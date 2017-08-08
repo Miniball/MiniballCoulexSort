@@ -1,0 +1,55 @@
+# Settings file for CREX Campaign 2016  5 Mesytec ADC, 4 Caen (CLX config no TREX)
+
+Coincidence.Window:		80							width of coincindence window in 25 ns. Before 40, CLX use 80
+Coincidence.Reference:		0.							reference point of coincidence window in us (i.e. where is the middle of the window)
+#timing conditions (in us)
+EbisWindow.LowerEdge:		0
+EbisWindow.UpperEdge:		1000 							#maybe 240???
+Dgf.Offset:			1							offset for dgf modules
+Adc.Offset:			55							offset for adc modules
+PatternUnit.Offset:		67							offset for pattern unit
+Dgf.NumberOfModules:		54							number of dgf modules
+Adc.NumberOfModules:		9							number of adc modules
+PatternUnit.NumberOfModules:	1							number of pattern units
+Dgf.NumberOfChannels:		4							number of channels per dgf
+Timestamp.NumberOfModules:	4							number of timestamp modules
+Timestamp.0.ModuleNumber:	49
+Timestamp.0.Offset:		0
+Timestamp.1.ModuleNumber:	50
+Timestamp.1.Offset:		0
+Timestamp.2.ModuleNumber:	51
+Timestamp.2.Offset:		0
+Timestamp.3.ModuleNumber:	52
+Timestamp.3.Offset:		0
+Timestamp.Channel:		0							timestamp channel
+Timestamp.NumberOfAdcs:		1							number of adcs per timestamp channel
+Time.ModuleNumber:		53							modulenumber for ebis, t1 and supercycle pulse
+Time.EbisChannel:		0							ebis channel
+Time.T1Channel:			1							t1 channel
+Time.SuperCycleChannel:		2							supercycle channel
+Dgf.FirstMiniballModule:	1							first miniball dgf
+Dgf.LastMiniballModule:		9							last miniball dgf
+Dgf.Beamdump.Module:		10							beamdump dgf
+Adc.FirstModule:		11							first adc
+Adc.LastModule:			19							last adc 
+BraggChamber.Module:		0
+Scaler.Module:			20
+PatternUnit.Module:		21								pattern unit (xx = Bragg Chamber, 18 = Scaler, 20-22 = DgfScaler)
+Dgf.Scaler.FirstModule:		22
+Dgf.Scaler.LastModule:		24
+Dgf.Indices.RealTime:		0
+Dgf.Indices.RunTime:		3
+Dgf.Indices.GSLTTime:		6
+Dgf.Indices.NumberOfEvents:	9
+Dgf.Indices.Offset.0:		62
+Dgf.Indices.Offset.1:		86
+Dgf.Indices.Offset.2:		110
+Dgf.Indices.Offset.3:		134
+Dgf.Indices.LiveTime:		0
+Dgf.Indices.FastPeak:		3
+Bragg.Trace.Length:		512
+Mesytec.Adc:			1
+SPEDE.Chamb:			0
+NumberOf.CaenAdc:		4
+TypeOf.Setup:			1							1 for CLX/CREX/SPEDE and 0 for TREX
+Dgf.Init.Delay: 		320

@@ -1,0 +1,37 @@
+ ==================================================================
+              SRIM version ---> SRIM-2013.00
+              Calc. date   ---> July 09, 2017 
+ ==================================================================
+
+ Disk File Name = SRIM Outputs\Argon in Platinum.txt
+
+ Ion = Argon [18] , Mass = 38 amu
+
+ Target Density =  2.1450E+01 g/cm3 = 6.5904E+22 atoms/cm3
+ ======= Target  Composition ========
+    Atom   Atom   Atomic    Mass     
+    Name   Numb   Percent   Percent  
+    ----   ----   -------   -------  
+     Pt     78    100.00    100.00   
+ ====================================
+ Bragg Correction = 0.00%
+ Stopping Units =  MeV / (mg/cm2) 
+ See bottom of Table for other Stopping units 
+
+        Ion        dE/dx      dE/dx     Projected  Longitudinal   Lateral
+       Energy      Elec.      Nuclear     Range     Straggling   Straggling
+  --------------  ---------- ---------- ----------  ----------  ----------
+ 161.66 MeV   6.359E+00  6.238E-03   12.03 um     5588 A      6948 A   
+-----------------------------------------------------------
+ Multiply Stopping by        for Stopping Units
+ -------------------        ------------------
+  2.1449E+02                 eV / Angstrom 
+  2.1449E+03                keV / micron   
+  2.1449E+03                MeV / mm       
+  1.0000E+00                keV / (ug/cm2) 
+  1.0000E+00                MeV / (mg/cm2) 
+  1.0000E+03                keV / (mg/cm2) 
+  3.2546E+02                 eV / (1E15 atoms/cm2)
+  8.4560E-01                L.S.S. reduced units
+ ==================================================================
+ (C) 1984,1989,1992,1998,2008 by J.P. Biersack and J.F. Ziegler
