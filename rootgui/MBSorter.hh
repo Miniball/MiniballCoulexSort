@@ -59,6 +59,7 @@ protected:
 	// Labels
 	TGLabel				*lab_run_files;		// label for run file list
 	TGLabel				*lab_daq_dir;		// label for daq directory
+	TGLabel				*lab_med_pre;		// label for med file prefix
 	TGLabel				*lab_local_dir;		// label for local directory
 	TGLabel				*lab_settings;		// label for settings file
 	TGLabel				*lab_last_entry;	// label for last entry number
@@ -84,6 +85,7 @@ protected:
 	// Text entries
 	TGTextEntry         *text_add_file;		// text entry for adding a file
 	TGTextEntry         *text_daq_dir;		// text entry for daq directory
+	TGTextEntry         *text_med_pre;		// text entry for medfile prefix
 	TGTextEntry         *text_local_dir;	// text entry for local directory
 	TGTextEntry         *text_settings;		// text entry for settings file
 	TGTextEntry         *text_outfile;		// text entry for output filename base
@@ -113,6 +115,7 @@ protected:
 	TGTextButton        *but_medroot;		// button to do MedToRoot
 	TGTextButton        *but_build;			// button to do TreeBuilder
 	TGTextButton        *but_ana;			// button to do TreeAna
+	TGTextButton        *but_mnt;			// button to do MntAna
 	TGTextButton        *but_add;			// button to add files
 	TGTextButton        *but_del;			// button to remove files
 	
@@ -129,6 +132,7 @@ public:
 	void on_medroot_clicked();	// MedToRoot function
 	void on_build_clicked();	// TreeBuilder function
 	void on_ana_clicked();		// TreeAna function
+	void on_mnt_clicked();		// MntAna function
 
 	// File list
 	vector <string> filelist;

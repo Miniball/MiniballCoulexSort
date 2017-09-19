@@ -84,6 +84,7 @@ protected:
 	// Text entries
 	TGTextEntry         *text_add_file;		// text entry for adding a file
 	TGTextEntry         *text_daq_dir;		// text entry for daq directory
+	TGTextEntry         *text_med_pre;		// text entry for medfile prefix
 	TGTextEntry         *text_local_dir;	// text entry for local directory
 	TGTextEntry         *text_settings;		// text entry for settings file
 	TGTextEntry         *text_outfile;		// text entry for output filename base
@@ -105,6 +106,7 @@ protected:
 	TGCheckButton       *check_cdpad;		// check button for CD+Pad for electrons
 	TGCheckButton       *check_ionch;		// check button for ionisation chamber
 	TGCheckButton       *check_singles;		// check button for singles tree
+	TGCheckButton       *check_addback;		// check button for addback on/off
 	TGCheckButton       *check_verbose;		// check button for verbose output
 	
 	// Action buttons
@@ -112,6 +114,7 @@ protected:
 	TGTextButton        *but_medroot;		// button to do MedToRoot
 	TGTextButton        *but_build;			// button to do TreeBuilder
 	TGTextButton        *but_ana;			// button to do TreeAna
+	TGTextButton        *but_mnt;			// button to do MntAna
 	TGTextButton        *but_add;			// button to add files
 	TGTextButton        *but_del;			// button to remove files
 	
@@ -128,6 +131,7 @@ public:
 	void on_medroot_clicked();	// MedToRoot function
 	void on_build_clicked();	// TreeBuilder function
 	void on_ana_clicked();		// TreeAna function
+	void on_mnt_clicked();		// MntAna function
 
 	// File list
 	vector <string> filelist;

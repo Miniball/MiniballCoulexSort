@@ -73,13 +73,13 @@ class g_clx : public TObject {
 	int             laser;
 	int             pr_hits;
 	int             rndm_hits;
+	int             del_hits;
 	vector <int>    pr_ptr;
 	vector <int>    rndm_ptr;
+	vector <int>    del_ptr;
 	int             file;
 
-	Double_t		GammaEnergy;
-
-	double scan_alpha;
+	double		GammaEnergy;
 	
 	// List of branches
 	TBranch        *b_mbevts_fUniqueID;   //!
@@ -108,8 +108,10 @@ class g_clx : public TObject {
 	TBranch        *b_mbevts_laser;   //!
 	TBranch        *b_mbevts_pr_hits;   //!
 	TBranch        *b_mbevts_rndm_hits;   //!
+	TBranch        *b_mbevts_del_hits;   //!
 	TBranch        *b_mbevts_pr_ptr;   //!
 	TBranch        *b_mbevts_rndm_ptr;   //!
+	TBranch        *b_mbevts_del_ptr;   //!
 	TBranch        *b_mbevts_file;   //!
 	
 	g_clx( TTree *tree = 0 );

@@ -365,8 +365,24 @@ MBSorter::MBSorter() {
 	text_daq_dir = new TGTextEntry( sub_frame_1 );
 	text_daq_dir->SetMaxLength( 4096 );
 	text_daq_dir->SetAlignment( kTextLeft );
-	text_daq_dir->Resize( 500, text_daq_dir->GetDefaultHeight() );
-	sub_frame_1->AddFrame( text_daq_dir, new TGLayoutHints( kLHintsRight | kLHintsExpandX, 2, 2, 2, 2 ) );
+	text_daq_dir->Resize( 410, text_daq_dir->GetDefaultHeight() );
+	sub_frame_1->AddFrame( text_daq_dir, new TGLayoutHints( kLHintsLeft | kLHintsExpandX, 2, 2, 2, 2 ) );
+	
+	// Med file prefix - label
+	lab_med_pre = new TGLabel( sub_frame_1, "prefix" );
+	lab_med_pre->SetTextJustify( 36 );
+	lab_med_pre->SetMargins( 0, 0, 0, 0 );
+	lab_med_pre->SetWrapLength( -1 );
+	lab_med_pre->Resize( 40, lab_med_pre->GetDefaultHeight() );
+	sub_frame_1->AddFrame( lab_med_pre,
+						   new TGLayoutHints( kLHintsLeft | kFixedWidth, 2, 2, 2, 2 ) );
+
+	// Med file prefix
+	text_med_pre = new TGTextEntry( sub_frame_1 );
+	text_med_pre->SetMaxLength( 4096 );
+	text_med_pre->SetAlignment( kTextLeft );
+	text_med_pre->Resize( 60, text_med_pre->GetDefaultHeight() );
+	sub_frame_1->AddFrame( text_med_pre, new TGLayoutHints( kLHintsRight , 2, 2, 2, 2 ) );
 	
 	// Local directory
 	text_local_dir = new TGTextEntry( sub_frame_2 );
@@ -487,13 +503,23 @@ MBSorter::MBSorter() {
 				new TGLayoutHints( kLHintsRight | kLHintsExpandY, 2, 2, 2, 2 ) );
 	
 	// TreeAna
-	but_ana = new TGTextButton( comp_frame_3, "Make histograms", -1, TGTextButton::GetDefaultGC()(),
+	but_ana = new TGTextButton( comp_frame_3, "Coulex analysis", -1, TGTextButton::GetDefaultGC()(),
 							   TGTextButton::GetDefaultFontStruct(), kRaisedFrame );
 	but_ana->SetTextJustify( 36 );
 	but_ana->SetMargins( 0, 0, 0, 0 );
 	but_ana->SetWrapLength( -1 );
 	but_ana->Resize( 50, 56 );
 	comp_frame_3->AddFrame( but_ana,
+				new TGLayoutHints( kLHintsRight | kLHintsExpandY, 2, 2, 2, 2 ) );
+
+	// MntAna
+	but_mnt = new TGTextButton( comp_frame_3, "MNT analysis", -1, TGTextButton::GetDefaultGC()(),
+							   TGTextButton::GetDefaultFontStruct(), kRaisedFrame );
+	but_mnt->SetTextJustify( 36 );
+	but_mnt->SetMargins( 0, 0, 0, 0 );
+	but_mnt->SetWrapLength( -1 );
+	but_mnt->Resize( 50, 56 );
+	comp_frame_3->AddFrame( but_mnt,
 				new TGLayoutHints( kLHintsRight | kLHintsExpandY, 2, 2, 2, 2 ) );
 	
 	// Add files
@@ -550,17 +576,18 @@ MBSorter::MBSorter() {
 	// Defaults //
 	//////////////
 	
-	text_daq_dir->SetText( "/mbdata/miniball/bonus-170728" );
-	text_local_dir->SetText( "/media/MinballBackup/clx107/medfiles" );
+	text_daq_dir->SetText( "/mbdata/miniball/is572-170830" );
+	text_local_dir->SetText( "/media/MinballBackup/is572/medfiles" );
+	text_med_pre->SetText( "94Rb" );
 
-	text_add_file->SetText( "22Ne_107Ag_Pos4_003" );
+	text_add_file->SetText( "94Rb_208Pb_pos5_066" );
 
-	text_settings->SetText( "/media/MinballBackup/clx107/MBSettings2017_CLX.dat" );
+	text_settings->SetText( "/media/MinballBackup/is572/MBSettings2017_CLX.dat" );
 	check_source->SetOn();
 
-	text_outfile->SetText( "/media/MinballBackup/clx107/rootfiles/22Ne_107Ag_" );
-	text_calfile->SetText( "/media/MinballBackup/clx107/calfiles/calibration-online-DTD2.dat" );
-	check_cdpad->SetOn();
+	text_outfile->SetText( "/media/MinballBackup/is572/rootfiles/94Rb_208Pb_xxx-yyy" );
+	text_calfile->SetText( "/media/MinballBackup/is572/calfiles/calibration-online-is558.dat" );
+	//check_cdpad->SetOn();
 	check_singles->SetOn();
 	check_addback->SetOn();
 
@@ -582,6 +609,7 @@ MBSorter::MBSorter() {
 	but_medroot->Connect( "Clicked()", "MBSorter", this, "on_medroot_clicked()" );
 	but_build->Connect( "Clicked()", "MBSorter", this, "on_build_clicked()" );
 	but_ana->Connect( "Clicked()", "MBSorter", this, "on_ana_clicked()" );
+	but_mnt->Connect( "Clicked()", "MBSorter", this, "on_mnt_clicked()" );
 	
 	
 }
@@ -633,7 +661,9 @@ void MBSorter::on_rsync_clicked() {
 	TString cmd = "rsync -avz ";
 	cmd += "miniball@hpdaqpc:";
 	cmd += text_daq_dir->GetText();
-	cmd += "/*.med ";
+	cmd += "/";
+	cmd += text_med_pre->GetText();
+	cmd += "*.med ";
 	cmd += text_local_dir->GetText();
 	cmd += "/";
 	
@@ -698,6 +728,7 @@ void MBSorter::on_build_clicked() {
 	if( check_cdpad->IsOn() ) cmd += "-cdpad ";
 	if( check_ionch->IsOn() ) cmd += "-ionch ";
 	if( check_singles->IsOn() ) cmd += "-s ";
+	if( check_addback->IsOn() ) cmd += "-addback ";
 	if( check_verbose->IsOn() ) cmd += "-vl ";
 
 	rootfileout = text_outfile->GetText();
@@ -751,6 +782,24 @@ void MBSorter::on_ana_clicked() {
 	outputfile += "_hists.root";
 	
 	cmd = "TreeAna -i " + inputfile + " -o " + outputfile;
+
+	cout << cmd << endl;
+	gSystem->Exec( cmd );
+	
+}
+
+void MBSorter::on_mnt_clicked() {
+	
+	// Slot to react to Histograms button
+	TString inputfile, outputfile;
+	TString cmd;
+
+	inputfile = text_outfile->GetText();
+	inputfile += "_tree.root";
+	outputfile = text_outfile->GetText();
+	outputfile += "_mnt.root";
+	
+	cmd = "MntAna -i " + inputfile + " -o " + outputfile;
 
 	cout << cmd << endl;
 	gSystem->Exec( cmd );

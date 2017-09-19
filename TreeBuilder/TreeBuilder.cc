@@ -12,7 +12,7 @@
 #define GAMMA_ARRAY 250
 
 #define ELBINS 2000
-#define ELRANGE 1000
+#define ELRANGE 2000
 #define ELMIN -1.0*ELRANGE/ELBINS
 #define ELMAX ELRANGE+ELMIN
 #define ELECTRON_ARRAY 250
@@ -135,15 +135,18 @@ int main(int argc, char* argv[]) {
 	// Hard-coded parameters... TODO read in from file?
 	// ------------------------------------------------------------------------ //
 	// How many ticks need to align the prompt, in ticks.
-	Double_t dtAdc[4] = {14.0,15.5,16.5,8.0};  // IS553
+	Double_t dtAdc[4] = {-13.0,-11.5,-9.0,-11.0};  // IS558
+	//Double_t dtAdc[4] = {14.0,15.5,16.5,8.0};  // IS558
+	//Double_t dtAdc[4] = {14.0,15.5,16.5,8.0};  // IS553
 	//Double_t dtAdc[4] = {35.0,38.0,40.0,30.0};  // IS553 - timestamp corrected
   
 	// IS553
-	Double_t tMinPrompt = -15., tMaxPrompt = 10.;
-	Double_t tMinRandom = 15., tMaxRandom = 40.;
+	Double_t tMinPrompt = -7., tMaxPrompt = 6.;
+	Double_t tMinRandom = 7., tMaxRandom = 20.;
+	Double_t tMinDelayed = -50., tMaxDelayed = -7.;
  
-	Double_t tMinPromptElectron = -2., tMaxPromptElectron = 2.;
-	Double_t tMinRandomElectron = 5., tMaxRandomElectron = 9.;
+	Double_t tMinPromptElectron = 1., tMaxPromptElectron = 24.;
+	Double_t tMinRandomElectron = -23., tMaxRandomElectron = 0.;
  
 	Double_t WeightPR = abs(tMinPrompt-tMaxPrompt)/abs(tMinRandom-tMaxRandom);
 	
@@ -431,7 +434,7 @@ int main(int argc, char* argv[]) {
 			mb_evts[j]->SearchCoin();  
 			write_mb_evts->Initialize();
 			write_mb_evts->CopyData( mb_evts[j] );
-			if( write_mb_evts->pr_hits > 0 || write_mb_evts->rndm_hits > 0 ) g_clx->Fill(); 
+			if( write_mb_evts->pr_hits > 0 || write_mb_evts->rndm_hits > 0 || write_mb_evts->del_hits > 0  ) g_clx->Fill(); 
 			else if( singles ) g_clx->Fill();
 			
 		}
@@ -822,15 +825,15 @@ int main(int argc, char* argv[]) {
 			// Do particles
 			for( k = 0; k < Ener_front.size(); k++ ) {
 
-				tdiffPG = time[k] - dgf_t;
+				tdiffPG = time[k] - gtd_array[j];
 
 				// electrons
 				if( clu_array[j] == 8 ) { 
 
 					tdiff_ep->Fill( tdiffPG );
 
-					if( tMinRandomElectron <= tdiffPG && tdiffPG <= tMaxRandomElectron ) coinc_flag = 1;
-					else if( tMinPromptElectron <= tdiffPG && tdiffPG <= tMaxPromptElectron ) coinc_flag = 0;
+					if( tMinRandomElectron <= tdiffPG && tdiffPG < tMaxRandomElectron ) coinc_flag = 1;
+					else if( tMinPromptElectron <= tdiffPG && tdiffPG < tMaxPromptElectron ) coinc_flag = 0;
 					else coinc_flag = -1;
 						
 				}
@@ -841,8 +844,9 @@ int main(int argc, char* argv[]) {
 					tdiff_gp->Fill( tdiffPG );
 					tdiff_gp_q[(int)Quad[k]]->Fill( tdiffPG - dtAdc[(int)Quad[k]] );
 
-					if( tMinRandom <= tdiffPG && tdiffPG <= tMaxRandom ) coinc_flag = 1;
-					else if( tMinPrompt <= tdiffPG && tdiffPG <= tMaxPrompt ) coinc_flag = 0;
+					if( tMinDelayed <= tdiffPG && tdiffPG < tMaxDelayed ) coinc_flag = 2;
+					else if( tMinRandom <= tdiffPG && tdiffPG < tMaxRandom ) coinc_flag = 1;
+					else if( tMinPrompt <= tdiffPG && tdiffPG < tMaxPrompt ) coinc_flag = 0;
 					else coinc_flag = -1;			
 
 				}

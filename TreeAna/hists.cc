@@ -3,11 +3,11 @@
 
 #define GBINS 4000	// number of bins in gamma spectra
 #define GMAX 4000	// maximum energy in gamma spectra
-#define EBINS 1500	// number of bins in electron spectra
-#define EMAX 3000	// maximum energy in electron spectra
+#define EBINS 3000	// number of bins in electron spectra
+#define EMAX 6000	// maximum energy in electron spectra
 #define PBINS 800	// number of bins in particle spectra
 #define PMAX 800	// maximum energy in particle spectra
-#define TBINS 242	// number of bins in tdiff spectracd_
+#define TBINS 242	// number of bins in tdiff spectra
 #define TMAX 1525	// maximum time in tdiff spectra
 
 #ifndef hist_hh
@@ -56,7 +56,7 @@ void hists::Initialise() {
 
 	// matrices
 	gg = new TH2F("gg","Gamma-gamma matrix;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
-	ge = new TH2F("ge","Gamma-electron matrix;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	ge = new TH2F("ge","Gamma-electron matrix;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
 	gg_dcB = new TH2F("gg_dcB","Gamma-gamma matrix, DC for beam;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	gg_dcT = new TH2F("gg_dcT","Gamma-gamma matrix, DC for target;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	gg_td = new TH1F("gg_td","#gamma-#gamma time difference;#tau (t_{#gamma} - t_{#gamma}) [ns];Counts per 12.5ns",TBINS,TMAX-25*TBINS,TMAX); // Total
@@ -149,13 +149,21 @@ void hists::Initialise() {
 		htitle = "Target gated (strip " + doppler::convertInt(i) + "), background subtracted gamma rays, Doppler corrected for target recoil;Energy [keV];Counts per 1keV";
 		T_dcT_x[i] = new TH1F(hname.c_str(),htitle.c_str(),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));	
 		
-		hname = "Te_dcB_x" + doppler::convertInt(i);
-		htitle = "Target gated (strip " + doppler::convertInt(i) + "), background subtracted electrons, Doppler corrected for scattered projectile;Energy [keV];Counts per 1keV";
-		Te_dcB_x[i] = new TH1F(hname.c_str(),htitle.c_str(),EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
+//		hname = "Te_dcB_x" + doppler::convertInt(i);
+//		htitle = "Target gated (strip " + doppler::convertInt(i) + "), background subtracted electrons, Doppler corrected for scattered projectile;Energy [keV];Counts per 1keV";
+//		Te_dcB_x[i] = new TH1F(hname.c_str(),htitle.c_str(),EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
 		
-		hname = "Te_dcT_x" + doppler::convertInt(i);
-		htitle = "Target gated (strip " + doppler::convertInt(i) + "), background subtracted electrons, Doppler corrected for target recoil;Energy [keV];Counts per 1keV";
-		Te_dcT_x[i] = new TH1F(hname.c_str(),htitle.c_str(),EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
+//		hname = "Te_dcT_x" + doppler::convertInt(i);
+//		htitle = "Target gated (strip " + doppler::convertInt(i) + "), background subtracted electrons, Doppler corrected for target recoil;Energy [keV];Counts per 1keV";
+//		Te_dcT_x[i] = new TH1F(hname.c_str(),htitle.c_str(),EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
+		
+		hname = "B_dcB_x" + doppler::convertInt(i);
+		htitle = "Beam gated (strip " + doppler::convertInt(i) + "), background subtracted gamma rays, Doppler corrected for scattered projectile;Energy [keV];Counts per 1keV";
+		B_dcB_x[i] = new TH1F(hname.c_str(),htitle.c_str(),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));	
+		
+		hname = "B_dcT_x" + doppler::convertInt(i);
+		htitle = "Beam gated (strip " + doppler::convertInt(i) + "), background subtracted gamma rays, Doppler corrected for target recoil;Energy [keV];Counts per 1keV";
+		B_dcT_x[i] = new TH1F(hname.c_str(),htitle.c_str(),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));	
 		
 	}
 	
@@ -416,6 +424,9 @@ void hists::FillGam1h( double GEn, double GTh, double GPh, double PEn, Int_t Pan
 		TTh = doppler::GetTTh(Pann,PEn);
 		TPh = doppler::GetQPhi(Pquad,Psec);
 
+		B_dcB_x[Pann]->Fill(GEn*doppler::DC(BEn, BTh, BPh, GTh, GPh, AP), weight);	
+		B_dcT_x[Pann]->Fill(GEn*doppler::DC(TEn, TTh, TPh, GTh, GPh, AT), weight);
+
 		B_1hdcB->Fill(GEn*doppler::DC(BEn, BTh, BPh, GTh, GPh, AP), weight);
 		B_1hdcT->Fill(GEn*doppler::DC(TEn, TTh, TPh, GTh, GPh, AT), weight);
 		
@@ -444,6 +455,9 @@ void hists::FillGam2h( double GEn, double GTh, double GPh, vector<double> PEn, v
 
 	T_dcB_x[Tann]->Fill(GEn*doppler::DC(BEn, BTh, BPh, GTh, GPh, AP), weight);	
 	T_dcT_x[Tann]->Fill(GEn*doppler::DC(TEn, TTh, TPh, GTh, GPh, AT), weight);
+
+	B_dcB_x[Bann]->Fill(GEn*doppler::DC(BEn, BTh, BPh, GTh, GPh, AP), weight);	
+	B_dcT_x[Bann]->Fill(GEn*doppler::DC(TEn, TTh, TPh, GTh, GPh, AT), weight);
 
 	if( Tann >= minrecoil && Tann <= maxrecoil ) {
 
@@ -477,8 +491,8 @@ void hists::FillElec1h( double GEn, double GTh, double GPh, double PEn, Int_t Pa
 		BTh = doppler::GetBTh(Pann);
 		BPh = doppler::GetQPhi(Pquad,Psec);
 
-		Te_dcB_x[Pann]->Fill(doppler::DC_elec(GEn, BEn, BTh, BPh, GTh, GPh, AP), weight);	
-		Te_dcT_x[Pann]->Fill(doppler::DC_elec(GEn, TEn, TTh, TPh, GTh, GPh, AT), weight);
+//		Te_dcB_x[Pann]->Fill(doppler::DC_elec(GEn, BEn, BTh, BPh, GTh, GPh, AP), weight);	
+//		Te_dcT_x[Pann]->Fill(doppler::DC_elec(GEn, TEn, TTh, TPh, GTh, GPh, AT), weight);
 	
 		if( Pann >= minrecoil && Pann <= maxrecoil ) {
 
@@ -530,8 +544,8 @@ void hists::FillElec2h( double GEn, double GTh, double GPh, vector<double> PEn, 
 	double BPh = doppler::GetPPhi(Pquad[Bptr],Psec[Bptr]);
 	double TPh = doppler::GetPPhi(Pquad[Tptr],Psec[Tptr]);
 
-	Te_dcB_x[Tann]->Fill(doppler::DC_elec(GEn, BEn, BTh, BPh, GTh, GPh, AP), weight);	
-	Te_dcT_x[Tann]->Fill(doppler::DC_elec(GEn, TEn, TTh, TPh, GTh, GPh, AT), weight);
+//	Te_dcB_x[Tann]->Fill(doppler::DC_elec(GEn, BEn, BTh, BPh, GTh, GPh, AP), weight);	
+//	Te_dcT_x[Tann]->Fill(doppler::DC_elec(GEn, TEn, TTh, TPh, GTh, GPh, AT), weight);
 
 	if( Tann >= minrecoil && Tann <= maxrecoil ) {
 
@@ -720,6 +734,7 @@ void hists::PhiCalHists( double GEn, double GTh, double GPh, double PEn, Int_t P
 		TPh += (double)j * PHI_STEP_WIDTH * TMath::DegToRad();
 		phical_dcT[j]->Fill( GEn*doppler::DC(TEn,TTh,TPh,GTh,GPh,AT), weight );
 		phical_dcB[j]->Fill( GEn*doppler::DC(BEn,BTh,BPh,GTh,GPh,AP), weight );
+
 	}
 
 #endif

@@ -40,10 +40,12 @@ class mbevts : public TObject {
 	int laser;
 	int pr_hits;
 	int rndm_hits;
+	int del_hits;
 
 	// pointers for particles
 	vector <int> pr_ptr;
 	vector <int> rndm_ptr;
+	vector <int> del_ptr;
 	int file; 
 
 	// setup functions

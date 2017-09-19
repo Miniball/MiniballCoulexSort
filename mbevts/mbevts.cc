@@ -34,6 +34,7 @@ void mbevts::Initialize() {
 	laser=-1;
 	pr_hits=0;
 	rndm_hits=0;
+	del_hits=0;
 	file=-1;
 	
 }
@@ -63,12 +64,14 @@ void mbevts::CopyData(mbevts* src) {
 	sec = src->sec;
 	det = src->det;
 	coin = src->coin;
-	rndm_ptr = src->rndm_ptr;
 	pr_ptr = src->pr_ptr;
+	rndm_ptr = src->rndm_ptr;
+	del_ptr = src->del_ptr;
 	
 	laser = src->laser;
 	pr_hits = src->pr_hits;
 	rndm_hits = src->rndm_hits;
+	del_hits = src->del_hits;
 	file = src->file;
 	
 }
@@ -241,6 +244,13 @@ void mbevts::SearchCoin() {
 		
 			rndm_ptr.push_back( i );
 			rndm_hits++;
+	
+		}
+	
+		else if( coin[i] == 2 ){
+		
+			del_ptr.push_back( i );
+			del_hits++;
 	
 		}
 	

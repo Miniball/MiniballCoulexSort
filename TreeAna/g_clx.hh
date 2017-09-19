@@ -73,8 +73,10 @@ class g_clx : public TObject {
 	int             laser;
 	int             pr_hits;
 	int             rndm_hits;
+	int             del_hits;
 	vector <int>    pr_ptr;
 	vector <int>    rndm_ptr;
+	vector <int>    del_ptr;
 	int             file;
 
 	double		GammaEnergy;
@@ -106,8 +108,10 @@ class g_clx : public TObject {
 	TBranch        *b_mbevts_laser;   //!
 	TBranch        *b_mbevts_pr_hits;   //!
 	TBranch        *b_mbevts_rndm_hits;   //!
+	TBranch        *b_mbevts_del_hits;   //!
 	TBranch        *b_mbevts_pr_ptr;   //!
 	TBranch        *b_mbevts_rndm_ptr;   //!
+	TBranch        *b_mbevts_del_ptr;   //!
 	TBranch        *b_mbevts_file;   //!
 	
 	g_clx( TTree *tree = 0 );
@@ -247,8 +251,10 @@ void g_clx::Init(TTree *tree) {
 	fChain->SetBranchAddress("laser", &laser, &b_mbevts_laser);
 	fChain->SetBranchAddress("pr_hits", &pr_hits, &b_mbevts_pr_hits);
 	fChain->SetBranchAddress("rndm_hits", &rndm_hits, &b_mbevts_rndm_hits);
+	fChain->SetBranchAddress("del_hits", &del_hits, &b_mbevts_del_hits);
 	fChain->SetBranchAddress("pr_ptr", &pr_ptr, &b_mbevts_pr_ptr);
 	fChain->SetBranchAddress("rndm_ptr", &rndm_ptr, &b_mbevts_rndm_ptr);
+	fChain->SetBranchAddress("del_ptr", &del_ptr, &b_mbevts_del_ptr);
 	fChain->SetBranchAddress("file", &file, &b_mbevts_file);
 	Notify();
 }

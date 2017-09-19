@@ -40,6 +40,7 @@ class mbevts : public TObject {
 	int laser;
 	int pr_hits;
 	int rndm_hits;
+	int del_hits;
 
 	// pointers for particles
 	vector <int> pr_ptr;
@@ -61,7 +62,7 @@ class mbevts : public TObject {
 	void SetCorGamCid(int id);
 	void SetCorGamSid(int id);
 	void SetCorGamGtd(double td);
-	void SetPart(double en, int a, int s, double t, double ss, double ctd, int co, int quad, int laserflag, int nr);
+	void SetPart(double en, int a, int s, double t, double ss, double ctd, int co, int quad, int laserflag);
 	void SearchCoin();
 	void CopyData(mbevts* src);
 

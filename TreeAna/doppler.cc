@@ -182,8 +182,9 @@ Int_t doppler::Cut(Double_t PEn, Double_t anno, Int_t quad) {
 	
 		double a = 497.602, b = -4.67677, c = -0.0274333;
 		double d = 435.186, e = -7.84811, f = 0.0199164;
+		double g = 0, h = 0, i = 0;
 		double ang = GetPTh(anno) * TMath::RadToDeg();
-
+		
 		if( AP == 22 ) {
 
 			//need fixing
@@ -192,12 +193,23 @@ Int_t doppler::Cut(Double_t PEn, Double_t anno, Int_t quad) {
 			d = 20; e = 0; f = 0;
 		}
 
-		if( PEn/1000. >= ( a + b*ang + c*ang*ang ) )
+		else if( AP == 140 ) {
+
+			// Hack to use strip number instead of angle
+			ang = anno;
+			a = 290.000; b = 8.28043; c = 0.567469;
+			d = 127.447; e = 13.3571; f = 0.415562;
+			g = 44.9824; h = 2.83287; i = 1.10326;
+
+		}
+
+		if( PEn/1000. <= ( a + b*ang + c*ang*ang ) &&
+			PEn/1000. >= ( d + e*ang + f*ang*ang ) )
 
 			identity = 1; // beam
 			
-		else if( PEn/1000. < ( a + b*ang + c*ang*ang ) &&
-				 PEn/1000. >= ( d + e*ang + f*ang*ang ) )
+		else if( PEn/1000. <= ( d + e*ang + f*ang*ang ) &&
+				 PEn/1000. >= ( g + h*ang + i*ang*ang ) )
 		
 			identity = 0; // target
 		

@@ -61,12 +61,13 @@ class hists {
 	TH1F *B_dcB, *B_dcT, *B_1hdcB, *B_1hdcT;
 	TH1F *T_dcT, *T_dcB, *T_1hdcT, *T_1hdcB;
 	TH1F *T_dcB_x[16], *T_dcT_x[16];
+	TH1F *B_dcB_x[16], *B_dcT_x[16];
 	TH1F *gam_dcB, *gam_dcT, *T_2hdcB, *T_2hdcT;
    
 	// Background subtracted, Doppler corrected electron spectra
 	TH1F *Be_dcB, *Be_dcT, *Be_1hdcB, *Be_1hdcT;
 	TH1F *Te_dcT, *Te_dcB, *Te_1hdcT, *Te_1hdcB;
-	TH1F *Te_dcB_x[16], *Te_dcT_x[16];
+//	TH1F *Te_dcB_x[16], *Te_dcT_x[16];
 	TH1F *elec_dcB, *elec_dcT, *Te_2hdcB, *Te_2hdcT;
    
 	// Prompt/Random Particle spectra
