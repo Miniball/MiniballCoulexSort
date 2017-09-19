@@ -271,6 +271,8 @@ void g_clx::Loop( string outputfilename ) {
 		// Check size of correlated gammas
 		h.gcor_size->Fill( gcor_gen.size() );
 
+		if( gcor_gen.size() > 0 ) h.FillGamGam0h( gen, tha, pha, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron );
+
 		// Fill conditioned spectra
 
 		// Condition on particle detection

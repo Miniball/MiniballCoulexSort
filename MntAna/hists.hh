@@ -41,7 +41,7 @@ class hists {
 	TH1F *p_1B, *r_1B, *p_1T, *r_1T, *p_2h, *r_2h;
 
 	// Coincidence matrices
-	TH2F *gg, *gg_p, *gd, *dd;
+	TH2F *gg, *pp, *pd, *dd;
 	TH2F *gg_dcT, *gg_dcB;
 	TH1F *gg_td, *ge_td, *gd_td;
 	TH1F *gcor_size;
@@ -123,6 +123,8 @@ class hists {
 					Int_t Psec, Int_t Pquad, Int_t cut, double weight=1.0 );
 	void FillGam2h( double GEn, double GTh, double GPh, vector <double> PEn, vector<int> Pann,
 					vector<int> Psec, vector<int> Pquad, Int_t Bptr, Int_t Tptr, double weight=1.0 );
+	void FillGamGam0h( double GEn, double GTh, double GPh, vector <double> GCor_GEn, vector <double> GCor_GTh,
+					  vector <double> GCor_GPh, vector <int> GCor_GCluID, vector <double> GCor_Gtd );
 	void FillGamGam1h( double GEn, double GTh, double GPh, vector <double> GCor_GEn, vector <double> GCor_GTh,
 					  vector <double> GCor_GPh, vector <int> GCor_GCluID, vector <double> GCor_Gtd,
 					  double PEn, Int_t Pann, Int_t Psec, Int_t Pquad, Int_t cut, double weight=1.0 );

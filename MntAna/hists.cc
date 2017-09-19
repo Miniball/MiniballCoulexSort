@@ -44,9 +44,9 @@ void hists::Initialise() {
 
 	// matrices
 	gg = new TH2F("gg","Gamma-gamma matrix, background subtracted;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
-	gd = new TH2F("gd","Gamma-gamma matrix, prompt vs. delayed, background subtracted;Prompt Energy [keV];Delayed Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	pp = new TH2F("pp","Gamma-gamma matrix, background subtracted;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	pd = new TH2F("pd","Gamma-gamma matrix, prompt vs. delayed, background subtracted;Prompt Energy [keV];Delayed Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	dd = new TH2F("dd","Gamma-gamma matrix, delayed vs. delayed, background subtracted;Delayed Energy [keV];Delayed Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
-	gg_p = new TH2F("gg_p","Gamma-gamma matrix;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	gg_dcB = new TH2F("gg_dcB","Gamma-gamma matrix, DC for beam;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	gg_dcT = new TH2F("gg_dcT","Gamma-gamma matrix, DC for target;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	gg_td = new TH1F("gg_td","#gamma-#gamma time difference;#tau (t_{#gamma} - t_{#gamma}) [ns];Counts per 12.5ns",TBINS,TMAX-25*TBINS,TMAX); // Total
@@ -324,7 +324,7 @@ void hists::FillDelayed( double GEn, double GTh, double GPh, vector <double> GCo
 			
 		if( GCor_Gtd.at(i)*25. > -1000. && GCor_Gtd.at(i)*25. < -125. ) {
 				
-			gd->Fill( GCor_GEn.at(i), GEn, weight );
+			pd->Fill( GCor_GEn.at(i), GEn, weight );
 				
 		}
 
@@ -434,6 +434,23 @@ void hists::FillGam2h( double GEn, double GTh, double GPh, vector<double> PEn, v
 
 }
 
+void hists::FillGamGam0h( double GEn, double GTh, double GPh, vector <double> GCor_GEn, vector <double> GCor_GTh,
+						 vector <double> GCor_GPh, vector <int> GCor_CluID, vector <double> GCor_Gtd ) {
+	
+	for( unsigned int i = 0; i < GCor_GEn.size(); i++ ) {
+		
+		if( GCor_Gtd.at(i)*25. > -100. && GCor_Gtd.at(i)*25. < 150. ) {
+				
+			gg->Fill( GEn, GCor_GEn.at(i) );
+				
+		}
+
+	}
+	
+	return;
+	
+}
+
 void hists::FillGamGam1h( double GEn, double GTh, double GPh, vector <double> GCor_GEn, vector <double> GCor_GTh,
 						 vector <double> GCor_GPh, vector <int> GCor_CluID, vector <double> GCor_Gtd,
 						 double PEn, Int_t Pann, Int_t Psec, Int_t Pquad, int cut, double weight ) {
@@ -478,8 +495,7 @@ void hists::FillGamGam1h( double GEn, double GTh, double GPh, vector <double> GC
 			
 		if( GCor_Gtd.at(i)*25. > -100. && GCor_Gtd.at(i)*25. < 150. ) {
 				
-			gg->Fill(GEn, GCor_GEn.at(i), weight);
-			if( weight > 0 ) gg_p->Fill(GEn, GCor_GEn.at(i));
+			pp->Fill(GEn, GCor_GEn.at(i), weight);
 			gg_dcT->Fill( GEn*doppler::DC(TEn,TTh,TPh,GTh,GPh,AT),
 						 GCor_GEn.at(i)*doppler::DC(TEn,TTh,TPh,GCor_GTh.at(i),GCor_GPh.at(i),AT) );
 			gg_dcB->Fill( GEn*doppler::DC(BEn,BTh,BPh,GTh,GPh,AP),
@@ -516,8 +532,7 @@ void hists::FillGamGam2h( double GEn, double GTh, double GPh, vector <double> GC
 		
 			if( GCor_Gtd.at(i)*25. > -100. && GCor_Gtd.at(i)*25. < 150. ) {
 					
-				gg->Fill(GEn, GCor_GEn.at(i), weight); // need to add DC versions
-				if( weight > 0 ) gg_p->Fill(GEn, GCor_GEn.at(i));
+				pp->Fill(GEn, GCor_GEn.at(i), weight); // need to add DC versions
 				gg_dcT->Fill( GEn*doppler::DC(TEn,TTh,TPh,GTh,GPh,AT),
 							 GCor_GEn.at(i)*doppler::DC(TEn,TTh,TPh,GCor_GTh.at(i),GCor_GPh.at(i),AT) );
 				gg_dcB->Fill( GEn*doppler::DC(BEn,BTh,BPh,GTh,GPh,AP),
