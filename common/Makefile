@@ -11,13 +11,12 @@ CC      = $(shell root-config --cc)
 CPP     = $(shell root-config --cxx)
 CFLAGS  =  -O2 -pipe -Wall -W -Woverloaded-virtual
 
-INCLUDES        = -I./
+INCLUDES	= -I./
 
 LFLAGS		=  -g 
 LIBS 		= $(ALLIBS)
 
-all: CommandLineInterface.o libCommandLineInterface.a
-	@echo Done
+all: libCommandLineInterface.a
 
 lib%.a: %.o
 	$(AR) cru $(LIB_DIR)/$@ $^
