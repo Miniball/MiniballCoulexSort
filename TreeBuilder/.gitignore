@@ -1,0 +1,7 @@
+# Ignore gedit temporary files
+*~
+*.o
+*Dictionary.cc
+*Dictionary.h
+TreeBuilder
+

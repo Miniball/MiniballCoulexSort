@@ -1,0 +1,8 @@
+# Ignore gedit temporary files
+*~
+*.o
+*Dict.cc
+*Dict.h
+TreeAna
+TreeAna_*
+

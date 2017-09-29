@@ -1,0 +1,6 @@
+# Ignore gedit temporary files
+*~
+*~
+*.o
+*_dict.cc
+*_dict.h

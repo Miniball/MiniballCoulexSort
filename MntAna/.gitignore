@@ -1,0 +1,7 @@
+# Ignore gedit temporary files
+*~
+*.o
+*Dict.cc
+*Dict.h
+MntAna
+MntAna_13mg

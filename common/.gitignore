@@ -1,0 +1,4 @@
+# Ignore gedit temporary files
+*~
+*~
+*.o
