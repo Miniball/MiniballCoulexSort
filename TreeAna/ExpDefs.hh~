@@ -12,7 +12,7 @@
 # define THICK 1.00  // target thickness in mg/cm^2
 # define DEPTH 0.50  // depth of interaction
 
-# define CDDIST 25.7	// distance between target and CD
+# define CDDIST 20.0	// distance between target and CD
 # define DEADLAYER 0.7	// thickness of the Si dead layer in um
 
 # define SPEDEDIST 23.6 // distance from target to SPEDE in mm

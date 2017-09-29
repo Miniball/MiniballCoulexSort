@@ -30,6 +30,7 @@ int main(int argc, char* argv[]) {
 	string OutputFile;
 	string CalibrationFile;
 	bool singles = false;
+	bool gamgam = false;
 	bool addback = false;
 	bool crex = false;
 	bool cdpad = false;
@@ -42,6 +43,7 @@ int main(int argc, char* argv[]) {
 	interface->Add("-o", "outputfile", &OutputFile );
 	interface->Add("-c", "calibrationfile", &CalibrationFile );
 	interface->Add("-s", "singles", &singles );
+	interface->Add("-gg", "gamma-gamma", &gamgam );
 	interface->Add("-addback", "addback", &addback );
 	interface->Add("-crex", "CREX", &crex );
 	interface->Add("-spede", "SPEDE", &spede );
@@ -135,15 +137,16 @@ int main(int argc, char* argv[]) {
 	// Hard-coded parameters... TODO read in from file?
 	// ------------------------------------------------------------------------ //
 	// How many ticks need to align the prompt, in ticks.
-	Double_t dtAdc[4] = {-13.0,-11.5,-9.0,-11.0};  // IS558
+	Double_t dtAdc[4] = {-4.9,-10.2,-5.3,-3.8};  // IS546
+	//Double_t dtAdc[4] = {-13.0,-11.5,-9.0,-11.0};  // IS558
 	//Double_t dtAdc[4] = {14.0,15.5,16.5,8.0};  // IS558
 	//Double_t dtAdc[4] = {14.0,15.5,16.5,8.0};  // IS553
 	//Double_t dtAdc[4] = {35.0,38.0,40.0,30.0};  // IS553 - timestamp corrected
   
 	// IS553
-	Double_t tMinPrompt = -7., tMaxPrompt = 6.;
-	Double_t tMinRandom = 7., tMaxRandom = 20.;
-	Double_t tMinDelayed = -50., tMaxDelayed = -7.;
+	Double_t tMinPrompt = -9., tMaxPrompt = 4.;
+	Double_t tMinRandom = 10., tMaxRandom = 23.;
+	Double_t tMinDelayed = -50., tMaxDelayed = -50.;
  
 	Double_t tMinPromptElectron = 1., tMaxPromptElectron = 24.;
 	Double_t tMinRandomElectron = -23., tMaxRandomElectron = 0.;
@@ -434,7 +437,8 @@ int main(int argc, char* argv[]) {
 			mb_evts[j]->SearchCoin();  
 			write_mb_evts->Initialize();
 			write_mb_evts->CopyData( mb_evts[j] );
-			if( write_mb_evts->pr_hits > 0 || write_mb_evts->rndm_hits > 0 ) g_clx->Fill(); 
+			if( write_mb_evts->pr_hits > 0 || write_mb_evts->rndm_hits > 0 || write_mb_evts->del_hits > 0  ) g_clx->Fill();
+			else if( gamgam && write_mb_evts->gcor_gen.size() > 1 ) g_clx->Fill();
 			else if( singles ) g_clx->Fill();
 			
 		}

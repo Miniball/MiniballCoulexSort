@@ -435,6 +435,9 @@ MBSorter::MBSorter() {
 	check_singles = new TGCheckButton( sub_frame_10, "Singles" );
 	sub_frame_10->AddFrame( check_singles, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
+	check_gamgam = new TGCheckButton( sub_frame_10, "Gamma-Gamma" );
+	sub_frame_10->AddFrame( check_gamgam, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
+	
 	check_addback = new TGCheckButton( sub_frame_10, "Addback" );
 	sub_frame_10->AddFrame( check_addback, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
@@ -576,27 +579,28 @@ MBSorter::MBSorter() {
 	// Defaults //
 	//////////////
 	
-	text_daq_dir->SetText( "/mbdata/miniball/is572-170830" );
-	text_local_dir->SetText( "/media/MinballBackup/is572/medfiles" );
-	text_med_pre->SetText( "94Rb" );
+	text_daq_dir->SetText( "/mbdata/miniball/is546-170922" );
+	text_local_dir->SetText( "/media/MinballBackup/is546/medfiles" );
+	text_med_pre->SetText( "140Nd" );
 
-	text_add_file->SetText( "94Rb_208Pb_pos5_066" );
+	text_add_file->SetText( "140Nd_208Pb_pos3_laser_on_053" );
 
-	text_settings->SetText( "/media/MinballBackup/is572/MBSettings2017_CLX.dat" );
+	text_settings->SetText( "/media/MinballBackup/is546/MBSettings2017_CLX.dat" );
 	check_source->SetOn();
 
-	text_outfile->SetText( "/media/MinballBackup/is572/rootfiles/94Rb_208Pb_xxx-yyy" );
-	text_calfile->SetText( "/media/MinballBackup/is572/calfiles/calibration-online-is558.dat" );
-	//check_cdpad->SetOn();
+	text_outfile->SetText( "/media/MinballBackup/is546/rootfiles/140Nd_208Pb_laser_on_xxx-yyy" );
+	text_calfile->SetText( "/media/MinballBackup/is546/calfiles/calibration-online-is546.dat" );
+	check_cdpad->SetOn();
 	//check_singles->SetOn();
+	//check_gamgam->SetOn();
 	check_addback->SetOn();
 
-	num_dop_zb->SetNumber( 34 );
-	num_dop_zt->SetNumber( 82 );
-	num_dop_ab->SetNumber( 72 );
-	num_dop_at->SetNumber( 208 );
-	num_dop_eb->SetNumber( 4400 );
-	num_dop_th->SetNumber( 2000 );
+	num_dop_zb->SetNumber( 1 );
+	num_dop_zt->SetNumber( 1 );
+	num_dop_ab->SetNumber( 1 );
+	num_dop_at->SetNumber( 1 );
+	num_dop_eb->SetNumber( 1 );
+	num_dop_th->SetNumber( 1 );
 
 	////////////////////
 	// Button presses //
@@ -728,6 +732,7 @@ void MBSorter::on_build_clicked() {
 	if( check_cdpad->IsOn() ) cmd += "-cdpad ";
 	if( check_ionch->IsOn() ) cmd += "-ionch ";
 	if( check_singles->IsOn() ) cmd += "-s ";
+	if( check_gamgam->IsOn() ) cmd += "-gg ";
 	if( check_addback->IsOn() ) cmd += "-addback ";
 	if( check_verbose->IsOn() ) cmd += "-vl ";
 

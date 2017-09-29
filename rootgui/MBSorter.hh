@@ -107,6 +107,7 @@ protected:
 	TGCheckButton       *check_cdpad;		// check button for CD+Pad for electrons
 	TGCheckButton       *check_ionch;		// check button for ionisation chamber
 	TGCheckButton       *check_singles;		// check button for singles tree
+	TGCheckButton       *check_gamgam;		// check button for gamma-gamma events in tree
 	TGCheckButton       *check_addback;		// check button for addback on/off
 	TGCheckButton       *check_verbose;		// check button for verbose output
 	

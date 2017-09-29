@@ -59,6 +59,7 @@ protected:
 	// Labels
 	TGLabel				*lab_run_files;		// label for run file list
 	TGLabel				*lab_daq_dir;		// label for daq directory
+	TGLabel				*lab_med_pre;		// label for med file prefix
 	TGLabel				*lab_local_dir;		// label for local directory
 	TGLabel				*lab_settings;		// label for settings file
 	TGLabel				*lab_last_entry;	// label for last entry number

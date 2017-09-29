@@ -43,7 +43,7 @@ void hists::Initialise() {
 	r_2h = new TH1F("r_2h","#gamma-rays in random coincidence with 2-particles",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 
 	// matrices
-	gg = new TH2F("gg","Gamma-gamma matrix, background subtracted;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	gg = new TH2F("gg","Gamma-gamma matrix;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	pp = new TH2F("pp","Gamma-gamma matrix, background subtracted;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	pd = new TH2F("pd","Gamma-gamma matrix, prompt vs. delayed, background subtracted;Prompt Energy [keV];Delayed Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	dd = new TH2F("dd","Gamma-gamma matrix, delayed vs. delayed, background subtracted;Delayed Energy [keV];Delayed Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
@@ -441,7 +441,7 @@ void hists::FillGamGam0h( double GEn, double GTh, double GPh, vector <double> GC
 		
 		if( GCor_Gtd.at(i)*25. > -100. && GCor_Gtd.at(i)*25. < 150. ) {
 				
-			gg->Fill(GEn, GCor_GEn.at(i), weight);
+			gg->Fill( GEn, GCor_GEn.at(i) );
 				
 		}
 
