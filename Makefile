@@ -1,9 +1,13 @@
-SUBDIRS := common, mbevts, MedToRoot, TreeBuilder, TreeAna, rootgui
+SUBDIRS = common \
+		  MedToRoot \
+		  TreeBuilder \
+		  TreeAna \
+		  rootgui
 
 all: $(SUBDIRS)
 
 $(SUBDIRS):
-       $(MAKE) -C $@
+	$(MAKE) -C $@
 
 .PHONY: all $(SUBDIRS)
 
