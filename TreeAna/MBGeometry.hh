@@ -5,8 +5,10 @@
 #include <TVector3.h>
 #include <TCanvas.h>
 #include <TText.h>
+#include <TMath.h>
 #include <cstdio>
 #include <iostream>
+
 
 using namespace std;
 
@@ -45,6 +47,43 @@ class MBGeometry {
 		double GetSegTheta( int core, int seg );
 		double GetSegPhi( int core, int seg );
 
+		// Get theta of a vector in Miniball system (return deg)
+		inline double MBTheta(TVector3 &v) {
+			double mytheta = v.Phi() * TMath::RadToDeg();
+			double myphi = v.Theta() * TMath::RadToDeg();
+			if( mytheta < 0 ) {
+		 		myphi = 360 - myphi;
+				mytheta = - mytheta;
+			}
+			return mytheta;
+	   	};
+
+		// Get phi of a vector in Miniball system (return deg)
+		inline double MBPhi(TVector3 &v) {
+			double mytheta = v.Phi() * TMath::RadToDeg();
+			double myphi = v.Theta() * TMath::RadToDeg();
+			if( mytheta < 0 ) {
+				myphi = 360 - myphi;
+				mytheta = -mytheta;
+			}
+			return myphi;
+		};
+
+		// Get true theta of a vector (return deg)
+		inline double TrueTheta(TVector3 &v) {
+			return std::acos(v.x() / v.Mag()) * TMath::RadToDeg();
+		};
+
+		// Get the true phi of a vector (return deg)
+		inline double TruePhi(TVector3 &v) {
+			TVector3 v2(-v.y(), v.z(), v.x());
+ 			double phi = v2.Phi() * TMath::RadToDeg();
+			if( phi < 0 ) phi += 360;
+			phi -= 90;
+			if( phi < 0 ) phi += 360;
+			return phi;
+		};
+   
 	private:
 	
 		// Current values of theta, phi, alpha and r
@@ -53,6 +92,9 @@ class MBGeometry {
 		double alpha;	// deg
 		double r; 		// mm
 		
+		// Cluster offset vectors
+		TVector3 clu_offset;
+
 		// Segment offset vectors
 		TVector3 seg_offset[18];
 
