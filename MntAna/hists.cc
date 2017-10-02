@@ -211,7 +211,7 @@ void hists::Initialise() {
 
 }
 
-void hists::Set_ppwin(double user_ppwin) {
+void hists::Set_ppwin(float user_ppwin) {
 	ppwin = user_ppwin;
 }
 
@@ -223,9 +223,9 @@ void hists::Set_minrecoil(int user_minrecoil) {
 	minrecoil = user_minrecoil;
 }
 
-void hists::Fill1h( double GEn, double GTh, double GPh, vector <double> GCor_GEn, vector <double> GCor_GTh,
-					vector <double> GCor_GPh, vector <int> GCor_CluID, vector <double> GCor_Gtd, bool electron,
-					double PEn, Int_t Pann, Int_t Psec, Int_t Pquad, double weight ) {
+void hists::Fill1h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, vector <float> GCor_GTh,
+					vector <float> GCor_GPh, vector <int> GCor_CluID, vector <float> GCor_Gtd, bool electron,
+					float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, float weight ) {
 
 	if( !electron ) {
 	
@@ -262,13 +262,13 @@ void hists::Fill1h( double GEn, double GTh, double GPh, vector <double> GCor_GEn
 
 }
 
-void hists::Fill2h( double GEn, double GTh, double GPh, vector <double> GCor_GEn, vector <double> GCor_GTh,
-					vector <double> GCor_GPh, vector <int> GCor_CluID, vector <double> GCor_Gtd, bool electron,
-					vector<double> PEn, vector<int> Pann, vector<int> Psec, vector<int> Pquad, vector<int> Pptr, vector<double> td, double weight ) {
+void hists::Fill2h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, vector <float> GCor_GTh,
+					vector <float> GCor_GPh, vector <int> GCor_CluID, vector <float> GCor_Gtd, bool electron,
+					vector<float> PEn, vector<int> Pann, vector<int> Psec, vector<int> Pquad, vector<int> Pptr, vector<float> td, float weight ) {
 
-	double Bptr, Tptr;
+	float Bptr, Tptr;
 
-	double time_diff = TMath::Abs(td[Pptr[0]]-td[Pptr[1]]);
+	float time_diff = TMath::Abs(td[Pptr[0]]-td[Pptr[1]]);
 	int quad_diff = TMath::Abs(Pquad[Pptr[0]]-Pquad[Pptr[1]]);
 	int cut2 = doppler::Cut_2p(PEn[Pptr[0]],Pann[Pptr[0]],Pquad[Pptr[0]],PEn[Pptr[1]],Pann[Pptr[1]],Pquad[Pptr[1]]);
 	bool cutg_0 = doppler::CutG_en2hit(PEn[Pptr[1]]/1000.,PEn[Pptr[0]]/1000.);
@@ -312,9 +312,9 @@ void hists::Fill2h( double GEn, double GTh, double GPh, vector <double> GCor_GEn
 
 }
 
-void hists::FillDelayed( double GEn, double GTh, double GPh, vector <double> GCor_GEn, vector <double> GCor_GTh,
-					vector <double> GCor_GPh, vector <int> GCor_CluID, vector <double> GCor_Gtd, bool electron,
-					double PEn, Int_t Pann, Int_t Psec, Int_t Pquad, double weight ) {
+void hists::FillDelayed( float GEn, float GTh, float GPh, vector <float> GCor_GEn, vector <float> GCor_GTh,
+					vector <float> GCor_GPh, vector <int> GCor_CluID, vector <float> GCor_Gtd, bool electron,
+					float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, float weight ) {
 
 	if( weight > 0 ) d->Fill( GEn );
 
@@ -340,11 +340,11 @@ void hists::FillDelayed( double GEn, double GTh, double GPh, vector <double> GCo
 
 }
 
-void hists::FillGam1h( double GEn, double GTh, double GPh, double PEn, Int_t Pann,
-						Int_t Psec, Int_t Pquad, Int_t cut, double weight ) {
+void hists::FillGam1h( float GEn, float GTh, float GPh, float PEn, Int_t Pann,
+						Int_t Psec, Int_t Pquad, Int_t cut, float weight ) {
 
 
-	double BEn, TEn, BTh, TTh, BPh, TPh;
+	float BEn, TEn, BTh, TTh, BPh, TPh;
 
 	// Target
 	if( cut == 0 ) {
@@ -400,22 +400,22 @@ void hists::FillGam1h( double GEn, double GTh, double GPh, double PEn, Int_t Pan
 
 }
 
-void hists::FillGam2h( double GEn, double GTh, double GPh, vector<double> PEn, vector<int> Pann,
-						vector<int> Psec, vector<int> Pquad, Int_t Bptr, Int_t Tptr, double weight ) {
+void hists::FillGam2h( float GEn, float GTh, float GPh, vector<float> PEn, vector<int> Pann,
+						vector<int> Psec, vector<int> Pquad, Int_t Bptr, Int_t Tptr, float weight ) {
 
 	if( weight > 0 ) p_2h->Fill(GEn);
 	else r_2h->Fill(GEn);
 	
 	int Bann = Pann[Bptr];
 	int Tann = Pann[Tptr];
-	double BEn = PEn[Bptr];
+	float BEn = PEn[Bptr];
 	BEn += doppler::GetELoss(BEn,DEADLAYER,1,"TS");
-	double TEn = PEn[Tptr];
+	float TEn = PEn[Tptr];
 	TEn += doppler::GetELoss(TEn,DEADLAYER,1,"TS");
-	double BTh = doppler::GetPTh(Bann);
-	double TTh = doppler::GetPTh(Tann);
-	double BPh = doppler::GetPPhi(Pquad[Bptr],Psec[Bptr]);
-	double TPh = doppler::GetPPhi(Pquad[Tptr],Psec[Tptr]);
+	float BTh = doppler::GetPTh(Bann);
+	float TTh = doppler::GetPTh(Tann);
+	float BPh = doppler::GetPPhi(Pquad[Bptr],Psec[Bptr]);
+	float TPh = doppler::GetPPhi(Pquad[Tptr],Psec[Tptr]);
 
 	T_dcB_x[Tann]->Fill(GEn*doppler::DC(BEn, BTh, BPh, GTh, GPh, AP), weight);	
 	T_dcT_x[Tann]->Fill(GEn*doppler::DC(TEn, TTh, TPh, GTh, GPh, AT), weight);
@@ -434,8 +434,8 @@ void hists::FillGam2h( double GEn, double GTh, double GPh, vector<double> PEn, v
 
 }
 
-void hists::FillGamGam0h( double GEn, double GTh, double GPh, vector <double> GCor_GEn, vector <double> GCor_GTh,
-						 vector <double> GCor_GPh, vector <int> GCor_CluID, vector <double> GCor_Gtd ) {
+void hists::FillGamGam0h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, vector <float> GCor_GTh,
+						 vector <float> GCor_GPh, vector <int> GCor_CluID, vector <float> GCor_Gtd ) {
 	
 	for( unsigned int i = 0; i < GCor_GEn.size(); i++ ) {
 		
@@ -451,11 +451,11 @@ void hists::FillGamGam0h( double GEn, double GTh, double GPh, vector <double> GC
 	
 }
 
-void hists::FillGamGam1h( double GEn, double GTh, double GPh, vector <double> GCor_GEn, vector <double> GCor_GTh,
-						 vector <double> GCor_GPh, vector <int> GCor_CluID, vector <double> GCor_Gtd,
-						 double PEn, Int_t Pann, Int_t Psec, Int_t Pquad, int cut, double weight ) {
+void hists::FillGamGam1h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, vector <float> GCor_GTh,
+						 vector <float> GCor_GPh, vector <int> GCor_CluID, vector <float> GCor_Gtd,
+						 float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, int cut, float weight ) {
 	
-	double BEn = 0, TEn = 0, BTh = 0, TTh = 0, BPh = 0, TPh = 0;
+	float BEn = 0, TEn = 0, BTh = 0, TTh = 0, BPh = 0, TPh = 0;
 	
 	// Target
 	if( cut == 0 ) {
@@ -509,20 +509,20 @@ void hists::FillGamGam1h( double GEn, double GTh, double GPh, vector <double> GC
 	
 }
 
-void hists::FillGamGam2h( double GEn, double GTh, double GPh, vector <double> GCor_GEn, vector <double> GCor_GTh,
-						 vector <double> GCor_GPh, vector <int> GCor_CluID, vector <double> GCor_Gtd, vector<double> PEn,
-						 vector<int> Pann, vector<int> Psec, vector<int> Pquad, Int_t Bptr, Int_t Tptr, double weight ) {
+void hists::FillGamGam2h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, vector <float> GCor_GTh,
+						 vector <float> GCor_GPh, vector <int> GCor_CluID, vector <float> GCor_Gtd, vector<float> PEn,
+						 vector<int> Pann, vector<int> Psec, vector<int> Pquad, Int_t Bptr, Int_t Tptr, float weight ) {
 	
 	int Bann = Pann[Bptr];
 	int Tann = Pann[Tptr];
-	double BEn = PEn[Bptr];
+	float BEn = PEn[Bptr];
 	BEn += doppler::GetELoss(BEn,DEADLAYER,1,"TS");
-	double TEn = PEn[Tptr];
+	float TEn = PEn[Tptr];
 	TEn += doppler::GetELoss(TEn,DEADLAYER,1,"TS");
-	double BTh = doppler::GetPTh(Bann);
-	double TTh = doppler::GetPTh(Tann);
-	double BPh = doppler::GetPPhi(Pquad[Bptr],Psec[Bptr]);
-	double TPh = doppler::GetPPhi(Pquad[Tptr],Psec[Tptr]);
+	float BTh = doppler::GetPTh(Bann);
+	float TTh = doppler::GetPTh(Tann);
+	float BPh = doppler::GetPPhi(Pquad[Bptr],Psec[Bptr]);
+	float TPh = doppler::GetPPhi(Pquad[Tptr],Psec[Tptr]);
 	
 	if( Tann >= minrecoil && Tann <= maxrecoil ) {
 		
@@ -550,13 +550,13 @@ void hists::FillGamGam2h( double GEn, double GTh, double GPh, vector <double> GC
 	
 }
 
-void hists::PhiCalHists( double GEn, double GTh, double GPh, double PEn, Int_t Pann,
-						Int_t Psec, Int_t Pquad, Int_t cut, double weight ) {
+void hists::PhiCalHists( float GEn, float GTh, float GPh, float PEn, Int_t Pann,
+						Int_t Psec, Int_t Pquad, Int_t cut, float weight ) {
 
 	// Calibration of the phi offset of the CD detector
 #ifdef PHICAL
 
-	double BEn = 0, TEn = 0, BTh = 0, TTh = 0, BPh = 0, TPh = 0;
+	float BEn = 0, TEn = 0, BTh = 0, TTh = 0, BPh = 0, TPh = 0;
 
 	// Target
 	if( cut == 0 ) {
@@ -589,14 +589,14 @@ void hists::PhiCalHists( double GEn, double GTh, double GPh, double PEn, Int_t P
 	else return;
 	
 	// Move BPh and TPh
-	BPh -= (double)(int)((PHI_NSTEPS-1)/2) * PHI_STEP_WIDTH * TMath::DegToRad();
-	TPh -= (double)(int)((PHI_NSTEPS-1)/2) * PHI_STEP_WIDTH * TMath::DegToRad();
+	BPh -= (float)(int)((PHI_NSTEPS-1)/2) * PHI_STEP_WIDTH * TMath::DegToRad();
+	TPh -= (float)(int)((PHI_NSTEPS-1)/2) * PHI_STEP_WIDTH * TMath::DegToRad();
 
 	// Make steps either side of the offset
 	for( int j = 0; j < PHI_NSTEPS; j++ ) {
 
-		BPh += (double)j * PHI_STEP_WIDTH * TMath::DegToRad();
-		TPh += (double)j * PHI_STEP_WIDTH * TMath::DegToRad();
+		BPh += (float)j * PHI_STEP_WIDTH * TMath::DegToRad();
+		TPh += (float)j * PHI_STEP_WIDTH * TMath::DegToRad();
 		phical_dcT[j]->Fill( GEn*doppler::DC(TEn,TTh,TPh,GTh,GPh,AT), weight );
 		phical_dcB[j]->Fill( GEn*doppler::DC(BEn,BTh,BPh,GTh,GPh,AP), weight );
 
@@ -608,10 +608,10 @@ void hists::PhiCalHists( double GEn, double GTh, double GPh, double PEn, Int_t P
 	
 }
 
-void hists::FillPar1h( double PEn, Int_t Pann, Int_t Psec, Int_t Pquad, Int_t cut, double weight ) {
+void hists::FillPar1h( float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, Int_t cut, float weight ) {
 	
-	double PTh = doppler::GetPTh(Pann)*TMath::RadToDeg();	
-	double BTh, TTh, BEn, TEn;
+	float PTh = doppler::GetPTh(Pann)*TMath::RadToDeg();	
+	float BTh, TTh, BEn, TEn;
 
 	part1h->Fill(PTh, PEn/1000.);
 	partQ[Pquad]->Fill(PTh, PEn/1000.);
@@ -645,7 +645,7 @@ void hists::FillPar1h( double PEn, Int_t Pann, Int_t Psec, Int_t Pquad, Int_t cu
 
 }
 
-void hists::FillPar2h( vector<double> PEn, vector<int> Pann, vector<int> Psec, vector<int> Pquad, Int_t Bptr, Int_t Tptr, double weight ) {
+void hists::FillPar2h( vector<float> PEn, vector<int> Pann, vector<int> Psec, vector<int> Pquad, Int_t Bptr, Int_t Tptr, float weight ) {
 
 	int Bann = Pann[Bptr];
 	int Tann = Pann[Tptr];
@@ -653,12 +653,12 @@ void hists::FillPar2h( vector<double> PEn, vector<int> Pann, vector<int> Psec, v
 	int Tsec = Psec[Tptr];
 	int Bquad = Pquad[Bptr];
 	int Tquad = Pquad[Tptr];
-	double BEn = PEn[Bptr];
-	double TEn = PEn[Tptr];
-	double BTh = doppler::GetPTh(Bann)*TMath::RadToDeg();
-	double TTh = doppler::GetPTh(Tann)*TMath::RadToDeg();
-	double BPh = doppler::GetPPhi(Bquad,Bsec)*TMath::RadToDeg();
-	double TPh = doppler::GetPPhi(Tquad,Tsec)*TMath::RadToDeg();
+	float BEn = PEn[Bptr];
+	float TEn = PEn[Tptr];
+	float BTh = doppler::GetPTh(Bann)*TMath::RadToDeg();
+	float TTh = doppler::GetPTh(Tann)*TMath::RadToDeg();
+	float BPh = doppler::GetPPhi(Bquad,Bsec)*TMath::RadToDeg();
+	float TPh = doppler::GetPPhi(Tquad,Tsec)*TMath::RadToDeg();
 
 	Bh->Fill(BTh, BEn/1000.);
 	Th->Fill(TTh, TEn/1000.);
@@ -679,7 +679,7 @@ void hists::FillPar2h( vector<double> PEn, vector<int> Pann, vector<int> Psec, v
 
 }
 
-void hists::AddSpectra( double bg_frac, double del_frac ) {
+void hists::AddSpectra( float bg_frac, float del_frac ) {
 
 	pmr->Add(p,r,1.0,bg_frac);
 	dmr->Add(d,r,1.0,del_frac);

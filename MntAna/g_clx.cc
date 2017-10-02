@@ -46,8 +46,8 @@ void g_clx::Loop( string outputfilename ) {
 
 	// Ratio of prompt and random time windows
 	// Alternatively, normalisation of beta-decay lines
-	double bg_frac = -1.0;
-	double del_frac = -0.85;
+	float bg_frac = -1.0;
+	float del_frac = -0.85;
 
 	// Test if it's an electron or gamma
 	bool electron;
