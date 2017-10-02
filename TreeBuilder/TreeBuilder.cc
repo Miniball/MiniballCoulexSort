@@ -195,10 +195,8 @@ int main(int argc, char* argv[]) {
 	int adc_en2 = 0;
 	long long adc_t =0;
 
-	vector<unsigned short> cd_ringenergy[4];
-	vector<unsigned short> cd_stripenergy[4];
-	vector<unsigned short> cd_ringadcen[4];
-	vector<unsigned short> cd_stripadcen[4];
+	vector<float> cd_ringenergy[4];
+	vector<float> cd_stripenergy[4];
 	vector<unsigned short> cd_ringid[4];
 	vector<unsigned short> cd_stripid[4];
 
@@ -301,7 +299,7 @@ int main(int argc, char* argv[]) {
 			E_part_ann[i][j] = new TH1F(Form("E_part_ann_%d_%d",i,j),Form("E_part_ann_%d_%d",i,j),4096,-0.5,4095.5);
 			E_part_ann[i][j]->GetXaxis()->SetTitle("Energy Particles [Channels]");
 			E_part_ann_cal[i][j] = new TH1F(Form("E_part_ann_%d_%d_cal",i,j),Form("E_part_ann_%d_%d_cal",i,j),PBINS,PMIN,PMAX);
-			E_part_ann_cal[i][j]->GetXaxis()->SetTitle("Energy Particles [keV]");
+			E_part_ann_cal[i][j]->GetXaxis()->SetTitle("Energy Particles [MeV]");
 
 		}
 
@@ -310,7 +308,7 @@ int main(int argc, char* argv[]) {
 			E_part_sec[i][j] = new TH1F(Form("E_part_sec_%d_%d",i,j),Form("E_part_sec_%d_%d",i,j),4096,-0.5,4095.);
 			E_part_sec[i][j]->GetXaxis()->SetTitle("Energy Particles [Channels]");
 			E_part_sec_cal[i][j] = new TH1F(Form("E_part_sec_%d_%d_cal",i,j),Form("E_part_sec_%d_%d_cal",i,j),PBINS,PMIN,PMAX);
-			E_part_sec_cal[i][j]->GetXaxis()->SetTitle("Energy Particles [keV]");
+			E_part_sec_cal[i][j]->GetXaxis()->SetTitle("Energy Particles [MeV]");
 
 		}
 
@@ -481,8 +479,6 @@ int main(int argc, char* argv[]) {
 
 			cd_ringenergy[j].clear();
 			cd_stripenergy[j].clear();
-			cd_ringadcen[j].clear();
-			cd_stripadcen[j].clear();
 			cd_ringid[j].clear();
 			cd_stripid[j].clear();
 
@@ -659,45 +655,43 @@ int main(int argc, char* argv[]) {
 
 				if( adc_num >= 0 && adc_num < 4 ) { // CD
 
-					if( adc_ch < 16 ) {
+					if( adc_ch < 16 ) { // front rings
 						
 						PartEnergy = Cal->AdcEnergy( adc_num, adc_ch, adc_en );
 
 						E_part_ann[adc_num][adc_ch]->Fill( adc_en );
-						E_part_ann_cal[adc_num][adc_ch]->Fill( PartEnergy );						
+						E_part_ann_cal[adc_num][adc_ch]->Fill( PartEnergy/1000. );						
 
 						CD_front_energy[adc_num]->Fill( adc_ch, adc_en );
 						CD_front_energy_cal[adc_num]->Fill( adc_ch, PartEnergy/1000. );
 
-						if( adc_en > Threshold_CDRing_E[adc_num] ) {
+						if( adc_en > Threshold_CDRing_E[adc_num] ) { // threshold
 
 							cd_ringenergy[adc_num].push_back( PartEnergy );
-							cd_ringadcen[adc_num].push_back( adc_en );
 							cd_ringid[adc_num].push_back( adc_ch );
 
-						}
+						} // threshold
 
-					}
+					} // front rings
 					
-					else if( adc_ch < 28 ) {
+					else if( adc_ch < 28 ) { // back strips
 
 						PartEnergy = Cal->AdcEnergy( adc_num, adc_ch, adc_en );
 
 						E_part_sec[adc_num][adc_ch-16]->Fill( adc_en );
-						E_part_sec_cal[adc_num][adc_ch-16]->Fill( PartEnergy );
+						E_part_sec_cal[adc_num][adc_ch-16]->Fill( PartEnergy/1000. );
 						
 						CD_back_energy[adc_num]->Fill( adc_ch-16, adc_en );
 						CD_back_energy_cal[adc_num]->Fill( adc_ch-16, PartEnergy/1000. );
 
-						if( adc_en > Threshold_CDStrip_E[adc_num] ) {
+						if( adc_en > Threshold_CDStrip_E[adc_num] ) { // threshold
 
 							cd_stripenergy[adc_num].push_back( PartEnergy );
-							cd_stripadcen[adc_num].push_back( adc_en );
 							cd_stripid[adc_num].push_back( adc_ch );
 
-						}
+						} // threshold
 
-					}
+					} // back strips
 
 					else if( adc_ch == 31 && cdpad ) { // something in the pad!
 
@@ -714,7 +708,7 @@ int main(int argc, char* argv[]) {
 						sid_array.push_back( 0 );
 						sen_array.push_back( 0 );
 
-					}
+					} // pad
 					
 				} // particle in CD
 			
@@ -780,9 +774,9 @@ int main(int argc, char* argv[]) {
 			// if we did have SPEDE (or ion. chamber), don't carry on with particle stuff
 			if( adc_num == 4 ) continue;
 
-			// --------------------------- //
-			// Particle reconstruction     //
-			// --------------------------- //
+			// ------------------------------------------- //
+			// Particle reconstruction                     //
+			// ------------------------------------------- //
 
 			// Easy case, 1 front and 1 back!
 			if( cd_ringenergy[adc_num].size() == 1 && cd_stripenergy[adc_num].size() == 1 ) {
@@ -823,7 +817,7 @@ int main(int argc, char* argv[]) {
 
 				for( k = 0; k < cd_stripenergy[adc_num].size(); k++ ) {
 
-					tempDiff = cd_stripenergy[adc_num][0] - cd_ringenergy[adc_num][0];
+					tempDiff = cd_stripenergy[adc_num][k] - cd_ringenergy[adc_num][0];
 					tempDiff = TMath::Abs( tempDiff );
 
 					if( tempDiff < StripEnergyDiff ) {
@@ -863,7 +857,7 @@ int main(int argc, char* argv[]) {
 
 				for( k = 0; k < cd_ringenergy[adc_num].size(); k++ ) {
 
-					tempDiff = cd_ringenergy[adc_num][0] - cd_stripenergy[adc_num][0];
+					tempDiff = cd_ringenergy[adc_num][k] - cd_stripenergy[adc_num][0];
 					tempDiff = TMath::Abs( tempDiff );
 
 					if( tempDiff < RingEnergyDiff ) {
@@ -884,6 +878,7 @@ int main(int argc, char* argv[]) {
 				CounterAdcCDFired[adc_num]++;
 
 			} // N vs. 1
+			// --------------------------------------- //
 
 			// Make real particle event (no reconstruction yet)
 			// Use only the highest energy hit - no reconstruction
