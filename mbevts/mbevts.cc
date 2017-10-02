@@ -214,7 +214,7 @@ int mbevts::GetSec(int nr) {
 
 }
 
-void mbevts::SetPart(float en, int a, int s, float t, double ss, float ctd, int co, int quad, int laserflag) { 
+void mbevts::SetPart(float en, int a, int s, double t, double ss, float ctd, int co, int quad, int laserflag) { 
 
 	laser=laserflag;
 	

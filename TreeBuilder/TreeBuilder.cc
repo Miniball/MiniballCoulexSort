@@ -956,7 +956,7 @@ int main(int argc, char* argv[]) {
 
 				// Add particle
 				mb_evts[GammaCtr]->SetPart( Ener_front[k], (int)Chan_front[k], (int)Chan_back[k],
-					(double)time[k], (double)event->SuperCycleTime()/1000000, (double)tdiffPG,
+					(double)time[k], (double)event->SuperCycleTime()/1000000, (float)tdiffPG,
 					(int)coinc_flag, Quad[k], (int)laser[k] );
 					
 				PartCtr++;

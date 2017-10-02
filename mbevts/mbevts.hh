@@ -30,7 +30,7 @@ class mbevts : public TObject {
 	
 	// particles
 	vector <float> pen;
-	vector <float> time;
+	vector <double> time;
 	vector <double> sst;
 	vector <float> td;
 	vector <int> ann;
@@ -50,9 +50,9 @@ class mbevts : public TObject {
 
 	// setup functions
 	void Initialize();
-	void SetGen(double en);
-	void SetTheta(double theta);
-	void SetPhi(double phi);
+	void SetGen(float en);
+	void SetTheta(float theta);
+	void SetPhi(float phi);
 	void SetCluid(int id);
 	void SetCid(int id);
 	void SetSid(int id);
@@ -63,7 +63,7 @@ class mbevts : public TObject {
 	void SetCorGamCid(int id);
 	void SetCorGamSid(int id);
 	void SetCorGamGtd(float td);
-	void SetPart(float en, int a, int s, float t, double ss, float ctd, int co, int quad, int laserflag);
+	void SetPart(float en, int a, int s, double t, double ss, float ctd, int co, int quad, int laserflag);
 	void SearchCoin();
 	void CopyData(mbevts* src);
 
