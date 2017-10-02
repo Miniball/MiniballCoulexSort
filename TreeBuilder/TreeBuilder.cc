@@ -211,9 +211,6 @@ int main(int argc, char* argv[]) {
 	bool ab_evt = false;
 	unsigned short ab_mul = 0;
 
-	long long cd_t[4];
-	unsigned short cd_laser[4];
-  
 	vector<unsigned int> Quad; // 0: Top, 1: Bottom, 2: Left and 3; Right
 	vector<unsigned int> Elem_fired; // 0: FCD, 1: Barrel, 2: BCD and 3: Pad
 	vector<unsigned int> Chan_front; // Rings for CDs, Total Energy for Pad or Strips for Barrel
@@ -655,9 +652,6 @@ int main(int argc, char* argv[]) {
 			adc_num = event->Adc(j)->ModuleNumber();
 			adc_t = event->Adc(j)->Time();
 
-			cd_t[adc_num] = adc_t ;
-			cd_laser[adc_num] = event->Adc(j)->LaserOn();
-
 			for( k = 0; k < event->Adc(j)->SubEvent()->Size(); k++ ) {
 
 				adc_ch = event->Adc(j)->SubEvent()->AdcChannel(k);
@@ -804,7 +798,8 @@ int main(int argc, char* argv[]) {
 				Chan_back.push_back( cd_stripid[adc_num][0]-16 );
 				Ener_back.push_back( cd_stripenergy[adc_num][0] );
 
-				CD_front_back[adc_num]->Fill( cd_ringenergy[adc_num][0], cd_stripenergy[adc_num][0] );
+				CD_front_back[adc_num]->Fill(
+					cd_ringenergy[adc_num][0]/1000., cd_stripenergy[adc_num][0]/1000. );
 
 				CounterAdcCDFired[adc_num]++;
 
@@ -823,10 +818,10 @@ int main(int argc, char* argv[]) {
 
 				StripNum = cd_stripid[adc_num][0]-16;
 				StripEnergy = cd_stripenergy[adc_num][0];
-				StripEnergyDiff = cd_stripenergy[adc_num][0] - cd_ringenergy[adc_num][0];
+				StripEnergyDiff = StripEnergy - cd_ringenergy[adc_num][0];
 				StripEnergyDiff = TMath::Abs( StripEnergyDiff );
 
-				for( k = 1; k < cd_stripenergy[adc_num].size(); k++ ) {
+				for( k = 0; k < cd_stripenergy[adc_num].size(); k++ ) {
 
 					tempDiff = cd_stripenergy[adc_num][0] - cd_ringenergy[adc_num][0];
 					tempDiff = TMath::Abs( tempDiff );
@@ -838,10 +833,15 @@ int main(int argc, char* argv[]) {
 
 					}
 
+					CD_front_back[adc_num]->Fill(
+						cd_ringenergy[adc_num][0]/1000., cd_stripenergy[adc_num][k]/1000. );
+
 				} // k
 
 				Chan_back.push_back( StripNum );
 				Ener_back.push_back( StripEnergy );
+
+				CounterAdcCDFired[adc_num]++;
 
 			} // 1 vs. N
 
@@ -856,12 +856,12 @@ int main(int argc, char* argv[]) {
 				Chan_back.push_back( cd_stripid[adc_num][0]-16 );
 				Ener_back.push_back( cd_stripenergy[adc_num][0] );
 
-				RingNum = cd_ringid[adc_num][0]-16;
+				RingNum = cd_ringid[adc_num][0];
 				RingEnergy = cd_ringenergy[adc_num][0];
-				RingEnergyDiff = cd_ringenergy[adc_num][0] - cd_stripenergy[adc_num][0];
+				RingEnergyDiff = RingEnergy - cd_stripenergy[adc_num][0];
 				RingEnergyDiff = TMath::Abs( RingEnergyDiff );
 
-				for( k = 1; k < cd_ringenergy[adc_num].size(); k++ ) {
+				for( k = 0; k < cd_ringenergy[adc_num].size(); k++ ) {
 
 					tempDiff = cd_ringenergy[adc_num][0] - cd_stripenergy[adc_num][0];
 					tempDiff = TMath::Abs( tempDiff );
@@ -873,10 +873,15 @@ int main(int argc, char* argv[]) {
 
 					}
 
+					CD_front_back[adc_num]->Fill(
+						cd_ringenergy[adc_num][k]/1000., cd_stripenergy[adc_num][0]/1000. );
+
 				} // k
 
 				Chan_front.push_back( RingNum );
 				Ener_front.push_back( RingEnergy );
+
+				CounterAdcCDFired[adc_num]++;
 
 			} // N vs. 1
 
