@@ -155,8 +155,8 @@ int main(int argc, char* argv[]) {
 	
 	if( verbose ) cout << "WeightPR: " << WeightPR << endl;
 
-	Double_t Threshold_CDRing_E[4] = {50.,50.,50.,50.};
-	Double_t Threshold_CDStrip_E[4] = {45.,45.,45.,45.};
+	Double_t Threshold_CDRing_E[4] = {120.,120.,120.,120.};
+	Double_t Threshold_CDStrip_E[4] = {120.,120.,160.,130.};
 	// ------------------------------------------------------------------------ //
  
 
@@ -197,10 +197,10 @@ int main(int argc, char* argv[]) {
 
 	vector<unsigned short> cd_ringenergy[4];
 	vector<unsigned short> cd_stripenergy[4];
+	vector<unsigned short> cd_ringadcen[4];
+	vector<unsigned short> cd_stripadcen[4];
 	vector<unsigned short> cd_ringid[4];
 	vector<unsigned short> cd_stripid[4];
-	vector<long long> cd_ringt[4];
-	vector<unsigned short> cd_ringlaser[4];
 
 	vector<double> gen_array;
 	vector<long long> gtd_array;
@@ -211,8 +211,8 @@ int main(int argc, char* argv[]) {
 	bool ab_evt = false;
 	unsigned short ab_mul = 0;
 
-	unsigned int cd_ringindex[4];
-	unsigned int cd_stripindex[4];
+	long long cd_t[4];
+	unsigned short cd_laser[4];
   
 	vector<unsigned int> Quad; // 0: Top, 1: Bottom, 2: Left and 3; Right
 	vector<unsigned int> Elem_fired; // 0: FCD, 1: Barrel, 2: BCD and 3: Pad
@@ -223,10 +223,13 @@ int main(int argc, char* argv[]) {
 	vector<long long> time;
 	vector<bool> laser;
   
-	int tempStripNum = 0;
-	int tempRingNum = 0;
-	int tempStripEnergy = 0;
-	int tempRingEnergy = 0;
+	int StripNum = 0;
+	int RingNum = 0;
+	int StripEnergy = 0;
+	int RingEnergy = 0;
+	int StripEnergyDiff = 0;
+	int RingEnergyDiff = 0;
+	int tempDiff = 0;
 	
 	// Check Code
 	int CounterAdcCDFired[5] = {0,0,0,0,0};
@@ -481,10 +484,10 @@ int main(int argc, char* argv[]) {
 
 			cd_ringenergy[j].clear();
 			cd_stripenergy[j].clear();
+			cd_ringadcen[j].clear();
+			cd_stripadcen[j].clear();
 			cd_ringid[j].clear();
 			cd_stripid[j].clear();
-			cd_ringt[j].clear();
-			cd_ringlaser[j].clear();
 
 		}
 	
@@ -652,6 +655,9 @@ int main(int argc, char* argv[]) {
 			adc_num = event->Adc(j)->ModuleNumber();
 			adc_t = event->Adc(j)->Time();
 
+			cd_t[adc_num] = adc_t ;
+			cd_laser[adc_num] = event->Adc(j)->LaserOn();
+
 			for( k = 0; k < event->Adc(j)->SubEvent()->Size(); k++ ) {
 
 				adc_ch = event->Adc(j)->SubEvent()->AdcChannel(k);
@@ -661,44 +667,40 @@ int main(int argc, char* argv[]) {
 
 					if( adc_ch < 16 ) {
 						
-						cd_ringenergy[adc_num].push_back( adc_en );
-						cd_ringid[adc_num].push_back( adc_ch );
-						cd_ringt[adc_num].push_back( adc_t );
-						cd_ringlaser[adc_num].push_back( event->Adc(j)->LaserOn() );
 						PartEnergy = Cal->AdcEnergy( adc_num, adc_ch, adc_en );
+
 						E_part_ann[adc_num][adc_ch]->Fill( adc_en );
-						E_part_ann_cal[adc_num][adc_ch]->Fill( PartEnergy );
-						
+						E_part_ann_cal[adc_num][adc_ch]->Fill( PartEnergy );						
+
 						CD_front_energy[adc_num]->Fill( adc_ch, adc_en );
 						CD_front_energy_cal[adc_num]->Fill( adc_ch, PartEnergy/1000. );
 
-						if( tempRingEnergy < adc_en ) {
-							
-							tempRingEnergy = adc_en;
-							tempRingNum = adc_ch;
-							cd_ringindex[adc_num] = cd_ringenergy[adc_num].size()-1;
-							
+						if( adc_en > Threshold_CDRing_E[adc_num] ) {
+
+							cd_ringenergy[adc_num].push_back( PartEnergy );
+							cd_ringadcen[adc_num].push_back( adc_en );
+							cd_ringid[adc_num].push_back( adc_ch );
+
 						}
 
 					}
 					
 					else if( adc_ch < 28 ) {
 
-						cd_stripenergy[adc_num].push_back( adc_en );
-						cd_stripid[adc_num].push_back( adc_ch );
 						PartEnergy = Cal->AdcEnergy( adc_num, adc_ch, adc_en );
+
 						E_part_sec[adc_num][adc_ch-16]->Fill( adc_en );
 						E_part_sec_cal[adc_num][adc_ch-16]->Fill( PartEnergy );
 						
 						CD_back_energy[adc_num]->Fill( adc_ch-16, adc_en );
-						CD_back_energy[adc_num]->Fill( adc_ch-16, PartEnergy/1000. );
+						CD_back_energy_cal[adc_num]->Fill( adc_ch-16, PartEnergy/1000. );
 
-						if( tempStripEnergy < adc_en ) { // TODO make this into real energy
-							
-							tempStripEnergy = adc_en;
-							tempStripNum = adc_ch;
-							cd_stripindex[adc_num] = cd_stripenergy[adc_num].size()-1;
-							
+						if( adc_en > Threshold_CDStrip_E[adc_num] ) {
+
+							cd_stripenergy[adc_num].push_back( PartEnergy );
+							cd_stripadcen[adc_num].push_back( adc_en );
+							cd_stripid[adc_num].push_back( adc_ch );
+
 						}
 
 					}
@@ -784,9 +786,103 @@ int main(int argc, char* argv[]) {
 			// if we did have SPEDE (or ion. chamber), don't carry on with particle stuff
 			if( adc_num == 4 ) continue;
 
+			// --------------------------- //
+			// Particle reconstruction     //
+			// --------------------------- //
+
+			// Easy case, 1 front and 1 back!
+			if( cd_ringenergy[adc_num].size() == 1 && cd_stripenergy[adc_num].size() == 1 ) {
+
+				Quad.push_back( adc_num );
+				Elem_fired.push_back( 0 );
+				time.push_back( adc_t + dtAdc[adc_num] );
+				laser.push_back( event->Adc(j)->LaserOn() );
+
+				Chan_front.push_back( cd_ringid[adc_num][0] );
+				Ener_front.push_back( cd_ringenergy[adc_num][0] );
+
+				Chan_back.push_back( cd_stripid[adc_num][0]-16 );
+				Ener_back.push_back( cd_stripenergy[adc_num][0] );
+
+				CD_front_back[adc_num]->Fill( cd_ringenergy[adc_num][0], cd_stripenergy[adc_num][0] );
+
+				CounterAdcCDFired[adc_num]++;
+
+			} // 1 vs. 1
+			
+			// 1 on the front and multiple on the back
+			else if( cd_ringenergy[adc_num].size() == 1 && cd_stripenergy[adc_num].size() > 1 ) {
+
+				Quad.push_back( adc_num );
+				Elem_fired.push_back( 0 );
+				time.push_back( adc_t + dtAdc[adc_num] );
+				laser.push_back( event->Adc(j)->LaserOn() );
+
+				Chan_front.push_back( cd_ringid[adc_num][0] );
+				Ener_front.push_back( cd_ringenergy[adc_num][0] );
+
+				StripNum = cd_stripid[adc_num][0]-16;
+				StripEnergy = cd_stripenergy[adc_num][0];
+				StripEnergyDiff = cd_stripenergy[adc_num][0] - cd_ringenergy[adc_num][0];
+				StripEnergyDiff = TMath::Abs( StripEnergyDiff );
+
+				for( k = 1; k < cd_stripenergy[adc_num].size(); k++ ) {
+
+					tempDiff = cd_stripenergy[adc_num][0] - cd_ringenergy[adc_num][0];
+					tempDiff = TMath::Abs( tempDiff );
+
+					if( tempDiff < StripEnergyDiff ) {
+
+						StripNum = cd_stripid[adc_num][k]-16;
+						StripEnergy = cd_stripenergy[adc_num][k];
+
+					}
+
+				} // k
+
+				Chan_back.push_back( StripNum );
+				Ener_back.push_back( StripEnergy );
+
+			} // 1 vs. N
+
+			// multiple on the front and 1 on the back
+			else if( cd_ringenergy[adc_num].size() > 1 && cd_stripenergy[adc_num].size() == 1 ) {
+
+				Quad.push_back( adc_num );
+				Elem_fired.push_back( 0 );
+				time.push_back( adc_t + dtAdc[adc_num] );
+				laser.push_back( event->Adc(j)->LaserOn() );
+
+				Chan_back.push_back( cd_stripid[adc_num][0]-16 );
+				Ener_back.push_back( cd_stripenergy[adc_num][0] );
+
+				RingNum = cd_ringid[adc_num][0]-16;
+				RingEnergy = cd_ringenergy[adc_num][0];
+				RingEnergyDiff = cd_ringenergy[adc_num][0] - cd_stripenergy[adc_num][0];
+				RingEnergyDiff = TMath::Abs( RingEnergyDiff );
+
+				for( k = 1; k < cd_ringenergy[adc_num].size(); k++ ) {
+
+					tempDiff = cd_ringenergy[adc_num][0] - cd_stripenergy[adc_num][0];
+					tempDiff = TMath::Abs( tempDiff );
+
+					if( tempDiff < RingEnergyDiff ) {
+
+						RingNum = cd_ringid[adc_num][k];
+						RingEnergy = cd_ringenergy[adc_num][k];
+
+					}
+
+				} // k
+
+				Chan_front.push_back( RingNum );
+				Ener_front.push_back( RingEnergy );
+
+			} // N vs. 1
+
 			// Make real particle event (no reconstruction yet)
 			// Use only the highest energy hit - no reconstruction
-			if(	adc_num >= 0 && adc_num < 4 && 
+			/*if(	adc_num >= 0 && adc_num < 4 && 
 				tempRingEnergy > Threshold_CDRing_E[adc_num] &&
 			 	tempStripEnergy > Threshold_CDStrip_E[adc_num] ) {
 
@@ -807,16 +903,9 @@ int main(int argc, char* argv[]) {
 				CD_front_back[adc_num]->Fill( Ener_front.back(), Ener_back.back() );
 
 				CounterAdcCDFired[adc_num]++;
-				cd_ringindex[adc_num] = 0;
-				cd_stripindex[adc_num] = 0;
 					
-			}
+			}*/
 		
-			tempStripNum = 0;
-			tempRingNum = 0;
-			tempStripEnergy = 0;
-			tempRingEnergy = 0;
-
 		} // j - numberofadcs
 		// ------------------------------------------------------------------------ //
 
