@@ -76,79 +76,79 @@ void mbevts::CopyData(mbevts* src) {
 	
 }
 
-void mbevts::SetGen(double en) {
+void mbevts::SetGen( float en ) {
 	
 	gen=en;
 	
 }
 
-void mbevts::SetCluid(int id) {
+void mbevts::SetCluid( int id ) {
 	
 	cluid=id;
 	
 }
 
-void mbevts::SetCid(int id) {
+void mbevts::SetCid( int id ) {
 	
 	cid=id;
 	
 }
 
-void mbevts::SetSid(int id) {
+void mbevts::SetSid( int id ) {
 	
 	sid=id;
 	
 }
 
-void mbevts::SetTheta(double theta) {
+void mbevts::SetTheta( float theta ) {
 	
 	tha=theta;
 	
 }
 
-void mbevts::SetPhi(double phi) {
+void mbevts::SetPhi( float phi ) {
 	
 	pha=phi;
 	
 }
 
-void mbevts::SetCorGamGen(double en) {
+void mbevts::SetCorGamGen( float en ) {
 	
 	gcor_gen.push_back( en );
 	
 }
 
-void mbevts::SetCorGamCluid(int id) {
+void mbevts::SetCorGamCluid( int id ) {
 	
 	gcor_cluid.push_back( id );
 	
 }
 
-void mbevts::SetCorGamCid(int id) {
+void mbevts::SetCorGamCid( int id ) {
 	
 	gcor_cid.push_back( id );
 	
 }
 
-void mbevts::SetCorGamSid(int id) {
+void mbevts::SetCorGamSid( int id ) {
 	
 	gcor_sid.push_back( id );
 	
 }
 
-void mbevts::SetCorGamTheta(double theta) {
+void mbevts::SetCorGamTheta( float theta ) {
 	
 	gcor_tha.push_back( theta );
 	
 }
 
-void mbevts::SetCorGamPhi(double phi) {
+void mbevts::SetCorGamPhi( float phi ) {
 	
 	gcor_pha.push_back( phi );
 	
 }
 
-void mbevts::SetCorGamGtd( double td ) {
+void mbevts::SetCorGamGtd( float td ) {
 	
 	gcor_gtd.push_back( td );
 	
