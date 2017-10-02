@@ -351,6 +351,7 @@ int main(int argc, char* argv[]) {
 	// particle-spectra
 	TH2F *CD_front_energy[4], *CD_front_energy_cal[4];
 	TH2F *CD_back_energy[4], *CD_back_energy_cal[4];
+	TH2F *CD_front_back[4];
 	
 	for( i = 0; i < 4; i++ ) {
 			
@@ -367,6 +368,10 @@ int main(int argc, char* argv[]) {
 		CD_back_energy_cal[i] = new TH2F(Form("CD_back_energy_cal_%d",i),Form("CD_back_energy_cal_%d",i),12,-0.5,11.5,PBINS,PMIN,PMAX);
 		CD_back_energy_cal[i]->GetXaxis()->SetTitle("Strip number");
 		CD_back_energy_cal[i]->GetYaxis()->SetTitle("Energy particle [MeV]");
+		
+		CD_front_back[i] = new TH2F(Form("CD_front_back_%d",i),Form("CD_front_back_%d",i),PBINS,PMIN,PMAX,PBINS,PMIN,PMAX);
+		CD_front_back[i]->GetXaxis()->SetTitle("Front Energy particle [MeV]");
+		CD_front_back[i]->GetYaxis()->SetTitle("Back Energy particle [MeV]");
 		
 	}
 
@@ -798,6 +803,8 @@ int main(int argc, char* argv[]) {
 					
 				time.push_back( adc_t + dtAdc[adc_num] );
 				laser.push_back( event->Adc(j)->LaserOn() );
+
+				CD_front_back[adc_num]->Fill( Ener_front.back(), Ener_back.back() );
 
 				CounterAdcCDFired[adc_num]++;
 				cd_ringindex[adc_num] = 0;
