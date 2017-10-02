@@ -12,27 +12,27 @@ class mbevts : public TObject {
 	public:
 	
 	// original gamma-ray
-	double gen;
+	float gen;
 	int cid;
 	int sid;
 	int cluid;
-	double tha;
-	double pha;
+	float tha;
+	float pha;
 	
 	// list of correlated gammas
-	vector <double> gcor_gen;
+	vector <float> gcor_gen;
 	vector <int> gcor_cid;
 	vector <int> gcor_sid;
 	vector <int> gcor_cluid;
-	vector <double> gcor_tha;
-	vector <double> gcor_pha;
-	vector <double> gcor_gtd;
+	vector <float> gcor_tha;
+	vector <float> gcor_pha;
+	vector <float> gcor_gtd;
 	
 	// particles
-	vector <double> pen;
-	vector <double> time;
+	vector <float> pen;
+	vector <float> time;
 	vector <double> sst;
-	vector <double> td;
+	vector <float> td;
 	vector <int> ann;
 	vector <int> sec;
 	vector <int> det;
@@ -56,14 +56,14 @@ class mbevts : public TObject {
 	void SetCluid(int id);
 	void SetCid(int id);
 	void SetSid(int id);
-	void SetCorGamGen(double en);
-	void SetCorGamTheta(double theta);
-	void SetCorGamPhi(double phi);
+	void SetCorGamGen(float en);
+	void SetCorGamTheta(float theta);
+	void SetCorGamPhi(float phi);
 	void SetCorGamCluid(int id);
 	void SetCorGamCid(int id);
 	void SetCorGamSid(int id);
-	void SetCorGamGtd(double td);
-	void SetPart(double en, int a, int s, double t, double ss, double ctd, int co, int quad, int laserflag);
+	void SetCorGamGtd(float td);
+	void SetPart(float en, int a, int s, float t, double ss, float ctd, int co, int quad, int laserflag);
 	void SearchCoin();
 	void CopyData(mbevts* src);
 
@@ -71,10 +71,10 @@ class mbevts : public TObject {
 	int GetCluid();
 	int GetCid();
 	int GetSid();
-	double GetGen();
-	double GetTheta();
-	double GetPhi();
-	double GetPen(int nr);
+	float GetGen();
+	float GetTheta();
+	float GetPhi();
+	float GetPen(int nr);
 	int GetNrParts();
 	int GetSec(int nr);
 	int GetAnn(int nr);

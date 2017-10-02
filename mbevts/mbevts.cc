@@ -154,7 +154,7 @@ void mbevts::SetCorGamGtd( double td ) {
 	
 }
 
-double mbevts::GetGen() {
+float mbevts::GetGen() {
 	
 	return gen;
 	
@@ -178,13 +178,13 @@ int mbevts::GetSid() {
 
 }
 
-double mbevts::GetTheta() {
+float mbevts::GetTheta() {
 
 	return tha;
 
 }
 
-double mbevts::GetPhi() {
+float mbevts::GetPhi() {
 
 	return pha;
 
@@ -196,7 +196,7 @@ int mbevts::GetNrParts() {
 
 }
 
-double mbevts::GetPen(int nr) {
+float mbevts::GetPen(int nr) {
 
 	return pen[nr];
 
@@ -214,7 +214,7 @@ int mbevts::GetSec(int nr) {
 
 }
 
-void mbevts::SetPart(double en, int a, int s, double t, double ss, double ctd, int co, int quad, int laserflag) { 
+void mbevts::SetPart(float en, int a, int s, float t, double ss, float ctd, int co, int quad, int laserflag) { 
 
 	laser=laserflag;
 	

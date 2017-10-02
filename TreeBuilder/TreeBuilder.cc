@@ -121,7 +121,7 @@ int main(int argc, char* argv[]) {
 	// ------------------------------------------------------------------------ //
  	mbevts* write_mb_evts = new mbevts();
 	mbevts* mb_evts[GAMMA_ARRAY];
-	for( int i = 0; i < GAMMA_ARRAY; i++ ) {
+	for( unsigned int i = 0; i < GAMMA_ARRAY; i++ ) {
 	
 		mb_evts[i] = new mbevts();
 		mb_evts[i]->Initialize();
@@ -174,7 +174,7 @@ int main(int argc, char* argv[]) {
 	float PadEnergy[4] = {0.,0.,0.,0.};
 	unsigned int GammaCtr = 0;
 	unsigned int PartCtr = 0;
-	double tdiffPG = 0.;
+	float tdiffPG = 0.;
 	float MaxSegEnergy = -99.;
 	int MaxSegClu = -1;
 	int MaxSegCore = -1;
@@ -200,21 +200,21 @@ int main(int argc, char* argv[]) {
 	vector<unsigned short> cd_ringid[4];
 	vector<unsigned short> cd_stripid[4];
 
-	vector<double> gen_array;
+	vector<float> gen_array;
 	vector<long long> gtd_array;
 	vector<unsigned short> clu_array;
 	vector<unsigned short> cid_array;
 	vector<unsigned short> sid_array;
-	vector<double> sen_array;
+	vector<float> sen_array;
 	bool ab_evt = false;
 	unsigned short ab_mul = 0;
 
 	vector<unsigned int> Quad; // 0: Top, 1: Bottom, 2: Left and 3; Right
 	vector<unsigned int> Elem_fired; // 0: FCD, 1: Barrel, 2: BCD and 3: Pad
 	vector<unsigned int> Chan_front; // Rings for CDs, Total Energy for Pad or Strips for Barrel
-	vector<double> Ener_front;
+	vector<float> Ener_front;
 	vector<unsigned int> Chan_back; // Strips for CDs and Total Energy for Barrel
-	vector<double> Ener_back;
+	vector<float> Ener_back;
 	vector<long long> time;
 	vector<bool> laser;
   
