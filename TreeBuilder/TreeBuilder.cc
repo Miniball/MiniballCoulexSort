@@ -792,8 +792,7 @@ int main(int argc, char* argv[]) {
 				Chan_back.push_back( cd_stripid[adc_num][0] );
 				Ener_back.push_back( cd_stripenergy[adc_num][0] );
 
-				CD_front_back[adc_num]->Fill(
-					cd_ringenergy[adc_num][0]/1000., cd_stripenergy[adc_num][0]/1000. );
+				CD_front_back[adc_num]->Fill( cd_ringenergy[adc_num][0]/1000., cd_stripenergy[adc_num][0]/1000. );
 
 				CounterAdcCDFired[adc_num]++;
 
@@ -815,6 +814,7 @@ int main(int argc, char* argv[]) {
 				StripEnergyDiff = StripEnergy - cd_ringenergy[adc_num][0];
 				StripEnergyDiff = TMath::Abs( StripEnergyDiff );
 
+				// Get closest match between front and back
 				for( k = 0; k < cd_stripenergy[adc_num].size(); k++ ) {
 
 					tempDiff = cd_stripenergy[adc_num][k] - cd_ringenergy[adc_num][0];
@@ -824,6 +824,7 @@ int main(int argc, char* argv[]) {
 
 						StripNum = cd_stripid[adc_num][k];
 						StripEnergy = cd_stripenergy[adc_num][k];
+						StripEnergyDiff = tempDiff;
 
 					}
 
@@ -855,6 +856,7 @@ int main(int argc, char* argv[]) {
 				RingEnergyDiff = RingEnergy - cd_stripenergy[adc_num][0];
 				RingEnergyDiff = TMath::Abs( RingEnergyDiff );
 
+				// Get closest match between front and back
 				for( k = 0; k < cd_ringenergy[adc_num].size(); k++ ) {
 
 					tempDiff = cd_ringenergy[adc_num][k] - cd_stripenergy[adc_num][0];
@@ -864,6 +866,7 @@ int main(int argc, char* argv[]) {
 
 						RingNum = cd_ringid[adc_num][k];
 						RingEnergy = cd_ringenergy[adc_num][k];
+						RingEnergyDiff = tempDiff;
 
 					}
 
@@ -878,33 +881,15 @@ int main(int argc, char* argv[]) {
 				CounterAdcCDFired[adc_num]++;
 
 			} // N vs. 1
+
+			// multiple on the front and multiple on the back
+			else if( cd_ringenergy[adc_num].size() > 1 && cd_stripenergy[adc_num].size() > 1 ) {
+
+				// Not yet implemented!
+
+			} // N vs. M
 			// --------------------------------------- //
 
-			// Make real particle event (no reconstruction yet)
-			// Use only the highest energy hit - no reconstruction
-			/*if(	adc_num >= 0 && adc_num < 4 && 
-				tempRingEnergy > Threshold_CDRing_E[adc_num] &&
-			 	tempStripEnergy > Threshold_CDStrip_E[adc_num] ) {
-
-				Quad.push_back( adc_num );
-				Elem_fired.push_back( 0 );
-				Chan_front.push_back( tempRingNum );
-				Chan_back.push_back( tempStripNum-16 );
-
-				PartEnergy = Cal->AdcEnergy( adc_num, Chan_front.back(), tempRingEnergy );
-				Ener_front.push_back( PartEnergy );
-
-				PartEnergy = Cal->AdcEnergy( adc_num, Chan_back.back(), tempStripEnergy );
-				Ener_back.push_back( PartEnergy );
-					
-				time.push_back( adc_t + dtAdc[adc_num] );
-				laser.push_back( event->Adc(j)->LaserOn() );
-
-				CD_front_back[adc_num]->Fill( Ener_front.back(), Ener_back.back() );
-
-				CounterAdcCDFired[adc_num]++;
-					
-			}*/
 		
 		} // j - numberofadcs
 		// ------------------------------------------------------------------------ //
