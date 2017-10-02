@@ -220,11 +220,11 @@ int main(int argc, char* argv[]) {
   
 	int StripNum = 0;
 	int RingNum = 0;
-	int StripEnergy = 0;
-	int RingEnergy = 0;
-	int StripEnergyDiff = 0;
-	int RingEnergyDiff = 0;
-	int tempDiff = 0;
+	float StripEnergy = 0;
+	float RingEnergy = 0;
+	float StripEnergyDiff = 0;
+	float RingEnergyDiff = 0;
+	float tempDiff = 0;
 	
 	// Check Code
 	int CounterAdcCDFired[5] = {0,0,0,0,0};
@@ -687,7 +687,7 @@ int main(int argc, char* argv[]) {
 						if( adc_en > Threshold_CDStrip_E[adc_num] ) { // threshold
 
 							cd_stripenergy[adc_num].push_back( PartEnergy );
-							cd_stripid[adc_num].push_back( adc_ch );
+							cd_stripid[adc_num].push_back( adc_ch-16 );
 
 						} // threshold
 
@@ -789,7 +789,7 @@ int main(int argc, char* argv[]) {
 				Chan_front.push_back( cd_ringid[adc_num][0] );
 				Ener_front.push_back( cd_ringenergy[adc_num][0] );
 
-				Chan_back.push_back( cd_stripid[adc_num][0]-16 );
+				Chan_back.push_back( cd_stripid[adc_num][0] );
 				Ener_back.push_back( cd_stripenergy[adc_num][0] );
 
 				CD_front_back[adc_num]->Fill(
@@ -810,7 +810,7 @@ int main(int argc, char* argv[]) {
 				Chan_front.push_back( cd_ringid[adc_num][0] );
 				Ener_front.push_back( cd_ringenergy[adc_num][0] );
 
-				StripNum = cd_stripid[adc_num][0]-16;
+				StripNum = cd_stripid[adc_num][0];
 				StripEnergy = cd_stripenergy[adc_num][0];
 				StripEnergyDiff = StripEnergy - cd_ringenergy[adc_num][0];
 				StripEnergyDiff = TMath::Abs( StripEnergyDiff );
@@ -822,7 +822,7 @@ int main(int argc, char* argv[]) {
 
 					if( tempDiff < StripEnergyDiff ) {
 
-						StripNum = cd_stripid[adc_num][k]-16;
+						StripNum = cd_stripid[adc_num][k];
 						StripEnergy = cd_stripenergy[adc_num][k];
 
 					}
@@ -847,7 +847,7 @@ int main(int argc, char* argv[]) {
 				time.push_back( adc_t + dtAdc[adc_num] );
 				laser.push_back( event->Adc(j)->LaserOn() );
 
-				Chan_back.push_back( cd_stripid[adc_num][0]-16 );
+				Chan_back.push_back( cd_stripid[adc_num][0] );
 				Ener_back.push_back( cd_stripenergy[adc_num][0] );
 
 				RingNum = cd_ringid[adc_num][0];
