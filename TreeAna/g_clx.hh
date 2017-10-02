@@ -49,23 +49,23 @@ class g_clx : public TObject {
 	//mbevts          *mbevts;
 	UInt_t          fUniqueID;
 	UInt_t          fBits;
-	double          gen;
+	float           gen;
 	int             cid;
 	int             sid;
 	int             cluid;
-	double          tha;
-	double          pha;
-	vector <double> gcor_gen;
+	float           tha;
+	float           pha;
+	vector <float>  gcor_gen;
 	vector <int>    gcor_cid;
 	vector <int>    gcor_sid;
 	vector <int>    gcor_cluid;
-	vector <double> gcor_tha;
-	vector <double> gcor_pha;
-	vector <double> gcor_gtd;
-	vector <double> pen;
+	vector <float>  gcor_tha;
+	vector <float>  gcor_pha;
+	vector <float>  gcor_gtd;
+	vector <float>  pen;
 	vector <double> time;
 	vector <double> sst;
-	vector <double> td;
+	vector <float>  td;
 	vector <int>    ann;
 	vector <int>    sec;
 	vector <int>    det;
@@ -79,7 +79,7 @@ class g_clx : public TObject {
 	vector <int>    del_ptr;
 	int             file;
 
-	double		GammaEnergy;
+	float		GammaEnergy;
 	
 	// List of branches
 	TBranch        *b_mbevts_fUniqueID;   //!

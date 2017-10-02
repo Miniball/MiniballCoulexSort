@@ -42,16 +42,16 @@ TreeAna: TreeAna.cc $(OBJECTS) ExpDefs.hh
 	$(AR) cru $(LIB_DIR)/libTreeAna.a $(OBJECTS)
 	cp TreeAna $(BIN_DIR)/
 
-g_clx.o: g_clx.cc g_clx.hh
+g_clx.o: g_clx.cc g_clx.hh ExpDefs.hh
 	$(CPP) $(CFLAGS) -c $< -o $@
 
 $(MBEVTS_DIR)/mbevts.o: $(MBEVTS_DIR)/mbevts.cc $(MBEVTS_DIR)/mbevts.hh
 	$(CPP) $(CFLAGS) -c $< -o $@
 
-doppler.o: doppler.cc doppler.hh
+doppler.o: doppler.cc doppler.hh ExpDefs.hh
 	$(CPP) $(CFLAGS) -c $< -o $@
 
-hists.o: hists.cc hists.hh
+hists.o: hists.cc hists.hh ExpDefs.hh
 	$(CPP) $(CFLAGS) -c $< -o $@
 
 MBGeometry.o: MBGeometry.cc MBGeometry.hh

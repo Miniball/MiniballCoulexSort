@@ -87,7 +87,7 @@ bool doppler::stoppingpowers( Int_t Zp, Int_t Zt, Double_t Ap, Double_t At, stri
 	getline( infile, line );
 	if( line.substr( 0, 5 ) == " ====" ) {
 		  
-		while( line.substr( 0, 5 ) != "  ---" )
+		while( line.substr( 0, 5 ) != "  ---" ) // Err, what if you use SRIM-2006, which doesn't have the spaces?
 			getline( infile, line );
 		  
 		getline( infile, line ); // read first line of data
@@ -196,8 +196,16 @@ Int_t doppler::Cut(Double_t PEn, Double_t anno, Int_t quad) {
 		else if( (int)AP == 140 && (int)ZP == 60 ) {
 
 			a = 576.308; b = 6.98955; c = -0.462751; l = 0.00418589;
-			d = 23.9609; e = 35.8015; f = -1.10132; k = 0.00873583;
+			d = -123.133; e = 45.6129; f = -1.28252; k = 0.00979219;
 			g = 506.363; h = -6.52989; i = -0.162027; n = 0.00222857;
+
+		}
+
+		else if( (int)AP == 142 && (int)ZP == 62 ) {
+
+			a = 935.41021; b = -9.7672106; c = -0.090456422; l = 0.001161002;
+			d = 27.174007; e = 39.523827; f = -1.13672251; k = 0.00856568;
+			g = 326.37297; h = 14.19075; i = -0.66434011; n = 0.005825002;
 
 		}
 
