@@ -196,25 +196,26 @@ int mbevts::GetNrParts() {
 
 }
 
-float mbevts::GetPen(int nr) {
+float mbevts::GetPen( int nr ) {
 
 	return pen[nr];
 
 }
 
-int mbevts::GetAnn(int nr) {
+int mbevts::GetAnn( int nr ) {
 
 	return ann[nr];
 
 }
 
-int mbevts::GetSec(int nr) {
+int mbevts::GetSec( int nr ) {
 
 	return sec[nr];
 
 }
 
-void mbevts::SetPart(float en, int a, int s, double t, double ss, float ctd, int co, int quad, int laserflag) { 
+void mbevts::SetPart( float en, int a, int s, double t, double ss, float ctd,
+							int co, int quad, int laserflag ) { 
 
 	laser=laserflag;
 	
