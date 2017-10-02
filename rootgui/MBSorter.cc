@@ -685,6 +685,8 @@ void MBSorter::on_medroot_clicked() {
 
 	if( check_source->IsOn() ) cmd_base += "-so ";
 
+	cmd_base += " -le ";
+	cmd_base += convertInt( num_last_entry->GetIntNumber() );
 	cmd_base += " -sf ";
 	cmd_base += text_settings->GetText();
 	

@@ -13,6 +13,7 @@
 #include <TList.h>
 #include <TG3DLine.h>
 #include <RQ_OBJECT.h>
+#include <sstream>
 #include <vector>
 using namespace std;
 
@@ -138,6 +139,14 @@ public:
 	// File list
 	vector <string> filelist;
 	vector <bool> filestatus;
+
+	// Int to String conversion
+	inline string convertInt( int number ) {
+		stringstream ss;
+		ss << number;
+		return ss.str();
+	};
+
 
 	ClassDef( MBSorter, 1 )
 	
