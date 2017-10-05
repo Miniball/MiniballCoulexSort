@@ -31,7 +31,7 @@ CPP       = $(shell root-config --cxx)
 CFLAGS    = -O2 -pipe -Wall -W -Woverloaded-virtual $(ROOTCFLAGS) -fPIC
 
 INCLUDES  = -I$(MED_DIR)/inc -I$(COMMON_DIR) -I$(MBEVTS_DIR) -I$(MED2R_DIR) -I./
-LFLAGS    = -O0 -g
+LFLAGS    = -O2 -g
 
 O_FILES = Calibration.o \
 		$(MBEVTS_DIR)/mbevts.o
