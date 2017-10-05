@@ -12,7 +12,8 @@
 # define THICK 2.50  // target thickness in mg/cm^2
 # define DEPTH 1.25  // depth of interaction
 
-# define CDDIST 24.0	// distance between target and CD
+# define CDDIST 21.5	// distance between target and CD
+# define CDOFFSET 242.6 // offset rotation of the CD detector
 # define DEADLAYER 0.7	// thickness of the Si dead layer in um
 
 # define SPEDEDIST 23.6 // distance from target to SPEDE in mm

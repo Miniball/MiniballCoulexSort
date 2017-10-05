@@ -296,7 +296,7 @@ void hists::Fill1h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, ve
 		if( !electron ) {
 	
 			FillGam1h( GEn, GTh, GPh, PEn, Pann, Psec, Pquad, cut, weight );
-			if( weight > 0. ) FillGamGam1h( GEn, GTh, GPh, GCor_GEn, GCor_GTh, GCor_GPh, GCor_CluID, GCor_Gtd,
+			FillGamGam1h( GEn, GTh, GPh, GCor_GEn, GCor_GTh, GCor_GPh, GCor_CluID, GCor_Gtd,
 							PEn, Pann, Psec, Pquad, cut, weight );
 			PhiCalHists( GEn, GTh, GPh, PEn, Pann, Psec, Pquad, cut, weight );
 		
@@ -583,8 +583,6 @@ void hists::FillGamGam1h( float GEn, float GTh, float GPh, vector <float> GCor_G
 	// Projectile
 	else if( cut > 0 ){
 		
-		return; // only target gates
-		
 		BEn = PEn;
 		BEn += doppler::GetELoss(BEn,DEADLAYER,1,"TS");
 		BTh = doppler::GetPTh(Pann);
@@ -604,11 +602,13 @@ void hists::FillGamGam1h( float GEn, float GTh, float GPh, vector <float> GCor_G
 			
 			if( GCor_Gtd.at(i)*25. > -200. && GCor_Gtd.at(i)*25. < 210. ) {
 				
-				gg->Fill(GEn, GCor_GEn.at(i), weight); // need to add DC versions
+				gg->Fill(GEn, GCor_GEn.at(i), weight);
 				gg_dcT->Fill( GEn*doppler::DC(TEn,TTh,TPh,GTh,GPh,AT),
-							 GCor_GEn.at(i)*doppler::DC(TEn,TTh,TPh,GCor_GTh.at(i),GCor_GPh.at(i),AT) );
+							  GCor_GEn.at(i)*doppler::DC(TEn,TTh,TPh,GCor_GTh.at(i),GCor_GPh.at(i),AT),
+							  weight );
 				gg_dcB->Fill( GEn*doppler::DC(BEn,BTh,BPh,GTh,GPh,AP),
-							 GCor_GEn.at(i)*doppler::DC(BEn,BTh,BPh,GCor_GTh.at(i),GCor_GPh.at(i),AP) );
+							  GCor_GEn.at(i)*doppler::DC(BEn,BTh,BPh,GCor_GTh.at(i),GCor_GPh.at(i),AP),
+							  weight );
 				
 			}
 			
@@ -633,8 +633,9 @@ void hists::FillGamGam1h( float GEn, float GTh, float GPh, vector <float> GCor_G
 }
 
 void hists::FillGamGam2h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, vector <float> GCor_GTh,
-						 vector <float> GCor_GPh, vector <int> GCor_CluID, vector <float> GCor_Gtd, vector<float> PEn,
-						 vector<int> Pann, vector<int> Psec, vector<int> Pquad, Int_t Bptr, Int_t Tptr, float weight ) {
+						 vector <float> GCor_GPh, vector <int> GCor_CluID, vector <float> GCor_Gtd,
+						 vector<float> PEn, vector<int> Pann, vector<int> Psec, vector<int> Pquad,
+						 Int_t Bptr, Int_t Tptr, float weight ) {
 	
 	int Bann = Pann[Bptr];
 	int Tann = Pann[Tptr];
@@ -647,36 +648,38 @@ void hists::FillGamGam2h( float GEn, float GTh, float GPh, vector <float> GCor_G
 	float BPh = doppler::GetPPhi(Pquad[Bptr],Psec[Bptr]);
 	float TPh = doppler::GetPPhi(Pquad[Tptr],Psec[Tptr]);
 	
-	if( Tann >= minrecoil && Tann <= maxrecoil ) {
+	for( unsigned int i = 0; i < GCor_GEn.size(); i++ ) {
 		
-		for( unsigned int i = 0; i < GCor_GEn.size(); i++ ) {
+		if( GCor_CluID.at(i) != 8 ) { // gamma
 			
-			if( GCor_CluID.at(i) != 8 ) { // gamma
-				
-				gg_td->Fill( GCor_Gtd.at(i)*25. );
-				
-				if( GCor_Gtd.at(i)*25. > -200. && GCor_Gtd.at(i)*25. < 210. ) {
-					
-					gg->Fill(GEn, GCor_GEn.at(i), weight); // need to add DC versions
-					
-				}
-				
-			}
+			gg_td->Fill( GCor_Gtd.at(i)*25. );
 			
-			else if( GCor_CluID.at(i) == 8 ) { // electron
+			if( GCor_Gtd.at(i)*25. > -200. && GCor_Gtd.at(i)*25. < 210. ) {
 				
-				ge_td->Fill( GCor_Gtd.at(i)*25. );
-				
-				if( GCor_Gtd.at(i)*25. > -980. && GCor_Gtd.at(i)*25. < -580. ) {
-					
-					ge->Fill(GEn, GCor_GEn.at(i), weight); // need to add DC versions
-					
-				}
+				gg->Fill(GEn, GCor_GEn.at(i), weight); 
+				gg_dcT->Fill( GEn*doppler::DC(TEn,TTh,TPh,GTh,GPh,AT),
+							  GCor_GEn.at(i)*doppler::DC(TEn,TTh,TPh,GCor_GTh.at(i),GCor_GPh.at(i),AT),
+							  weight );
+				gg_dcB->Fill( GEn*doppler::DC(BEn,BTh,BPh,GTh,GPh,AP),
+							  GCor_GEn.at(i)*doppler::DC(BEn,BTh,BPh,GCor_GTh.at(i),GCor_GPh.at(i),AP),
+							  weight );
 				
 			}
 			
 		}
 		
+		else if( GCor_CluID.at(i) == 8 ) { // electron
+				
+			ge_td->Fill( GCor_Gtd.at(i)*25. );
+				
+			if( GCor_Gtd.at(i)*25. > -980. && GCor_Gtd.at(i)*25. < -580. ) {
+					
+				ge->Fill(GEn, GCor_GEn.at(i), weight); // need to add DC versions
+					
+			}
+				
+		}
+			
 	}
 	
 	return;
