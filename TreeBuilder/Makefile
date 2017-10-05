@@ -31,11 +31,10 @@ CPP       = $(shell root-config --cxx)
 CFLAGS    = -O2 -pipe -Wall -W -Woverloaded-virtual $(ROOTCFLAGS) -fPIC
 
 INCLUDES  = -I$(MED_DIR)/inc -I$(COMMON_DIR) -I$(MBEVTS_DIR) -I$(MED2R_DIR) -I./
-LFLAGS    = -O2 -g
+LFLAGS    = -O0 -g
 
 O_FILES = Calibration.o \
-		$(MBEVTS_DIR)/mbevts.o \
-		$(COMMON_DIR)/CommandLineInterface.o
+		$(MBEVTS_DIR)/mbevts.o
 
 all: TreeBuilder NeSort
 
@@ -48,9 +47,6 @@ NeSort: NeSort.cc $(O_FILES) NeSortDictionary.o
 	$(CPP) $(CFLAGS) $(INCLUDES) NeSort.cc $(O_FILES) NeSortDictionary.o $(LIBS) -o $@
 	$(AR) cru $(LIB_DIR)/libNeSort.a $(O_FILES) NeSortDictionary.o
 	cp NeSort $(BIN_DIR)/
-
-$(COMMON_DIR)/CommandLineInterface.o:
-	@cd $(COMMON_DIR); make
 
 %.o: %.cc %.hh
 	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@

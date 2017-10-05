@@ -188,17 +188,19 @@ int main(int argc, char* argv[]) {
 	int dgf_en2 = 0;
 	long long dgf_t = 0;
 	long long dgf_t2 = 0;
-	int adc_num = 0;
-	int adc_ch = 0;
-	int adc_en = 0;
-	int adc_ch2 = 0;
-	int adc_en2 = 0;
+	unsigned int adc_num = 0;
+	unsigned int adc_ch = 0;
+	unsigned int adc_en = 0;
+	unsigned int adc_ch2 = 0;
+	unsigned int adc_en2 = 0;
 	long long adc_t =0;
 
 	vector<float> cd_ringenergy[4];
 	vector<float> cd_stripenergy[4];
 	vector<unsigned short> cd_ringid[4];
 	vector<unsigned short> cd_stripid[4];
+	vector<bool> cd_ringused[4];
+	vector<bool> cd_stripused[4];
 
 	vector<float> gen_array;
 	vector<long long> gtd_array;
@@ -224,6 +226,7 @@ int main(int argc, char* argv[]) {
 	float RingEnergy = 0;
 	float StripEnergyDiff = 0;
 	float RingEnergyDiff = 0;
+	bool RingMult = false;
 	float tempDiff = 0;
 	
 	// Check Code
@@ -481,6 +484,8 @@ int main(int argc, char* argv[]) {
 			cd_stripenergy[j].clear();
 			cd_ringid[j].clear();
 			cd_stripid[j].clear();
+			cd_ringused[j].clear();
+			cd_stripused[j].clear();
 
 		}
 	
@@ -647,13 +652,14 @@ int main(int argc, char* argv[]) {
 
 			adc_num = event->Adc(j)->ModuleNumber();
 			adc_t = event->Adc(j)->Time();
+			RingMult = true;
 
 			for( k = 0; k < event->Adc(j)->SubEvent()->Size(); k++ ) {
 
 				adc_ch = event->Adc(j)->SubEvent()->AdcChannel(k);
 				adc_en = event->Adc(j)->SubEvent()->AdcValue(k);
 
-				if( adc_num >= 0 && adc_num < 4 ) { // CD
+				if( adc_num < 4 ) { // CD
 
 					if( adc_ch < 16 ) { // front rings
 						
@@ -669,6 +675,7 @@ int main(int argc, char* argv[]) {
 
 							cd_ringenergy[adc_num].push_back( PartEnergy );
 							cd_ringid[adc_num].push_back( adc_ch );
+							cd_ringused[adc_num].push_back( false );
 
 						} // threshold
 
@@ -688,6 +695,7 @@ int main(int argc, char* argv[]) {
 
 							cd_stripenergy[adc_num].push_back( PartEnergy );
 							cd_stripid[adc_num].push_back( adc_ch-16 );
+							cd_stripused[adc_num].push_back( false );
 
 						} // threshold
 
@@ -833,6 +841,15 @@ int main(int argc, char* argv[]) {
 
 				} // k
 
+				// Addback neighbouring strips
+				for( k = 0; k < cd_stripenergy[adc_num].size(); k++ ) {
+
+					if( TMath::Abs( StripNum - cd_stripid[adc_num][k] ) == 1 )
+
+						StripEnergy += cd_stripenergy[adc_num][k];
+
+				} // k
+
 				Chan_back.push_back( StripNum );
 				Ener_back.push_back( StripEnergy );
 
@@ -875,6 +892,15 @@ int main(int argc, char* argv[]) {
 
 				} // k
 
+				// Addback neighbouring rings
+				for( k = 0; k < cd_ringenergy[adc_num].size(); k++ ) {
+
+					if( TMath::Abs( RingNum - cd_ringid[adc_num][k] ) == 1 )
+
+						RingEnergy += cd_ringenergy[adc_num][k];
+
+				} // k
+
 				Chan_front.push_back( RingNum );
 				Ener_front.push_back( RingEnergy );
 
@@ -885,7 +911,89 @@ int main(int argc, char* argv[]) {
 			// multiple on the front and multiple on the back
 			else if( cd_ringenergy[adc_num].size() > 1 && cd_stripenergy[adc_num].size() > 1 ) {
 
-				// Not yet implemented!
+				// Loop for multiplicity where separated by >1 rings
+				while( RingMult ) {
+
+					RingMult = false;
+					Quad.push_back( adc_num );
+					Elem_fired.push_back( 0 );
+					time.push_back( adc_t + dtAdc[adc_num] );
+					laser.push_back( event->Adc(j)->LaserOn() );
+
+					// Find highest energy on the front first
+					RingEnergy = 0;
+					for( k = 0; k < cd_ringenergy[adc_num].size(); k++ ) {
+
+						// Check highest energy that we've not already used
+						if( cd_ringenergy[adc_num][k] > RingEnergy && !cd_ringused[adc_num][k] ) {
+
+							RingNum = cd_ringid[adc_num][k];
+							RingEnergy = cd_ringenergy[adc_num][k];
+
+						}
+
+					}
+
+					// Addback rings and "use" the highest energy strip
+					for( k = 0; k < cd_ringenergy[adc_num].size(); k++ ) {
+
+						if( cd_ringused[adc_num][k] == true ) continue;
+
+						else if( TMath::Abs( RingNum - cd_ringid[adc_num][k] ) == 1 ) {
+
+							RingEnergy += cd_ringenergy[adc_num][k];
+							cd_ringused[adc_num][k] = true;
+
+						}
+
+						else if( RingNum == cd_ringid[adc_num][k] )
+
+							cd_ringused[adc_num][k] = true;
+
+						else if( TMath::Abs( RingNum - cd_ringid[adc_num][k] ) > 1 )
+
+							RingMult = true;
+
+					}
+
+					Chan_front.push_back( RingNum );
+					Ener_front.push_back( RingEnergy );
+
+				} // while RingMult
+
+				// Get closest match between front and back
+				StripEnergyDiff = 99999999.;
+				for( l = 0; l < Ener_front.size(); l++ ) {
+
+					if( Quad[l] != adc_num ) continue;
+
+					for( k = 0; k < cd_stripenergy[adc_num].size(); k++ ) {
+
+						tempDiff = cd_stripenergy[adc_num][k] - Ener_front[l];
+						tempDiff = TMath::Abs( tempDiff );
+
+						if( tempDiff < StripEnergyDiff && !cd_stripused[adc_num][k] ) {
+
+							StripNum = cd_stripid[adc_num][k];
+							StripEnergy = cd_stripenergy[adc_num][k];
+							StripEnergyDiff = tempDiff;
+
+						}
+
+					} // k
+
+					Chan_back.push_back( StripNum );
+					Ener_back.push_back( StripEnergy );
+
+					for( k = 0; k < cd_stripenergy[adc_num].size(); k++ ) {
+
+						if( cd_stripid[adc_num][k] == StripNum )
+
+							cd_stripused[adc_num][k] = true;
+
+					} // k
+
+				} // l
 
 			} // N vs. M
 			// --------------------------------------- //
