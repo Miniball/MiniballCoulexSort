@@ -41,8 +41,7 @@ O_FILES = BuiltEvent.o \
         SubEvents.o \
         UnpackedEvent.o \
         $(MED_DIR)/mbsio.o \
-        $(MED_DIR)/byte_order.o \
-		$(COMMON_DIR)/CommandLineInterface.o
+        $(MED_DIR)/byte_order.o
 
 all: MedToRoot
 
