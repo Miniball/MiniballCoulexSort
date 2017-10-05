@@ -959,6 +959,8 @@ int main(int argc, char* argv[]) {
 					Chan_front.push_back( RingNum );
 					Ener_front.push_back( RingEnergy );
 
+					CounterAdcCDFired[adc_num]++;
+
 				} // while RingMult
 
 				// Get closest match between front and back
