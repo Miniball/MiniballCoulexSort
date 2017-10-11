@@ -86,6 +86,12 @@ bool CommandLineInterface::CheckFlags( unsigned int argc, char* argv[], const bo
 		  i++;
 		  break;//found the right flag for this argument so the flag loop can be stopped
 		}
+	      else if(fTypes[j] == "float")
+		{
+		  *((float*) fValues[j]) = atof(argv[i+1]);
+		  i++;
+		  break;//found the right flag for this argument so the flag loop can be stopped
+		}
 	      else if(fTypes[j] == "size_t")
 		{
 		  *((size_t*) fValues[j]) = atoi(argv[i+1]);
@@ -246,6 +252,10 @@ ostream& operator <<(ostream &os,const CommandLineInterface &obj)
 	{
 	  cout<<obj.fFlags[i]<<": "<<*((int*) obj.fValues[i])<<endl;
 	}
+      else if(obj.fTypes[i] == "float")
+	{
+	  cout<<obj.fFlags[i]<<": "<<*((float*) obj.fValues[i])<<endl;
+	}
       else if(obj.fTypes[i] == "long long")
 	{
 	  cout<<obj.fFlags[i]<<": "<<*((long*) obj.fValues[i])<<endl;
@@ -369,6 +379,21 @@ void CommandLineInterface::Add(const char* flag, const char* comment, int* value
   if(strlen("int") > fMaximumTypeLength)
     fMaximumTypeLength = strlen("int");
   fTypes.push_back(string("int"));
+  if(strlen(comment) > fMaximumCommentLength)
+    fMaximumCommentLength = strlen(comment);
+  fComments.push_back(string(comment));
+  fFactors.push_back(1.);
+}
+
+void CommandLineInterface::Add(const char* flag, const char* comment, float* value)
+{
+  if(strlen(flag) > fMaximumFlagLength)
+    fMaximumFlagLength = strlen(flag);
+  fFlags.push_back(string(flag));
+  fValues.push_back((void*) value);
+  if(strlen("float") > fMaximumTypeLength)
+    fMaximumTypeLength = strlen("float");
+  fTypes.push_back(string("float"));
   if(strlen(comment) > fMaximumCommentLength)
     fMaximumCommentLength = strlen(comment);
   fComments.push_back(string(comment));

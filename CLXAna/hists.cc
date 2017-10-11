@@ -14,19 +14,21 @@
 # include "hists.hh"
 #endif
 
-void hists::Initialise() {
+void hists::Initialise( doppler dc_ ) {
+
+	dc = dc_;
 
 	cout << "Initialising histograms...\n";
 
 	string hname, htitle;
 
-	for( int k=0; k<17; k++ ) cd_angles[k] = doppler::GetPTh(15.5-k)*TMath::RadToDeg(); 
+	for( int k=0; k<17; k++ ) cd_angles[k] = dc.GetPTh(15.5-k)*TMath::RadToDeg(); 
 
 	p = new TH1F("p","Prompt gammas;Energy [keV];Counts per 1 keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	r = new TH1F("r","Random gammas;Energy [keV];Counts per 1 keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	pe = new TH1F("pe","Prompt electrons;Energy [keV];Counts per 1 keV",EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
 	re = new TH1F("re","Random electrons;Energy [keV];Counts per 1 keV",EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
-	hname = "Prompt minus random;Energy [keV];Counts per " + doppler::convertInt( (int)(GMAX/GBINS) ) + " keV";
+	hname = "Prompt minus random;Energy [keV];Counts per " + dc.convertInt( (int)(GMAX/GBINS) ) + " keV";
 	pmr = new TH1F("pmr",hname.c_str(),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	pemre = new TH1F("pemre",hname.c_str(),EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
 	pB = new TH1F("pB","Prompt gammas gated on beam",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
@@ -66,46 +68,46 @@ void hists::Initialise() {
 	/* Doppler corrected spectra per detector */
 #ifdef PHICAL
 	for(int i=0; i<PHI_NSTEPS; i++){
-		hname = "phical_dcB" + doppler::convertInt(i+1);
+		hname = "phical_dcB" + dc.convertInt(i+1);
 		phical_dcB[i] = new TH1F(hname.c_str(),"Beam gated prompt, Doppler corrected #gamma-rays",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));	
-		hname = "phical_dcT" + doppler::convertInt(i+1);
+		hname = "phical_dcT" + dc.convertInt(i+1);
 		phical_dcT[i] = new TH1F(hname.c_str(),"Beam gated prompt, Doppler corrected #gamma-rays",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));	
 	}
 #endif
 #ifdef CALIB
 	for(int i=0; i<8; i++){
-		hname = "GeCalib_clu" + doppler::convertInt(i+1);
+		hname = "GeCalib_clu" + dc.convertInt(i+1);
 		GeCalib_clu[i] = new TH1F(hname.c_str(),"Beam gated prompt, Doppler corrected #gamma-rays",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	}
 	//for(int i=0; i<3; i++)
 	{
-		//hname = "GeCalib_cid" + doppler::convertInt(i+1)+ "_dcT_MaxEnergy";
+		//hname = "GeCalib_cid" + dc.convertInt(i+1)+ "_dcT_MaxEnergy";
 		//GeCalib_dcTMaxE[i] = new TH2F(hname.c_str(),"Beam gated prompt, Target Doppler corrected #gamma-rays",GE_THETA_NSTEPS,0,GE_THETA_NSTEPS,GE_PHI_NSTEPS,0,GE_PHI_NSTEPS);
-		//hname = "GeCalib_cid" + doppler::convertInt(i+1)+ "_dcT_Max";
+		//hname = "GeCalib_cid" + dc.convertInt(i+1)+ "_dcT_Max";
 		//GeCalib_dcTMax[i] = new TH2F(hname.c_str(),"Beam gated prompt, Target Doppler corrected #gamma-rays",GE_THETA_NSTEPS,0,GE_THETA_NSTEPS,GE_PHI_NSTEPS,0,GE_PHI_NSTEPS);
-		//hname = "GeCalib_cid" + doppler::convertInt(i+1)+ "_dcT_MaxSigma";
+		//hname = "GeCalib_cid" + dc.convertInt(i+1)+ "_dcT_MaxSigma";
 		//GeCalib_dcTMaxSigma[i] = new TH2F(hname.c_str(),"Beam gated prompt, Target Doppler corrected #gamma-rays",GE_THETA_NSTEPS,0,GE_THETA_NSTEPS,GE_PHI_NSTEPS,0,GE_PHI_NSTEPS);
 		//for(int j=0; j<GE_THETA_NSTEPS; j++){
 		//	for(int k=0; k<GE_PHI_NSTEPS; k++){
-		//		hname = "GeCalib_cid_dcT"+ doppler::convertInt(i+1) + "Th"+ doppler::convertInt(j) + "Ph" + doppler::convertInt(k);
+		//		hname = "GeCalib_cid_dcT"+ dc.convertInt(i+1) + "Th"+ dc.convertInt(j) + "Ph" + dc.convertInt(k);
 		//		GeCalib_dcT[i][j][k] = new TH1F(hname.c_str(),"Beam gated prompt, Target Doppler corrected #gamma-rays",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));//horrible hack to brute force angle calculation
 		//	}
 		//}
-		hname = "GeCalib_clu" + doppler::convertInt(CLUSTER)+ "_dcT_MaxEnergy";
+		hname = "GeCalib_clu" + dc.convertInt(CLUSTER)+ "_dcT_MaxEnergy";
 		GeCalib_dcTMaxE = new TH2F(hname.c_str(),"Beam gated prompt, Target Doppler corrected #gamma-rays",GE_THETA_NSTEPS-1,0,GE_THETA_NSTEPS-1,GE_PHI_NSTEPS-1,0,GE_PHI_NSTEPS-1);
-		hname = "GeCalib_clu" + doppler::convertInt(CLUSTER)+ "_dcT_Max";
+		hname = "GeCalib_clu" + dc.convertInt(CLUSTER)+ "_dcT_Max";
 		GeCalib_dcTMax = new TH2F(hname.c_str(),"Beam gated prompt, Target Doppler corrected #gamma-rays",GE_THETA_NSTEPS-1,0,GE_THETA_NSTEPS-1,GE_PHI_NSTEPS-1,0,GE_PHI_NSTEPS-1);
-		hname = "GeCalib_clu" + doppler::convertInt(CLUSTER)+ "_dcT_MaxSigma";
+		hname = "GeCalib_clu" + dc.convertInt(CLUSTER)+ "_dcT_MaxSigma";
 		GeCalib_dcTMaxSigma = new TH2F(hname.c_str(),"Beam gated prompt, Target Doppler corrected #gamma-rays",GE_THETA_NSTEPS-1,0,GE_THETA_NSTEPS-1,GE_PHI_NSTEPS-1,0,GE_PHI_NSTEPS-1);
 		for(int j=0; j<GE_THETA_NSTEPS; j++){
 			for(int k=0; k<GE_PHI_NSTEPS; k++){
-				hname = "GeCalib_clu"+ doppler::convertInt(CLUSTER) + "_dcT_Th"+ doppler::convertInt(j) + "Ph" + doppler::convertInt(k);
+				hname = "GeCalib_clu"+ dc.convertInt(CLUSTER) + "_dcT_Th"+ dc.convertInt(j) + "Ph" + dc.convertInt(k);
 				GeCalib_dcT[j][k] = new TH1F(hname.c_str(),"Beam gated prompt, Target Doppler corrected #gamma-rays",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));//horrible hack to brute force angle calculation
 			}
 		}
 	}
 	for(int i=0; i<24; i++){
-		hname = "GeCalib_cid" + doppler::convertInt(i+1);
+		hname = "GeCalib_cid" + dc.convertInt(i+1);
 		GeCalib_cid[i] = new TH1F(hname.c_str(),"Beam gated prompt, Doppler corrected #gamma-rays",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	}
 #endif
@@ -141,28 +143,28 @@ void hists::Initialise() {
 
 	for(int i=0; i<16; i++){
 	
-		hname = "T_dcB_x" + doppler::convertInt(i);
-		htitle = "Target gated (strip " + doppler::convertInt(i) + "), background subtracted gamma rays, Doppler corrected for scattered projectile;Energy [keV];Counts per 1keV";
+		hname = "T_dcB_x" + dc.convertInt(i);
+		htitle = "Target gated (strip " + dc.convertInt(i) + "), background subtracted gamma rays, Doppler corrected for scattered projectile;Energy [keV];Counts per 1keV";
 		T_dcB_x[i] = new TH1F(hname.c_str(),htitle.c_str(),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));	
 		
-		hname = "T_dcT_x" + doppler::convertInt(i);
-		htitle = "Target gated (strip " + doppler::convertInt(i) + "), background subtracted gamma rays, Doppler corrected for target recoil;Energy [keV];Counts per 1keV";
+		hname = "T_dcT_x" + dc.convertInt(i);
+		htitle = "Target gated (strip " + dc.convertInt(i) + "), background subtracted gamma rays, Doppler corrected for target recoil;Energy [keV];Counts per 1keV";
 		T_dcT_x[i] = new TH1F(hname.c_str(),htitle.c_str(),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));	
 		
-//		hname = "Te_dcB_x" + doppler::convertInt(i);
-//		htitle = "Target gated (strip " + doppler::convertInt(i) + "), background subtracted electrons, Doppler corrected for scattered projectile;Energy [keV];Counts per 1keV";
+//		hname = "Te_dcB_x" + dc.convertInt(i);
+//		htitle = "Target gated (strip " + dc.convertInt(i) + "), background subtracted electrons, Doppler corrected for scattered projectile;Energy [keV];Counts per 1keV";
 //		Te_dcB_x[i] = new TH1F(hname.c_str(),htitle.c_str(),EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
 		
-//		hname = "Te_dcT_x" + doppler::convertInt(i);
-//		htitle = "Target gated (strip " + doppler::convertInt(i) + "), background subtracted electrons, Doppler corrected for target recoil;Energy [keV];Counts per 1keV";
+//		hname = "Te_dcT_x" + dc.convertInt(i);
+//		htitle = "Target gated (strip " + dc.convertInt(i) + "), background subtracted electrons, Doppler corrected for target recoil;Energy [keV];Counts per 1keV";
 //		Te_dcT_x[i] = new TH1F(hname.c_str(),htitle.c_str(),EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
 		
-		hname = "B_dcB_x" + doppler::convertInt(i);
-		htitle = "Beam gated (strip " + doppler::convertInt(i) + "), background subtracted gamma rays, Doppler corrected for scattered projectile;Energy [keV];Counts per 1keV";
+		hname = "B_dcB_x" + dc.convertInt(i);
+		htitle = "Beam gated (strip " + dc.convertInt(i) + "), background subtracted gamma rays, Doppler corrected for scattered projectile;Energy [keV];Counts per 1keV";
 		B_dcB_x[i] = new TH1F(hname.c_str(),htitle.c_str(),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));	
 		
-		hname = "B_dcT_x" + doppler::convertInt(i);
-		htitle = "Beam gated (strip " + doppler::convertInt(i) + "), background subtracted gamma rays, Doppler corrected for target recoil;Energy [keV];Counts per 1keV";
+		hname = "B_dcT_x" + dc.convertInt(i);
+		htitle = "Beam gated (strip " + dc.convertInt(i) + "), background subtracted gamma rays, Doppler corrected for target recoil;Energy [keV];Counts per 1keV";
 		B_dcT_x[i] = new TH1F(hname.c_str(),htitle.c_str(),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));	
 		
 	}
@@ -184,15 +186,15 @@ void hists::Initialise() {
 	target_1pev = new TH1F("target_1pev","Number of recoil events, without coincidence, per degree;Lab angle [deg];Number of events per degree",16,cd_angles);
 	target_2pev = new TH1F("target_2pev","Number of recoil events, coincident with a projectile, per degree;Lab angle [deg];Number of events per degree",16,cd_angles);
 	for(int i=0; i<4; i++){
-		hname = "partQ" + doppler::convertInt(i+1);
+		hname = "partQ" + dc.convertInt(i+1);
 		partQ[i] = new TH2F(hname.c_str(),"Random subtracted 1-particle events;Lab angle [deg];Energy [MeV]",16,cd_angles,PBINS,0,PMAX);
 	}
 	
 #ifdef TWOPART
 	for(int i=0; i<16; i++){
-		hname = "B" + doppler::convertInt(i);
+		hname = "B" + dc.convertInt(i);
 		BT[i] = new TH2F(hname.c_str(),hname.c_str(),16,cd_angles,PBINS,0,PMAX);
-		hname = "T" + doppler::convertInt(i);
+		hname = "T" + dc.convertInt(i);
 		TB[i] = new TH2F(hname.c_str(),hname.c_str(),16,cd_angles,PBINS,0,PMAX);		
 	}
 #endif
@@ -216,11 +218,11 @@ void hists::Initialise() {
 #ifdef GEANG
 	GeSiAng = new TH3F("GeSiAng","Ge and Si coincidences angles;Ge #theta;Si #theta;#phi",45,0,180,30,0,60,270,-720,360);
 	for(int i=0; i<8; i++){
-		hname = "GeAng_clu" + doppler::convertInt(i+1);
-		htitle = "Detector angles in Cluster " + doppler::convertInt(i+1) + ";#theta;#phi";
+		hname = "GeAng_clu" + dc.convertInt(i+1);
+		htitle = "Detector angles in Cluster " + dc.convertInt(i+1) + ";#theta;#phi";
 		GeAng_clu[i] = new TH2F(hname.c_str(),htitle.c_str(),45,0,180,90,0,359);
-		hname = "GeSiAng_clu" + doppler::convertInt(i+1);
-		htitle = "Ge and Si coincidences angles in Cluster " + doppler::convertInt(i+1) + ";Ge #theta;Si #theta;#phi";
+		hname = "GeSiAng_clu" + dc.convertInt(i+1);
+		htitle = "Ge and Si coincidences angles in Cluster " + dc.convertInt(i+1) + ";Ge #theta;Si #theta;#phi";
 		GeSiAng_clu[i] = new TH3F(hname.c_str(),htitle.c_str(),45,0,180,30,0,60,270,-720,360);
 	}
 #endif
@@ -233,19 +235,19 @@ void hists::Initialise() {
 	tegate[2] = 228.;
 	tegate[3] = 881.;
 	for(int i=0; i<4; i++){
-		hname = "tdiffE" + doppler::convertInt(tegate[i]);
-		htitle = "Particle-#gamma time difference gated around " + doppler::convertInt(tegate[i]) + " keV;#tau (t_{p} - t_{#gamma}) [ns];Counts per 25ns";		
+		hname = "tdiffE" + dc.convertInt(tegate[i]);
+		htitle = "Particle-#gamma time difference gated around " + dc.convertInt(tegate[i]) + " keV;#tau (t_{p} - t_{#gamma}) [ns];Counts per 25ns";		
 		tdiffE[i] = new TH1F(hname.c_str(),htitle.c_str(),TBINS,TMAX-25*TBINS,TMAX);
-		hname = "tdiffQ" + doppler::convertInt(i+1);
-		htitle = "Particle-#gamma time difference in quadrant " + doppler::convertInt(i+1) + ";#tau (t_{p} - t_{#gamma}) [ns];Counts per 25ns";		
+		hname = "tdiffQ" + dc.convertInt(i+1);
+		htitle = "Particle-#gamma time difference in quadrant " + dc.convertInt(i+1) + ";#tau (t_{p} - t_{#gamma}) [ns];Counts per 25ns";		
 		tdiffQ[i] = new TH1F(hname.c_str(),hname.c_str(),TBINS,TMAX-25*TBINS,TMAX);
 	}
 	// particle - particle time difference
 	tppdiff = new TH1F("tppdiff","Particle-particle time difference;t_{p_{1}} - t_{p_{2}} [ns];Counts per 25ns",12000/25,-6000,6000);
 	tpp = new TH2F("tpp","Particle-gamma time difference matrix;t_{#gamma} - t_{p_{1}} [ns];t_{#gamma} - t_{p_{2}} [ns]",TBINS,TMAX-25*TBINS,TMAX,TBINS,TMAX-25*TBINS,TMAX);
 	for(int i=0; i<2; i++){
-		hname = "tQ" + doppler::convertInt(i+1) + "Q" + doppler::convertInt(i+3);
-		htitle = "Q" + doppler::convertInt(i+1) + "-Q" + doppler::convertInt(i+3) + " time difference;t_{p}(Q" + doppler::convertInt(i+1) + ") - t_{p}(Q" + doppler::convertInt(i+3) + ") [ns];Counts per 25ns;Counts per 25ns";		
+		hname = "tQ" + dc.convertInt(i+1) + "Q" + dc.convertInt(i+3);
+		htitle = "Q" + dc.convertInt(i+1) + "-Q" + dc.convertInt(i+3) + " time difference;t_{p}(Q" + dc.convertInt(i+1) + ") - t_{p}(Q" + dc.convertInt(i+3) + ") [ns];Counts per 25ns;Counts per 25ns";		
 		tQQ[i] = new TH1F(hname.c_str(),htitle.c_str(),12000/25,-6000,6000);
 	}			
 
@@ -287,7 +289,7 @@ void hists::Fill1h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, ve
 
 	}
 
-	int cut = doppler::Cut( PEn, Pann, Pquad );
+	int cut = dc.Cut( PEn, Pann, Pquad );
 	
 	FillPar1h( PEn, Pann, Psec, Pquad, cut, weight );
 
@@ -322,11 +324,11 @@ void hists::Fill2h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, ve
 
 	float time_diff = TMath::Abs(td[Pptr[0]]-td[Pptr[1]]);
 	int quad_diff = TMath::Abs(Pquad[Pptr[0]]-Pquad[Pptr[1]]);
-	int cut2 = doppler::Cut_2p(PEn[Pptr[0]],Pann[Pptr[0]],Pquad[Pptr[0]],PEn[Pptr[1]],Pann[Pptr[1]],Pquad[Pptr[1]]);
-	bool cutg_0 = doppler::CutG_en2hit(PEn[Pptr[1]]/1000.,PEn[Pptr[0]]/1000.);
-	bool cutg_1 = doppler::CutG_en2hit(PEn[Pptr[0]]/1000.,PEn[Pptr[1]]/1000.);
-	int cut_0 = doppler::Cut(PEn[Pptr[0]],Pann[Pptr[0]],Pquad[Pptr[0]]);
-	int cut_1 = doppler::Cut(PEn[Pptr[1]],Pann[Pptr[1]],Pquad[Pptr[1]]);
+	int cut2 = dc.Cut_2p(PEn[Pptr[0]],Pann[Pptr[0]],Pquad[Pptr[0]],PEn[Pptr[1]],Pann[Pptr[1]],Pquad[Pptr[1]]);
+	bool cutg_0 = dc.CutG_en2hit(PEn[Pptr[1]]/1000.,PEn[Pptr[0]]/1000.);
+	bool cutg_1 = dc.CutG_en2hit(PEn[Pptr[0]]/1000.,PEn[Pptr[1]]/1000.);
+	int cut_0 = dc.Cut(PEn[Pptr[0]],Pann[Pptr[0]],Pquad[Pptr[0]]);
+	int cut_1 = dc.Cut(PEn[Pptr[1]],Pann[Pptr[1]],Pquad[Pptr[1]]);
 
 	if( quad_diff == 2 && time_diff <= ppwin && cut2 == 0 && cutg_0 ) { // target is [0]
 
@@ -389,21 +391,21 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, float PEn, Int_t Pann,
 		else r_1T->Fill(GEn);
 		
 		TEn = PEn;
-		//TEn += doppler::GetELoss(TEn,DEADLAYER,1,"TS");
-		TTh = doppler::GetPTh(Pann);
-		TPh = doppler::GetPPhi(Pquad,Psec);
+		//TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TS");
+		TTh = dc.GetPTh(Pann);
+		TPh = dc.GetPPhi(Pquad,Psec);
 		
-		BEn = doppler::GetBEn(PEn,Pann);
-		BTh = doppler::GetBTh(Pann);
-		BPh = doppler::GetQPhi(Pquad,Psec);
+		BEn = dc.GetBEn(PEn,Pann);
+		BTh = dc.GetBTh(Pann);
+		BPh = dc.GetQPhi(Pquad,Psec);
 
-		T_dcB_x[Pann]->Fill(GEn*doppler::DC(BEn, BTh, BPh, GTh, GPh, AP), weight);	
-		T_dcT_x[Pann]->Fill(GEn*doppler::DC(TEn, TTh, TPh, GTh, GPh, AT), weight);
+		T_dcB_x[Pann]->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);	
+		T_dcT_x[Pann]->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 	
 		if( Pann >= minrecoil && Pann <= maxrecoil ) {
 
-			T_1hdcB->Fill(GEn*doppler::DC(BEn, BTh, BPh, GTh, GPh, AP), weight);
-			T_1hdcT->Fill(GEn*doppler::DC(TEn, TTh, TPh, GTh, GPh, AT), weight);
+			T_1hdcB->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+			T_1hdcT->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 			
 		}
 
@@ -416,19 +418,19 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, float PEn, Int_t Pann,
 		else r_1B->Fill(GEn);
 		
 		BEn = PEn;
-		BEn += doppler::GetELoss(BEn,DEADLAYER,1,"TS");
-		BTh = doppler::GetPTh(Pann);
-		BPh = doppler::GetPPhi(Pquad,Psec);
+		BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"TS");
+		BTh = dc.GetPTh(Pann);
+		BPh = dc.GetPPhi(Pquad,Psec);
 		
-		TEn = doppler::GetTEn(PEn,Pann);
-		TTh = doppler::GetTTh(Pann,PEn);
-		TPh = doppler::GetQPhi(Pquad,Psec);
+		TEn = dc.GetTEn(PEn,Pann);
+		TTh = dc.GetTTh(Pann,PEn);
+		TPh = dc.GetQPhi(Pquad,Psec);
 
-		B_dcB_x[Pann]->Fill(GEn*doppler::DC(BEn, BTh, BPh, GTh, GPh, AP), weight);	
-		B_dcT_x[Pann]->Fill(GEn*doppler::DC(TEn, TTh, TPh, GTh, GPh, AT), weight);
+		B_dcB_x[Pann]->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);	
+		B_dcT_x[Pann]->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 
-		B_1hdcB->Fill(GEn*doppler::DC(BEn, BTh, BPh, GTh, GPh, AP), weight);
-		B_1hdcT->Fill(GEn*doppler::DC(TEn, TTh, TPh, GTh, GPh, AT), weight);
+		B_1hdcB->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+		B_1hdcT->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 		
 	}
 
@@ -445,24 +447,24 @@ void hists::FillGam2h( float GEn, float GTh, float GPh, vector<float> PEn, vecto
 	int Bann = Pann[Bptr];
 	int Tann = Pann[Tptr];
 	float BEn = PEn[Bptr];
-	BEn += doppler::GetELoss(BEn,DEADLAYER,1,"TS");
+	BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"TS");
 	float TEn = PEn[Tptr];
-	TEn += doppler::GetELoss(TEn,DEADLAYER,1,"TS");
-	float BTh = doppler::GetPTh(Bann);
-	float TTh = doppler::GetPTh(Tann);
-	float BPh = doppler::GetPPhi(Pquad[Bptr],Psec[Bptr]);
-	float TPh = doppler::GetPPhi(Pquad[Tptr],Psec[Tptr]);
+	TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TS");
+	float BTh = dc.GetPTh(Bann);
+	float TTh = dc.GetPTh(Tann);
+	float BPh = dc.GetPPhi(Pquad[Bptr],Psec[Bptr]);
+	float TPh = dc.GetPPhi(Pquad[Tptr],Psec[Tptr]);
 
-	T_dcB_x[Tann]->Fill(GEn*doppler::DC(BEn, BTh, BPh, GTh, GPh, AP), weight);	
-	T_dcT_x[Tann]->Fill(GEn*doppler::DC(TEn, TTh, TPh, GTh, GPh, AT), weight);
+	T_dcB_x[Tann]->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);	
+	T_dcT_x[Tann]->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 
-	B_dcB_x[Bann]->Fill(GEn*doppler::DC(BEn, BTh, BPh, GTh, GPh, AP), weight);	
-	B_dcT_x[Bann]->Fill(GEn*doppler::DC(TEn, TTh, TPh, GTh, GPh, AT), weight);
+	B_dcB_x[Bann]->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);	
+	B_dcT_x[Bann]->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 
 	if( Tann >= minrecoil && Tann <= maxrecoil ) {
 
-		T_2hdcB->Fill(GEn*doppler::DC(BEn,BTh,BPh,GTh,GPh,AP), weight);
-		T_2hdcT->Fill(GEn*doppler::DC(TEn,TTh,TPh,GTh,GPh,AT), weight);
+		T_2hdcB->Fill(GEn*dc.DC(BEn,BTh,BPh,GTh,GPh,dc.GetAb()), weight);
+		T_2hdcT->Fill(GEn*dc.DC(TEn,TTh,TPh,GTh,GPh,dc.GetAt()), weight);
 		
 	}
 
@@ -483,21 +485,21 @@ void hists::FillElec1h( float GEn, float GTh, float GPh, float PEn, Int_t Pann,
 		else re_1T->Fill(GEn);
 		
 		TEn = PEn;
-		TEn += doppler::GetELoss(TEn,DEADLAYER,1,"TS");
-		TTh = doppler::GetPTh(Pann);
-		TPh = doppler::GetPPhi(Pquad,Psec);
+		TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TS");
+		TTh = dc.GetPTh(Pann);
+		TPh = dc.GetPPhi(Pquad,Psec);
 		
-		BEn = doppler::GetBEn(PEn,Pann);
-		BTh = doppler::GetBTh(Pann);
-		BPh = doppler::GetQPhi(Pquad,Psec);
+		BEn = dc.GetBEn(PEn,Pann);
+		BTh = dc.GetBTh(Pann);
+		BPh = dc.GetQPhi(Pquad,Psec);
 
-//		Te_dcB_x[Pann]->Fill(doppler::DC_elec(GEn, BEn, BTh, BPh, GTh, GPh, AP), weight);	
-//		Te_dcT_x[Pann]->Fill(doppler::DC_elec(GEn, TEn, TTh, TPh, GTh, GPh, AT), weight);
+//		Te_dcB_x[Pann]->Fill(dc.DC_elec(GEn, BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);	
+//		Te_dcT_x[Pann]->Fill(dc.DC_elec(GEn, TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 	
 		if( Pann >= minrecoil && Pann <= maxrecoil ) {
 
-			Te_1hdcB->Fill(doppler::DC_elec(GEn, BEn, BTh, BPh, GTh, GPh, AP), weight);
-			Te_1hdcT->Fill(doppler::DC_elec(GEn, TEn, TTh, TPh, GTh, GPh, AT), weight);
+			Te_1hdcB->Fill(dc.DC_elec(GEn, BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+			Te_1hdcT->Fill(dc.DC_elec(GEn, TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 			
 		}
 
@@ -510,16 +512,16 @@ void hists::FillElec1h( float GEn, float GTh, float GPh, float PEn, Int_t Pann,
 		else re_1B->Fill(GEn);
 		
 		BEn = PEn;
-		BEn += doppler::GetELoss(BEn,DEADLAYER,1,"TS");
-		BTh = doppler::GetPTh(Pann);
-		BPh = doppler::GetPPhi(Pquad,Psec);
+		BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"TS");
+		BTh = dc.GetPTh(Pann);
+		BPh = dc.GetPPhi(Pquad,Psec);
 		
-		TEn = doppler::GetTEn(PEn,Pann);
-		TTh = doppler::GetTTh(Pann,PEn);
-		TPh = doppler::GetQPhi(Pquad,Psec);
+		TEn = dc.GetTEn(PEn,Pann);
+		TTh = dc.GetTTh(Pann,PEn);
+		TPh = dc.GetQPhi(Pquad,Psec);
 
-		Be_1hdcB->Fill(doppler::DC_elec(GEn, BEn, BTh, BPh, GTh, GPh, AP), weight);
-		Be_1hdcT->Fill(doppler::DC_elec(GEn, TEn, TTh, TPh, GTh, GPh, AT), weight);
+		Be_1hdcB->Fill(dc.DC_elec(GEn, BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+		Be_1hdcT->Fill(dc.DC_elec(GEn, TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 		
 	}
 
@@ -536,21 +538,21 @@ void hists::FillElec2h( float GEn, float GTh, float GPh, vector<float> PEn, vect
 	int Bann = Pann[Bptr];
 	int Tann = Pann[Tptr];
 	float BEn = PEn[Bptr];
-	BEn += doppler::GetELoss(BEn,DEADLAYER,1,"TS");
+	BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"TS");
 	float TEn = PEn[Tptr];
-	TEn += doppler::GetELoss(TEn,DEADLAYER,1,"TS");
-	float BTh = doppler::GetPTh(Bann);
-	float TTh = doppler::GetPTh(Tann);
-	float BPh = doppler::GetPPhi(Pquad[Bptr],Psec[Bptr]);
-	float TPh = doppler::GetPPhi(Pquad[Tptr],Psec[Tptr]);
+	TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TS");
+	float BTh = dc.GetPTh(Bann);
+	float TTh = dc.GetPTh(Tann);
+	float BPh = dc.GetPPhi(Pquad[Bptr],Psec[Bptr]);
+	float TPh = dc.GetPPhi(Pquad[Tptr],Psec[Tptr]);
 
-//	Te_dcB_x[Tann]->Fill(doppler::DC_elec(GEn, BEn, BTh, BPh, GTh, GPh, AP), weight);	
-//	Te_dcT_x[Tann]->Fill(doppler::DC_elec(GEn, TEn, TTh, TPh, GTh, GPh, AT), weight);
+//	Te_dcB_x[Tann]->Fill(dc.DC_elec(GEn, BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);	
+//	Te_dcT_x[Tann]->Fill(dc.DC_elec(GEn, TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 
 	if( Tann >= minrecoil && Tann <= maxrecoil ) {
 
-		Te_2hdcB->Fill(doppler::DC_elec(GEn, BEn,BTh,BPh,GTh,GPh,AP), weight);
-		Te_2hdcT->Fill(doppler::DC_elec(GEn, TEn,TTh,TPh,GTh,GPh,AT), weight);
+		Te_2hdcB->Fill(dc.DC_elec(GEn, BEn,BTh,BPh,GTh,GPh,dc.GetAb()), weight);
+		Te_2hdcT->Fill(dc.DC_elec(GEn, TEn,TTh,TPh,GTh,GPh,dc.GetAt()), weight);
 		
 	}
 
@@ -570,13 +572,13 @@ void hists::FillGamGam1h( float GEn, float GTh, float GPh, vector <float> GCor_G
 		if( Pann < minrecoil || Pann > maxrecoil ) return;
 		
 		TEn = PEn;
-		//TEn += doppler::GetELoss(TEn,DEADLAYER,1,"TS");
-		TTh = doppler::GetPTh(Pann);
-		TPh = doppler::GetPPhi(Pquad,Psec);
+		//TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TS");
+		TTh = dc.GetPTh(Pann);
+		TPh = dc.GetPPhi(Pquad,Psec);
 		
-		BEn = doppler::GetBEn(PEn,Pann);
-		BTh = doppler::GetBTh(Pann);
-		BPh = doppler::GetQPhi(Pquad,Psec);
+		BEn = dc.GetBEn(PEn,Pann);
+		BTh = dc.GetBTh(Pann);
+		BPh = dc.GetQPhi(Pquad,Psec);
 
 	}
 	
@@ -584,13 +586,13 @@ void hists::FillGamGam1h( float GEn, float GTh, float GPh, vector <float> GCor_G
 	else if( cut > 0 ){
 		
 		BEn = PEn;
-		BEn += doppler::GetELoss(BEn,DEADLAYER,1,"TS");
-		BTh = doppler::GetPTh(Pann);
-		BPh = doppler::GetPPhi(Pquad,Psec);
+		BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"TS");
+		BTh = dc.GetPTh(Pann);
+		BPh = dc.GetPPhi(Pquad,Psec);
 		
-		TEn = doppler::GetTEn(PEn,Pann);
-		TTh = doppler::GetTTh(Pann,PEn);
-		TPh = doppler::GetQPhi(Pquad,Psec);
+		TEn = dc.GetTEn(PEn,Pann);
+		TTh = dc.GetTTh(Pann,PEn);
+		TPh = dc.GetQPhi(Pquad,Psec);
 		
 	}
 	
@@ -603,11 +605,11 @@ void hists::FillGamGam1h( float GEn, float GTh, float GPh, vector <float> GCor_G
 			if( GCor_Gtd.at(i)*25. > -200. && GCor_Gtd.at(i)*25. < 210. ) {
 				
 				gg->Fill(GEn, GCor_GEn.at(i), weight);
-				gg_dcT->Fill( GEn*doppler::DC(TEn,TTh,TPh,GTh,GPh,AT),
-							  GCor_GEn.at(i)*doppler::DC(TEn,TTh,TPh,GCor_GTh.at(i),GCor_GPh.at(i),AT),
+				gg_dcT->Fill( GEn*dc.DC(TEn,TTh,TPh,GTh,GPh,dc.GetAt()),
+							  GCor_GEn.at(i)*dc.DC(TEn,TTh,TPh,GCor_GTh.at(i),GCor_GPh.at(i),dc.GetAt()),
 							  weight );
-				gg_dcB->Fill( GEn*doppler::DC(BEn,BTh,BPh,GTh,GPh,AP),
-							  GCor_GEn.at(i)*doppler::DC(BEn,BTh,BPh,GCor_GTh.at(i),GCor_GPh.at(i),AP),
+				gg_dcB->Fill( GEn*dc.DC(BEn,BTh,BPh,GTh,GPh,dc.GetAb()),
+							  GCor_GEn.at(i)*dc.DC(BEn,BTh,BPh,GCor_GTh.at(i),GCor_GPh.at(i),dc.GetAb()),
 							  weight );
 				
 			}
@@ -640,13 +642,13 @@ void hists::FillGamGam2h( float GEn, float GTh, float GPh, vector <float> GCor_G
 	int Bann = Pann[Bptr];
 	int Tann = Pann[Tptr];
 	float BEn = PEn[Bptr];
-	BEn += doppler::GetELoss(BEn,DEADLAYER,1,"TS");
+	BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"TS");
 	float TEn = PEn[Tptr];
-	TEn += doppler::GetELoss(TEn,DEADLAYER,1,"TS");
-	float BTh = doppler::GetPTh(Bann);
-	float TTh = doppler::GetPTh(Tann);
-	float BPh = doppler::GetPPhi(Pquad[Bptr],Psec[Bptr]);
-	float TPh = doppler::GetPPhi(Pquad[Tptr],Psec[Tptr]);
+	TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TS");
+	float BTh = dc.GetPTh(Bann);
+	float TTh = dc.GetPTh(Tann);
+	float BPh = dc.GetPPhi(Pquad[Bptr],Psec[Bptr]);
+	float TPh = dc.GetPPhi(Pquad[Tptr],Psec[Tptr]);
 	
 	for( unsigned int i = 0; i < GCor_GEn.size(); i++ ) {
 		
@@ -657,11 +659,11 @@ void hists::FillGamGam2h( float GEn, float GTh, float GPh, vector <float> GCor_G
 			if( GCor_Gtd.at(i)*25. > -200. && GCor_Gtd.at(i)*25. < 210. ) {
 				
 				gg->Fill(GEn, GCor_GEn.at(i), weight); 
-				gg_dcT->Fill( GEn*doppler::DC(TEn,TTh,TPh,GTh,GPh,AT),
-							  GCor_GEn.at(i)*doppler::DC(TEn,TTh,TPh,GCor_GTh.at(i),GCor_GPh.at(i),AT),
+				gg_dcT->Fill( GEn*dc.DC(TEn,TTh,TPh,GTh,GPh,dc.GetAt()),
+							  GCor_GEn.at(i)*dc.DC(TEn,TTh,TPh,GCor_GTh.at(i),GCor_GPh.at(i),dc.GetAt()),
 							  weight );
-				gg_dcB->Fill( GEn*doppler::DC(BEn,BTh,BPh,GTh,GPh,AP),
-							  GCor_GEn.at(i)*doppler::DC(BEn,BTh,BPh,GCor_GTh.at(i),GCor_GPh.at(i),AP),
+				gg_dcB->Fill( GEn*dc.DC(BEn,BTh,BPh,GTh,GPh,dc.GetAb()),
+							  GCor_GEn.at(i)*dc.DC(BEn,BTh,BPh,GCor_GTh.at(i),GCor_GPh.at(i),dc.GetAb()),
 							  weight );
 				
 			}
@@ -700,13 +702,13 @@ void hists::PhiCalHists( float GEn, float GTh, float GPh, float PEn, Int_t Pann,
 	if( cut == 0 ) {
 	
 		TEn = PEn;
-		TEn += doppler::GetELoss(TEn,DEADLAYER,1,"TS");
-		TTh = doppler::GetPTh(Pann);
-		TPh = doppler::GetPPhi(Pquad,Psec);
+		TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TS");
+		TTh = dc.GetPTh(Pann);
+		TPh = dc.GetPPhi(Pquad,Psec);
 		
-		BEn = doppler::GetBEn(PEn,Pann);
-		BTh = doppler::GetBTh(Pann);
-		BPh = doppler::GetQPhi(Pquad,Psec);
+		BEn = dc.GetBEn(PEn,Pann);
+		BTh = dc.GetBTh(Pann);
+		BPh = dc.GetQPhi(Pquad,Psec);
 
 	}
 	
@@ -714,13 +716,13 @@ void hists::PhiCalHists( float GEn, float GTh, float GPh, float PEn, Int_t Pann,
 	else if( cut > 0 ){
 	
 		BEn = PEn;
-		BEn += doppler::GetELoss(BEn,DEADLAYER,1,"TS");
-		BTh = doppler::GetPTh(Pann);
-		BPh = doppler::GetPPhi(Pquad,Psec);
+		BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"TS");
+		BTh = dc.GetPTh(Pann);
+		BPh = dc.GetPPhi(Pquad,Psec);
 		
-		TEn = doppler::GetTEn(PEn,Pann);
-		TTh = doppler::GetTTh(Pann,PEn);
-		TPh = doppler::GetQPhi(Pquad,Psec);
+		TEn = dc.GetTEn(PEn,Pann);
+		TTh = dc.GetTTh(Pann,PEn);
+		TPh = dc.GetQPhi(Pquad,Psec);
 		
 	}
 	
@@ -735,8 +737,8 @@ void hists::PhiCalHists( float GEn, float GTh, float GPh, float PEn, Int_t Pann,
 
 		BPh += (float)j * PHI_STEP_WIDTH * TMath::DegToRad();
 		TPh += (float)j * PHI_STEP_WIDTH * TMath::DegToRad();
-		phical_dcT[j]->Fill( GEn*doppler::DC(TEn,TTh,TPh,GTh,GPh,AT), weight );
-		phical_dcB[j]->Fill( GEn*doppler::DC(BEn,BTh,BPh,GTh,GPh,AP), weight );
+		phical_dcT[j]->Fill( GEn*dc.DC(TEn,TTh,TPh,GTh,GPh,dc.GetAt()), weight );
+		phical_dcB[j]->Fill( GEn*dc.DC(BEn,BTh,BPh,GTh,GPh,dc.GetAb()), weight );
 
 	}
 
@@ -748,7 +750,7 @@ void hists::PhiCalHists( float GEn, float GTh, float GPh, float PEn, Int_t Pann,
 
 void hists::FillPar1h( float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, Int_t cut, float weight ) {
 	
-	float PTh = doppler::GetPTh(Pann)*TMath::RadToDeg();	
+	float PTh = dc.GetPTh(Pann)*TMath::RadToDeg();	
 	float BTh, TTh, BEn, TEn;
 
 	part1h->Fill(PTh, PEn/1000.);
@@ -757,9 +759,9 @@ void hists::FillPar1h( float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, Int_t cut
 	
 	if( cut == 0 ) {
 	
-		BTh = doppler::GetBTh(Pann)*TMath::RadToDeg();
-		BEn = doppler::GetBEn(PEn,Pann);
-		BEn -= doppler::GetELoss(BEn,DEADLAYER,0,"TS");
+		BTh = dc.GetBTh(Pann)*TMath::RadToDeg();
+		BEn = dc.GetBEn(PEn,Pann);
+		BEn -= dc.GetELoss(BEn,dc.GetCDDeadLayer(),0,"TS");
 
 		Th->Fill(PTh,PEn/1000.);
 		T1h->Fill(PTh,PEn/1000.);
@@ -769,9 +771,9 @@ void hists::FillPar1h( float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, Int_t cut
 	
 	else if( cut > 0 ) {
 	
-		TTh = doppler::GetTTh(Pann,PEn)*TMath::RadToDeg();
-		TEn = doppler::GetTEn(PEn,Pann);
-		TEn -= doppler::GetELoss(TEn,DEADLAYER,0,"TS");
+		TTh = dc.GetTTh(Pann,PEn)*TMath::RadToDeg();
+		TEn = dc.GetTEn(PEn,Pann);
+		TEn -= dc.GetELoss(TEn,dc.GetCDDeadLayer(),0,"TS");
 	
 		Bh->Fill(PTh,PEn/1000.);
 		B1h->Fill(PTh,PEn/1000.);
@@ -793,10 +795,10 @@ void hists::FillPar2h( vector<float> PEn, vector<int> Pann, vector<int> Psec, ve
 	int Tquad = Pquad[Tptr];
 	float BEn = PEn[Bptr];
 	float TEn = PEn[Tptr];
-	float BTh = doppler::GetPTh(Bann)*TMath::RadToDeg();
-	float TTh = doppler::GetPTh(Tann)*TMath::RadToDeg();
-	float BPh = doppler::GetPPhi(Bquad,Bsec)*TMath::RadToDeg();
-	float TPh = doppler::GetPPhi(Tquad,Tsec)*TMath::RadToDeg();
+	float BTh = dc.GetPTh(Bann)*TMath::RadToDeg();
+	float TTh = dc.GetPTh(Tann)*TMath::RadToDeg();
+	float BPh = dc.GetPPhi(Bquad,Bsec)*TMath::RadToDeg();
+	float TPh = dc.GetPPhi(Tquad,Tsec)*TMath::RadToDeg();
 
 	Bh->Fill(BTh, BEn/1000.);
 	Th->Fill(TTh, TEn/1000.);

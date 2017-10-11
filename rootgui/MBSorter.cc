@@ -138,6 +138,21 @@ MBSorter::MBSorter() {
 	sub_frame_10->SetName( "sub_frame_10" );
 	sub_frame_7->AddFrame( sub_frame_10, new TGLayoutHints( kLHintsBottom | kLHintsExpandX ) );
 	
+	// Sub frame 11 - Analysis boxes
+	sub_frame_11 = new TGVerticalFrame( comp_frame_3, 700, 90 );
+	sub_frame_11->SetName( "sub_frame_11" );
+	comp_frame_3->AddFrame( sub_frame_11, new TGLayoutHints( kLHintsLeft ) );
+	
+	// Sub frame 12 - Configuration file
+	sub_frame_12 = new TGHorizontalFrame( sub_frame_11, 700, 45 );
+	sub_frame_12->SetName( "sub_frame_12" );
+	sub_frame_11->AddFrame( sub_frame_12, new TGLayoutHints( kLHintsTop | kLHintsExpandX ) );
+	
+	// Sub frame 13 - Analysis check buttons
+	sub_frame_13 = new TGHorizontalFrame( sub_frame_11, 700, 45 );
+	sub_frame_13->SetName( "sub_frame_13" );
+	sub_frame_11->AddFrame( sub_frame_13, new TGLayoutHints( kLHintsBottom | kLHintsExpandX ) );
+	
 	// Doppler frame 0 - Labels
 	dop_frame_0 = new TGVerticalFrame( right_frame, 30, 360 );
 	dop_frame_0->SetName( "dop_frame_0" );
@@ -228,6 +243,15 @@ MBSorter::MBSorter() {
 	lab_calfile->SetWrapLength( -1 );
 	lab_calfile->Resize( 80, lab_calfile->GetDefaultHeight() );
 	sub_frame_9->AddFrame( lab_calfile,
+						  new TGLayoutHints( kLHintsLeft | kFixedWidth, 2, 2, 2, 2 ) );
+	
+	// Configuration file
+	lab_config = new TGLabel( sub_frame_12, "Configuration filename" );
+	lab_config->SetTextJustify( 36 );
+	lab_config->SetMargins( 0, 0, 0, 0 );
+	lab_config->SetWrapLength( -1 );
+	lab_config->Resize( 80, lab_config->GetDefaultHeight() );
+	sub_frame_12->AddFrame( lab_config,
 						  new TGLayoutHints( kLHintsLeft | kFixedWidth, 2, 2, 2, 2 ) );
 	
 	// Doppler - Zb
@@ -412,6 +436,13 @@ MBSorter::MBSorter() {
 	text_calfile->Resize( 500, text_calfile->GetDefaultHeight() );
 	sub_frame_9->AddFrame( text_calfile, new TGLayoutHints( kLHintsRight | kLHintsExpandX, 2, 2, 2, 2 ) );
 	
+	// Configuration file
+	text_config = new TGTextEntry( sub_frame_12 );
+	text_config->SetMaxLength( 4096 );
+	text_config->SetAlignment( kTextLeft );
+	text_config->Resize( 370, text_config->GetDefaultHeight() );
+	sub_frame_12->AddFrame( text_config, new TGLayoutHints( kLHintsRight | kLHintsExpandX, 2, 2, 2, 2 ) );
+	
 	
 	//////////////////////////
 	// Create check buttons //
@@ -444,30 +475,47 @@ MBSorter::MBSorter() {
 	check_verbose = new TGCheckButton( sub_frame_10, "Verbose" );
 	sub_frame_10->AddFrame( check_verbose, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
+	check_config = new TGCheckButton( sub_frame_13, "Use config file" );
+	sub_frame_13->AddFrame( check_config, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
+	
 	
 	///////////////////////////
 	// Create number entries //
 	///////////////////////////
 	
-	num_last_entry = new TGNumberEntry( sub_frame_6, -1 );
+	num_last_entry = new TGNumberEntry( sub_frame_6, -1, 9, -1, 
+		TGNumberFormat::kNESInteger, TGNumberFormat::kNEAAnyNumber, TGNumberFormat::kNELLimitMin,
+		-1, 99999999 );
 	sub_frame_6->AddFrame( num_last_entry, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
-	num_dop_zb = new TGNumberEntry( dop_frame_1, 50 );
+	num_dop_zb = new TGNumberEntry( dop_frame_1, 50, 3, -1,
+		TGNumberFormat::kNESInteger, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMinMax,
+		1, 120 );
 	dop_frame_1->AddFrame( num_dop_zb, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
-	num_dop_zt = new TGNumberEntry( dop_frame_1, 82 );
+	num_dop_zt = new TGNumberEntry( dop_frame_1, 82, 3, -1,
+		TGNumberFormat::kNESInteger, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMinMax,
+		1, 120 );
 	dop_frame_1->AddFrame( num_dop_zt, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
-	num_dop_ab = new TGNumberEntry( dop_frame_1, 132 );
+	num_dop_ab = new TGNumberEntry( dop_frame_1, 132, 3, -1,
+		TGNumberFormat::kNESInteger, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMinMax,
+		1, 300 );
 	dop_frame_1->AddFrame( num_dop_ab, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
-	num_dop_at = new TGNumberEntry( dop_frame_1, 206 );
+	num_dop_at = new TGNumberEntry( dop_frame_1, 206, 3, -1,
+		TGNumberFormat::kNESInteger, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMinMax,
+		1, 300 );
 	dop_frame_1->AddFrame( num_dop_at, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
-	num_dop_eb = new TGNumberEntry( dop_frame_1, 5000 );
+	num_dop_eb = new TGNumberEntry( dop_frame_1, 5000, 5, -1,
+		TGNumberFormat::kNESInteger, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMin,
+		1, 999999 );
 	dop_frame_1->AddFrame( num_dop_eb, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
-	num_dop_th = new TGNumberEntry( dop_frame_1, 2000 );
+	num_dop_th = new TGNumberEntry( dop_frame_1, 2000, 5, -1,
+		TGNumberFormat::kNESInteger, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMin,
+		1, 999999 );
 	dop_frame_1->AddFrame( num_dop_th, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
 	
@@ -523,6 +571,16 @@ MBSorter::MBSorter() {
 	but_mnt->SetWrapLength( -1 );
 	but_mnt->Resize( 50, 56 );
 	comp_frame_3->AddFrame( but_mnt,
+				new TGLayoutHints( kLHintsRight | kLHintsExpandY, 2, 2, 2, 2 ) );
+	
+	// TDRIVAna
+	but_tdriv = new TGTextButton( comp_frame_3, "TDRIV analysis", -1, TGTextButton::GetDefaultGC()(),
+							   TGTextButton::GetDefaultFontStruct(), kRaisedFrame );
+	but_tdriv->SetTextJustify( 36 );
+	but_tdriv->SetMargins( 0, 0, 0, 0 );
+	but_tdriv->SetWrapLength( -1 );
+	but_tdriv->Resize( 50, 56 );
+	comp_frame_3->AddFrame( but_tdriv,
 				new TGLayoutHints( kLHintsRight | kLHintsExpandY, 2, 2, 2, 2 ) );
 	
 	// Add files
@@ -589,11 +647,13 @@ MBSorter::MBSorter() {
 	check_source->SetOn();
 
 	text_outfile->SetText( "/media/MinballBackup/is562/rootfiles/108Sn_206Pb_laser_on_xxx-yyy" );
-	text_calfile->SetText( "/media/MinballBackup/is562/calfiles/calibration-online-is546.dat" );
+	text_calfile->SetText( "/media/MinballBackup/is562/config/calibration-online-is546.dat" );
+	text_config->SetText( "/media/MinballBackup/is562/config/config-is562.dat" );
 	check_cdpad->SetOn();
 	//check_singles->SetOn();
 	//check_gamgam->SetOn();
 	check_addback->SetOn();
+	//check_config->SetOn();
 
 	num_dop_zb->SetNumber( 1 );
 	num_dop_zt->SetNumber( 1 );
@@ -614,6 +674,7 @@ MBSorter::MBSorter() {
 	but_build->Connect( "Clicked()", "MBSorter", this, "on_build_clicked()" );
 	but_ana->Connect( "Clicked()", "MBSorter", this, "on_ana_clicked()" );
 	but_mnt->Connect( "Clicked()", "MBSorter", this, "on_mnt_clicked()" );
+	but_tdriv->Connect( "Clicked()", "MBSorter", this, "on_tdriv_clicked()" );
 	
 	
 }
@@ -807,6 +868,24 @@ void MBSorter::on_mnt_clicked() {
 	outputfile += "_mnt.root";
 	
 	cmd = "MntAna -i " + inputfile + " -o " + outputfile;
+
+	cout << cmd << endl;
+	gSystem->Exec( cmd );
+	
+}
+
+void MBSorter::on_tdriv_clicked() {
+	
+	// Slot to react to Histograms button
+	TString inputfile, outputfile;
+	TString cmd;
+
+	inputfile = text_outfile->GetText();
+	inputfile += "_tree.root";
+	outputfile = text_outfile->GetText();
+	outputfile += "_mnt.root";
+	
+	cmd = "TDRIVAna -i " + inputfile + " -o " + outputfile;
 
 	cout << cmd << endl;
 	gSystem->Exec( cmd );

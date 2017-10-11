@@ -31,7 +31,7 @@ protected:
 	TGCompositeFrame    *comp_frame_0;		// composite frame for rsync
 	TGCompositeFrame    *comp_frame_1;		// composite frame for MedToRoot
 	TGCompositeFrame    *comp_frame_2;		// composite frame for TreeBuilder
-	TGCompositeFrame    *comp_frame_3;		// composite frame for TreeAna
+	TGCompositeFrame    *comp_frame_3;		// composite frame for CLXAna
 	TGVerticalFrame     *dop_frame_0;		// vertical frame for Doppler labels
 	TGVerticalFrame     *dop_frame_1;		// vertical frame for Doppler values
 	TGVerticalFrame     *dop_frame_2;		// vertical frame for Doppler units
@@ -46,8 +46,9 @@ protected:
 	TGHorizontalFrame   *sub_frame_8;		// sub-sub frame for output file
 	TGHorizontalFrame   *sub_frame_9;		// sub-sub frame for calibration file
 	TGHorizontalFrame   *sub_frame_10;		// sub-sub frame for TreeBuilder check buttons
-	TGVerticalFrame     *sub_frame_11;		// sub frame for TreeAna buttons/boxes
-	TGHorizontalFrame   *sub_frame_12;		// sub-sub frame for TreeAna check buttons
+	TGVerticalFrame     *sub_frame_11;		// sub frame for Analysis buttons/boxes
+	TGHorizontalFrame   *sub_frame_12;		// sub-sub frame for configuration file
+	TGHorizontalFrame   *sub_frame_13;		// sub-sub frame for Analysis check buttons
 	
 	// Separators
 	TGHorizontal3DLine  *fHorizontal_0;
@@ -67,6 +68,7 @@ protected:
 	TGLabel				*lab_outfile;		// label for output filename
 	TGLabel				*lab_outsuffix;		// display suffix of output filename
 	TGLabel				*lab_calfile;		// label for calibration file
+	TGLabel				*lab_config;		// label for configuration file
 	TGLabel				*lab_dop_zb;		// label for Z of beam
 	TGLabel				*lab_dop_zt;		// label for Z of target
 	TGLabel				*lab_dop_ab;		// label for A of beam
@@ -91,6 +93,7 @@ protected:
 	TGTextEntry         *text_settings;		// text entry for settings file
 	TGTextEntry         *text_outfile;		// text entry for output filename base
 	TGTextEntry         *text_calfile;		// text entry for calibration file
+	TGTextEntry         *text_config;		// text entry for configuration file
 
 	// Number entries
 	TGNumberEntry		*num_last_entry;	// number for the last entry flag
@@ -111,13 +114,15 @@ protected:
 	TGCheckButton       *check_gamgam;		// check button for gamma-gamma events in tree
 	TGCheckButton       *check_addback;		// check button for addback on/off
 	TGCheckButton       *check_verbose;		// check button for verbose output
+	TGCheckButton       *check_config;		// check button for config file
 	
 	// Action buttons
 	TGTextButton        *but_rsync;			// button to do rsync
 	TGTextButton        *but_medroot;		// button to do MedToRoot
 	TGTextButton        *but_build;			// button to do TreeBuilder
-	TGTextButton        *but_ana;			// button to do TreeAna
+	TGTextButton        *but_ana;			// button to do CLXAna
 	TGTextButton        *but_mnt;			// button to do MntAna
+	TGTextButton        *but_tdriv;			// button to do TDRIVAna
 	TGTextButton        *but_add;			// button to add files
 	TGTextButton        *but_del;			// button to remove files
 	
@@ -133,8 +138,9 @@ public:
 	void on_rsync_clicked();	// rsync function
 	void on_medroot_clicked();	// MedToRoot function
 	void on_build_clicked();	// TreeBuilder function
-	void on_ana_clicked();		// TreeAna function
+	void on_ana_clicked();		// CLXAna function
 	void on_mnt_clicked();		// MntAna function
+	void on_tdriv_clicked();	// TDRIVAna function
 
 	// File list
 	vector <string> filelist;

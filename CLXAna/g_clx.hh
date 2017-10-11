@@ -29,9 +29,9 @@ using namespace std;
 #include <TObject.h>
 
 // Experimental definitions
-#ifndef ExpDefs_hh
-# include "ExpDefs.hh"
-#endif
+//#ifndef ExpDefs_hh
+//# include "ExpDefs.hh"
+//#endif
 
 // Headers for tree
 #ifndef __MBEVTS_HH__
@@ -79,7 +79,12 @@ class g_clx : public TObject {
 	vector <int>    del_ptr;
 	int             file;
 
-	float		GammaEnergy;
+	float			GammaEnergy;
+	int				Zb, Zt, Ab, At;
+	float			Eb, Ex, thick, depth;
+	float			cddist, cdoffset;
+	float			deadlayer;
+	float			spededist;
 	
 	// List of branches
 	TBranch        *b_mbevts_fUniqueID;   //!
@@ -131,59 +136,9 @@ class g_clx : public TObject {
 
 #ifdef g_clx_cxx
 g_clx::g_clx(TTree *tree) : fChain(0) {
-	// if parameter tree is not specified (or zero), connect the file
-	// used to generate this class and read the Tree.
+	// if parameter tree is not specified (or zero), probably crash
 	
-	if( tree == 0 ) {
-
-		bool skip_flag;
-		vector<int> skip_list;
-		skip_list.push_back( 17 );
-		skip_list.push_back( 22 );
-		skip_list.push_back( 26 );
-		skip_list.push_back( 32 );
-		skip_list.push_back( 34 );
-		skip_list.push_back( 54 );
-		skip_list.push_back( 71 );
-		skip_list.push_back( 74 );
-		skip_list.push_back( 109 );
-		skip_list.push_back( 111 );
-		skip_list.push_back( 113 );
-		skip_list.push_back( 114 );
-		skip_list.push_back( 116 );
-		skip_list.push_back( 119 );
-	
-		string inputfilename;
-	
-		TChain *chain = new TChain( "g_clx", "" );
-
-		for( int i = 9; i <= 125; i++ ) {
-	
-			// Skip background/broken runs
-			skip_flag = false;
-			for( unsigned int j = 0; j < skip_list.size(); j++ ) 
-				if( i == skip_list[j] ) skip_flag = true;
-				
-			if( skip_flag ) continue;
-				
-			// Skip decay runs
-			if( i >= 84 && i <= 103 ) continue;
-
-			inputfilename = "rootfiles/IS551_132Sn_RUN";
-			if( i < 10 ) inputfilename += "00";
-			else if( i < 100 ) inputfilename += "0";
-			inputfilename += doppler::convertInt( i );
-			inputfilename += "_tree.root";
-	
-			chain->Add( inputfilename.c_str() );	
-		
-		}
-	
-		tree = chain;
-	
-	}
-	
-	Init(tree);
+	if( tree != 0 )	Init(tree);
 	
 }
 

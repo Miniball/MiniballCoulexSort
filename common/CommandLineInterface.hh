@@ -25,6 +25,7 @@ public:
   void Add(const char*, const char*, char**);
   void Add(const char*, const char*, string*);
   void Add(const char*, const char*, int*);
+  void Add(const char*, const char*, float*);
   void Add(const char*, const char*, size_t*);
   void Add(const char*, const char*, long long*);
   void Add(const char*, const char*, double*, double factor = 1.);

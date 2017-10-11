@@ -36,13 +36,13 @@ void g_clx::Loop( string outputfilename ) {
 	// Output file name	
 	TFile *out = new TFile( outputfilename.c_str(), "RECREATE" );
 
+	// Create doppler instance and set experimental parameters
+	doppler dc;
+	dc.ExpDefs( Zb, Ab, Zt, At, Eb, Ex, thick, depth, cddist, deadlayer, spededist );
+
 	// Fit stopping power curves from the srim output files
 	// Comment out to use the default parameters in doppler.hh
-	if( !doppler::stoppingpowers( ZP, ZT, AP, AT, "BT" ) || // beam in target
-			!doppler::stoppingpowers( ZP, ZT, AP, AT, "TT" ) || // target in target
-			!doppler::stoppingpowers( ZP, ZT, AP, AT, "BS" ) || // beam in silicon
-			!doppler::stoppingpowers( ZP, ZT, AP, AT, "TS" )	// target in silicon
-	  ) return;
+	if( !dc.stoppingpowers( true, true, true, true ) ) return;
 
 	// Ratio of prompt and random time windows
 	// Alternatively, normalisation of beta-decay lines
@@ -56,7 +56,7 @@ void g_clx::Loop( string outputfilename ) {
 
 	// Declare the histograms here and initialise!
 	hists h;
-	h.Initialise();
+	h.Initialise( dc );
 
 	// Particle-particle time difference (from tppdiff)
 	h.Set_ppwin(300.);
@@ -115,7 +115,7 @@ void g_clx::Loop( string outputfilename ) {
 
 	// New angles defined by Spede geometry
 #ifdef SPEDEGEOMETRY
-	double spede_r = SPEDEDIST;
+	double spede_r = dc.GetSpedeDist();
 	double spede_alpha = 0.0;
 
 	double spede_theta[24];
@@ -192,8 +192,8 @@ void g_clx::Loop( string outputfilename ) {
 			
 			else { // PAD
 
-				tha = doppler::GetPTh( 10 );
-				pha = doppler::GetPPhi( cid-1, 6 );
+				tha = dc.GetPTh( 10 );
+				pha = dc.GetPPhi( cid-1, 6, dc.GetCDOffset() );
 
 				for( unsigned int i = 0; i < gcor_gen.size(); i++ ){
 			
@@ -270,8 +270,8 @@ void g_clx::Loop( string outputfilename ) {
 			// Germanium angles vs. Silicon angles
 			if( !electron ) {
 #ifdef GEANG
-				h.GeSiAng->Fill(tha*TMath::RadToDeg(),doppler::GetPTh(ann[i])*TMath::RadToDeg(),(pha-doppler::GetPPhi(det[i],sec[i]))*TMath::RadToDeg());
-				h.GeSiAng_clu[cluid]->Fill(tha*TMath::RadToDeg(),doppler::GetPTh(ann[i])*TMath::RadToDeg(),(pha-doppler::GetPPhi(det[i],sec[i]))*TMath::RadToDeg());
+				h.GeSiAng->Fill(tha*TMath::RadToDeg(),dc.GetPTh(ann[i])*TMath::RadToDeg(),(pha-dc.GetPPhi(det[i],sec[i]))*TMath::RadToDeg());
+				h.GeSiAng_clu[cluid]->Fill(tha*TMath::RadToDeg(),dc.GetPTh(ann[i])*TMath::RadToDeg(),(pha-dc.GetPPhi(det[i],sec[i]))*TMath::RadToDeg());
 #endif
 			} // !electron
 			
