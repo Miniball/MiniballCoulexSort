@@ -1,0 +1,15 @@
+# Config file for IS562 (October 2017)
+
+Zb: 50				# Z of the beam
+Ab: 108				# A of the beam
+Zt: 82				# Z of the target
+At: 206				# A of the target
+Eb: 4500			# Energy of the beam in keV/u
+Ex: 1206			# Excitation energy of state of interest
+thick: 4.70			# Target thickness in mg/cm2
+depth: 2.35			# Depth of interaction (usually half way through)
+cddist: 21.0		# Distance between CD and target in mm
+cdoffset: 242.6		# Rotation of the CD from the vertical in degrees
+deadlayer: 0.7		# Dead layer on Si of the CD in um
+spededist: 23.6		# Distance between Spede and target in mm
+
