@@ -78,7 +78,7 @@ MBSorter::MBSorter() {
 	fHorizontal_2->SetName( "fHorizontal_2" );
 	centre_frame->AddFrame( fHorizontal_2, new TGLayoutHints( kLHintsLeft | kLHintsTop, 2, 2, 2, 2 ) );
 	
-	// Centre frame 3 - TreeAna
+	// Centre frame 3 - CLXAna
 	comp_frame_3 = new TGCompositeFrame( centre_frame, 800, 90, kHorizontalFrame | kFixedWidth );
 	comp_frame_3->SetName( "comp_frame_3" );
 	centre_frame->AddFrame( comp_frame_3, new TGLayoutHints( kLHintsExpandX ) );
@@ -505,7 +505,7 @@ MBSorter::MBSorter() {
 	comp_frame_2->AddFrame( but_build,
 				new TGLayoutHints( kLHintsRight | kLHintsExpandY, 2, 2, 2, 2 ) );
 	
-	// TreeAna
+	// CLXAna
 	but_ana = new TGTextButton( comp_frame_3, "Coulex analysis", -1, TGTextButton::GetDefaultGC()(),
 							   TGTextButton::GetDefaultFontStruct(), kRaisedFrame );
 	but_ana->SetTextJustify( 36 );
@@ -788,7 +788,7 @@ void MBSorter::on_ana_clicked() {
 	outputfile = text_outfile->GetText();
 	outputfile += "_hists.root";
 	
-	cmd = "TreeAna -i " + inputfile + " -o " + outputfile;
+	cmd = "CLXAna -i " + inputfile + " -o " + outputfile;
 
 	cout << cmd << endl;
 	gSystem->Exec( cmd );
