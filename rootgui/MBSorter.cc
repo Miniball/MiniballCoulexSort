@@ -643,7 +643,7 @@ MBSorter::MBSorter() {
 
 	text_add_file->SetText( "108Sn_206Pb_pos6_laser_on_053" );
 
-	text_settings->SetText( "/media/MinballBackup/is562/MBSettings2017_CLX.dat" );
+	text_settings->SetText( "/media/MinballBackup/is562/config/MBSettings2017_CLX.dat" );
 	check_source->SetOn();
 
 	text_outfile->SetText( "/media/MinballBackup/is562/rootfiles/108Sn_206Pb_laser_on_xxx-yyy" );
