@@ -1,7 +1,7 @@
 SUBDIRS = common \
 		  MedToRoot \
 		  TreeBuilder \
-		  TreeAna \
+		  CLXAna \
 		  rootgui
 
 all: $(SUBDIRS)

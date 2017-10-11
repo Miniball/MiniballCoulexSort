@@ -579,17 +579,17 @@ MBSorter::MBSorter() {
 	// Defaults //
 	//////////////
 	
-	text_daq_dir->SetText( "/mbdata/miniball/is546-170922" );
-	text_local_dir->SetText( "/media/MinballBackup/is546/medfiles" );
-	text_med_pre->SetText( "140Nd" );
+	text_daq_dir->SetText( "/mbdata/miniball/is562-171009" );
+	text_local_dir->SetText( "/media/MinballBackup/is562/medfiles" );
+	text_med_pre->SetText( "108Sn" );
 
-	text_add_file->SetText( "140Nd_208Pb_pos3_laser_on_053" );
+	text_add_file->SetText( "108Sn_206Pb_pos6_laser_on_053" );
 
-	text_settings->SetText( "/media/MinballBackup/is546/MBSettings2017_CLX.dat" );
+	text_settings->SetText( "/media/MinballBackup/is562/MBSettings2017_CLX.dat" );
 	check_source->SetOn();
 
-	text_outfile->SetText( "/media/MinballBackup/is546/rootfiles/140Nd_208Pb_laser_on_xxx-yyy" );
-	text_calfile->SetText( "/media/MinballBackup/is546/calfiles/calibration-online-is546.dat" );
+	text_outfile->SetText( "/media/MinballBackup/is562/rootfiles/108Sn_206Pb_laser_on_xxx-yyy" );
+	text_calfile->SetText( "/media/MinballBackup/is562/calfiles/calibration-online-is546.dat" );
 	check_cdpad->SetOn();
 	//check_singles->SetOn();
 	//check_gamgam->SetOn();
