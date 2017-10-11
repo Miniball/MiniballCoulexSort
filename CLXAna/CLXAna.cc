@@ -12,9 +12,9 @@ int main( int argc, char *argv[] ) {
 	vector<string> inputfilenames;
 	string configfilename;
 	float		GammaEnergy;
-	int			Zb, Zt, Ab, At;
-	float		Eb, Ex, thick, depth;
-	float		cddist, cdoffset = 242.6;
+	int			Zb = 0, Zt = 0, Ab = 0, At = 0;
+	float		Eb = 0, Ex = 0, thick = 0, depth = 0;
+	float		cddist = 0, cdoffset = 242.6;
 	float		deadlayer = 0.7;
 	float		spededist = 23.6;
 
