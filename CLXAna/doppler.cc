@@ -372,7 +372,6 @@ bool doppler::CutG_en2hit( float BEn, float TEn ) {
 float doppler::GetCDOffset() {
 
 	// Return offset of the CD in the phi rotation from vertical
-	cout << cdoffset << endl;
 	return cdoffset;
 
 }
