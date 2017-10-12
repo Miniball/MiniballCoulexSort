@@ -137,7 +137,8 @@ int main(int argc, char* argv[]) {
 	// Hard-coded parameters... TODO read in from file?
 	// ------------------------------------------------------------------------ //
 	// How many ticks need to align the prompt, in ticks.
-	Double_t dtAdc[4] = {-4.9,-10.2,-5.3,-3.8};  // IS546
+	Double_t dtAdc[4] = {-6.2,-11.4,-5.2,-6.8};  // IS562
+	//Double_t dtAdc[4] = {-4.9,-10.2,-5.3,-3.8};  // IS546
 	//Double_t dtAdc[4] = {-13.0,-11.5,-9.0,-11.0};  // IS558
 	//Double_t dtAdc[4] = {14.0,15.5,16.5,8.0};  // IS558
 	//Double_t dtAdc[4] = {14.0,15.5,16.5,8.0};  // IS553

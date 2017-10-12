@@ -48,7 +48,7 @@ protected:
 	TGHorizontalFrame   *sub_frame_10;		// sub-sub frame for TreeBuilder check buttons
 	TGVerticalFrame     *sub_frame_11;		// sub frame for Analysis buttons/boxes
 	TGHorizontalFrame   *sub_frame_12;		// sub-sub frame for configuration file
-	TGHorizontalFrame   *sub_frame_13;		// sub-sub frame for kinemtaic cut file
+	TGHorizontalFrame   *sub_frame_13;		// sub-sub frame for kinematic cut file
 	TGHorizontalFrame   *sub_frame_14;		// sub-sub frame for Analysis check buttons
 	
 	// Separators
@@ -170,6 +170,13 @@ public:
 
 	// Int to String conversion
 	inline string convertInt( int number ) {
+		stringstream ss;
+		ss << number;
+		return ss.str();
+	};
+
+	// Float to String conversion
+	inline string convertFloat( float number ) {
 		stringstream ss;
 		ss << number;
 		return ss.str();

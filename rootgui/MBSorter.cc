@@ -151,12 +151,12 @@ MBSorter::MBSorter() {
 	// Sub frame 13 - Kinematic cut file
 	sub_frame_13 = new TGHorizontalFrame( sub_frame_11, 700, 45 );
 	sub_frame_13->SetName( "sub_frame_13" );
-	sub_frame_11->AddFrame( sub_frame_13, new TGLayoutHints( kLHintsBottom | kLHintsExpandX ) );
+	sub_frame_11->AddFrame( sub_frame_13, new TGLayoutHints( kLHintsTop | kLHintsExpandX ) );
 	
 	// Sub frame 14 - Analysis check buttons
 	sub_frame_14 = new TGHorizontalFrame( sub_frame_11, 700, 45 );
 	sub_frame_14->SetName( "sub_frame_14" );
-	sub_frame_11->AddFrame( sub_frame_14, new TGLayoutHints( kLHintsBottom | kLHintsExpandX ) );
+	sub_frame_11->AddFrame( sub_frame_14, new TGLayoutHints( kLHintsTop | kLHintsExpandX ) );
 	
 	// Doppler frame 0 - Labels
 	dop_frame_0 = new TGVerticalFrame( right_frame, 30, 360 );
@@ -349,13 +349,13 @@ MBSorter::MBSorter() {
 	dop_frame_0->AddFrame( lab_dop_eb,
 						  new TGLayoutHints( kLHintsTop | kLHintsRight, 2, 2, 5, 5 ) );
 	
-	// Units - Ex
-	lab_unit_ex = new TGLabel( dop_frame_2, "keV/u" );
-	lab_unit_ex->SetTextJustify( 36 );
-	lab_unit_ex->SetMargins( 0, 0, 0, 0 );
-	lab_unit_ex->SetWrapLength( -1 );
-	lab_unit_ex->Resize( 40, lab_unit_ex->GetDefaultHeight() );
-	dop_frame_2->AddFrame( lab_unit_ex,
+	// Units - Eb
+	lab_unit_eb = new TGLabel( dop_frame_2, "keV/u" );
+	lab_unit_eb->SetTextJustify( 36 );
+	lab_unit_eb->SetMargins( 0, 0, 0, 0 );
+	lab_unit_eb->SetWrapLength( -1 );
+	lab_unit_eb->Resize( 40, lab_unit_eb->GetDefaultHeight() );
+	dop_frame_2->AddFrame( lab_unit_eb,
 						  new TGLayoutHints( kLHintsTop, 2, 2, 5, 5 ) );
 	
 	// Doppler - Ex
@@ -367,13 +367,13 @@ MBSorter::MBSorter() {
 	dop_frame_0->AddFrame( lab_dop_ex,
 						  new TGLayoutHints( kLHintsTop | kLHintsRight, 2, 2, 5, 5 ) );
 	
-	// Units - Eb
-	lab_unit_eb = new TGLabel( dop_frame_2, "keV/u" );
-	lab_unit_eb->SetTextJustify( 36 );
-	lab_unit_eb->SetMargins( 0, 0, 0, 0 );
-	lab_unit_eb->SetWrapLength( -1 );
-	lab_unit_eb->Resize( 40, lab_unit_eb->GetDefaultHeight() );
-	dop_frame_2->AddFrame( lab_unit_eb,
+	// Units - Ex
+	lab_unit_ex = new TGLabel( dop_frame_2, "keV" );
+	lab_unit_ex->SetTextJustify( 36 );
+	lab_unit_ex->SetMargins( 0, 0, 0, 0 );
+	lab_unit_ex->SetWrapLength( -1 );
+	lab_unit_ex->Resize( 40, lab_unit_ex->GetDefaultHeight() );
+	dop_frame_2->AddFrame( lab_unit_ex,
 						  new TGLayoutHints( kLHintsTop, 2, 2, 5, 5 ) );
 	
 	// Doppler - Target thickness
@@ -607,6 +607,9 @@ MBSorter::MBSorter() {
 	check_config = new TGCheckButton( sub_frame_14, "Use config file" );
 	sub_frame_14->AddFrame( check_config, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
+	check_cutfile = new TGCheckButton( sub_frame_14, "Use cut file" );
+	sub_frame_14->AddFrame( check_cutfile, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
+	
 	
 	///////////////////////////
 	// Create number entries //
@@ -800,7 +803,7 @@ MBSorter::MBSorter() {
 	text_local_dir->SetText( "/media/MinballBackup/is562/medfiles" );
 	text_med_pre->SetText( "108Sn" );
 
-	text_add_file->SetText( "108Sn_206Pb_pos6_laser_on_053" );
+	text_add_file->SetText( "108Sn_CoulEx_Pos3_laserOn_021" );
 
 	text_settings->SetText( "/media/MinballBackup/is562/config/MBSettings2017_CLX.dat" );
 	check_source->SetOn();
@@ -808,22 +811,23 @@ MBSorter::MBSorter() {
 	text_outfile->SetText( "/media/MinballBackup/is562/rootfiles/108Sn_206Pb_laser_on_xxx-yyy" );
 	text_calfile->SetText( "/media/MinballBackup/is562/config/calibration-online-is546.dat" );
 	text_config->SetText( "/media/MinballBackup/is562/config/config-is562.dat" );
-	text_config->SetText( "/media/MinballBackup/is562/config/cutfile-is562.root" );
+	text_cutfile->SetText( "/media/MinballBackup/is562/config/cutfile-is562.root:Bcut:Tcut" );
 
 	check_cdpad->SetOn();
 	//check_singles->SetOn();
 	//check_gamgam->SetOn();
 	check_addback->SetOn();
 	//check_config->SetOn();
+	check_cutfile->SetOn();
 
 	num_dop_zb->SetNumber( 50 );
 	num_dop_zt->SetNumber( 82 );
 	num_dop_ab->SetNumber( 108 );
-	num_dop_at->SetNumber( 208 );
+	num_dop_at->SetNumber( 206 );
 	num_dop_eb->SetNumber( 4500 );
 	num_dop_ex->SetNumber( 1206 );
-	num_dop_th->SetNumber( 4700 );
-	num_dop_id->SetNumber( 2350 );
+	num_dop_th->SetNumber( 4200 );
+	num_dop_id->SetNumber( 2100 );
 	num_dop_cd->SetNumber( 21.1 );
 	num_dop_ro->SetNumber( 242.6 );
 	num_dop_dl->SetNumber( 0.7 );
@@ -1044,15 +1048,13 @@ void MBSorter::on_ana_clicked() {
 		cmd += " -depth ";
 		cmd += convertInt( num_dop_id->GetIntNumber() );
 		cmd += " -cddist ";
-		cmd += convertInt( num_dop_cd->GetIntNumber() );
+		cmd += convertFloat( num_dop_cd->GetNumber() );
 		cmd += " -cdoffset ";
-		cmd += convertInt( num_dop_ro->GetIntNumber() );
-		cmd += " -cdoffset ";
-		cmd += convertInt( num_dop_ro->GetIntNumber() );
+		cmd += convertFloat( num_dop_ro->GetNumber() );
 		cmd += " -deadlayer ";
-		cmd += convertInt( num_dop_dl->GetIntNumber() );
+		cmd += convertFloat( num_dop_dl->GetNumber() );
 		cmd += " -spededist ";
-		cmd += convertInt( num_dop_sp->GetIntNumber() );
+		cmd += convertFloat( num_dop_sp->GetNumber() );
 
 	}
 
