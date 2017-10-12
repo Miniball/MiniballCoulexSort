@@ -136,6 +136,7 @@ protected:
 	TGCheckButton       *check_addback;		// check button for addback on/off
 	TGCheckButton       *check_verbose;		// check button for verbose output
 	TGCheckButton       *check_config;		// check button for config file
+	TGCheckButton       *check_cutfile;		// check button for kinematics cut file
 	
 	// Action buttons
 	TGTextButton        *but_rsync;			// button to do rsync
