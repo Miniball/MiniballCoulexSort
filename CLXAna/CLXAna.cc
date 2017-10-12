@@ -96,14 +96,14 @@ int main( int argc, char *argv[] ) {
 
 		}
 
-		if( fcut->GetListOfKeys()->Contains( str_bcut.c_str() ) ) {
+		if( !fcut->GetListOfKeys()->Contains( str_bcut.c_str() ) ) {
 
 			cout << "Didn't find beam cut, " << str_bcut << ", in " << str_file << endl;
 			return 0;
 
 		}
 
-		if( fcut->GetListOfKeys()->Contains( str_tcut.c_str() ) ) {
+		if( !fcut->GetListOfKeys()->Contains( str_tcut.c_str() ) ) {
 
 			cout << "Didn't find target cut, " << str_tcut << ", in " << str_file << endl;
 			return 0;
