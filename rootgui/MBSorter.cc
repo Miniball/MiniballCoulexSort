@@ -148,10 +148,15 @@ MBSorter::MBSorter() {
 	sub_frame_12->SetName( "sub_frame_12" );
 	sub_frame_11->AddFrame( sub_frame_12, new TGLayoutHints( kLHintsTop | kLHintsExpandX ) );
 	
-	// Sub frame 13 - Analysis check buttons
+	// Sub frame 13 - Kinematic cut file
 	sub_frame_13 = new TGHorizontalFrame( sub_frame_11, 700, 45 );
 	sub_frame_13->SetName( "sub_frame_13" );
 	sub_frame_11->AddFrame( sub_frame_13, new TGLayoutHints( kLHintsBottom | kLHintsExpandX ) );
+	
+	// Sub frame 14 - Analysis check buttons
+	sub_frame_14 = new TGHorizontalFrame( sub_frame_11, 700, 45 );
+	sub_frame_14->SetName( "sub_frame_14" );
+	sub_frame_11->AddFrame( sub_frame_14, new TGLayoutHints( kLHintsBottom | kLHintsExpandX ) );
 	
 	// Doppler frame 0 - Labels
 	dop_frame_0 = new TGVerticalFrame( right_frame, 30, 360 );
@@ -246,12 +251,21 @@ MBSorter::MBSorter() {
 						  new TGLayoutHints( kLHintsLeft | kFixedWidth, 2, 2, 2, 2 ) );
 	
 	// Configuration file
-	lab_config = new TGLabel( sub_frame_12, "Configuration filename" );
+	lab_config = new TGLabel( sub_frame_12, "Configuration file" );
 	lab_config->SetTextJustify( 36 );
 	lab_config->SetMargins( 0, 0, 0, 0 );
 	lab_config->SetWrapLength( -1 );
 	lab_config->Resize( 80, lab_config->GetDefaultHeight() );
 	sub_frame_12->AddFrame( lab_config,
+						  new TGLayoutHints( kLHintsLeft | kFixedWidth, 2, 2, 2, 2 ) );
+	
+	// Kinematic cut file
+	lab_cutfile = new TGLabel( sub_frame_13, "Kinematic cuts file" );
+	lab_cutfile->SetTextJustify( 36 );
+	lab_cutfile->SetMargins( 0, 0, 0, 0 );
+	lab_cutfile->SetWrapLength( -1 );
+	lab_cutfile->Resize( 80, lab_cutfile->GetDefaultHeight() );
+	sub_frame_13->AddFrame( lab_cutfile,
 						  new TGLayoutHints( kLHintsLeft | kFixedWidth, 2, 2, 2, 2 ) );
 	
 	// Doppler - Zb
@@ -335,6 +349,24 @@ MBSorter::MBSorter() {
 	dop_frame_0->AddFrame( lab_dop_eb,
 						  new TGLayoutHints( kLHintsTop | kLHintsRight, 2, 2, 5, 5 ) );
 	
+	// Units - Ex
+	lab_unit_ex = new TGLabel( dop_frame_2, "keV/u" );
+	lab_unit_ex->SetTextJustify( 36 );
+	lab_unit_ex->SetMargins( 0, 0, 0, 0 );
+	lab_unit_ex->SetWrapLength( -1 );
+	lab_unit_ex->Resize( 40, lab_unit_ex->GetDefaultHeight() );
+	dop_frame_2->AddFrame( lab_unit_ex,
+						  new TGLayoutHints( kLHintsTop, 2, 2, 5, 5 ) );
+	
+	// Doppler - Ex
+	lab_dop_ex = new TGLabel( dop_frame_0, "E_x =" );
+	lab_dop_ex->SetTextJustify( kTextRight );
+	lab_dop_ex->SetMargins( 0, 0, 0, 0 );
+	lab_dop_ex->SetWrapLength( -1 );
+	lab_dop_ex->Resize( 40, lab_dop_ex->GetDefaultHeight() );
+	dop_frame_0->AddFrame( lab_dop_ex,
+						  new TGLayoutHints( kLHintsTop | kLHintsRight, 2, 2, 5, 5 ) );
+	
 	// Units - Eb
 	lab_unit_eb = new TGLabel( dop_frame_2, "keV/u" );
 	lab_unit_eb->SetTextJustify( 36 );
@@ -344,7 +376,7 @@ MBSorter::MBSorter() {
 	dop_frame_2->AddFrame( lab_unit_eb,
 						  new TGLayoutHints( kLHintsTop, 2, 2, 5, 5 ) );
 	
-	// Doppler - Eb
+	// Doppler - Target thickness
 	lab_dop_th = new TGLabel( dop_frame_0, "Target thickness" );
 	lab_dop_th->SetTextJustify( kTextRight );
 	lab_dop_th->SetMargins( 0, 0, 0, 0 );
@@ -353,13 +385,103 @@ MBSorter::MBSorter() {
 	dop_frame_0->AddFrame( lab_dop_th,
 						  new TGLayoutHints( kLHintsTop | kLHintsRight, 2, 2, 5, 5 ) );
 	
-	// Units - Eb
+	// Units - Target thickness
 	lab_unit_th = new TGLabel( dop_frame_2, "µg/cm^2" );
 	lab_unit_th->SetTextJustify( 36 );
 	lab_unit_th->SetMargins( 0, 0, 0, 0 );
 	lab_unit_th->SetWrapLength( -1 );
 	lab_unit_th->Resize( 40, lab_unit_th->GetDefaultHeight() );
 	dop_frame_2->AddFrame( lab_unit_th,
+						  new TGLayoutHints( kLHintsTop, 2, 2, 5, 5 ) );
+	
+	// Doppler - Interaction depth
+	lab_dop_id = new TGLabel( dop_frame_0, "Interaction depth" );
+	lab_dop_id->SetTextJustify( kTextRight );
+	lab_dop_id->SetMargins( 0, 0, 0, 0 );
+	lab_dop_id->SetWrapLength( -1 );
+	lab_dop_id->Resize( 40, lab_dop_id->GetDefaultHeight() );
+	dop_frame_0->AddFrame( lab_dop_id,
+						  new TGLayoutHints( kLHintsTop | kLHintsRight, 2, 2, 5, 5 ) );
+	
+	// Units - Interaction depth
+	lab_unit_id = new TGLabel( dop_frame_2, "µg/cm^2" );
+	lab_unit_id->SetTextJustify( 36 );
+	lab_unit_id->SetMargins( 0, 0, 0, 0 );
+	lab_unit_id->SetWrapLength( -1 );
+	lab_unit_id->Resize( 40, lab_unit_id->GetDefaultHeight() );
+	dop_frame_2->AddFrame( lab_unit_id,
+						  new TGLayoutHints( kLHintsTop, 2, 2, 5, 5 ) );
+	
+	// Doppler - CD distance
+	lab_dop_cd = new TGLabel( dop_frame_0, "CD distance" );
+	lab_dop_cd->SetTextJustify( kTextRight );
+	lab_dop_cd->SetMargins( 0, 0, 0, 0 );
+	lab_dop_cd->SetWrapLength( -1 );
+	lab_dop_cd->Resize( 40, lab_dop_cd->GetDefaultHeight() );
+	dop_frame_0->AddFrame( lab_dop_cd,
+						  new TGLayoutHints( kLHintsTop | kLHintsRight, 2, 2, 5, 5 ) );
+	
+	// Units - CD distance
+	lab_unit_cd = new TGLabel( dop_frame_2, "mm" );
+	lab_unit_cd->SetTextJustify( 36 );
+	lab_unit_cd->SetMargins( 0, 0, 0, 0 );
+	lab_unit_cd->SetWrapLength( -1 );
+	lab_unit_cd->Resize( 40, lab_unit_cd->GetDefaultHeight() );
+	dop_frame_2->AddFrame( lab_unit_cd,
+						  new TGLayoutHints( kLHintsTop, 2, 2, 5, 5 ) );
+	
+	// Doppler - CD rotation
+	lab_dop_cd = new TGLabel( dop_frame_0, "CD rotation" );
+	lab_dop_cd->SetTextJustify( kTextRight );
+	lab_dop_cd->SetMargins( 0, 0, 0, 0 );
+	lab_dop_cd->SetWrapLength( -1 );
+	lab_dop_cd->Resize( 40, lab_dop_cd->GetDefaultHeight() );
+	dop_frame_0->AddFrame( lab_dop_cd,
+						  new TGLayoutHints( kLHintsTop | kLHintsRight, 2, 2, 5, 5 ) );
+	
+	// Units - CD rotation
+	lab_unit_ro = new TGLabel( dop_frame_2, "deg" );
+	lab_unit_ro->SetTextJustify( 36 );
+	lab_unit_ro->SetMargins( 0, 0, 0, 0 );
+	lab_unit_ro->SetWrapLength( -1 );
+	lab_unit_ro->Resize( 40, lab_unit_ro->GetDefaultHeight() );
+	dop_frame_2->AddFrame( lab_unit_ro,
+						  new TGLayoutHints( kLHintsTop, 2, 2, 5, 5 ) );
+	
+	// Doppler - Dead layer
+	lab_dop_dl = new TGLabel( dop_frame_0, "Si dead layer" );
+	lab_dop_dl->SetTextJustify( kTextRight );
+	lab_dop_dl->SetMargins( 0, 0, 0, 0 );
+	lab_dop_dl->SetWrapLength( -1 );
+	lab_dop_dl->Resize( 40, lab_dop_dl->GetDefaultHeight() );
+	dop_frame_0->AddFrame( lab_dop_dl,
+						  new TGLayoutHints( kLHintsTop | kLHintsRight, 2, 2, 5, 5 ) );
+	
+	// Units - Dead layer
+	lab_unit_dl = new TGLabel( dop_frame_2, "µm" );
+	lab_unit_dl->SetTextJustify( 36 );
+	lab_unit_dl->SetMargins( 0, 0, 0, 0 );
+	lab_unit_dl->SetWrapLength( -1 );
+	lab_unit_dl->Resize( 40, lab_unit_dl->GetDefaultHeight() );
+	dop_frame_2->AddFrame( lab_unit_dl,
+						  new TGLayoutHints( kLHintsTop, 2, 2, 5, 5 ) );
+	
+	// Doppler - Spede distance
+	lab_dop_sp = new TGLabel( dop_frame_0, "Spede distance" );
+	lab_dop_sp->SetTextJustify( kTextRight );
+	lab_dop_sp->SetMargins( 0, 0, 0, 0 );
+	lab_dop_sp->SetWrapLength( -1 );
+	lab_dop_sp->Resize( 40, lab_dop_sp->GetDefaultHeight() );
+	dop_frame_0->AddFrame( lab_dop_sp,
+						  new TGLayoutHints( kLHintsTop | kLHintsRight, 2, 2, 5, 5 ) );
+	
+	// Units - Spede distance
+	lab_unit_sp = new TGLabel( dop_frame_2, "mm" );
+	lab_unit_sp->SetTextJustify( 36 );
+	lab_unit_sp->SetMargins( 0, 0, 0, 0 );
+	lab_unit_sp->SetWrapLength( -1 );
+	lab_unit_sp->Resize( 40, lab_unit_sp->GetDefaultHeight() );
+	dop_frame_2->AddFrame( lab_unit_sp,
 						  new TGLayoutHints( kLHintsTop, 2, 2, 5, 5 ) );
 	
 	
@@ -443,6 +565,13 @@ MBSorter::MBSorter() {
 	text_config->Resize( 370, text_config->GetDefaultHeight() );
 	sub_frame_12->AddFrame( text_config, new TGLayoutHints( kLHintsRight | kLHintsExpandX, 2, 2, 2, 2 ) );
 	
+	// Kinematic cut file
+	text_cutfile = new TGTextEntry( sub_frame_13 );
+	text_cutfile->SetMaxLength( 4096 );
+	text_cutfile->SetAlignment( kTextLeft );
+	text_cutfile->Resize( 370, text_cutfile->GetDefaultHeight() );
+	sub_frame_13->AddFrame( text_cutfile, new TGLayoutHints( kLHintsRight | kLHintsExpandX, 2, 2, 2, 2 ) );
+	
 	
 	//////////////////////////
 	// Create check buttons //
@@ -475,8 +604,8 @@ MBSorter::MBSorter() {
 	check_verbose = new TGCheckButton( sub_frame_10, "Verbose" );
 	sub_frame_10->AddFrame( check_verbose, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
-	check_config = new TGCheckButton( sub_frame_13, "Use config file" );
-	sub_frame_13->AddFrame( check_config, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
+	check_config = new TGCheckButton( sub_frame_14, "Use config file" );
+	sub_frame_14->AddFrame( check_config, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
 	
 	///////////////////////////
@@ -498,12 +627,12 @@ MBSorter::MBSorter() {
 		1, 120 );
 	dop_frame_1->AddFrame( num_dop_zt, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
-	num_dop_ab = new TGNumberEntry( dop_frame_1, 132, 3, -1,
+	num_dop_ab = new TGNumberEntry( dop_frame_1, 132, 4, -1,
 		TGNumberFormat::kNESInteger, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMinMax,
 		1, 300 );
 	dop_frame_1->AddFrame( num_dop_ab, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
-	num_dop_at = new TGNumberEntry( dop_frame_1, 206, 3, -1,
+	num_dop_at = new TGNumberEntry( dop_frame_1, 206, 4, -1,
 		TGNumberFormat::kNESInteger, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMinMax,
 		1, 300 );
 	dop_frame_1->AddFrame( num_dop_at, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
@@ -513,10 +642,40 @@ MBSorter::MBSorter() {
 		1, 999999 );
 	dop_frame_1->AddFrame( num_dop_eb, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
+	num_dop_ex = new TGNumberEntry( dop_frame_1, 1206, 5, -1,
+		TGNumberFormat::kNESReal, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMin,
+		1, 999999 );
+	dop_frame_1->AddFrame( num_dop_ex, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
+	
 	num_dop_th = new TGNumberEntry( dop_frame_1, 2000, 5, -1,
 		TGNumberFormat::kNESInteger, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMin,
 		1, 999999 );
 	dop_frame_1->AddFrame( num_dop_th, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
+	
+	num_dop_id = new TGNumberEntry( dop_frame_1, 1000, 5, -1,
+		TGNumberFormat::kNESInteger, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMin,
+		1, 999999 );
+	dop_frame_1->AddFrame( num_dop_id, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
+	
+	num_dop_cd = new TGNumberEntry( dop_frame_1, 21.1, 5, -1,
+		TGNumberFormat::kNESReal, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMinMax,
+		1, 100 );
+	dop_frame_1->AddFrame( num_dop_cd, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
+	
+	num_dop_ro = new TGNumberEntry( dop_frame_1, 242.6, 5, -1,
+		TGNumberFormat::kNESReal, TGNumberFormat::kNEAAnyNumber, TGNumberFormat::kNELLimitMinMax,
+		-999, 999 );
+	dop_frame_1->AddFrame( num_dop_ro, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
+	
+	num_dop_dl = new TGNumberEntry( dop_frame_1, 0.7, 5, -1,
+		TGNumberFormat::kNESReal, TGNumberFormat::kNEANonNegative, TGNumberFormat::kNELLimitMinMax,
+		0, 10 );
+	dop_frame_1->AddFrame( num_dop_dl, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
+	
+	num_dop_sp = new TGNumberEntry( dop_frame_1, 26.2, 5, -1,
+		TGNumberFormat::kNESReal, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMinMax,
+		1, 100 );
+	dop_frame_1->AddFrame( num_dop_sp, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
 	
 	///////////////////////////
@@ -649,18 +808,26 @@ MBSorter::MBSorter() {
 	text_outfile->SetText( "/media/MinballBackup/is562/rootfiles/108Sn_206Pb_laser_on_xxx-yyy" );
 	text_calfile->SetText( "/media/MinballBackup/is562/config/calibration-online-is546.dat" );
 	text_config->SetText( "/media/MinballBackup/is562/config/config-is562.dat" );
+	text_config->SetText( "/media/MinballBackup/is562/config/cutfile-is562.root" );
+
 	check_cdpad->SetOn();
 	//check_singles->SetOn();
 	//check_gamgam->SetOn();
 	check_addback->SetOn();
 	//check_config->SetOn();
 
-	num_dop_zb->SetNumber( 1 );
-	num_dop_zt->SetNumber( 1 );
-	num_dop_ab->SetNumber( 1 );
-	num_dop_at->SetNumber( 1 );
-	num_dop_eb->SetNumber( 1 );
-	num_dop_th->SetNumber( 1 );
+	num_dop_zb->SetNumber( 50 );
+	num_dop_zt->SetNumber( 82 );
+	num_dop_ab->SetNumber( 108 );
+	num_dop_at->SetNumber( 208 );
+	num_dop_eb->SetNumber( 4500 );
+	num_dop_ex->SetNumber( 1206 );
+	num_dop_th->SetNumber( 4700 );
+	num_dop_id->SetNumber( 2350 );
+	num_dop_cd->SetNumber( 21.1 );
+	num_dop_ro->SetNumber( 242.6 );
+	num_dop_dl->SetNumber( 0.7 );
+	num_dop_sp->SetNumber( 26.2 );
 
 	////////////////////
 	// Button presses //
@@ -848,8 +1015,58 @@ void MBSorter::on_ana_clicked() {
 	inputfile += "_tree.root";
 	outputfile = text_outfile->GetText();
 	outputfile += "_hists.root";
-	
-	cmd = "CLXAna -i " + inputfile + " -o " + outputfile;
+
+	cmd = "CLXAna ";
+
+	if( check_config->IsOn() ) {
+
+		cmd += " -c ";
+		cmd += text_config->GetText();
+
+	}
+
+	else {
+
+		cmd += " -Zb ";
+		cmd += convertInt( num_dop_zb->GetIntNumber() );
+		cmd += " -Ab ";
+		cmd += convertInt( num_dop_ab->GetIntNumber() );
+		cmd += " -Zt ";
+		cmd += convertInt( num_dop_zt->GetIntNumber() );
+		cmd += " -At ";
+		cmd += convertInt( num_dop_at->GetIntNumber() );
+		cmd += " -Eb ";
+		cmd += convertInt( num_dop_eb->GetIntNumber() );
+		cmd += " -Ex ";
+		cmd += convertInt( num_dop_ex->GetIntNumber() );
+		cmd += " -thick ";
+		cmd += convertInt( num_dop_th->GetIntNumber() );
+		cmd += " -depth ";
+		cmd += convertInt( num_dop_id->GetIntNumber() );
+		cmd += " -cddist ";
+		cmd += convertInt( num_dop_cd->GetIntNumber() );
+		cmd += " -cdoffset ";
+		cmd += convertInt( num_dop_ro->GetIntNumber() );
+		cmd += " -cdoffset ";
+		cmd += convertInt( num_dop_ro->GetIntNumber() );
+		cmd += " -deadlayer ";
+		cmd += convertInt( num_dop_dl->GetIntNumber() );
+		cmd += " -spededist ";
+		cmd += convertInt( num_dop_sp->GetIntNumber() );
+
+	}
+
+	if( check_cutfile->IsOn() ) {
+
+		cmd += " -cut ";
+		cmd += text_cutfile->GetText();
+
+	}
+
+	cmd += " -i ";
+	cmd += inputfile;
+	cmd += " -o ";
+	cmd += outputfile;
 
 	cout << cmd << endl;
 	gSystem->Exec( cmd );

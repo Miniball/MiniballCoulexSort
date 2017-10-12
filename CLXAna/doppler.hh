@@ -28,11 +28,11 @@ class doppler : public TObject {
 
 	public:
 
-	void			ExpDefs( int Zb_, int Ab_, int Zt_, int At_, float Eb_, float Ex_, float thick_,
-								float depth_, float cddist_, float deadlayer_, float spededist_ );
-	int		Cut(float PEn, float anno, int quad);
-	int		Cut_2p(float PEn1, float anno1, int quad1,
-							float PEn2, float anno2, int quad2);
+	void	ExpDefs( int Zb_, int Ab_, int Zt_, int At_, float Eb_, float Ex_, float thick_,
+						float depth_, float cddist_, float deadlayer_, float spededist_,
+						TCutG *Bcut_, TCutG *Tcut_ );
+	int		Cut( float PEn, float anno, int quad );
+	int		Cut_2p( float PEn1, float anno1, int quad1, float PEn2, float anno2, int quad2 );
 	bool	CutG_en2hit( float BEn, float TEn );
 	int		GetZb();
 	int		GetAb();
@@ -55,6 +55,7 @@ class doppler : public TObject {
 	float	DC_elec( float een, float PEn, float PTh, float PPhi, float GTh, float GPhi, float A );
 	bool	stoppingpowers( bool BT, bool TT, bool BS, bool TS );
 	bool	stoppingpowers( string opt );
+
 	static string	convertInt( int number );
 	static string	convertFloat( float number );
 	
@@ -72,6 +73,7 @@ class doppler : public TObject {
 	float	cddist, cdoffset;
 	float	deadlayer;
 	float	spededist;
+	TCutG	*Bcut, *Tcut;
 	
 	ClassDef(doppler,1);
 

@@ -8,9 +8,8 @@ int main( int argc, char *argv[] ) {
 
 	int j = 0;
 
-	string outputfilename;
+	string outputfilename, configfilename, cutfilename;
 	vector<string> inputfilenames;
-	string configfilename;
 	float		GammaEnergy;
 	int			Zb = 0, Zt = 0, Ab = 0, At = 0;
 	float		Eb = 0, Ex = 0, thick = 0, depth = 0;
@@ -23,6 +22,7 @@ int main( int argc, char *argv[] ) {
 	interface->Add("-i", "inputfiles", &inputfilenames );
 	interface->Add("-o", "outputfile", &outputfilename );
 	interface->Add("-c", "configfile", &configfilename );
+	interface->Add("-cut", "cutfile", &cutfilename );
 	interface->Add("-Zb", "Zb", &Zb );
 	interface->Add("-Ab", "Ab", &Ab );
 	interface->Add("-Zt", "Zt", &Zt );
@@ -64,6 +64,56 @@ int main( int argc, char *argv[] ) {
 
 	// Initiate g_clx
 	g_clx x( chain );
+
+	// Get the cut file
+	if( cutfilename.size() > 0 ) {
+
+		size_t sep1 = cutfilename.find_first_of( ":" );
+		size_t sep2 = cutfilename.find_last_of( ":" );
+
+		if( sep1 <= 1 || sep2 <= 1 || sep1 > cutfilename.size() || sep2 > cutfilename.size() ) {
+
+			cout << "Format for the cutfile should be <cutfile.root>:<Bcut>:<Tcut>\n";
+			cout << "where <Bcut> and <Tcut> are the TCutG names of the beam and\n";
+			cout << "target cuts in the root file, respectively." << endl;
+
+			return 0;
+
+		}
+
+		string str_file = cutfilename.substr( 0, sep1 );
+		string str_bcut = cutfilename.substr( sep1+1, sep2-sep1-1 );
+		string str_tcut = cutfilename.substr( sep2+1, cutfilename.size()-sep2-1 );
+
+		TFile *fcut = new TFile( cutfilename.c_str() );
+
+		if( fcut->IsZombie() ) {
+
+			cout << "Didn't open " << cutfilename << " correctly\n";
+			cout << "Does it exist?\n";
+
+			return 0;
+
+		}
+
+		if( fcut->GetListOfKeys()->Contains( str_bcut.c_str() ) ) {
+
+			cout << "Didn't find beam cut, " << str_bcut << ", in " << cutfilename << endl;
+			return 0;
+
+		}
+
+		if( fcut->GetListOfKeys()->Contains( str_tcut.c_str() ) ) {
+
+			cout << "Didn't find target cut, " << str_tcut << ", in " << cutfilename << endl;
+			return 0;
+
+		}
+
+		x.Bcut = (TCutG*)fcut->Get( str_bcut.c_str() );
+		x.Tcut = (TCutG*)fcut->Get( str_tcut.c_str() );
+
+	}
 
 	// Test if we're using a config file (we overwrite the values if so)
 	if( configfilename.size() > 0 ) {

@@ -85,6 +85,7 @@ class g_clx : public TObject {
 	float			cddist, cdoffset;
 	float			deadlayer;
 	float			spededist;
+	TCutG			*Bcut, *Tcut;
 	
 	// List of branches
 	TBranch        *b_mbevts_fUniqueID;   //!
@@ -121,11 +122,11 @@ class g_clx : public TObject {
 	
 	g_clx( TTree *tree = 0 );
 	virtual ~g_clx();
-	virtual Int_t	GetEntry( Long64_t entry );
+	virtual Int_t		GetEntry( Long64_t entry );
 	virtual Long64_t	LoadTree( Long64_t entry );
 	virtual void		Init( TTree *tree );
 	virtual void		Loop( string outputfilename );
-	virtual Bool_t	Notify();
+	virtual Bool_t		Notify();
 	virtual void		Show( Long64_t entry = -1 );
 	
 	ClassDef(g_clx,1);
