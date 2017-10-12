@@ -19,7 +19,8 @@ LIBS 		= $(ALLIBS)
 all: libCommandLineInterface.a
 
 lib%.a: %.o
-	$(AR) cru $(LIB_DIR)/$@ $^
+	$(AR) cru $@ $^
+	cp $@ $(LIB_DIR)/
 
 %.o: %.cc %.hh
 	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@
