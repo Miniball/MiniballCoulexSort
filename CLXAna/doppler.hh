@@ -29,8 +29,8 @@ class doppler : public TObject {
 	public:
 
 	void	ExpDefs( int Zb_, int Ab_, int Zt_, int At_, float Eb_, float Ex_, float thick_,
-						float depth_, float cddist_, float deadlayer_, float spededist_,
-						TCutG *Bcut_, TCutG *Tcut_ );
+						float depth_, float cddist_, float cdoffset_, float deadlayer_,
+						float spededist_, TCutG *Bcut_, TCutG *Tcut_ );
 	int		Cut( float PEn, float anno, int quad );
 	int		Cut_2p( float PEn1, float anno1, int quad1, float PEn2, float anno2, int quad2 );
 	bool	CutG_en2hit( float BEn, float TEn );

@@ -168,6 +168,7 @@ int main( int argc, char *argv[] ) {
 		cout << "thick = " << thick << endl;
 		cout << "depth = " << depth << endl;
 		cout << "cddist = " << cddist << endl;
+		cout << "cdoffset = " << cdoffset << endl;
 
 		return 0;
 

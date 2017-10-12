@@ -27,7 +27,7 @@ double doppler::SP_function( double *x, double *par ) { // energy units of keV
 }
 
 void doppler::ExpDefs( int Zb_, int Ab_, int Zt_, int At_, float Eb_, float Ex_, float thick_,
-						float depth_, float cddist_, float deadlayer_, float spededist_,
+						float depth_, float cddist_, float cdoffset_, float deadlayer_, float spededist_,
 						TCutG *Bcut_, TCutG *Tcut_ ) {
 
 	Zb = Zb_;
@@ -39,6 +39,7 @@ void doppler::ExpDefs( int Zb_, int Ab_, int Zt_, int At_, float Eb_, float Ex_,
 	thick = thick_;
 	depth = depth_;
 	cddist = cddist_;
+	cdoffset = cdoffset_;
 	deadlayer = deadlayer_;
 	spededist = spededist_;
 	Bcut = Bcut_;
@@ -238,7 +239,7 @@ int doppler::Cut( float PEn, float anno, int quad ) {
 			d = 20; e = 0; f = 0;
 		}
 
-		else if( (int)Ab == 140 && (int)Zb == 60 ) {
+		else if( Ab == 140 && Zb == 60 ) {
 
 			a = 576.308; b = 6.98955; c = -0.462751; l = 0.00418589;
 			d = -123.133; e = 45.6129; f = -1.28252; k = 0.00979219;
@@ -246,7 +247,7 @@ int doppler::Cut( float PEn, float anno, int quad ) {
 
 		}
 
-		else if( (int)Ab == 142 && (int)Zb == 62 ) {
+		else if( Ab == 142 && Zb == 62 ) {
 
 			a	=	786.059;	b	=	-8.20774;	c	=	-0.0760138;	l	=	0.0009756319;
 			d	=	22.8353;	e	=	33.2133;	f	=	-0.955229;	k	=	0.0071980504;
@@ -258,7 +259,7 @@ int doppler::Cut( float PEn, float anno, int quad ) {
 
 		}
 
-		else if( (int)Ab == 140 ) {
+		else if( Ab == 140 ) {
 
 			// Hack to use strip number instead of angle
 			ang = anno;
@@ -371,6 +372,7 @@ bool doppler::CutG_en2hit( float BEn, float TEn ) {
 float doppler::GetCDOffset() {
 
 	// Return offset of the CD in the phi rotation from vertical
+	cout << cdoffset << endl;
 	return cdoffset;
 
 }
@@ -451,9 +453,9 @@ float doppler::GetQPhi( int quad, int seg ) {
 float doppler::GetTTh( float Banno, float BEn ) {
 
 	// Returns theta angle of T using angle and energy of B
-	double tau = Ab/At;
-	double Eprime = Eb*Ab - Ex*(1+tau);
-	double epsilon = TMath::Sqrt(Eb*Ab/Eprime);
+	double tau = (float)Ab/(float)At;
+	double Eprime = (float)Eb*(float)Ab - (float)Ex*(1+tau);
+	double epsilon = TMath::Sqrt((float)Eb*(float)Ab/Eprime);
 	double fac = rand.Rndm(8)*0.9-0.45; // randomize angle across strip
 	double x, y, TTh;
 	if( tau > 1 ) { // inverse kinematics: maximum scattering angle may be exceeded...
@@ -478,9 +480,9 @@ float doppler::GetTTh( float Banno, float BEn ) {
 float doppler::GetBTh( float Tanno ) {
 
 	// Returns theta angle of B using angle and energy of T
-	double tau = Ab/At;
-	double Eprime = Eb*Ab - Ex*(1+tau);
-	double epsilon = TMath::Sqrt(Eb*Ab/Eprime);
+	double tau = (float)Ab/(float)At;
+	double Eprime = (float)Eb*(float)Ab - (float)Ex*(1+tau);
+	double epsilon = TMath::Sqrt((float)Eb*(float)Ab/Eprime);
 	double fac = rand.Rndm(8)*0.9-0.45; // randomize angle across strip
 	double x, y, BTh;
 	y = TMath::Tan(GetPTh(Tanno+fac)); // y = tan(Theta_targetlab)
@@ -499,7 +501,7 @@ float doppler::GetTEn( float BEn, float Banno ) {
 	double dist, angle;
 
 	// energy at interaction point
-	double Ereac = Eb*Ab - GetELoss(Eb*Ab,depth,0,"BT");
+	double Ereac = (float)Eb*(float)Ab - GetELoss((float)Eb*(float)Ab,depth,0,"BT");
 
 	// Trace energy loss back through target to get energy at interaction point
 	double Eproj = BEn + GetELoss(BEn,deadlayer,1,"BS"); // correct for dead layer loss first
@@ -526,7 +528,7 @@ float doppler::GetBEn( float TEn, float Tanno ) {
 	double dist, angle;
 
 	// energy at interaction point
-	double Ereac = Eb*Ab - GetELoss(Eb*Ab,depth,0,"BT");
+	double Ereac = (float)Eb*(float)Ab - GetELoss((float)Eb*(float)Ab,depth,0,"BT");
 
 	// Trace energy loss back through target to get energy at interaction point
 	double Etarg = TEn + GetELoss(TEn,deadlayer,1,"TS"); // correct for dead layer loss first
