@@ -89,7 +89,7 @@ int main( int argc, char *argv[] ) {
 
 		if( fcut->IsZombie() ) {
 
-			cout << "Didn't open " << cutfilename << " correctly\n";
+			cout << "Didn't open " << str_file << " correctly\n";
 			cout << "Does it exist?\n";
 
 			return 0;
@@ -98,14 +98,14 @@ int main( int argc, char *argv[] ) {
 
 		if( fcut->GetListOfKeys()->Contains( str_bcut.c_str() ) ) {
 
-			cout << "Didn't find beam cut, " << str_bcut << ", in " << cutfilename << endl;
+			cout << "Didn't find beam cut, " << str_bcut << ", in " << str_file << endl;
 			return 0;
 
 		}
 
 		if( fcut->GetListOfKeys()->Contains( str_tcut.c_str() ) ) {
 
-			cout << "Didn't find target cut, " << str_tcut << ", in " << cutfilename << endl;
+			cout << "Didn't find target cut, " << str_tcut << ", in " << str_file << endl;
 			return 0;
 
 		}
