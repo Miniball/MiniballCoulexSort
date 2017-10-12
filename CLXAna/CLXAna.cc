@@ -85,7 +85,7 @@ int main( int argc, char *argv[] ) {
 		string str_bcut = cutfilename.substr( sep1+1, sep2-sep1-1 );
 		string str_tcut = cutfilename.substr( sep2+1, cutfilename.size()-sep2-1 );
 
-		TFile *fcut = new TFile( cutfilename.c_str() );
+		TFile *fcut = new TFile( str_file.c_str() );
 
 		if( fcut->IsZombie() ) {
 

@@ -42,7 +42,8 @@ void g_clx::Loop( string outputfilename ) {
 
 	// Fit stopping power curves from the srim output files
 	// Comment out to use the default parameters in doppler.hh
-	if( !dc.stoppingpowers( true, true, true, true ) ) return;
+	// stoppingpowers( BT, TT, BS, TS )
+	if( !dc.stoppingpowers( true, true, false, false ) ) return;
 
 	// Ratio of prompt and random time windows
 	// Alternatively, normalisation of beta-decay lines
