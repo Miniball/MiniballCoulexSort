@@ -304,7 +304,7 @@ bool GlobalSettings::Verify()
       return false;
     }
 
-  if(fFirstAdc <= fLastMiniballDgf && fBeamdumpDgf < 0)
+  if(fFirstAdc <= fLastMiniballDgf)
     {
       cerr<<"first adc wrong"<<endl;
       return false;
