@@ -227,7 +227,7 @@ ostream& operator <<(ostream &os,const GlobalSettings &obj)
   os<<"Settings are:"<<endl
     <<"First Miniball Dgf = "<<obj.fFirstMiniballDgf<<endl
     <<"Last Miniball Dgf = "<<obj.fLastMiniballDgf<<endl
-    <<"Beamdumo Dgf = "<<obj.fBeamdumpDgf<<endl
+    <<"Beamdump Dgf = "<<obj.fBeamdumpDgf<<endl
     <<"First Adc = "<<obj.fFirstAdc<<endl
     <<"Last Adc = "<<obj.fLastAdc<<endl
     <<"Pattern Unit = "<<obj.fPatternUnit<<endl
@@ -298,9 +298,21 @@ bool GlobalSettings::Verify()
       return false;
     }
 
-  if(fBeamdumpDgf <= fLastMiniballDgf && !fSPEDEChamb)
+  if(fBeamdumpDgf <= fLastMiniballDgf && !fSPEDEChamb && fBeamdumpDgf > 0)
     {
       cerr<<"beam dump wrong"<<endl;
+      return false;
+    }
+
+  if(fFirstAdc <= fLastMiniballDgf && fBeamdumpDgf < 0)
+    {
+      cerr<<"first adc wrong"<<endl;
+      return false;
+    }
+
+  if(fFirstAdc <= fBeamdumpDgf && fBeamdumpDgf > 0)
+    {
+      cerr<<"first adc/beam dump wrong"<<endl;
       return false;
     }
 
@@ -310,13 +322,7 @@ bool GlobalSettings::Verify()
       return false;
     }
 
-  if(fFirstAdc <= fBeamdumpDgf)
-    {
-      cerr<<"first adc/beam dump wrong"<<endl;
-      return false;
-    }
-
-  if(fPatternUnit <= fBeamdumpDgf)
+  if(fPatternUnit <= fBeamdumpDgf && fBeamdumpDgf > 0)
     {
       cerr<<"pattern unit/beam dump wrong"<<endl;
       return false;
