@@ -120,7 +120,7 @@ int main( int argc, char *argv[] ) {
 
 		TEnv *config = new TEnv( configfilename.c_str() );
 
-		Zb = config->GetValue( "Zp", -1 );
+		Zb = config->GetValue( "Zb", -1 );
 		Ab = config->GetValue( "Ab", -1 );
 		Zt = config->GetValue( "Zt", -1 );
 		At = config->GetValue( "At", -1 );
