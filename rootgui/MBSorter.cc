@@ -386,7 +386,7 @@ MBSorter::MBSorter() {
 						  new TGLayoutHints( kLHintsTop | kLHintsRight, 2, 2, 5, 5 ) );
 	
 	// Units - Target thickness
-	lab_unit_th = new TGLabel( dop_frame_2, "µg/cm^2" );
+	lab_unit_th = new TGLabel( dop_frame_2, "mg/cm^2" );
 	lab_unit_th->SetTextJustify( 36 );
 	lab_unit_th->SetMargins( 0, 0, 0, 0 );
 	lab_unit_th->SetWrapLength( -1 );
@@ -404,7 +404,7 @@ MBSorter::MBSorter() {
 						  new TGLayoutHints( kLHintsTop | kLHintsRight, 2, 2, 5, 5 ) );
 	
 	// Units - Interaction depth
-	lab_unit_id = new TGLabel( dop_frame_2, "µg/cm^2" );
+	lab_unit_id = new TGLabel( dop_frame_2, "mg/cm^2" );
 	lab_unit_id->SetTextJustify( 36 );
 	lab_unit_id->SetMargins( 0, 0, 0, 0 );
 	lab_unit_id->SetWrapLength( -1 );
@@ -651,12 +651,12 @@ MBSorter::MBSorter() {
 	dop_frame_1->AddFrame( num_dop_ex, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
 	num_dop_th = new TGNumberEntry( dop_frame_1, 2000, 5, -1,
-		TGNumberFormat::kNESInteger, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMin,
+		TGNumberFormat::kNESReal, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMin,
 		1, 999999 );
 	dop_frame_1->AddFrame( num_dop_th, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
 	num_dop_id = new TGNumberEntry( dop_frame_1, 1000, 5, -1,
-		TGNumberFormat::kNESInteger, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMin,
+		TGNumberFormat::kNESReal, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMin,
 		1, 999999 );
 	dop_frame_1->AddFrame( num_dop_id, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
@@ -799,19 +799,19 @@ MBSorter::MBSorter() {
 	// Defaults //
 	//////////////
 	
-	text_daq_dir->SetText( "/mbdata/miniball/is562-171009" );
-	text_local_dir->SetText( "/media/MinballBackup/is562/medfiles" );
-	text_med_pre->SetText( "108Sn" );
+	text_daq_dir->SetText( "/mbdata/miniball/is547-171025" );
+	text_local_dir->SetText( "/media/MinballBackup/is547/medfiles" );
+	text_med_pre->SetText( "206Hg" );
 
-	text_add_file->SetText( "108Sn_CoulEx_Pos3_laserOn_021" );
+	text_add_file->SetText( "206Hg_104Pd_pos4_060" );
 
-	text_settings->SetText( "/media/MinballBackup/is562/config/MBSettings2017_CLX.dat" );
+	text_settings->SetText( "/media/MinballBackup/is547/config/MBSettings2017_CLX_noBD.dat" );
 	check_source->SetOn();
 
-	text_outfile->SetText( "/media/MinballBackup/is562/rootfiles/108Sn_206Pb_laser_on_xxx-yyy" );
-	text_calfile->SetText( "/media/MinballBackup/is562/config/calibration-online-is546.dat" );
-	text_config->SetText( "/media/MinballBackup/is562/config/config-is562.dat" );
-	text_cutfile->SetText( "/media/MinballBackup/is562/config/cutfile-is562.root:Bcut:Tcut" );
+	text_outfile->SetText( "/media/MinballBackup/is547/rootfiles/206Pb_104Pd_xxx-yyy" );
+	text_calfile->SetText( "/media/MinballBackup/is547/config/is547.cal" );
+	text_config->SetText( "/media/MinballBackup/is547/config/config-is547.dat" );
+	text_cutfile->SetText( "/media/MinballBackup/is547/config/cutfile-is562.root:Bcut:Tcut" );
 
 	check_cdpad->SetOn();
 	//check_singles->SetOn();
@@ -820,15 +820,15 @@ MBSorter::MBSorter() {
 	//check_config->SetOn();
 	check_cutfile->SetOn();
 
-	num_dop_zb->SetNumber( 50 );
-	num_dop_zt->SetNumber( 82 );
-	num_dop_ab->SetNumber( 108 );
-	num_dop_at->SetNumber( 206 );
-	num_dop_eb->SetNumber( 4500 );
-	num_dop_ex->SetNumber( 1206 );
-	num_dop_th->SetNumber( 4200 );
-	num_dop_id->SetNumber( 2100 );
-	num_dop_cd->SetNumber( 21.1 );
+	num_dop_zb->SetNumber( 80 );
+	num_dop_zt->SetNumber( 46 );
+	num_dop_ab->SetNumber( 206 );
+	num_dop_at->SetNumber( 104 );
+	num_dop_eb->SetNumber( 4200 );
+	num_dop_ex->SetNumber( 1069 );
+	num_dop_th->SetNumber( 2.0 );
+	num_dop_id->SetNumber( 1.0 );
+	num_dop_cd->SetNumber( 24.6 );
 	num_dop_ro->SetNumber( 242.6 );
 	num_dop_dl->SetNumber( 0.7 );
 	num_dop_sp->SetNumber( 26.2 );
@@ -1044,9 +1044,9 @@ void MBSorter::on_ana_clicked() {
 		cmd += " -Ex ";
 		cmd += convertInt( num_dop_ex->GetIntNumber() );
 		cmd += " -thick ";
-		cmd += convertInt( num_dop_th->GetIntNumber() );
+		cmd += convertFloat( num_dop_th->GetNumber() );
 		cmd += " -depth ";
-		cmd += convertInt( num_dop_id->GetIntNumber() );
+		cmd += convertFloat( num_dop_id->GetNumber() );
 		cmd += " -cddist ";
 		cmd += convertFloat( num_dop_cd->GetNumber() );
 		cmd += " -cdoffset ";

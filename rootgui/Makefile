@@ -15,14 +15,15 @@ endif
 
 LIB_DIR     := ../lib
 MED_DIR     := ../MedToRoot
+ANA_INC     := -I../CLXAna -I../MntAna -I../TDRIVAna
 
 CC       := $(shell root-config --cc)
 CPP      := $(shell root-config --cxx)
 CFLAGS   := $(ROOTCFLAGS) -Wall -fPIC -Wno-unused-variable -g
 
-LIBS     := $(ROOTGLIBS) -L$(LIB_DIR) -lCLXAna -lTDRIVAna -lMNTAna -lTreeBuilder
+LIBS     := $(ROOTGLIBS) -L$(LIB_DIR) -lCLXAna -lTDRIVAna -lMntAna -lTreeBuilder
 
-INCLUDES := -I$(ANA_DIR)
+INCLUDES := $(ANA_DIR)
 
 all: mb_sorter
 
@@ -47,5 +48,5 @@ mb_sorter_dict.cc: $(DEPENDENCIES)
 
 
 clean:
-	rm -f *.o *Dictionary$(DICTEXT) *_dict.cc
+	rm -f *.o *_dict$(DICTEXT) *_dict.cc
 
