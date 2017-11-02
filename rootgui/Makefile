@@ -14,14 +14,13 @@ else
 endif
 
 LIB_DIR     := ../lib
-ANA_DIR     := ../TreeAna
 MED_DIR     := ../MedToRoot
 
 CC       := $(shell root-config --cc)
 CPP      := $(shell root-config --cxx)
 CFLAGS   := $(ROOTCFLAGS) -Wall -fPIC -Wno-unused-variable -g
 
-LIBS     := $(ROOTGLIBS) -L$(LIB_DIR) -lTreeAna -lTreeBuilder
+LIBS     := $(ROOTGLIBS) -L$(LIB_DIR) -lCLXAna -lTDRIVAna -lMNTAna -lTreeBuilder
 
 INCLUDES := -I$(ANA_DIR)
 
