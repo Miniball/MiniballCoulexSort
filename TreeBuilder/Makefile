@@ -36,7 +36,7 @@ LFLAGS    = -O2 -g
 O_FILES = Calibration.o \
 		$(MBEVTS_DIR)/mbevts.o
 
-all: TreeBuilder NeSort
+all: TreeBuilder NeSort AQ4Sort
 
 TreeBuilder: TreeBuilder.cc $(O_FILES) TreeBuilderDictionary.o
 	$(CPP) $(CFLAGS) $(INCLUDES) TreeBuilder.cc $(O_FILES) TreeBuilderDictionary.o $(LIBS) -o $@
@@ -47,6 +47,11 @@ NeSort: NeSort.cc $(O_FILES) NeSortDictionary.o
 	$(CPP) $(CFLAGS) $(INCLUDES) NeSort.cc $(O_FILES) NeSortDictionary.o $(LIBS) -o $@
 	$(AR) cru $(LIB_DIR)/libNeSort.a $(O_FILES) NeSortDictionary.o
 	cp NeSort $(BIN_DIR)/
+
+AQ4Sort: AQ4Sort.cc $(O_FILES) AQ4SortDictionary.o
+	$(CPP) $(CFLAGS) $(INCLUDES) AQ4Sort.cc $(O_FILES) AQ4SortDictionary.o $(LIBS) -o $@
+	$(AR) cru $(LIB_DIR)/libNeSort.a $(O_FILES) AQ4SortDictionary.o
+	cp AQ4Sort $(BIN_DIR)/
 
 %.o: %.cc %.hh
 	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@
@@ -78,10 +83,19 @@ NeSortDictionary.cc: $(DEPENDENCIES)
 NeSortDictionary.o: NeSortDictionary.cc NeSortDictionary$(DICTEXT)
 	$(CPP) -fPIC $(CFLAGS) $(INCLUDES) -c $<
 
+AQ4SortDictionary.cc: $(DEPENDENCIES)
+	rm -f AQ4SortDictionary.cc AQ4SortDictionary$(DICTEXT)
+	$(ROOTDICT) -f AQ4SortDictionary.cc -c $(INCLUDES) $(DEPENDENCIES)
+	cp AQ4SortDictionary$(DICTEXT) $(LIB_DIR)/
+
+AQ4SortDictionary.o: AQ4SortDictionary.cc AQ4SortDictionary$(DICTEXT)
+	$(CPP) -fPIC $(CFLAGS) $(INCLUDES) -c $<
+
 #--------------------------------------------------
 clean:
-	rm -f TreeBuilder NeSort *.o $(MED_DIR)/*.o $(MBEVTS_DIR)/*.o
+	rm -f TreeBuilder NeSort AQ4Sort *.o $(MED_DIR)/*.o $(MBEVTS_DIR)/*.o
 	rm -f TreeBuilderDictionary.cc TreeBuilderDictionary$(DICTEXT) 
 	rm -f NeSortDictionary.cc NeSortDictionary$(DICTEXT) 
+	rm -f AQ4SortDictionary.cc AQ4SortDictionary$(DICTEXT) 
 	@cd $(COMMON_DIR); make clean
 
