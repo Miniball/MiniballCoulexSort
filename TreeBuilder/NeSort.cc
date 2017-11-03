@@ -25,16 +25,17 @@ int main(int argc, char* argv[]) {
 
 	interface->CheckFlags(argc, argv);
 
+	if( CalibrationFile.size() == 0 ) {
+
+		cout << "No calibration file given, default values will be used" << endl;
+		CalibrationFile = "default";
+
+	}
+	else cout << "calibration file: " << CalibrationFile << endl;
+
 	if( InputFiles.size() == 0 || OutputFile.size() == 0 ) {
 
 		cerr << "You have to provide at least one input file and the output file!" << endl;
-		exit(1);
-
-	}
-
-	if( CalibrationFile.size() == 0 ) {
-
-		cout << "No Calibration File given, you have to provide one!" << endl;
 		exit(1);
 
 	}
@@ -46,7 +47,6 @@ int main(int argc, char* argv[]) {
 	
 	}
 	
-	cout << "calibration file: " << CalibrationFile << endl;
 	cout << "output file: " << OutputFile << endl;
 
 	TChain* tr;

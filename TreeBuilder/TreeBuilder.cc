@@ -137,7 +137,8 @@ int main(int argc, char* argv[]) {
 	// Hard-coded parameters... TODO read in from file?
 	// ------------------------------------------------------------------------ //
 	// How many ticks need to align the prompt, in ticks.
-	Double_t dtAdc[4] = {-6.2,-11.4,-5.2,-6.8};  // IS562
+	Double_t dtAdc[4] = {-5.1,-10.0,-5.2,-6.1};  // IS547
+	//Double_t dtAdc[4] = {-6.2,-11.4,-5.2,-6.8};  // IS562
 	//Double_t dtAdc[4] = {-4.9,-10.2,-5.3,-3.8};  // IS546
 	//Double_t dtAdc[4] = {-13.0,-11.5,-9.0,-11.0};  // IS558
 	//Double_t dtAdc[4] = {14.0,15.5,16.5,8.0};  // IS558
@@ -145,8 +146,8 @@ int main(int argc, char* argv[]) {
 	//Double_t dtAdc[4] = {35.0,38.0,40.0,30.0};  // IS553 - timestamp corrected
   
 	// IS553
-	Double_t tMinPrompt = -9., tMaxPrompt = 4.;
-	Double_t tMinRandom = 10., tMaxRandom = 23.;
+	Double_t tMinPrompt = -12., tMaxPrompt = 6.;
+	Double_t tMinRandom = 12., tMaxRandom = 30.;
 	Double_t tMinDelayed = -50., tMaxDelayed = -50.;
  
 	Double_t tMinPromptElectron = -16., tMaxPromptElectron = 3.;
@@ -711,7 +712,7 @@ int main(int argc, char* argv[]) {
 						padE_sum->Fill( PadEnergy[adc_num] );
 
 						gen_array.push_back( PadEnergy[adc_num] );
-						gtd_array.push_back( adc_t );
+						gtd_array.push_back( adc_t + dtAdc[adc_num] );
 						clu_array.push_back( 8 );
 						cid_array.push_back( adc_num+1 );
 						sid_array.push_back( 0 );

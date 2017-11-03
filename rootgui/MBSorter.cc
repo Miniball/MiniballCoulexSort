@@ -876,7 +876,7 @@ void MBSorter::on_del_clicked() {
 	// Slot to react to remove file button
 	if( run_list_box->GetSelected() < 0 ) {
 
-		cout << "No runs selected" << endl;
+		cout << "\nNo runs selected" << endl;
 
 	}
 
@@ -903,6 +903,7 @@ void MBSorter::on_rsync_clicked() {
 	cmd += text_local_dir->GetText();
 	cmd += "/";
 	
+	cout << endl << cmd << endl << endl;
 	gSystem->Exec( cmd );
 
 }
@@ -945,7 +946,7 @@ void MBSorter::on_medroot_clicked() {
 		cmd += filebase;
 		cmd += ".med";
 
-		cout << cmd << endl;
+		cout << endl << cmd << endl << endl;
 		gSystem->Exec( cmd );
 
 	}
@@ -1004,7 +1005,7 @@ void MBSorter::on_build_clicked() {
 	cmd += text_outfile->GetText();
 	cmd += "_tree.root";
 
-	cout << cmd << endl;
+	cout << endl << cmd << endl << endl;
 	gSystem->Exec( cmd );
 	
 }
@@ -1070,7 +1071,7 @@ void MBSorter::on_ana_clicked() {
 	cmd += " -o ";
 	cmd += outputfile;
 
-	cout << cmd << endl;
+	cout << endl << cmd << endl << endl;
 	gSystem->Exec( cmd );
 	
 }
@@ -1088,7 +1089,7 @@ void MBSorter::on_mnt_clicked() {
 	
 	cmd = "MntAna -i " + inputfile + " -o " + outputfile;
 
-	cout << cmd << endl;
+	cout << endl << cmd << endl;
 	gSystem->Exec( cmd );
 	
 }
@@ -1106,7 +1107,7 @@ void MBSorter::on_tdriv_clicked() {
 	
 	cmd = "TDRIVAna -i " + inputfile + " -o " + outputfile;
 
-	cout << cmd << endl;
+	cout << endl << cmd << endl << endl;
 	gSystem->Exec( cmd );
 	
 }

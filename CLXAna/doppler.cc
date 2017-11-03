@@ -500,7 +500,7 @@ float doppler::GetTEn( float BEn, float Banno ) {
 	double dist, angle;
 
 	// energy at interaction point
-	double Ereac = (float)Eb*(float)Ab - GetELoss((float)Eb*(float)Ab,depth,0,"BT");
+	double Ereac = (float)Eb*(float)Ab - GetELoss( (float)Eb*(float)Ab, depth, 0, "BT" );
 
 	// Trace energy loss back through target to get energy at interaction point
 	double Eproj = BEn + GetELoss(BEn,deadlayer,1,"BS"); // correct for dead layer loss first

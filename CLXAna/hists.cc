@@ -565,6 +565,9 @@ void hists::FillGamGam1h( float GEn, float GTh, float GPh, vector <float> GCor_G
 						 float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, int cut, float weight ) {
 	
 	float BEn = 0, TEn = 0, BTh = 0, TTh = 0, BPh = 0, TPh = 0;
+
+	// Comment below for background subtraction
+	if( weight < 0 ) return;
 	
 	// Target
 	if( cut == 0 ) {
@@ -650,6 +653,9 @@ void hists::FillGamGam2h( float GEn, float GTh, float GPh, vector <float> GCor_G
 	float BPh = dc.GetPPhi(Pquad[Bptr],Psec[Bptr]);
 	float TPh = dc.GetPPhi(Pquad[Tptr],Psec[Tptr]);
 	
+	// Comment below for background subtraction
+	if( weight < 0 ) return;
+
 	for( unsigned int i = 0; i < GCor_GEn.size(); i++ ) {
 		
 		if( GCor_CluID.at(i) != 8 ) { // gamma

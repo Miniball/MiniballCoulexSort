@@ -12,6 +12,7 @@
 
 #include "CommandLineInterface.hh"
 #include "BuiltEvent.hh"
+#include "Calibration.hh"
 #include "mbevts.hh"
 
 using namespace std;
