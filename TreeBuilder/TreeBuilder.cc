@@ -150,8 +150,8 @@ int main(int argc, char* argv[]) {
 	Double_t tMinRandom = 12., tMaxRandom = 30.;
 	Double_t tMinDelayed = -50., tMaxDelayed = -50.;
  
-	Double_t tMinPromptElectron = -16., tMaxPromptElectron = 3.;
-	Double_t tMinRandomElectron = -37., tMaxRandomElectron = -18.;
+	Double_t tMinPromptElectron = -6., tMaxPromptElectron = 6.;
+	Double_t tMinRandomElectron = 18., tMaxRandomElectron = 30.;
  
 	Double_t WeightPR = abs(tMinPrompt-tMaxPrompt)/abs(tMinRandom-tMaxRandom);
 	
