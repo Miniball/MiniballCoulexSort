@@ -11,11 +11,6 @@
 #include <string>
 using namespace std;
 
-// Experimental definitions
-#ifndef ExpDefs_hh
-# include "ExpDefs.hh"
-#endif
-
 // Headers for doppler
 #ifndef doppler_hh
 # include "doppler.hh"
@@ -76,10 +71,7 @@ class hists {
 	TH1F *multp, *multr;
 	TH1F *GeReject, *GePass, *GeRatio;
 	TH2F *GeAng;
-#ifdef GEANG
-	TH2F *GeAng_clu[8];
-	TH3F *GeSiAng, *GeSiAng_clu[8];
-#endif
+	TH3F *GeSiAng;
 
 	// gamma - particle time difference
 	TH1F *tdiff;
@@ -96,19 +88,24 @@ class hists {
 
 	// Array of cd angles for histogram bins
 	double cd_angles[17];
+	double ge_angles[91];
+	double phi_angles[181];
+
+	// Doppler instance
+	doppler dc;
 
 	// functions
-	void Initialise();
+	void Initialise( doppler dc_ );
 	void Set_ppwin( float user_ppwin );
 	void Set_maxrecoil( int user_maxrecoil );
 	void Set_minrecoil( int user_minrecoil );
 
 	// fill functions
 	void Fill1h( float GEn, float GTh, float GPh, int cid, vector <float> GCor_GEn, vector <float> GCor_GTh,
-					vector <float> GCor_GPh, vector <int> GCor_GCluID, vector <float> GCor_Gtd, bool electron,
+					vector <float> GCor_GPh, vector <int> GCor_GCluID, vector <float> GCor_Gtd,
 					float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, float weight=1.0 );
 	void Fill2h( float GEn, float GTh, float GPh, int cid, vector <float> GCor_GEn, vector <float> GCor_GTh,
-					vector <float> GCor_GPh, vector <int> GCor_GCluID, vector <float> GCor_Gtd, bool electron,
+					vector <float> GCor_GPh, vector <int> GCor_GCluID, vector <float> GCor_Gtd,
 					vector <float> PEn, vector<int> Pann, vector<int> Psec, vector<int> Pquad, vector<int> Pptr,
 					vector <float> td, float weight=1.0 );
 	void FillGam1h( float GEn, float GTh, float GPh, int cid, float PEn, Int_t Pann,

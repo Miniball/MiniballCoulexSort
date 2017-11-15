@@ -26,7 +26,43 @@ double doppler::SP_function( double *x, double *par ) { // energy units of keV
 	 
 }
 
-bool doppler::stoppingpowers( Int_t Zp, Int_t Zt, Double_t Ap, Double_t At, string opt ) {
+void doppler::ExpDefs( int Zb_, int Ab_, int Zt_, int At_, float Eb_, float Ex_, float thick_,
+						float depth_, float cddist_, float cdoffset_, float deadlayer_, float plunger_,
+						TCutG *Bcut_, TCutG *Tcut_ ) {
+
+	Zb = Zb_;
+	Ab = Ab_;
+	Zt = Zt_;
+	At = At_;
+	Eb = Eb_;
+	Ex = Ex_;
+	thick = thick_;
+	depth = depth_;
+	cddist = cddist_;
+	cdoffset = cdoffset_;
+	deadlayer = deadlayer_;
+	plunger = plunger_;
+	Bcut = Bcut_;
+	Tcut = Tcut_;
+
+	return;
+
+}
+
+bool doppler::stoppingpowers( bool BT, bool TT, bool BS, bool TS ) {
+
+	bool success = true;
+
+	if( BT ) success *= stoppingpowers( "BT" );
+	if( TT ) success *= stoppingpowers( "TT" );
+	if( BS ) success *= stoppingpowers( "BS" );
+	if( TS ) success *= stoppingpowers( "TS" );
+
+	return success;
+
+}
+
+bool doppler::stoppingpowers( string opt ) {
 	 
 	string gElName[110] = {
 		"H","He","Li","Be","B","C","N","O","F","Ne","Na","Mg",
@@ -41,7 +77,7 @@ bool doppler::stoppingpowers( Int_t Zp, Int_t Zt, Double_t Ap, Double_t At, stri
 		"Mt","Ds" };
 
 	string srimfile = "./srim/"; // prefix
-	if( opt.substr(0,1) == "B" ) srimfile += convertInt(Ap) + gElName[Zp-1];
+	if( opt.substr(0,1) == "B" ) srimfile += convertInt(Ab) + gElName[Zb-1];
 	else if( opt.substr(0,1) == "T" ) srimfile += convertInt(At) + gElName[Zt-1];
 	else {
 		cout << "opt must equal BT, TT, BS or TS \n";
@@ -67,7 +103,7 @@ bool doppler::stoppingpowers( Int_t Zp, Int_t Zt, Double_t Ap, Double_t At, stri
 	 
 	TGraph *gSP = new TGraph();
 	string title = "Stopping powers for ";
-	if( opt.substr(0,1) == "B" ) title += convertInt(Ap) + gElName[Zp-1];
+	if( opt.substr(0,1) == "B" ) title += convertInt(Ab) + gElName[Zb-1];
 	else if( opt.substr(0,1) == "T" )  title += convertInt(At) + gElName[Zt-1];
 	if( opt.substr(1,1) == "T" ) title += " in " + convertInt(At) + gElName[Zt-1];
 	else if( opt.substr(1,1) == "S" ) title += " in the Si dead layer";
@@ -148,21 +184,31 @@ bool doppler::stoppingpowers( Int_t Zp, Int_t Zt, Double_t Ap, Double_t At, stri
 	 
 }
 
-Int_t doppler::Cut(Double_t PEn, Double_t anno, Int_t quad) {
-	/* Check if entry passes any particle gates		*/
-	/* Functions returns 1 for projectile or 0 for target	*/
-	/* -1 is returned if particle is outside of gates	*/
-	/* Gates are set in the ParticleGates.h file		*/
-	/* This is a lie */
-	int identity=-1;
-	int str=quad*16+anno;
+int doppler::Cut( float PEn, float anno, int quad ) {
+
+	// Check if entry passes any particle gates
+	// Function returns 1 for projectile or 0 for target
+	// -1 is returned if particle is outside of gates
+
+	int identity = -1;
+	int str = quad*16 + anno;
+	float ang = GetPTh(anno) * TMath::RadToDeg();
+
+	// Graphical cuts given at command line
+	if( Bcut->GetN() > 0 && Tcut->GetN() > 0 ) {
+
+		if( Bcut->IsInside( ang, PEn/1000. ) ) identity = 1; 
+
+		else if( Tcut->IsInside( ang, PEn/1000. ) ) identity = 0; 
+
+	}
 
 	// inverse kinematics, include overlap region
-	if( AP > AT ){
+	else if( Ab > At ){
 
 		double a = 349.07, b = -4.997, c = -0.0145;
-		double ang = GetPTh(anno) * TMath::RadToDeg();
-		if( AP < 143 ) a -= 25.;
+		
+		if( Ab < 143 ) a -= 25.;
 
 		if( PEn/1000. <= ( a + b*ang + c*ang*ang ) && anno < 15 )
 
@@ -185,7 +231,7 @@ Int_t doppler::Cut(Double_t PEn, Double_t anno, Int_t quad) {
 		double g = 0, h = 0, i = 0, n=0;
 		double ang = GetPTh(anno) * TMath::RadToDeg();
 		
-		if( AP == 22 ) {
+		if( Ab == 22 ) {
 
 			//need fixing
 			a = 57.706; b = 0.0120384; c = -0.00478394;
@@ -193,7 +239,7 @@ Int_t doppler::Cut(Double_t PEn, Double_t anno, Int_t quad) {
 			d = 20; e = 0; f = 0;
 		}
 
-		else if( (int)AP == 140 && (int)ZP == 60 ) {
+		else if( Ab == 140 && Zb == 60 ) {
 
 			a = 576.308; b = 6.98955; c = -0.462751; l = 0.00418589;
 			d = -123.133; e = 45.6129; f = -1.28252; k = 0.00979219;
@@ -201,7 +247,7 @@ Int_t doppler::Cut(Double_t PEn, Double_t anno, Int_t quad) {
 
 		}
 
-		else if( (int)AP == 142 && (int)ZP == 62 ) {
+		else if( Ab == 142 && Zb == 62 ) {
 
 			a	=	786.059;	b	=	-8.20774;	c	=	-0.0760138;	l	=	0.0009756319;
 			d	=	22.8353;	e	=	33.2133;	f	=	-0.955229;	k	=	0.0071980504;
@@ -213,7 +259,7 @@ Int_t doppler::Cut(Double_t PEn, Double_t anno, Int_t quad) {
 
 		}
 
-		else if( (int)AP == 140 ) {
+		else if( Ab == 140 ) {
 
 			// Hack to use strip number instead of angle
 			ang = anno;
@@ -239,22 +285,22 @@ Int_t doppler::Cut(Double_t PEn, Double_t anno, Int_t quad) {
 
 }
 
-Int_t doppler::Cut_2p(Double_t PEn1, Double_t anno1, Int_t quad1,
-						Double_t PEn2, Double_t anno2, Int_t quad2) {
-	/* Check if entry passes the 2 particle condition		*/
-	/* Return value is 1 if target is p1 or 2 if p2			*/
-	/* -1 is returned if condition is not filled			*/
+int doppler::Cut_2p( float PEn1, float anno1, int quad1, float PEn2, float anno2, int quad2 ) {
+
+	// Check if entry passes the 2 particle condition
+	// Return value is 1 if target is p1 or 2 if p2	
+	// -1 is returned if condition is not filled
 	int identity=-1;
 
 	// inverse kinematics, include overlap region
-	if( AP > AT ){
+	if( Ab > At ){
 
-		if( ( Cut(PEn2,anno2,quad2) >0 || ((int)anno2>=10 && PEn2<450000.) ) &&
-			( Cut(PEn1,anno1,quad1)==0 || ((int)anno1>=12 && PEn1>280000. && PEn1<600000.) ) ){
+		if( ( Cut(PEn2,anno2,quad2) >0 || ((int)anno2>=12 && PEn2<550000.) ) &&
+			( Cut(PEn1,anno1,quad1)==0 || ((int)anno1>=12 && PEn1>300000. && PEn1<700000.) ) ){
 			identity=0; // target is particle number 1
 		}
-		if( ( Cut(PEn1,anno1,quad1) >0 || ((int)anno1>=10 && PEn1<450000.) ) &&
-			( Cut(PEn2,anno2,quad2)==0 || ((int)anno2>=12 && PEn2>280000. && PEn2<600000.) ) ){
+		if( ( Cut(PEn1,anno1,quad1) >0 || ((int)anno1>=12 && PEn1<550000.) ) &&
+			( Cut(PEn2,anno2,quad2)==0 || ((int)anno2>=12 && PEn2>300000. && PEn2<700000.) ) ){
 			identity=1; // target is particle number 2
 		}
 
@@ -291,7 +337,7 @@ Int_t doppler::Cut_2p(Double_t PEn1, Double_t anno1, Int_t quad1,
 
 }
 
-bool doppler::CutG_en2hit( double BEn, double TEn ) {
+bool doppler::CutG_en2hit( float BEn, float TEn ) {
 
 	// Returns true or false if the 2d graphical cut on beam and target enegry passes
 	// Look into the "en2hit" histogram after changing return value of this function
@@ -323,34 +369,92 @@ bool doppler::CutG_en2hit( double BEn, double TEn ) {
 
 }
 
-Double_t doppler::GetTarDist() {
-	/* Return target to detector distance in mm for angles et cetera */
-	return CDDIST;
+float doppler::GetCDOffset() {
+
+	// Return offset of the CD in the phi rotation from vertical
+	return cdoffset;
+
 }
 
-Double_t doppler::GetPTh(Double_t anno) {
-	/* Returns theta angle from ann strip number in radians */
-	return TMath::ATan((9.+(15.5-anno)*2.)/GetTarDist());
+float doppler::GetPlungerDist() {
+
+	// Return distance of Spede detector
+	return plunger;
+
 }
 
-Double_t doppler::GetPPhi(Int_t quad, Int_t seg, Double_t offset) {//TODO make sure this is right
-	/* Returns phi angle from quadrant and ohm strip number in radians */
-	double ph_det[4]={ 0.+offset, 90.+offset, 180.+offset, 270.+offset };
-	double pphi = ( ph_det[quad] + seg * 7.0 );
+float doppler::GetCDDeadLayer() {
+
+	// Return dead layer of the Si in um
+	return deadlayer;
+
+}
+
+int doppler::GetZb() {
+
+	// Return Z of the projectile
+	return Zb;
+
+}
+
+int doppler::GetAb() {
+
+	// Return A of the projectile
+	return Ab;
+
+}
+
+int doppler::GetZt() {
+
+	// Return Z of the target
+	return Zt;
+
+}
+
+int doppler::GetAt() {
+
+	// Return A of the target
+	return At;
+
+}
+
+float doppler::GetPTh( float anno ) {
+
+	// Returns theta angle from ann strip number in radians
+	return TMath::ATan( (9.+(15.5-anno)*2.) / cddist );
+
+}
+
+float doppler::GetPPhi( int quad, int seg ) { 
+
+	// Returns phi angle from quadrant and ohm strip number in radians 
+	return GetPPhi( quad, seg, cdoffset );
+
+}
+
+float doppler::GetPPhi( int quad, int seg, float offset ) { 
+
+	// Returns phi angle from quadrant and ohm strip number in radians 
+	float ph_det[4] = { 0.+cdoffset, 90.+cdoffset, 180.+cdoffset, 270.+cdoffset };
+	float pphi = ( ph_det[quad] + seg * 7.0 );
 	if( pphi < 360. ) return pphi * TMath::DegToRad();
 	else return ( pphi - 360. ) * TMath::DegToRad();
+
 }
 
-Double_t doppler::GetQPhi(Int_t quad, Int_t seg) {
-	/* Returns phi angle of Sn/Rn using angle of Rn/Sn */
-	return GetPPhi(quad,seg)+TMath::Pi();
+float doppler::GetQPhi( int quad, int seg ) {
+
+	// Returns phi angle of B/T using angle of T/B
+	return GetPPhi( quad, seg, cdoffset ) + TMath::Pi();
+
 }
 
-Double_t doppler::GetTTh(Double_t Banno, Double_t BEn) {
-	/* Returns theta angle of Cd using angle and energy of Rn */
-	double tau = AP/AT;
-	double Eprime = EB*AP - EX*(1+tau);
-	double epsilon = TMath::Sqrt(EB*AP/Eprime);
+float doppler::GetTTh( float Banno, float BEn ) {
+
+	// Returns theta angle of T using angle and energy of B
+	double tau = (float)Ab/(float)At;
+	double Eprime = (float)Eb*(float)Ab - (float)Ex*(1+tau);
+	double epsilon = TMath::Sqrt((float)Eb*(float)Ab/Eprime);
 	double fac = rand.Rndm(8)*0.9-0.45; // randomize angle across strip
 	double x, y, TTh;
 	if( tau > 1 ) { // inverse kinematics: maximum scattering angle may be exceeded...
@@ -372,11 +476,12 @@ Double_t doppler::GetTTh(Double_t Banno, Double_t BEn) {
 	return TTh;
 }
 
-Double_t doppler::GetBTh(Double_t Tanno) {
-	/* Returns theta angle of Rn using angle and energy of Sn */
-	double tau = AP/AT;
-	double Eprime = EB*AP - EX*(1+tau);
-	double epsilon = TMath::Sqrt(EB*AP/Eprime);
+float doppler::GetBTh( float Tanno ) {
+
+	// Returns theta angle of B using angle and energy of T
+	double tau = (float)Ab/(float)At;
+	double Eprime = (float)Eb*(float)Ab - (float)Ex*(1+tau);
+	double epsilon = TMath::Sqrt((float)Eb*(float)Ab/Eprime);
 	double fac = rand.Rndm(8)*0.9-0.45; // randomize angle across strip
 	double x, y, BTh;
 	y = TMath::Tan(GetPTh(Tanno+fac)); // y = tan(Theta_targetlab)
@@ -386,18 +491,20 @@ Double_t doppler::GetBTh(Double_t Tanno) {
 	if( BTh < 0 ) BTh += TMath::Pi();
 	//	cout << "Simulated beam angle: " << BTh*TMath::RadToDeg() << endl;
 	return BTh;
+
 }
 
-Double_t doppler::GetTEn(Double_t BEn, Double_t Banno) {
+float doppler::GetTEn( float BEn, float Banno ) {
+
 	// Returns energy of target using energy and angle of Rn 
 	double dist, angle;
 
 	// energy at interaction point
-	double Ereac = EB*AP - GetELoss(EB*AP,DEPTH,0,"BT");
+	double Ereac = (float)Eb*(float)Ab - GetELoss( (float)Eb*(float)Ab, depth, 0, "BT" );
 
 	// Trace energy loss back through target to get energy at interaction point
-	double Eproj = BEn + GetELoss(BEn,DEADLAYER,1,"BS"); // correct for dead layer loss first
-	dist = TMath::Abs((double)(THICK-DEPTH)/TMath::Cos(GetPTh(Banno)));
+	double Eproj = BEn + GetELoss(BEn,deadlayer,1,"BS"); // correct for dead layer loss first
+	dist = TMath::Abs((double)(thick-depth)/TMath::Cos(GetPTh(Banno)));
 	Eproj += GetELoss(Eproj,dist,1,"BT");
 
 	double Etarg = Ereac - Eproj;
@@ -406,24 +513,25 @@ Double_t doppler::GetTEn(Double_t BEn, Double_t Banno) {
 	angle = GetTTh(Banno,BEn);
 	if( angle < 0.501*TMath::Pi() && angle > 0.499*TMath::Pi() ) return 0.1; // stopped
 
-	dist = TMath::Abs((double)(THICK-DEPTH)/TMath::Cos(angle));
+	dist = TMath::Abs((double)(thick-depth)/TMath::Cos(angle));
 	Etarg -= GetELoss(Etarg,dist,0,"TT");
 
-	if (Etarg < 0) return 0.1;
+	if( Etarg < 0 ) return 0.1;
 	else return Etarg;
 	
 }
 
-Double_t doppler::GetBEn(Double_t TEn, Double_t Tanno) {
+float doppler::GetBEn( float TEn, float Tanno ) {
+
 	// Returns energy of Rn using energy and angle of target
 	double dist, angle;
 
 	// energy at interaction point
-	double Ereac = EB*AP - GetELoss(EB*AP,DEPTH,0,"BT");
+	double Ereac = (float)Eb*(float)Ab - GetELoss((float)Eb*(float)Ab,depth,0,"BT");
 
 	// Trace energy loss back through target to get energy at interaction point
-	double Etarg = TEn + GetELoss(TEn,DEADLAYER,1,"TS"); // correct for dead layer loss first
-	dist = TMath::Abs((double)(THICK-DEPTH)/TMath::Cos(GetPTh(Tanno)));
+	double Etarg = TEn + GetELoss(TEn,deadlayer,1,"TS"); // correct for dead layer loss first
+	dist = TMath::Abs((double)(thick-depth)/TMath::Cos(GetPTh(Tanno)));
 	Etarg += GetELoss(Etarg,dist,1,"TT");
 
 	double Eproj = Ereac - Etarg;
@@ -432,15 +540,16 @@ Double_t doppler::GetBEn(Double_t TEn, Double_t Tanno) {
 	angle = GetBTh(Tanno);
 	if( angle < 0.501*TMath::Pi() && angle > 0.499*TMath::Pi() ) return 0.1; // stopped
 
-	dist = TMath::Abs((double)(THICK-DEPTH)/TMath::Cos(angle));
+	dist = TMath::Abs((double)(thick-depth)/TMath::Cos(angle));
 	Eproj -= GetELoss(Eproj,dist,0,"BT");
 
-	if (Eproj < 0) return 0.1;
+	if( Eproj < 0 ) return 0.1;
 	else return Eproj;
 	
 }
 
-Double_t doppler::GetELoss(Double_t Ei, Double_t dist, Int_t opt, string combo) {
+float doppler::GetELoss( float Ei, float dist, int opt, string combo ) {
+
 	// Returns the energy loss at a given initial energy and distance travelled in the target or Si dead layer
 	// Ei is the initial energy in keV
 	// dist is the distance travelled in the target in mg/cm2
@@ -483,16 +592,18 @@ Double_t doppler::GetELoss(Double_t Ei, Double_t dist, Int_t opt, string combo) 
 
 }
 
-Double_t doppler::GammaAng(Double_t PTh, Double_t PPhi, Double_t GTh, Double_t GPhi) {
+float doppler::GammaAng( float PTh, float PPhi, float GTh, float GPhi ) {
+
 	// Returns angle between particle and gamma	in radians
-	
+
 	double costheta = sin(PTh)*sin(GTh)*cos(PPhi-GPhi)+(cos(PTh)*cos(GTh));
 	
 	return acos( costheta );
 	
 }
 
-Double_t doppler::DC(Double_t PEn, Double_t PTh, Double_t PPhi, Double_t GTh, Double_t GPhi, Double_t A) {
+float doppler::DC( float PEn, float PTh, float PPhi, float GTh, float GPhi, float A ) {
+
 	// Returns Doppler correction factor for given particle and gamma
 	// angular combination.  Factors in detected particle energy too
 	
@@ -504,23 +615,6 @@ Double_t doppler::DC(Double_t PEn, Double_t PTh, Double_t PPhi, Double_t GTh, Do
 	corr /= gamma;
 	
 	return corr;
-	
-}
-
-Double_t doppler::DC_elec(double een, double PEn, double PTh, double PPhi, double GTh, double GPhi, double A) {
-	// Returns Doppler correction factor for given particle and electron
-	// angular combination.  Factors in detected particle energy too
-	
-	double beta = TMath::Sqrt( 2*PEn / (A*931494.028) );
-	double mass_e = 511.;
-	double gamma = 1. / TMath::Sqrt( 1. - beta*beta );
-	double costheta = sin(PTh)*sin(GTh)*cos(PPhi-GPhi)+(cos(PTh)*cos(GTh));
-	
-	double energy = een + mass_e - beta*costheta*TMath::Sqrt( een*een + 2.*mass_e*een );
-	energy /= gamma;
-	energy -= mass_e;	
-
-	return energy;
 	
 }
 

@@ -20,43 +20,59 @@
 using namespace std;
 
 // Experimental definitions
-#ifndef ExpDefs_hh
-# include "ExpDefs.hh"
-#endif
+//#ifndef ExpDefs_hh
+//# include "ExpDefs.hh"
+//#endif
 
 class doppler : public TObject {
 
 	public:
 
-	static Int_t	Cut(Double_t PEn, Double_t anno, Int_t quad);
-	static Int_t	Cut_2p(Double_t PEn1, Double_t anno1, Int_t quad1,
-							Double_t PEn2, Double_t anno2, Int_t quad2);
-	static bool	CutG_en2hit( double BEn, double TEn );
-	static Double_t	GetTarDist();
-	static Double_t	GetPTh(Double_t anno);
-	static Double_t	GetPPhi(Int_t quad, Int_t seg, Double_t offset=CDOFFSET);
-	static Double_t	GetTTh(Double_t Banno, Double_t BEn);
-	static Double_t	GetBTh(Double_t Tanno);
-	static Double_t	GetQPhi(Int_t quad, Int_t seg);
-	static Double_t	GetTEn(Double_t BEn, Double_t Banno);
-	static Double_t	GetBEn(Double_t TEn, Double_t Tanno);
-	static Double_t	GetELoss(Double_t Ei, Double_t dist, Int_t opt, string combo);
-	static Double_t	GammaAng(Double_t PTh, Double_t PPhi, Double_t GTh, Double_t GPhi);
-	static Double_t	DC(Double_t PEn, Double_t PTh, Double_t PPhi, Double_t GTh, Double_t GPhi, Double_t A);
-	static Double_t	DC_elec(double een, double PEn, double PTh, double PPhi, double GTh, double GPhi, double A);
-	static bool stoppingpowers( Int_t Zp, Int_t Zt, Double_t Ap, Double_t At, string opt );
-	static string convertInt( int number );
-	static string convertFloat( float number );
+	void	ExpDefs( int Zb_, int Ab_, int Zt_, int At_, float Eb_, float Ex_, float thick_,
+						float depth_, float cddist_, float cdoffset_, float deadlayer_,
+						float plunger_, TCutG *Bcut_, TCutG *Tcut_ );
+	int		Cut( float PEn, float anno, int quad );
+	int		Cut_2p( float PEn1, float anno1, int quad1, float PEn2, float anno2, int quad2 );
+	bool	CutG_en2hit( float BEn, float TEn );
+	int		GetZb();
+	int		GetAb();
+	int		GetZt();
+	int		GetAt();
+	float	GetCDOffset();
+	float	GetCDDeadLayer();
+	float	GetPlungerDist();
+	float	GetPTh( float anno);
+	float	GetPPhi( int quad, int seg );
+	float	GetPPhi( int quad, int seg, float offset );
+	float	GetTTh( float Banno, float BEn );
+	float	GetBTh( float Tanno );
+	float	GetQPhi( int quad, int seg );
+	float	GetTEn( float BEn, float Banno );
+	float	GetBEn( float TEn, float Tanno );
+	float	GetELoss( float Ei, float dist, int opt, string combo );
+	float	GammaAng( float PTh, float PPhi, float GTh, float GPhi );
+	float	DC( float PEn, float PTh, float PPhi, float GTh, float GPhi, float A );
+	bool	stoppingpowers( bool BT, bool TT, bool BS, bool TS );
+	bool	stoppingpowers( string opt );
+
+	static string	convertInt( int number );
+	static string	convertFloat( float number );
 	
 	private:
-	static TRandom3 rand;
-	static double BTELoss_pars[6];
-	static double TTELoss_pars[6];
-	static double BSELoss_pars[6];
-	static double TSELoss_pars[6];
-	static string gElName[110];
-	static double SP_function( double *x, double *par );
-	static double gates[64][3];
+	static TRandom3	rand;
+	static double	BTELoss_pars[6];
+	static double	TTELoss_pars[6];
+	static double	BSELoss_pars[6];
+	static double	TSELoss_pars[6];
+	static string	gElName[110];
+	static double	SP_function( double *x, double *par );
+	static float	gates[64][3];
+	int		Zb, Zt, Ab, At;
+	float	Eb, Ex, thick, depth;
+	float	cddist, cdoffset;
+	float	deadlayer;
+	float	plunger;
+	TCutG	*Bcut, *Tcut;
 	
 	ClassDef(doppler,1);
 

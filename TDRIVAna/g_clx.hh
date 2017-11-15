@@ -28,11 +28,6 @@ using namespace std;
 // Header file for the classes stored in the TTree if any.
 #include <TObject.h>
 
-// Experimental definitions
-#ifndef ExpDefs_hh
-# include "ExpDefs.hh"
-#endif
-
 // Headers for tree
 #ifndef __MBEVTS_HH__
 # include "../mbevts/mbevts.hh"
@@ -49,12 +44,12 @@ class g_clx : public TObject {
 	//mbevts          *mbevts;
 	UInt_t          fUniqueID;
 	UInt_t          fBits;
-	float           gen;	// Gamma-ray energy, calibrated
-	int             cid;	// core id (0-23)
-	int             sid;	// segment id (0-6), where 0 is core, 1-6 is segments
-	int             cluid; 	// cluster id (0-7)
-	float           tha;	// theta of gamma, overwritten with MBGeometry
-	float           pha;	// phi of gamma, overwritten with MBGeometry
+	float           gen;
+	int             cid;
+	int             sid;
+	int             cluid;
+	float           tha;
+	float           pha;
 	vector <float>  gcor_gen;
 	vector <int>    gcor_cid;
 	vector <int>    gcor_sid;
@@ -62,24 +57,30 @@ class g_clx : public TObject {
 	vector <float>  gcor_tha;
 	vector <float>  gcor_pha;
 	vector <float>  gcor_gtd;
-	vector <float>  pen;		// particle energy, calibrated
-	vector <double> time;		// particle timestamp
-	vector <double> sst;		// supercycle timestamp
-	vector <float>  td;			// particle-gamma time difference (25ns ticks)
-	vector <int>    ann;		// annular ring number (0-15)
-	vector <int>    sec;		// sector strip number (0-11)
-	vector <int>    det;		// quadrant number (0-3)
-	vector <int>    coin;		// prompt (0) or random (1) or delayed (2) coincidence
-	int             laser;		// laser on (1) or laser off (0)
-	int             pr_hits;	// number of prompt hits
-	int             rndm_hits;	// number of random hits
-	int             del_hits;	// number of delayed hits
-	vector <int>    pr_ptr;		// vector of pointers to id's of prompt hits
-	vector <int>    rndm_ptr;	// vector of pointers to id's of prompt hits
-	vector <int>    del_ptr;	// vector of pointers to id's of prompt hits
+	vector <float>  pen;
+	vector <double> time;
+	vector <double> sst;
+	vector <float>  td;
+	vector <int>    ann;
+	vector <int>    sec;
+	vector <int>    det;
+	vector <int>    coin;
+	int             laser;
+	int             pr_hits;
+	int             rndm_hits;
+	int             del_hits;
+	vector <int>    pr_ptr;
+	vector <int>    rndm_ptr;
+	vector <int>    del_ptr;
 	int             file;
 
-	float		GammaEnergy;
+	float			GammaEnergy;
+	int				Zb, Zt, Ab, At;
+	float			Eb, Ex, thick, depth;
+	float			cddist, cdoffset;
+	float			deadlayer;
+	float			plunger;
+	TCutG			*Bcut, *Tcut;
 	
 	// List of branches
 	TBranch        *b_mbevts_fUniqueID;   //!
@@ -116,11 +117,11 @@ class g_clx : public TObject {
 	
 	g_clx( TTree *tree = 0 );
 	virtual ~g_clx();
-	virtual Int_t	GetEntry( Long64_t entry );
+	virtual Int_t		GetEntry( Long64_t entry );
 	virtual Long64_t	LoadTree( Long64_t entry );
 	virtual void		Init( TTree *tree );
 	virtual void		Loop( string outputfilename );
-	virtual Bool_t	Notify();
+	virtual Bool_t		Notify();
 	virtual void		Show( Long64_t entry = -1 );
 	
 	ClassDef(g_clx,1);
@@ -131,59 +132,9 @@ class g_clx : public TObject {
 
 #ifdef g_clx_cxx
 g_clx::g_clx(TTree *tree) : fChain(0) {
-	// if parameter tree is not specified (or zero), connect the file
-	// used to generate this class and read the Tree.
+	// if parameter tree is not specified (or zero), probably crash
 	
-	if( tree == 0 ) {
-
-		bool skip_flag;
-		vector<int> skip_list;
-		skip_list.push_back( 17 );
-		skip_list.push_back( 22 );
-		skip_list.push_back( 26 );
-		skip_list.push_back( 32 );
-		skip_list.push_back( 34 );
-		skip_list.push_back( 54 );
-		skip_list.push_back( 71 );
-		skip_list.push_back( 74 );
-		skip_list.push_back( 109 );
-		skip_list.push_back( 111 );
-		skip_list.push_back( 113 );
-		skip_list.push_back( 114 );
-		skip_list.push_back( 116 );
-		skip_list.push_back( 119 );
-	
-		string inputfilename;
-	
-		TChain *chain = new TChain( "g_clx", "" );
-
-		for( int i = 9; i <= 125; i++ ) {
-	
-			// Skip background/broken runs
-			skip_flag = false;
-			for( unsigned int j = 0; j < skip_list.size(); j++ ) 
-				if( i == skip_list[j] ) skip_flag = true;
-				
-			if( skip_flag ) continue;
-				
-			// Skip decay runs
-			if( i >= 84 && i <= 103 ) continue;
-
-			inputfilename = "rootfiles/IS551_132Sn_RUN";
-			if( i < 10 ) inputfilename += "00";
-			else if( i < 100 ) inputfilename += "0";
-			inputfilename += doppler::convertInt( i );
-			inputfilename += "_tree.root";
-	
-			chain->Add( inputfilename.c_str() );	
-		
-		}
-	
-		tree = chain;
-	
-	}
-	
-	Init(tree);
+	if( tree != 0 )	Init(tree);
 	
 }
 

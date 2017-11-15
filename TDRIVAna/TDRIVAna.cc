@@ -1,104 +1,42 @@
-// TreeAna: The main routine that calls g_clx
-// Liam Gaffney (liam.gaffney@cern.ch) - 01/05/2017
+// TDRIVAna: The main routine that calls g_clx
+// Liam Gaffney (liam.gaffney@cern.ch) - 15/11/2017
 
-// Experimental definitions
-#ifndef g_clx_hh
-# include "g_clx.hh"
-#endif
-
-#include <ctime>
-#include <iostream>
-using namespace std;
+#include "TDRIVAna.hh"
 
 #ifndef __CINT__
 int main( int argc, char *argv[] ) {
 
-	string arg_str;
-	string outputfilename;
-	vector<string> inputfilenames;
 	int j = 0;
 
-	// If not arguments, run default
-	if( argc == 1 ) {
+	string outputfilename, configfilename, cutfilename;
+	vector<string> inputfilenames;
+	float		GammaEnergy;
+	int			Zb = 0, Zt = 0, Ab = 0, At = 0;
+	float		Eb = 0, Ex = 0, thick = 0, depth = 0;
+	float		cddist = 0, cdoffset = 242.6;
+	float		deadlayer = 0.7;
+	float		plunger = 5.0; // um
 
-		time_t rawtime;
-		struct tm *timeinfo;
-		char buf[80];
+	CommandLineInterface* interface = new CommandLineInterface();
 
-		time( &rawtime );
-		timeinfo = localtime( &rawtime );
+	interface->Add("-i", "inputfiles", &inputfilenames );
+	interface->Add("-o", "outputfile", &outputfilename );
+	interface->Add("-c", "configfile", &configfilename );
+	interface->Add("-cut", "cutfile", &cutfilename );
+	interface->Add("-Zb", "Zb", &Zb );
+	interface->Add("-Ab", "Ab", &Ab );
+	interface->Add("-Zt", "Zt", &Zt );
+	interface->Add("-At", "At", &At );
+	interface->Add("-Eb", "Eb", &Eb );
+	interface->Add("-Ex", "Ex", &Ex );
+	interface->Add("-thick", "thick", &thick );
+	interface->Add("-depth", "depth", &depth );
+	interface->Add("-cddist", "cddist", &cddist );
+	interface->Add("-cdoffset", "cdoffset", &cdoffset );
+	interface->Add("-deadlayer", "deadlayer", &deadlayer );
+	interface->Add("-plunger", "plunger", &plunger );
 
-		strftime( buf, 80, "%Y%m%d_%H%M", timeinfo );
-
-		outputfilename = buf;
-		outputfilename = "Hists_" + outputfilename + ".root";
-
-		g_clx x;
-		x.Loop( outputfilename );
-
-	}
-
-	// Else process command line arguments
-	else {
-
-		for( int i = 1; i < argc; i++ ) {
-
-			arg_str.assign( argv[i] );
-
-			// Help
-			if( arg_str == "-h" ) {
-
-				cout << argv[0] << "-i <inputfiles> -o <outputfile>" << endl;
-
-			}
-
-			// Input files
-			else if( arg_str == "-i" ) {
-
-				if( i >= argc ) {
-
-					cerr << "No input filename given" << endl;
-					return 0;
-
-				}
-
-				cout << "List of input files..." << endl;
-
-				while( i+j+1 < argc ) {
-
-					arg_str.assign( argv[i+j+1] );
-
-					if( arg_str[0] == '-' ) break;
-
-					inputfilenames.push_back( arg_str );
-					cout << inputfilenames[j] << endl;
-
-					j++;
-
-				}
-
-			} // "-i"
-
-			// Output file
-			else if( arg_str == "-o" ) {
-
-				if( i >= argc ) {
-
-					cerr << "No output filename given" << endl;
-					return 0;
-
-				}
-
-				else outputfilename = argv[i+1];
-
-				cout << "Output file: " << outputfilename << endl;
-
-
-			} // "-o"
-
-		} // i
-
-	} // process command line arguments
+	interface->CheckFlags( argc, argv );
 
 	// Test if output file is there
 	if( outputfilename.size() <= 0 ) {
@@ -126,6 +64,126 @@ int main( int argc, char *argv[] ) {
 
 	// Initiate g_clx
 	g_clx x( chain );
+
+	// Get the cut file
+	if( cutfilename.size() > 0 ) {
+
+		size_t sep1 = cutfilename.find_first_of( ":" );
+		size_t sep2 = cutfilename.find_last_of( ":" );
+
+		if( sep1 <= 1 || sep2 <= 1 || sep1 > cutfilename.size() || sep2 > cutfilename.size() ) {
+
+			cout << "Format for the cutfile should be <cutfile.root>:<Bcut>:<Tcut>\n";
+			cout << "where <Bcut> and <Tcut> are the TCutG names of the beam and\n";
+			cout << "target cuts in the root file, respectively." << endl;
+
+			return 0;
+
+		}
+
+		string str_file = cutfilename.substr( 0, sep1 );
+		string str_bcut = cutfilename.substr( sep1+1, sep2-sep1-1 );
+		string str_tcut = cutfilename.substr( sep2+1, cutfilename.size()-sep2-1 );
+
+		TFile *fcut = new TFile( str_file.c_str() );
+
+		if( fcut->IsZombie() ) {
+
+			cout << "Didn't open " << str_file << " correctly\n";
+			cout << "Does it exist?\n";
+
+			return 0;
+
+		}
+
+		if( !fcut->GetListOfKeys()->Contains( str_bcut.c_str() ) ) {
+
+			cout << "Didn't find beam cut, " << str_bcut << ", in " << str_file << endl;
+			return 0;
+
+		}
+
+		if( !fcut->GetListOfKeys()->Contains( str_tcut.c_str() ) ) {
+
+			cout << "Didn't find target cut, " << str_tcut << ", in " << str_file << endl;
+			return 0;
+
+		}
+
+		x.Bcut = (TCutG*)fcut->Get( str_bcut.c_str() );
+		x.Tcut = (TCutG*)fcut->Get( str_tcut.c_str() );
+
+	}
+
+	// if not cut file given, make empty cuts
+	else {
+
+		cout << "No cut file given" << endl;
+		x.Bcut = new TCutG( "bcut", 0 );
+		x.Tcut = new TCutG( "tcut", 0 );
+
+	}
+
+	// Test if we're using a config file (we overwrite the values if so)
+	if( configfilename.size() > 0 ) {
+
+		TEnv *config = new TEnv( configfilename.c_str() );
+
+		Zb = config->GetValue( "Zb", -1 );
+		Ab = config->GetValue( "Ab", -1 );
+		Zt = config->GetValue( "Zt", -1 );
+		At = config->GetValue( "At", -1 );
+		Eb = config->GetValue( "Eb", -1 );
+		Ex = config->GetValue( "Ex", -1 );
+		thick = config->GetValue( "thick", -1 );
+		depth = config->GetValue( "depth", -1 );
+		cddist = config->GetValue( "cddist", -1 );
+		cdoffset = config->GetValue( "cdoffset", 242.6 );
+		deadlayer = config->GetValue( "deadlayer", 0.7 );
+		plunger = config->GetValue( "plunger", 23.6 );
+
+	}
+
+	// Parameters are already read from the command line if not overwritten by config file
+	if( Zb > 0 && Zt > 0 && Ab > 0 && At > 0 && Eb > 0 && Ex > 0 &&
+				thick > 0 && depth > 0 && cddist > 0 ) {
+
+		// Setup the experimental parameters
+		//x.SetExpDefs( Zb, Ab, Zt, At, Eb, Ex, thick, depth, cddist, cdoffset );
+		x.Zb = Zb;
+		x.Ab = Ab;
+		x.Zt = Zt;
+		x.At = At;
+		x.Eb = Eb;
+		x.Ex = Ex;
+		x.thick = thick;
+		x.depth = depth;
+		x.cddist = cddist;
+		x.cdoffset = cdoffset;
+		x.deadlayer = deadlayer;
+		x.plunger = plunger;
+
+	}
+
+	// In case something is missing, print out what we have and quit
+	else {
+
+		cout << "Zb = " << Zb << endl;
+		cout << "Ab = " << Ab << endl;
+		cout << "Zt = " << Zt << endl;
+		cout << "At = " << At << endl;
+		cout << "Eb = " << Eb << endl;
+		cout << "Ex = " << Ex << endl;
+		cout << "thick = " << thick << endl;
+		cout << "depth = " << depth << endl;
+		cout << "cddist = " << cddist << endl;
+		cout << "cdoffset = " << cdoffset << endl;
+
+		return 0;
+
+	}
+
+	// Run sort
 	x.Loop( outputfilename );
 
 	return 0;

@@ -3,5 +3,6 @@
 *.o
 *Dict.cc
 *Dict.h
-TDRIVAna
+CLXAna
+CLXAna_*
 

@@ -9,7 +9,6 @@
 //#define PHICAL  		// define to plot different CD rotation offsets
 //#define GEANG			// define for plotting Ge angles per cluster
 #define MBGEOMETRY  		// define to overwrite MB angles with MBGeometry routine
-#define SPEDEGEOMETRY	// define to overwrite Spede angles with SpedeGeometry routine
 
 #ifdef PHICAL
 # define PHI_STEP_WIDTH 1 
@@ -18,9 +17,6 @@
 
 #ifndef __MBGEOMETRY_HH__
 # include "MBGeometry.hh"
-#endif
-#ifndef __SpedeGeometry_HH__
-# include "SpedeGeometry.hh"
 #endif
 #ifndef hist_hh
 # include "hists.hh"
@@ -36,27 +32,26 @@ void g_clx::Loop( string outputfilename ) {
 	// Output file name	
 	TFile *out = new TFile( outputfilename.c_str(), "RECREATE" );
 
+	// Create doppler instance and set experimental parameters
+	doppler dc;
+	dc.ExpDefs( Zb, Ab, Zt, At, Eb, Ex, thick, depth, cddist, cdoffset,
+					deadlayer, plunger, Bcut, Tcut );
+
 	// Fit stopping power curves from the srim output files
 	// Comment out to use the default parameters in doppler.hh
-	if( !doppler::stoppingpowers( ZP, ZT, AP, AT, "BT" ) || // beam in target
-			!doppler::stoppingpowers( ZP, ZT, AP, AT, "TT" ) || // target in target
-			!doppler::stoppingpowers( ZP, ZT, AP, AT, "BS" ) || // beam in silicon
-			!doppler::stoppingpowers( ZP, ZT, AP, AT, "TS" )	// target in silicon
-	  ) return;
+	// stoppingpowers( BT, TT, BS, TS )
+	if( !dc.stoppingpowers( true, true, false, false ) ) return;
 
 	// Ratio of prompt and random time windows
 	// Alternatively, normalisation of beta-decay lines
 	float bg_frac = -1.0;
-
-	// Test if it's an electron or gamma
-	bool electron;
 
 	// Include errors on histograms (required for correct bg subtraction)
 	TH1::SetDefaultSumw2();
 
 	// Declare the histograms here and initialise!
 	hists h;
-	h.Initialise();
+	h.Initialise( dc );
 
 	// Particle-particle time difference (from tppdiff)
 	h.Set_ppwin(300.);
@@ -76,16 +71,16 @@ void g_clx::Loop( string outputfilename ) {
 	//ifstream angfile;
 
 	// Original values from frame
-	//double clu_r[8] = { 135, 135, 135, 135, 135, 135, 135, 135 };
-	//double clu_theta[8] = { 136.7, 48.8, 48.8, 136.7, 135., 42.8, 135., 42.8 };
-	//double clu_phi[8] = { 129.5, 56.4, 132.4, 52.9, 236.6, 235., 310.5, 319. };
-	//double clu_alpha[8] = { 320., 300., 310., 310., 290., 240., 60., 120. }; 
+	double clu_r[8] = { 116, 116, 116, 116, 116, 116, 116, 116 };
+	double clu_theta[8] = { 114.3, 67.0, 67.0, 114.3, 111.3, 67.0, 111.3, 67.0 };
+	double clu_phi[8] = { 141.7, 36.2, 107.0, 77.3, 256.9, 218.2, 323.5, 282.1 };
+	double clu_alpha[8] = { 350.0, 296.5, 252.5, 72.0, 248.5, 93.0, 67.5, 67.5 }; 
 
 	// Nigel's values from 22Ne data
-	double clu_r[8] = { 95.17, 92.77, 95.38, 91.35, 96.24, 92.57, 97.25, 102.80 };
-	double clu_theta[8] = { 136.33, 45.79, 42.95, 136.98, 131.17, 40.31, 136.72, 32.23 };
-	double clu_phi[8] = { 130.82, 54.99, 133.56, 51.45, 235.24, 233.11, 311.46, 319.63 };
-	double clu_alpha[8] = { 322.00, 61.90, 296.75, 243.75, 294.64, 240.78, 68.85, 110.33 }; 
+	//double clu_r[8] = { 95.17, 92.77, 95.38, 91.35, 96.24, 92.57, 97.25, 102.80 };
+	//double clu_theta[8] = { 136.33, 45.79, 42.95, 136.98, 131.17, 40.31, 136.72, 32.23 };
+	//double clu_phi[8] = { 130.82, 54.99, 133.56, 51.45, 235.24, 233.11, 311.46, 319.63 };
+	//double clu_alpha[8] = { 322.00, 61.90, 296.75, 243.75, 294.64, 240.78, 68.85, 110.33 }; 
 
 	double new_theta[8][3][7]; // cluster, crystal segment
 	double new_phi[8][3][7];
@@ -113,24 +108,6 @@ void g_clx::Loop( string outputfilename ) {
 
 #endif
 
-	// New angles defined by Spede geometry
-#ifdef SPEDEGEOMETRY
-	double spede_r = SPEDEDIST;
-	double spede_alpha = 0.0;
-
-	double spede_theta[24];
-	double spede_phi[24];
-
-	SpedeGeometry spg;	
-	spg.SetupSpede( spede_r, spede_alpha );
-	for( unsigned int j = 0; j < 24; j++ ) { // loop over segments
-
-		spede_theta[j] = spg.GetSpedeTheta(j) * TMath::DegToRad();
-		spede_phi[j] = spg.GetSpedePhi(j) * TMath::DegToRad();
-	}
-
-#endif
-
 	// Loop over events 
 	cout << "Looping over events...\n";
 	Int_t nbytes = 0, nb = 0;
@@ -148,66 +125,19 @@ void g_clx::Loop( string outputfilename ) {
 			cout << flush;
 		}
 
-		// Is it an electron or gamma?
-		if( cluid < 8 ) electron = false;
-		else if( cluid == 8 ) electron = true;
-		else break; // shouldn't be anything else
-
 		// Overwrite angles from tree with new angles
 #ifdef MBGEOMETRY
-		if( !electron ) { // check if it's Miniball
+		tha = new_theta[cluid][cid%3][sid];
+		pha = new_phi[cluid][cid%3][sid];
 
-			tha = new_theta[cluid][cid%3][sid];
-			pha = new_phi[cluid][cid%3][sid];
-
-			for( unsigned int i = 0; i < gcor_gen.size(); i++ ){
+		for( unsigned int i = 0; i < gcor_gen.size(); i++ ){
 		
-				if( gcor_cluid[i] == 8 || gcor_sid[i] < 0 ) continue; // not Ge
-				gcor_tha[i] = new_theta[gcor_cluid[i]][gcor_cid[i]%3][gcor_sid[i]];	// gcor_sid broken!
-				gcor_pha[i] = new_phi[gcor_cluid[i]][gcor_cid[i]%3][gcor_sid[i]];		// gcor_sid broken!
+			if( gcor_cluid[i] == 8 || gcor_sid[i] < 0 ) continue; // not Ge
+			gcor_tha[i] = new_theta[gcor_cluid[i]][gcor_cid[i]%3][gcor_sid[i]];	// gcor_sid broken!
+			gcor_pha[i] = new_phi[gcor_cluid[i]][gcor_cid[i]%3][gcor_sid[i]];		// gcor_sid broken!
 			
-			}
-		
 		}
 #endif
-#ifdef SPEDEGEOMETRY
-		if( electron ) { // check if it's SPEDE/PAD
-
-			if( cid == 0 ) { // spede
-
-				tha = spede_theta[sid];
-				pha = spede_phi[sid];
-
-				for( unsigned int i = 0; i < gcor_gen.size(); i++ ){
-			
-					if( gcor_cluid[i] != 8 || gcor_sid[i] < 0 || gcor_sid[i] > 23 ) continue; // not spede/PAD
-					gcor_tha[i] = spede_theta[gcor_sid[i]];		// gcor_sid broken!
-					gcor_pha[i] = spede_phi[gcor_sid[i]];		// gcor_sid broken!
-				
-				}
-
-			}
-			
-			else { // PAD
-
-				tha = doppler::GetPTh( 10 );
-				pha = doppler::GetPPhi( cid-1, 6 );
-
-				for( unsigned int i = 0; i < gcor_gen.size(); i++ ){
-			
-					if( gcor_cluid[i] != 8 || gcor_sid[i] < 0 || gcor_sid[i] > 23 ) continue; // not spede/PAD
-					gcor_tha[i] = spede_theta[gcor_sid[i]];		// gcor_sid broken!
-					gcor_pha[i] = spede_phi[gcor_sid[i]];		// gcor_sid broken!
-				
-				}
-
-
-			}
-
-		}
-#endif
-
-
 		// Escape if angles are strange
 		//if( gen >= 0 && ( tha < 0.0005 || pha < 0.0005 ) && !electron ){
 		//	h.GeReject->Fill( cluid );
@@ -220,44 +150,40 @@ void g_clx::Loop( string outputfilename ) {
 		else if( rndm_hits != 0 )  h.multr->Fill( rndm_hits );
 
 		// Germanium angles
-		if( !electron ) { // check if it's Miniball
-
-			h.GeAng->Fill(tha*TMath::RadToDeg(),pha*TMath::RadToDeg());
-#ifdef GEANG
-			h.GeAng_clu[cluid]->Fill(tha*TMath::RadToDeg(),pha*TMath::RadToDeg());
-#endif
-		}
+		h.GeAng->Fill( tha*TMath::RadToDeg(), pha*TMath::RadToDeg() );
 
 		// Loop over particle counter
-		for( unsigned int i=0; i<pen.size(); i++ ){
+		for( unsigned int i = 0; i < pen.size(); i++ ){
 
 			// Escape funny events if there are any
 			if( det[i]<0 || det[i]>3 || ann[i]<0 || sec[i]<0 ) continue;
 
 			// Fill particle-gamma time spectra
-			if( !electron ) {
-				h.tdiff->Fill(td[i]*25.);
+			h.tdiff->Fill( td[i]*25. );
 
-				// particle - particle time difference
-				for( unsigned int j=i+1; j<pen.size(); j++ ) {
-					h.tpp->Fill(td[i]*25.,td[j]*25.);
-					h.tppdiff->Fill((td[i]-td[j])*25.);
-					for( int k=0; k<2; k++ ){
-						if( (det[i]==k && det[j]==k+2) || (det[j]==k && det[i]==k+2) ) {
-							if( det[i]>det[j] ) h.tQQ[k]->Fill((td[j]-td[i])*25.);
-							else h.tQQ[k]->Fill((td[i]-td[j])*25.);
-						}
+			// Germanium vs. Si angles
+			if( coin[i] == 0 )
+				h.GeSiAng->Fill( tha * TMath::RadToDeg(), dc.GetPTh( ann[i] ) * TMath::RadToDeg(),
+					( pha - dc.GetPPhi( det[i], sec[i] ) ) * TMath::RadToDeg() );
+
+			// particle - particle time difference
+			for( unsigned int j = i+1; j < pen.size(); j++ ) {
+
+				h.tpp->Fill( td[i]*25., td[j]*25. );
+				h.tppdiff->Fill( (td[i]-td[j])*25. );
+
+				for( int k = 0; k < 2; k++ ){
+
+					if( ( det[i]==k && det[j]==k+2 ) || ( det[j]==k && det[i]==k+2 ) ) {
+
+						if( det[i]>det[j] ) h.tQQ[k]->Fill( (td[j]-td[i])*25. );
+						else h.tQQ[k]->Fill( (td[i]-td[j])*25. );
+
 					}
-				}
-			} // cluid < 8
 
-			// Germanium angles vs. Silicon angles
-			if( !electron ) {
-#ifdef GEANG
-				h.GeSiAng->Fill(tha*TMath::RadToDeg(),doppler::GetPTh(ann[i])*TMath::RadToDeg(),(pha-doppler::GetPPhi(det[i],sec[i]))*TMath::RadToDeg());
-				h.GeSiAng_clu[cluid]->Fill(tha*TMath::RadToDeg(),doppler::GetPTh(ann[i])*TMath::RadToDeg(),(pha-doppler::GetPPhi(det[i],sec[i]))*TMath::RadToDeg());
-#endif
-			} // !electron
+				}
+
+			}
 			
 		} // END - Loop over particle counter
 
@@ -268,20 +194,20 @@ void g_clx::Loop( string outputfilename ) {
 
 		// Condition on particle detection
 		if( pr_hits==1 && rndm_hits==0 ) 
-			h.Fill1h(gen, tha, pha, cid, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron,
-					 pen[pr_ptr[0]], ann[pr_ptr[0]], sec[pr_ptr[0]], det[pr_ptr[0]], 1.0);
+			h.Fill1h( gen, tha, pha, cid, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd,
+					  pen[pr_ptr[0]], ann[pr_ptr[0]], sec[pr_ptr[0]], det[pr_ptr[0]], 1.0 );
 
 		else if( pr_hits==2 && rndm_hits==0 )
-			h.Fill2h(gen, tha, pha, cid, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron,
-					 pen, ann, sec, det, pr_ptr, td, 1.0);
+			h.Fill2h( gen, tha, pha, cid, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd,
+					  pen, ann, sec, det, pr_ptr, td, 1.0 );
 
 		else if( rndm_hits==1 && pr_hits==0 ) 
-			h.Fill1h(gen, tha, pha, cid, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron,
-					 pen[rndm_ptr[0]], ann[rndm_ptr[0]], sec[rndm_ptr[0]], det[rndm_ptr[0]], bg_frac);
+			h.Fill1h( gen, tha, pha, cid, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd,
+					  pen[rndm_ptr[0]], ann[rndm_ptr[0]], sec[rndm_ptr[0]], det[rndm_ptr[0]], bg_frac );
 
 		else if( rndm_hits==2 && pr_hits==0 )			
-			h.Fill2h(gen, tha, pha, cid, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron,
-					 pen, ann, sec, det, rndm_ptr, td, bg_frac);
+			h.Fill2h( gen, tha, pha, cid, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd,
+					  pen, ann, sec, det, rndm_ptr, td, bg_frac );
 
 	} // for (Long64_t jentry=0; jentry<fChain->GetEntries();jentry++)
 	
