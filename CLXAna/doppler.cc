@@ -295,12 +295,12 @@ int doppler::Cut_2p( float PEn1, float anno1, int quad1, float PEn2, float anno2
 	// inverse kinematics, include overlap region
 	if( Ab > At ){
 
-		if( ( Cut(PEn2,anno2,quad2) >0 || ((int)anno2>=10 && PEn2<450000.) ) &&
-			( Cut(PEn1,anno1,quad1)==0 || ((int)anno1>=12 && PEn1>280000. && PEn1<600000.) ) ){
+		if( ( Cut(PEn2,anno2,quad2) >0 || ((int)anno2>=12 && PEn2<550000.) ) &&
+			( Cut(PEn1,anno1,quad1)==0 || ((int)anno1>=12 && PEn1>300000. && PEn1<700000.) ) ){
 			identity=0; // target is particle number 1
 		}
-		if( ( Cut(PEn1,anno1,quad1) >0 || ((int)anno1>=10 && PEn1<450000.) ) &&
-			( Cut(PEn2,anno2,quad2)==0 || ((int)anno2>=12 && PEn2>280000. && PEn2<600000.) ) ){
+		if( ( Cut(PEn1,anno1,quad1) >0 || ((int)anno1>=12 && PEn1<550000.) ) &&
+			( Cut(PEn2,anno2,quad2)==0 || ((int)anno2>=12 && PEn2>300000. && PEn2<700000.) ) ){
 			identity=1; // target is particle number 2
 		}
 

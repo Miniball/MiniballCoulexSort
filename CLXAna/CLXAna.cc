@@ -115,6 +115,14 @@ int main( int argc, char *argv[] ) {
 
 	}
 
+	// if not cut file given, make empty cuts
+	else {
+
+		x.Bcut = new TCutG();
+		x.Tcut = new TCutG();
+
+	}
+
 	// Test if we're using a config file (we overwrite the values if so)
 	if( configfilename.size() > 0 ) {
 
