@@ -165,12 +165,16 @@ int main(int argc, char* argv[]) {
 			dgf_ch  = event->Dgf(j)->Channel();
 			dgf_en  = event->Dgf(j)->Energy();
 				
-			GammaEnergy = Cal->DgfEnergy( dgf_num, dgf_ch, dgf_en );
-			GammaEnergyCore[dgf_num/2] = GammaEnergy;
+			if( 0 <= dgf_num && dgf_num < 48 && 0 <= dgf_ch && dgf_ch < 4 ) {
 
-			E_gam_seg[dgf_num/6][dgf_num%6/2][dgf_ch]->Fill( dgf_en );
-			E_gam_seg_cal[dgf_num/6][dgf_num%6/2][dgf_ch]->Fill( GammaEnergy );
-			E_gam->Fill( GammaEnergy );
+				GammaEnergy = Cal->DgfEnergy( dgf_num, dgf_ch, dgf_en );
+				GammaEnergyCore[dgf_num/2] = GammaEnergy;
+
+				E_gam_seg[dgf_num/6][dgf_num%6/2][dgf_ch]->Fill( dgf_en );
+				E_gam_seg_cal[dgf_num/6][dgf_num%6/2][dgf_ch]->Fill( GammaEnergy );
+				E_gam->Fill( GammaEnergy );
+
+			}
 
 		}
 		
