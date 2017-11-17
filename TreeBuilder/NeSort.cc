@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
 
 	if( tr == NULL ) {
 
-		cout << "could not find tree caltr in file " << endl;
+		cout << "could not find tree in file " << endl;
 
 		for( unsigned int i=0; i < InputFiles.size(); i++ ) {
 
@@ -85,7 +85,7 @@ int main(int argc, char* argv[]) {
   
 	// Variables
 	float GammaEnergy = 0.;
-	float GammaEnergyCore = 0.;
+	float GammaEnergyCore[24];
 	int dgf_num, dgf_ch, dgf_en;
  
 	// ------ Histograms ------ //
@@ -151,32 +151,54 @@ int main(int argc, char* argv[]) {
 		
 		nbytes += status;
 
-		// Only Gammas (dgfs)
+		// Initialise core energies
+		for( j = 0; j < 24; j++ ) {
+
+			GammaEnergyCore[j] = -1.;
+
+		}
+
+		// Only cores first!
 		for( j = 0; j < event->NumberOfDgfs(); j++ ) {
 
 			dgf_num = event->Dgf(j)->ModuleNumber();
 			dgf_ch  = event->Dgf(j)->Channel();
 			dgf_en  = event->Dgf(j)->Energy();
 				
-			if( 0 <= dgf_num && dgf_num < 48 && 0 <= dgf_ch && dgf_ch < 4 ) { // miniball
+			GammaEnergy = Cal->DgfEnergy( dgf_num, dgf_ch, dgf_en );
+			GammaEnergyCore[dgf_num/2] = GammaEnergy;
+
+			E_gam_seg[dgf_num/6][dgf_num%6/2][dgf_ch]->Fill( dgf_en );
+			E_gam_seg_cal[dgf_num/6][dgf_num%6/2][dgf_ch]->Fill( GammaEnergy );
+			E_gam->Fill( GammaEnergy );
+
+		}
+		
+		// Then find the segments
+		for( j = 0; j < event->NumberOfDgfs(); j++ ) {
+
+			dgf_num = event->Dgf(j)->ModuleNumber();
+			dgf_ch  = event->Dgf(j)->Channel();
+			dgf_en  = event->Dgf(j)->Energy();
+				
+			if( 0 <= dgf_num && dgf_num < 48 && 0 <= dgf_ch && dgf_ch < 4 ) {
 
 				GammaEnergy = Cal->DgfEnergy( dgf_num, dgf_ch, dgf_en );
-				GammaEnergyCore = Cal->DgfEnergy( dgf_num - dgf_num%2, 0, dgf_en );
 
-				if( dgf_num % 2 == 0 && dgf_ch < 3 ) { // cores plus seg1 and seg2
+				if( dgf_num % 2 == 0 && dgf_ch > 0 && dgf_ch < 3 ) { // seg1 and seg2
 
 					E_gam_seg[dgf_num/6][dgf_num%6/2][dgf_ch]->Fill( dgf_en );
 					E_gam_seg_cal[dgf_num/6][dgf_num%6/2][dgf_ch]->Fill( GammaEnergy );
 					if( dgf_ch == 0 ) E_gam->Fill( GammaEnergy );
-					else E_gam_seg_core[dgf_num/6][dgf_num%6/2][dgf_ch-1]->Fill( GammaEnergyCore );
+					else E_gam_seg_core[dgf_num/6][dgf_num%6/2][dgf_ch-1]->Fill( GammaEnergyCore[dgf_num/2] );
 
 				} // even DGF number
 
-				else {
+				else if( dgf_num % 2 == 1 ) { // seg3-6
 
 					E_gam_seg[dgf_num/6][dgf_num%6/2][dgf_ch+3]->Fill( dgf_en );
 					E_gam_seg_cal[dgf_num/6][dgf_num%6/2][dgf_ch+3]->Fill( GammaEnergy );
-					E_gam_seg_core[dgf_num/6][dgf_num%6/2][dgf_ch+3-1]->Fill( GammaEnergyCore );
+					E_gam_seg_core[dgf_num/6][dgf_num%6/2][dgf_ch+3-1]->Fill( GammaEnergyCore[dgf_num/2] );
 
 				} // odd DGF number
 					

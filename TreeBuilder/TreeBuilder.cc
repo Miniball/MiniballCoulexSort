@@ -137,7 +137,8 @@ int main(int argc, char* argv[]) {
 	// Hard-coded parameters... TODO read in from file?
 	// ------------------------------------------------------------------------ //
 	// How many ticks need to align the prompt, in ticks.
-	Double_t dtAdc[4] = {-5.1,-10.0,-5.2,-6.1};  // IS547
+	Double_t dtAdc[4] = {-5.1,-10.0,-4.8,-4.1};  // IS628
+	//Double_t dtAdc[4] = {-5.1,-10.0,-5.2,-6.1};  // IS547
 	//Double_t dtAdc[4] = {-6.2,-11.4,-5.2,-6.8};  // IS562
 	//Double_t dtAdc[4] = {-4.9,-10.2,-5.3,-3.8};  // IS546
 	//Double_t dtAdc[4] = {-13.0,-11.5,-9.0,-11.0};  // IS558
@@ -159,6 +160,7 @@ int main(int argc, char* argv[]) {
 
 	Double_t Threshold_CDRing_E[4] = {120.,120.,120.,120.};
 	Double_t Threshold_CDStrip_E[4] = {120.,120.,160.,130.};
+	Double_t Threshold_CDPad_E[4] = {50.,50.,50.,50.};
 	// ------------------------------------------------------------------------ //
  
 
@@ -704,6 +706,8 @@ int main(int argc, char* argv[]) {
 					} // back strips
 
 					else if( adc_ch == 31 && cdpad ) { // something in the pad!
+
+						if( adc_en < Threshold_CDPad_E[adc_num] ) continue; // thrreshold
 
 						PadEnergy[adc_num] = Cal->AdcEnergy( adc_num, adc_ch, adc_en );
 					
