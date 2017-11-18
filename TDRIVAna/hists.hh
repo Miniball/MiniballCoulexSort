@@ -80,7 +80,7 @@ class hists {
 	// Testing
 	TH1F *multp, *multr;
 	TH1F *GeReject, *GePass, *GeRatio;
-	//TH2F *GeAng;
+	TH2F *GeAng;
 	//TH3F *GeSiAng;
 
 	// gamma - particle time difference
@@ -92,11 +92,16 @@ class hists {
 	TH1F *tQQ[2];
 
 	// R(t) Function histograms
-	TH1F *rthist[8][24];
+	TH1F *rthist[24][7], *rtgam[24][7];
+	TH1F *rthist_th[3][7], *rtgam_th[3][7];
+	float deltaPhi[3][7];
+	float groupTheta[3];
+	float groupThWidth;
 
-    //Particle gamma angular correlations
-	TH2S *gamma_particle_ang[30];
+    // Particle gamma angular correlations
+	TH2S *gamma_particle_ang[24];
     TH1S *coreid;
+
 	// Variables to be set in g_clx.C via Set_xxx functions
 	float ppwin;
 	int maxrecoil;
@@ -106,6 +111,7 @@ class hists {
 	double cd_angles[CDBINS];
 	double ge_angles[GEBINS];
 	double phi_angles[PHIBINS];
+	double cdphi_angles[49];
 
 	// Doppler instance
 	doppler dc;

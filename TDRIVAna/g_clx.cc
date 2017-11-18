@@ -35,7 +35,7 @@ void g_clx::Loop( string outputfilename ) {
 	// Fit stopping power curves from the srim output files
 	// Comment out to use the default parameters in doppler.hh
 	// stoppingpowers( BT, TT, BS, TS )
-	if( !dc.stoppingpowers( false, false, false, false ) ) return;
+	if( !dc.stoppingpowers( true, true, false, false ) ) return;
 
 	// Ratio of prompt and random time windows
 	// Alternatively, normalisation of beta-decay lines
@@ -63,22 +63,27 @@ void g_clx::Loop( string outputfilename ) {
 	//double clu_alpha[8] = { 332.88, 280.14, 256.95, 70.47, 253.25, 89.97, 272.31, 69.11 }; 
 
     // Joa's values  
-	double clu_r[8] = { 192.52, 97.56, 114.90, 106.16, 115.86, 116.30, 114.65, 115.03 };
-	double clu_theta[8] = { 106.6, 73.14, 66.01, 116.37, 110.89, 75.66, 101.80, 66.62 };
+	//double clu_r[8] = { 192.52, 97.56, 114.90, 106.16, 115.86, 116.30, 114.65, 115.03 };
+	//double clu_theta[8] = { 106.6, 73.14, 66.01, 116.37, 110.89, 75.66, 101.80, 66.62 };
+	//double clu_phi[8] = { 141.70, 36.20, 107.00, 77.30, 256.90, 218.20, 323.50, 282.10 };
+	//double clu_alpha[8] = { 332.88, 280.14, 256.95, 70.47, 253.25, 89.97, 272.31, 69.11 }; 
+
+	/*Amars values
+	  theta        phi      alpha          r
+	  107.35     141.70     333.73     115.42 # 17
+	   72.54      36.20     280.21      89.20 # 12
+	   64.95     107.00     256.49     106.96 # 16
+	  117.91      77.30      70.03      97.05 # 13
+	  112.03     256.90     252.93     106.36 # 22
+	   75.14     218.20      90.49     109.25 # 18
+	  102.65     323.50     275.42     105.37 # 14
+	   65.69     282.10      69.04     106.15 # 23
+	*/
+
+	double clu_r[8] = { 115.42, 89.2, 106.96, 97.05, 106.36, 109.25, 105.37, 106.15 };
+	double clu_theta[8] = { 107.35, 72.54, 64.95, 117.91, 112.03, 75.14, 102.65, 65.69 };
 	double clu_phi[8] = { 141.70, 36.20, 107.00, 77.30, 256.90, 218.20, 323.50, 282.10 };
-	double clu_alpha[8] = { 332.88, 280.14, 256.95, 70.47, 253.25, 89.97, 272.31, 69.11 }; 
-
-
-//#  theta        phi      alpha          r
-//  106.60     141.70     332.88     129.52 # 17
-//   73.14      36.20     280.14      97.56 # 12
-//   66.01     107.00     256.95     114.90 # 16
-//  116.37      77.30      70.47     106.16 # 13
-//  110.89     256.90     253.25     115.86 # 22
-//   75.66     218.20      89.97     116.30 # 18
-//  101.80     323.50     272.31     114.65 # 14
-//   66.62     282.10      69.11     115.03 # 23
-
+	double clu_alpha[8] = { 333.73, 280.21, 256.49, 70.03, 252.93, 90.49, 275.42, 69.04 }; 
 
 	double new_theta[8][3][7]; // cluster, crystal segment
 	double new_phi[8][3][7];
@@ -131,7 +136,7 @@ void g_clx::Loop( string outputfilename ) {
 	// Loop over events 
 	cout << "Looping over events...\n";
 	Int_t nbytes = 0, nb = 0;
-	Int_t skipFactor =1;
+	Int_t skipFactor = 1;
 	for( Long64_t jentry=0; jentry<fChain->GetEntries()/skipFactor; jentry++ ) {	
 
 		Long64_t ientry = LoadTree(jentry);
@@ -154,7 +159,7 @@ void g_clx::Loop( string outputfilename ) {
 		
 			if( gcor_cluid[i] == 8 || gcor_sid[i] < 0 ) continue; // not Ge
 			gcor_tha[i] = new_theta[gcor_cluid[i]][gcor_cid[i]%3][gcor_sid[i]];	// gcor_sid broken!
-			gcor_pha[i] = new_phi[gcor_cluid[i]][gcor_cid[i]%3][gcor_sid[i]];		// gcor_sid broken!
+			gcor_pha[i] = new_phi[gcor_cluid[i]][gcor_cid[i]%3][gcor_sid[i]];	// gcor_sid broken!
 			
 		}
 #endif
@@ -170,7 +175,7 @@ void g_clx::Loop( string outputfilename ) {
 		else if( rndm_hits != 0 )  h.multr->Fill( rndm_hits );
 
 		// Germanium angles
-		//h.GeAng->Fill( tha*TMath::RadToDeg(), pha*TMath::RadToDeg() );
+		h.GeAng->Fill( tha*TMath::RadToDeg(), pha*TMath::RadToDeg() );
 
 		// Loop over particle counter
 		for( unsigned int i = 0; i < pen.size(); i++ ){

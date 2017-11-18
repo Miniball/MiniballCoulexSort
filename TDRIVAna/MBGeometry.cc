@@ -184,14 +184,14 @@ void MBGeometry::SetupCluster() {
 	clu_offset.RotateZ(mytheta);
 		
 	// Rotate cores to appropriate angle
-	for( UInt_t i = 0; i < 3; i++ ) {
+	for( int i = 0; i < 3; i++ ) {
 		det_offset[i].RotateY(myalpha);
 		det_offset[i].RotateX(myphi);
 		det_offset[i].RotateZ(mytheta);
 	}
 
 	// Rotate segments to appropriate angle
-	for( UInt_t i = 0; i < 18; i++ ) {
+	for( int i = 0; i < 18; i++ ) {
 		seg_offset[i].RotateY(myalpha);
 		seg_offset[i].RotateX(myphi);
 		seg_offset[i].RotateZ(mytheta);
