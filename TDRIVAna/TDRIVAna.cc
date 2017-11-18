@@ -118,9 +118,9 @@ int main( int argc, char *argv[] ) {
 	// if not cut file given, make empty cuts
 	else {
 
-		cout << "No cut file given" << endl;
-		x.Bcut = new TCutG( "bcut", 0 );
-		x.Tcut = new TCutG( "tcut", 0 );
+		cout << "No cut file given, using some defaults in doppler.cc" << endl;
+		x.Bcut = new TCutG( "Bcut", 0 );
+		x.Tcut = new TCutG( "Tcut", 0 );
 
 	}
 

@@ -20,7 +20,7 @@
 # include "hists.hh"
 #endif
 
-void hists::Initialise( doppler dc_ ) {
+void hists::Initialise( doppler dc_, double core_theta[24], double core_phi[24] ) {
 
 	cout << "Initialising histograms...\n";
 
@@ -28,9 +28,9 @@ void hists::Initialise( doppler dc_ ) {
 
 	string hname, htitle;
 
-	for( int k = 0; k < 17; k++ ) cd_angles[k] = dc.GetPTh(15.5-k)*TMath::RadToDeg(); 
-	for( int k = 0; k < 91; k++ ) ge_angles[k] = 45. + k*1.0; 
-	for( int k = 0; k < 181; k++ ) phi_angles[k] = -180. + k*2.0; 
+	for( int k = 0; k < CDBINS; k++ ) cd_angles[k] = dc.GetPTh(15.5-k)*TMath::RadToDeg(); 
+	for( int k = 0; k < GEBINS; k++ ) ge_angles[k] = 41. + k * 98.0 / (float)(GEBINS-1); 
+	for( int k = 0; k < PHIBINS; k++ ) phi_angles[k] = -180. + k * 360.0 / (float)(PHIBINS-1); 
 
 	p = new TH1F("p","Prompt gammas;Energy [keV];Counts per 1 keV",GBINS, GMIN, GMAX );
 	r = new TH1F("r","Random gammas;Energy [keV];Counts per 1 keV",GBINS, GMIN, GMAX );
@@ -145,11 +145,15 @@ void hists::Initialise( doppler dc_ ) {
 	GeReject = new TH1F("GeReject","Events with Ge angle equal to zero;Cluster Number",9,-0.5,8.5); 
 	GePass = new TH1F("GePass","Events with Ge angle greater than zero;Cluster Number",9,-0.5,8.5); 
 	GeRatio = new TH1F("GeRatio","Ratio of Ge events with angle less than or equal to zero to those with real angles;Cluster Number",9,-0.5,8.5); 
-
+	for(int i=0; i<30; i++){
+       gamma_particle_ang[i] = new TH2S(Form("AngCorrSiGe%d",i),
+        Form("AngCorrSiGe%d",i),50,-2.5,357.5,1000,-1,1999);
+    }
+    coreid = new TH1S("coreid","coreid",100,-.5,99.5);
 	// Ge and Si angular combinations
-	GeAng = new TH2F( "GeAng", "Detector angles;#theta;#phi", 45, 0, 180, 90, 0, 359 );
-	GeSiAng = new TH3F( "GeSiAng", "Ge and Si coincidences angles;Ge #theta;Si #theta;#phi",
-		90, ge_angles, 16, cd_angles, 180, phi_angles);
+//	GeAng = new TH2F( "GeAng", "Detector angles;#theta;#phi", GEBINS-1, ge_angles, 90, 0, 356 );
+//	GeSiAng = new TH3F( "GeSiAng", "Ge and Si coincidences angles;Ge #theta;Si #theta;#delta#phi",
+//		GEBINS-1, ge_angles, CDBINS-1, cd_angles, PHIBINS-1, phi_angles);
 
 	// gamma - particle time difference
 	tdiff = new TH1F("tdiff","Particle-#gamma time difference;#tau (t_{p} - t_{#gamma}) [ns];Counts per 12.5ns",TBINS,TMAX-25*TBINS,TMAX); // Total
@@ -158,10 +162,35 @@ void hists::Initialise( doppler dc_ ) {
 	tppdiff = new TH1F("tppdiff","Particle-particle time difference;t_{p_{1}} - t_{p_{2}} [ns];Counts per 25ns",12000/25,-6000,6000);
 	tpp = new TH2F("tpp","Particle-gamma time difference matrix;t_{#gamma} - t_{p_{1}} [ns];t_{#gamma} - t_{p_{2}} [ns]",TBINS,TMAX-25*TBINS,TMAX,TBINS,TMAX-25*TBINS,TMAX);
 	for(int i=0; i<2; i++){
+
 		hname = "tQ" + dc.convertInt(i+1) + "Q" + dc.convertInt(i+3);
 		htitle = "Q" + dc.convertInt(i+1) + "-Q" + dc.convertInt(i+3) + " time difference;t_{p}(Q" + dc.convertInt(i+1) + ") - t_{p}(Q" + dc.convertInt(i+3) + ") [ns];Counts per 25ns;Counts per 25ns";		
 		tQQ[i] = new TH1F(hname.c_str(),htitle.c_str(),12000/25,-6000,6000);
-	}			
+
+	}
+
+	// R(t) function histograms
+	for( int i = 0; i < 4; i++ ) {
+
+		for( int j = 0; j < 2; j++ ) {
+
+			for( int k = 0; k < 24; k++ ) {
+
+				hname = "rthist_p" + dc.convertInt( i*2 + j ) + "_c" + dc.convertInt( k );
+				htitle = "R(t) function for #phi_{p} = ";
+				htitle += dc.convertFloat( ( dc.GetPPhi( i, j*6+2 )*TMath::RadToDeg() + 3.5 ) );
+				htitle += " and #phi_{#gamma} = ";
+				htitle += dc.convertFloat( core_phi[k]*TMath::RadToDeg() );
+				htitle += ": #Delta#phi_{(p-#gamma)} = ";
+				htitle += dc.convertFloat( ( dc.GetPPhi( i, j*6+2 ) - core_phi[k] )*TMath::RadToDeg() + 3.5 );
+				rthist[i*2+j][k] = new TH1F( hname.c_str(), htitle.c_str(), 1000, -0.5, 999.5 );
+
+			} // k
+
+		} // j
+
+	} // i
+
 
 	// Default values for g_clx definitions
 	ppwin = 300.;
@@ -203,6 +232,8 @@ void hists::Fill1h( float GEn, float GTh, float GPh, int cid, vector <float> GCo
 		PhiCalHists( GEn, GTh, GPh, PEn, Pann, Psec, Pquad, cut, weight );
 
 	}
+
+	if( cut == 1 ) RtFunc( GEn, GTh, GPh, cid, PEn, Pann, Psec, Pquad );
 	
 	return;
 
@@ -228,6 +259,8 @@ void hists::Fill2h( float GEn, float GTh, float GPh, int cid, vector <float> GCo
 		Tptr = Pptr[0];
 		FillGam2h( GEn, GTh, GPh, cid, PEn, Pann, Psec, Pquad, Bptr, Tptr, weight );
 		FillPar2h( PEn, Pann, Psec, Pquad, Bptr, Tptr, weight );
+
+		RtFunc( GEn, GTh, GPh, cid, PEn[Pptr[1]], Pann[Pptr[1]], Psec[Pptr[1]], Pquad[Pptr[1]] );	
 		
 	}
 
@@ -237,6 +270,8 @@ void hists::Fill2h( float GEn, float GTh, float GPh, int cid, vector <float> GCo
 		Tptr = Pptr[1];
 		FillGam2h( GEn, GTh, GPh, cid, PEn, Pann, Psec, Pquad, Bptr, Tptr, weight );
 		FillPar2h( PEn, Pann, Psec, Pquad, Bptr, Tptr, weight );
+		
+		RtFunc( GEn, GTh, GPh, cid, PEn[Pptr[0]], Pann[Pptr[0]], Psec[Pptr[0]], Pquad[Pptr[0]] );	
 		
 	}
 
@@ -253,6 +288,19 @@ void hists::Fill2h( float GEn, float GTh, float GPh, int cid, vector <float> GCo
 		FillPar1h( PEn[Pptr[1]], Pann[Pptr[1]], Psec[Pptr[1]], Pquad[Pptr[1]], cut_1, weight );
 		
 	}
+	
+	else if( cut_0 == 1 ) { // Pptr[0] is a 1p projectile
+	
+		RtFunc( GEn, GTh, GPh, cid, PEn[Pptr[0]], Pann[Pptr[0]], Psec[Pptr[0]], Pquad[Pptr[0]] );	
+
+	}
+	
+	else if( cut_1 == 1 ) { // Pptr[1] is a 1p projectile
+
+		RtFunc( GEn, GTh, GPh, cid, PEn[Pptr[1]], Pann[Pptr[1]], Psec[Pptr[1]], Pquad[Pptr[1]] );	
+
+	}
+	
 	
 	return;
 
@@ -308,7 +356,11 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, int cid, float PEn, Int_
 
 		B_dcB_x[(int)(Pquad*24+cid)]->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb() ), weight);	
 		B_dcT_x[(int)(Pquad*24+cid)]->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt() ), weight);
-
+        double fillphi = TMath::RadToDeg()*(dc.GetPPhi(Pquad,Psec)-GPh);
+	    if(fillphi<0) fillphi+=360.;
+        if(Pann>5 && Pann<14) gamma_particle_ang[cid]->Fill(fillphi,
+        GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()));
+        coreid->Fill(cid);
 		B_1hdcB->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb() ), weight);
 		B_1hdcT->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt() ), weight);
 		
@@ -456,6 +508,27 @@ void hists::FillGamGam2h( float GEn, float GTh, float GPh, vector <float> GCor_G
 	
 
 	
+}
+
+void hists::RtFunc( float GEn, float GTh, float GPh, int cid, float BEn, int Bann, int Bsec, int Bquad ) {
+
+	// Beam location in phi
+	float BPh = dc.GetPPhi( Bquad, Bsec );
+	int q = 0;
+	if( Bsec >= 6 ) q = 1;
+
+	// Beam in theta (safe Coulex)
+	float BTh = dc.GetPTh( Bann );;
+	if( Bann > 13 || BTh*TMath::RadToDeg() > 40. ) return;
+
+	// Doppler correction
+	GEn *= dc.DC( BEn, BTh, BPh, GTh, GPh, dc.GetAb() );
+
+	// Fill Rt function histograms
+	if( GEn > 1220. && GEn < 1290. ) rthist[Bquad*2+q][cid]->Fill( dc.GetPlungerDist() );
+
+	return;
+
 }
 
 void hists::PhiCalHists( float GEn, float GTh, float GPh, float PEn, Int_t Pann,

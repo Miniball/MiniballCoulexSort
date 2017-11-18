@@ -9,11 +9,21 @@
 
 #include <iostream>
 #include <string>
+#include <map>
 using namespace std;
 
 // Headers for doppler
 #ifndef doppler_hh
 # include "doppler.hh"
+#endif
+
+#define CDBINS 17
+#define GEBINS 50
+#define PHIBINS 61
+
+#ifdef PHICAL
+# define PHI_STEP_WIDTH 1 
+# define PHI_NSTEPS 21 // try to use an odd number
 #endif
 
 using namespace std;
@@ -70,8 +80,8 @@ class hists {
 	// Testing
 	TH1F *multp, *multr;
 	TH1F *GeReject, *GePass, *GeRatio;
-	TH2F *GeAng;
-	TH3F *GeSiAng;
+	//TH2F *GeAng;
+	//TH3F *GeSiAng;
 
 	// gamma - particle time difference
 	TH1F *tdiff;
@@ -81,21 +91,27 @@ class hists {
 	TH2F *tpp;
 	TH1F *tQQ[2];
 
+	// R(t) Function histograms
+	TH1F *rthist[8][24];
+
+    //Particle gamma angular correlations
+	TH2S *gamma_particle_ang[30];
+    TH1S *coreid;
 	// Variables to be set in g_clx.C via Set_xxx functions
 	float ppwin;
 	int maxrecoil;
 	int minrecoil;
 
 	// Array of cd angles for histogram bins
-	double cd_angles[17];
-	double ge_angles[91];
-	double phi_angles[181];
+	double cd_angles[CDBINS];
+	double ge_angles[GEBINS];
+	double phi_angles[PHIBINS];
 
 	// Doppler instance
 	doppler dc;
 
 	// functions
-	void Initialise( doppler dc_ );
+	void Initialise( doppler dc_, double core_theta[24], double core_phi[24] );
 	void Set_ppwin( float user_ppwin );
 	void Set_maxrecoil( int user_maxrecoil );
 	void Set_minrecoil( int user_minrecoil );
@@ -121,6 +137,7 @@ class hists {
 	void FillPar1h( float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, Int_t cut, float weight=1.0 );
 	void FillPar2h( vector <float> PEn, vector<int> Pann, vector<int> Psec, vector<int> Pquad, Int_t Bptr,
 						Int_t Tptr, float weight=1.0 );
+	void RtFunc( float GEn, float GTh, float GPh, int cid, float BEn, int Bann, int Bsec, int Bquad );
 	void PhiCalHists( float GEn, float GTh, float GPh, float PEn, Int_t Pann,
 						Int_t Psec, Int_t Pquad, Int_t cut, float weight=1.0 );
 	void AddSpectra( float bg_frac );

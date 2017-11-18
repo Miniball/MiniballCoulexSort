@@ -10,11 +10,6 @@
 //#define GEANG			// define for plotting Ge angles per cluster
 #define MBGEOMETRY  		// define to overwrite MB angles with MBGeometry routine
 
-#ifdef PHICAL
-# define PHI_STEP_WIDTH 1 
-# define PHI_NSTEPS 21 // try to use an odd number
-#endif
-
 #ifndef __MBGEOMETRY_HH__
 # include "MBGeometry.hh"
 #endif
@@ -40,7 +35,7 @@ void g_clx::Loop( string outputfilename ) {
 	// Fit stopping power curves from the srim output files
 	// Comment out to use the default parameters in doppler.hh
 	// stoppingpowers( BT, TT, BS, TS )
-	if( !dc.stoppingpowers( true, true, false, false ) ) return;
+	if( !dc.stoppingpowers( false, false, false, false ) ) return;
 
 	// Ratio of prompt and random time windows
 	// Alternatively, normalisation of beta-decay lines
@@ -49,9 +44,76 @@ void g_clx::Loop( string outputfilename ) {
 	// Include errors on histograms (required for correct bg subtraction)
 	TH1::SetDefaultSumw2();
 
+	// New angles defined by Miniball geometry
+#ifdef MBGEOMETRY
+
+	//ifstream angfile;
+
+	// Original values from frame
+	//double clu_r[8] = { 116, 116, 116, 116, 116, 116, 116, 116 };
+	//double clu_theta[8] = { 114.3, 67.0, 67.0, 114.3, 111.3, 67.0, 111.3, 67.0 };
+	//double clu_phi[8] = { 141.7, 36.2, 107.0, 77.3, 256.9, 218.2, 323.5, 282.1 };
+	//double clu_alpha[8] = { 350.0, 296.5, 252.5, 72.0, 248.5, 93.0, 67.5, 67.5 }; 
+
+
+	// Nigel's values from 22Ne data taken from elog entry 19366 
+	//double clu_r[8] = { 192.52, 97.56, 114.90, 106.16, 115.86, 116.30, 114.65, 115.03 };
+	//double clu_theta[8] = { 106.6, 73.14, 66.01, 116.37, 110.89, 75.66, 101.80, 66.62 };
+	//double clu_phi[8] = { 141.70, 36.20, 107.00, 77.30, 256.90, 218.20, 323.50, 282.10 };
+	//double clu_alpha[8] = { 332.88, 280.14, 256.95, 70.47, 253.25, 89.97, 272.31, 69.11 }; 
+
+    // Joa's values  
+	double clu_r[8] = { 192.52, 97.56, 114.90, 106.16, 115.86, 116.30, 114.65, 115.03 };
+	double clu_theta[8] = { 106.6, 73.14, 66.01, 116.37, 110.89, 75.66, 101.80, 66.62 };
+	double clu_phi[8] = { 141.70, 36.20, 107.00, 77.30, 256.90, 218.20, 323.50, 282.10 };
+	double clu_alpha[8] = { 332.88, 280.14, 256.95, 70.47, 253.25, 89.97, 272.31, 69.11 }; 
+
+
+//#  theta        phi      alpha          r
+//  106.60     141.70     332.88     129.52 # 17
+//   73.14      36.20     280.14      97.56 # 12
+//   66.01     107.00     256.95     114.90 # 16
+//  116.37      77.30      70.47     106.16 # 13
+//  110.89     256.90     253.25     115.86 # 22
+//   75.66     218.20      89.97     116.30 # 18
+//  101.80     323.50     272.31     114.65 # 14
+//   66.62     282.10      69.11     115.03 # 23
+
+
+	double new_theta[8][3][7]; // cluster, crystal segment
+	double new_phi[8][3][7];
+	double core_theta[24];   // cores only
+	double core_phi[24];
+
+	MBGeometry mbg;	
+	for( int i = 0; i < 8; i++ ) { // loop over clusters
+
+		mbg.SetupCluster( clu_theta[i], clu_phi[i], clu_alpha[i], clu_r[i] );
+
+		for( unsigned int j = 0; j < 3; j++ ) { // loop over cores
+
+			new_theta[i][j][0] = mbg.GetCoreTheta(j) * TMath::DegToRad();
+			new_phi[i][j][0] = mbg.GetCorePhi(j) * TMath::DegToRad();
+
+			core_theta[i*3+j] = new_theta[i][j][0];
+			core_phi[i*3+j] = new_phi[i][j][0];
+	
+			for( int k = 0; k < 6; k++ ) { // loop over segments
+
+				new_theta[i][j][k+1] = mbg.GetSegTheta(j,k) * TMath::DegToRad();
+				new_phi[i][j][k+1] = mbg.GetSegPhi(j,k) * TMath::DegToRad();
+
+			}
+
+		}
+
+	}
+
+#endif
+
 	// Declare the histograms here and initialise!
 	hists h;
-	h.Initialise( dc );
+	h.Initialise( dc, core_theta, core_phi );
 
 	// Particle-particle time difference (from tppdiff)
 	h.Set_ppwin(300.);
@@ -65,48 +127,6 @@ void g_clx::Loop( string outputfilename ) {
 	// i.e. strips that are >= minrecoil are unsafe. Only low CoM solution is safe
 	h.Set_minrecoil(0);
 
-	// New angles defined by Miniball geometry
-#ifdef MBGEOMETRY
-
-	//ifstream angfile;
-
-	// Original values from frame
-	double clu_r[8] = { 116, 116, 116, 116, 116, 116, 116, 116 };
-	double clu_theta[8] = { 114.3, 67.0, 67.0, 114.3, 111.3, 67.0, 111.3, 67.0 };
-	double clu_phi[8] = { 141.7, 36.2, 107.0, 77.3, 256.9, 218.2, 323.5, 282.1 };
-	double clu_alpha[8] = { 350.0, 296.5, 252.5, 72.0, 248.5, 93.0, 67.5, 67.5 }; 
-
-	// Nigel's values from 22Ne data
-	//double clu_r[8] = { 95.17, 92.77, 95.38, 91.35, 96.24, 92.57, 97.25, 102.80 };
-	//double clu_theta[8] = { 136.33, 45.79, 42.95, 136.98, 131.17, 40.31, 136.72, 32.23 };
-	//double clu_phi[8] = { 130.82, 54.99, 133.56, 51.45, 235.24, 233.11, 311.46, 319.63 };
-	//double clu_alpha[8] = { 322.00, 61.90, 296.75, 243.75, 294.64, 240.78, 68.85, 110.33 }; 
-
-	double new_theta[8][3][7]; // cluster, crystal segment
-	double new_phi[8][3][7];
-
-	MBGeometry mbg;	
-	for( int i = 0; i < 8; i++ ) { // loop over clusters
-
-		mbg.SetupCluster( clu_theta[i], clu_phi[i], clu_alpha[i], clu_r[i] );
-
-		for( unsigned int j = 0; j < 3; j++ ) { // loop over cores
-
-			new_theta[i][j][0] = mbg.GetCoreTheta(j) * TMath::DegToRad();
-			new_phi[i][j][0] = mbg.GetCorePhi(j) * TMath::DegToRad();
-			//cout << new_phi[i][j][0]*TMath::RadToDeg() << " ";	
-			for( int k = 0; k < 6; k++ ) { // loop over segments
-
-				new_theta[i][j][k+1] = mbg.GetSegTheta(j,k) * TMath::DegToRad();
-				new_phi[i][j][k+1] = mbg.GetSegPhi(j,k) * TMath::DegToRad();
-
-			}
-
-		}
-
-	}
-
-#endif
 
 	// Loop over events 
 	cout << "Looping over events...\n";
@@ -150,7 +170,7 @@ void g_clx::Loop( string outputfilename ) {
 		else if( rndm_hits != 0 )  h.multr->Fill( rndm_hits );
 
 		// Germanium angles
-		h.GeAng->Fill( tha*TMath::RadToDeg(), pha*TMath::RadToDeg() );
+		//h.GeAng->Fill( tha*TMath::RadToDeg(), pha*TMath::RadToDeg() );
 
 		// Loop over particle counter
 		for( unsigned int i = 0; i < pen.size(); i++ ){
@@ -162,9 +182,9 @@ void g_clx::Loop( string outputfilename ) {
 			h.tdiff->Fill( td[i]*25. );
 
 			// Germanium vs. Si angles
-			if( coin[i] == 0 )
-				h.GeSiAng->Fill( tha * TMath::RadToDeg(), dc.GetPTh( ann[i] ) * TMath::RadToDeg(),
-					( pha - dc.GetPPhi( det[i], sec[i] ) ) * TMath::RadToDeg() );
+			//if( coin[i] == 0 )
+		//		h.GeSiAng->Fill( tha * TMath::RadToDeg(), dc.GetPTh( ann[i] ) * TMath::RadToDeg(),
+		//			( pha - dc.GetPPhi( det[i], sec[i] ) ) * TMath::RadToDeg() );
 
 			// particle - particle time difference
 			for( unsigned int j = i+1; j < pen.size(); j++ ) {
