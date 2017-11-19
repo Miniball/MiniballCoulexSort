@@ -59,8 +59,7 @@ class hists {
 	// Background subtracted, Doppler corrected gamma spectra
 	TH1F *B_dcB, *B_dcT, *B_1hdcB, *B_1hdcT;
 	TH1F *T_dcT, *T_dcB, *T_1hdcT, *T_1hdcB;
-	TH1F *T_dcB_x[96], *T_dcT_x[96];
-	TH1F *B_dcB_x[96], *B_dcT_x[96];
+	TH1F *B_dcB_x[96];
 	TH1F *gam_dcB, *gam_dcT, *T_2hdcB, *T_2hdcT;
    
 	// Prompt/Random Particle spectra
@@ -99,8 +98,8 @@ class hists {
 	float groupThWidth;
 
     // Particle gamma angular correlations
-	TH2S *gamma_particle_ang[24];
-    TH1S *coreid;
+//	TH2S *gamma_particle_ang[24];
+//    TH1S *coreid;
 
 	// Variables to be set in g_clx.C via Set_xxx functions
 	float ppwin;

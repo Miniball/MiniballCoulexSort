@@ -109,21 +109,9 @@ void hists::Initialise( doppler dc_, double core_theta[24], double core_phi[24] 
 	
 		for( int j = 0; j < 24; j++ ) { // per Ge detector
 		
-			hname = "T_dcB_x" + dc.convertInt(i) + "_" + dc.convertInt(j);
-			htitle = "Target gated (Q" + dc.convertInt(i) + ", Ge" + dc.convertInt(j) + "), background subtracted gamma rays, Doppler corrected for scattered projectile;Energy [keV];Counts per 1keV";
-			T_dcB_x[(int)(24*i+j)] = new TH1F(hname.c_str(),htitle.c_str(),GBINS, GMIN, GMAX );	
-		
-			hname = "T_dcT_x" + dc.convertInt(i) + "_" + dc.convertInt(j);
-			htitle = "Target gated (Q" + dc.convertInt(i) + ", Ge" + dc.convertInt(j) + "), background subtracted gamma rays, Doppler corrected for target recoil;Energy [keV];Counts per 1keV";
-			T_dcT_x[(int)(24*i+j)] = new TH1F(hname.c_str(),htitle.c_str(),GBINS, GMIN, GMAX );	
-		
 			hname = "B_dcB_x" + dc.convertInt(i) + "_" + dc.convertInt(j);
 			htitle = "Beam gated (Q" + dc.convertInt(i) + ", Ge" + dc.convertInt(j) + "), background subtracted gamma rays, Doppler corrected for scattered projectile;Energy [keV];Counts per 1keV";
 			B_dcB_x[(int)(24*i+j)] = new TH1F(hname.c_str(),htitle.c_str(),GBINS, GMIN, GMAX );	
-		
-			hname = "B_dcT_x" + dc.convertInt(i) + "_" + dc.convertInt(j);
-			htitle = "Beam gated (Q" + dc.convertInt(i) + ", Ge" + dc.convertInt(j) + "), background subtracted gamma rays, Doppler corrected for target recoil;Energy [keV];Counts per 1keV";
-			B_dcT_x[(int)(24*i+j)] = new TH1F(hname.c_str(),htitle.c_str(),GBINS, GMIN, GMAX );	
 		
 		}
 
@@ -170,11 +158,11 @@ void hists::Initialise( doppler dc_, double core_theta[24], double core_phi[24] 
 	GeReject = new TH1F("GeReject","Events with Ge angle equal to zero;Cluster Number",9,-0.5,8.5); 
 	GePass = new TH1F("GePass","Events with Ge angle greater than zero;Cluster Number",9,-0.5,8.5); 
 	GeRatio = new TH1F("GeRatio","Ratio of Ge events with angle less than or equal to zero to those with real angles;Cluster Number",9,-0.5,8.5); 
-	for(int i=0; i<24; i++){
-       gamma_particle_ang[i] = new TH2S(Form("AngCorrSiGe%d",i),
-        Form("AngCorrSiGe%d",i),51,-3.5,356.5,1000,-1,1999);
-    }
-    coreid = new TH1S("coreid","coreid",100,-.5,99.5);
+//	for(int i=0; i<24; i++){
+//       gamma_particle_ang[i] = new TH2S(Form("AngCorrSiGe%d",i),
+//        Form("AngCorrSiGe%d",i),51,-3.5,356.5,1000,-1,1999);
+//    }
+//    coreid = new TH1S("coreid","coreid",100,-.5,99.5);
 
 	// Ge and Si angular combinations
 	GeAng = new TH2F( "GeAng", "Detector angles;#theta;#phi", GEBINS-1, ge_angles, 90, 0, 356 );
@@ -376,9 +364,6 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, int cid, float PEn, Int_
 		BTh = dc.GetBTh(Pann);
 		BPh = dc.GetQPhi(Pquad,Psec);
 
-		T_dcB_x[(int)(Pquad*24+cid)]->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb() ), weight);	
-		T_dcT_x[(int)(Pquad*24+cid)]->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt() ), weight);
-	
 		if( Pann >= minrecoil && Pann <= maxrecoil ) {
 
 			T_1hdcB->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb() ), weight);
@@ -404,12 +389,11 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, int cid, float PEn, Int_
 		TPh = dc.GetQPhi(Pquad,Psec);
 
 		B_dcB_x[(int)(Pquad*24+cid)]->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb() ), weight);	
-		B_dcT_x[(int)(Pquad*24+cid)]->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt() ), weight);
-        double fillphi = TMath::RadToDeg()*(dc.GetPPhi(Pquad,Psec)-GPh);
-	    if(fillphi<0) fillphi+=360.;
-        if(Pann>5 && Pann<14) gamma_particle_ang[cid]->Fill(fillphi,
-        	GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()));
-        coreid->Fill(cid);
+//        double fillphi = TMath::RadToDeg()*(dc.GetPPhi(Pquad,Psec)-GPh);
+//	    if(fillphi<0) fillphi+=360.;
+//        if(Pann>5 && Pann<14) gamma_particle_ang[cid]->Fill(fillphi,
+//        	GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()));
+//        coreid->Fill(cid);
 		B_1hdcB->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb() ), weight);
 		B_1hdcT->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt() ), weight);
 		
@@ -436,11 +420,7 @@ void hists::FillGam2h( float GEn, float GTh, float GPh, int cid, vector<float> P
 	float BPh = dc.GetPPhi(Pquad[Bptr],Psec[Bptr]);
 	float TPh = dc.GetPPhi(Pquad[Tptr],Psec[Tptr]);
 
-	T_dcB_x[(int)(Pquad[Tptr]*24+cid)]->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb() ), weight);	
-	T_dcT_x[(int)(Pquad[Tptr]*24+cid)]->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt() ), weight);
-
 	B_dcB_x[(int)(Pquad[Bptr]*24+cid)]->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb() ), weight);	
-	B_dcT_x[(int)(Pquad[Bptr]*24+cid)]->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt() ), weight);
 
 	if( Tann >= minrecoil && Tann <= maxrecoil ) {
 
