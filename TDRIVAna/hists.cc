@@ -105,19 +105,6 @@ void hists::Initialise( doppler dc_, double core_theta[24], double core_phi[24] 
 	T_2hdcT = new TH1F("T_2hdcT","T_2hit;Energy [keV];Counts per 1keV",GBINS, GMIN, GMAX );
 	T_2hdcB = new TH1F("T_2hdcB","T_2hit DC for beam;Energy [keV];Counts per 1keV",GBINS, GMIN, GMAX );
 
-	for( int i = 0; i < 4; i++ ) { // per CD quadrant
-	
-		for( int j = 0; j < 24; j++ ) { // per Ge detector
-		
-			hname = "B_dcB_x" + dc.convertInt(i) + "_" + dc.convertInt(j);
-			htitle = "Beam gated (Q" + dc.convertInt(i) + ", Ge" + dc.convertInt(j) + "), background subtracted gamma rays, Doppler corrected for scattered projectile;Energy [keV];Counts per 1keV";
-			B_dcB_x[(int)(24*i+j)] = new TH1F(hname.c_str(),htitle.c_str(),GBINS, GMIN, GMAX );	
-		
-		}
-
-	}
-	
-   
 	// Prompt/Random Particle 1 hit
 	part = new TH2F("part","Detected particle events;Lab angle [deg];Energy [MeV]",16,cd_angles, PBINS, PMIN, PMAX );
 	part1h = new TH2F("part1h","Detected particle events;Lab angle [deg];Energy [MeV]",16,cd_angles, PBINS, PMIN, PMAX );
@@ -388,7 +375,6 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, int cid, float PEn, Int_
 		TTh = dc.GetTTh(Pann,PEn);
 		TPh = dc.GetQPhi(Pquad,Psec);
 
-		B_dcB_x[(int)(Pquad*24+cid)]->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb() ), weight);	
 //        double fillphi = TMath::RadToDeg()*(dc.GetPPhi(Pquad,Psec)-GPh);
 //	    if(fillphi<0) fillphi+=360.;
 //        if(Pann>5 && Pann<14) gamma_particle_ang[cid]->Fill(fillphi,
@@ -419,8 +405,6 @@ void hists::FillGam2h( float GEn, float GTh, float GPh, int cid, vector<float> P
 	float TTh = dc.GetPTh(Tann);
 	float BPh = dc.GetPPhi(Pquad[Bptr],Psec[Bptr]);
 	float TPh = dc.GetPPhi(Pquad[Tptr],Psec[Tptr]);
-
-	B_dcB_x[(int)(Pquad[Bptr]*24+cid)]->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb() ), weight);	
 
 	if( Tann >= minrecoil && Tann <= maxrecoil ) {
 
