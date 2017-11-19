@@ -268,6 +268,9 @@ int main(int argc, char* argv[]) {
 	TH1F* E_gam = new TH1F("E_gam","E_gam",GBINS,GMIN,GMAX);
 	E_gam->GetXaxis()->SetTitle("Energy Gamma Rays [Channels]");
 
+	// Gamma-gamma - no Doppler correction
+	TH2F* gg = new TH2F("gg","#gamma-#gamma matrix;Energy [keV];Energy[keV]",GBINS,GMIN,GMAX,GBINS,GMIN,GMAX);
+
 	// Gamma spectra for every segment - no Doppler correction
 	TH1F* E_gam_seg[8][3][7];
 	TH1F* E_gam_seg_cal[8][3][7];
@@ -1090,6 +1093,20 @@ int main(int argc, char* argv[]) {
 		} // j
 		// ------------------------------------------------------------------------ //
 		
+		// ------------------------------------------------------------------------ //
+		// Gamma-gamma coincidences
+		// ------------------------------------------------------------------------ //
+		for( j = 0; j < gen_array.size(); j++ ) {
+
+		    for( k = 0; k < gen_array.size(); k++ ) {
+
+		      if( j == k ) continue;
+		      gg->Fill( gen_array[i], gen_array[j] );
+
+		    }
+
+		}
+
 		// Progress bar
 		if( i % 50000 == 0 ) {
 

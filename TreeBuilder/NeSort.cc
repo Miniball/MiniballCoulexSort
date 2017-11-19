@@ -165,7 +165,7 @@ int main(int argc, char* argv[]) {
 			dgf_ch  = event->Dgf(j)->Channel();
 			dgf_en  = event->Dgf(j)->Energy();
 				
-			if( 0 <= dgf_num && dgf_num < 48 && 0 <= dgf_ch && dgf_ch < 4 ) {
+			if( 0 <= dgf_num && dgf_num < 48 && dgf_num%2 == 0 && dgf_ch == 0 ) {
 
 				GammaEnergy = Cal->DgfEnergy( dgf_num, dgf_ch, dgf_en );
 				GammaEnergyCore[dgf_num/2] = GammaEnergy;
