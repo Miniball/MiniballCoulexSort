@@ -77,7 +77,7 @@ double MBGeometry::GetSegTheta( int core, int seg ) {
 
 }
 
-// Get a segment theta
+// Get a segment phi
 double MBGeometry::GetSegPhi( int core, int seg ) {
 
 	// Calculate the segment number
@@ -99,7 +99,7 @@ double MBGeometry::GetCoreTheta( int core ) {
 
 }
 
-// Get a core theta
+// Get a core phi
 double MBGeometry::GetCorePhi( int core ) {
 
 	// Return phi from segment offset
