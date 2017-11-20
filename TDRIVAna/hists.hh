@@ -64,7 +64,6 @@ class hists {
 	// Prompt/Random Particle spectra
 	TH2F *part, *part1h, *part2h, *partQ[4], *part_ann;
 	TH2F *Bh, *Th, *B1h, *T1h, *B2h, *T2h;
-	TH2F *Bhhigh, *Bhlow, *Thhigh, *Thlow;
 	TH1F *target_ev, *target_1pev, *target_2pev;
 #ifdef TWOPART
 	TH2F *BT[16], *TB[16];
@@ -92,9 +91,15 @@ class hists {
 	// R(t) Function histograms
 	TH1F *rthist[24][7], *rtgam[24][7];
 	TH1F *rthist_th[3][7], *rtgam_th[3][7];
+	TH1F *ang_dist[7];
 	float deltaPhi[3][7];
 	float groupTheta[3];
 	float groupThWidth;
+	float sliceTheta[3];
+	float sliceThWidth;
+
+	// Gamma-ray energy gates
+	float gLow, gHigh;
 
     // Particle gamma angular correlations
 //	TH2S *gamma_particle_ang[24];
@@ -109,7 +114,6 @@ class hists {
 	double cd_angles[CDBINS];
 	double ge_angles[GEBINS];
 	double phi_angles[PHIBINS];
-	double cdphi_angles[49];
 
 	// Doppler instance
 	doppler dc;
@@ -141,7 +145,7 @@ class hists {
 	void FillPar1h( float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, Int_t cut, float weight=1.0 );
 	void FillPar2h( vector <float> PEn, vector<int> Pann, vector<int> Psec, vector<int> Pquad, Int_t Bptr,
 						Int_t Tptr, float weight=1.0 );
-	void RtFunc( float GEn, float GTh, float GPh, int cid, float BEn, int Bann, int Bsec, int Bquad );
+	void RtFunc( float GEn, float GTh, float GPh, int cid, float BEn, int Bann, int Bsec, int Bquad, float weight=1.0);
 	void PhiCalHists( float GEn, float GTh, float GPh, float PEn, Int_t Pann,
 						Int_t Psec, Int_t Pquad, Int_t cut, float weight=1.0 );
 	void AddSpectra( float bg_frac );

@@ -31,31 +31,56 @@ void hists::Initialise( doppler dc_, double core_theta[24], double core_phi[24] 
 	for( int k = 0; k < CDBINS; k++ ) cd_angles[k] = dc.GetPTh(15.5-k)*TMath::RadToDeg(); 
 	for( int k = 0; k < GEBINS; k++ ) ge_angles[k] = 41. + k * 98.0 / (float)(GEBINS-1); 
 	for( int k = 0; k < PHIBINS; k++ ) phi_angles[k] = -180. + k * 360.0 / (float)(PHIBINS-1); 
-	for( int k = 0; k < 4; k++ ) {
-		for( int l = 0; l < 12; l++ ) {
-			if( dc.GetPPhi( k, l ) * TMath::RadToDeg() >= dc.GetCDOffset() )
-				cdphi_angles[k*12+l] = dc.GetPPhi( k, l );
-			else
-				cdphi_angles[k*12+l] = dc.GetPPhi( k, l ) + 2.*TMath::Pi();
-			cdphi_angles[k*12+l] *= TMath::RadToDeg();
-		}
-	}
-	cdphi_angles[48] = dc.GetCDOffset() + 360.;
 
 	// Delta phi combinations
+	/*	deltaPhi[0][0] = 26.;	deltaPhi[1][0] = 34.;	deltaPhi[2][0] = 36.;	deltaPhi[3][0] = 38.;
+	deltaPhi[0][1] = 132.;	deltaPhi[1][1] = 134.;	deltaPhi[2][1] = 136.;	deltaPhi[3][1] = 139.;
+	deltaPhi[0][2] = 228.;	deltaPhi[1][2] = 226.;	deltaPhi[2][2] = 224.;	deltaPhi[3][2] = 221.;
+	deltaPhi[0][3] = 334.;	deltaPhi[1][3] = 328.;	deltaPhi[2][3] = 324.;	deltaPhi[3][3] = 322.;
+	deltaPhi[0][4] = 80.;	deltaPhi[1][4] = 83.;	deltaPhi[2][4] = 86.;	deltaPhi[3][4] = 89.;
+	deltaPhi[0][5] = 180.;	deltaPhi[1][5] = 180.;	deltaPhi[2][5] = 180.;	deltaPhi[3][5] = 180.;
+	deltaPhi[0][6] = 280.;	deltaPhi[1][6] = 276.;	deltaPhi[2][6] = 273.;	deltaPhi[3][6] = 270.;
+
+	deltaPhi[4][0] = 39.;	deltaPhi[5][0] = 40.;	deltaPhi[6][0] = 42.;
+	deltaPhi[4][1] = 142.;	deltaPhi[5][1] = 144.;	deltaPhi[6][1] = 150.;
+	deltaPhi[4][2] = 220.;	deltaPhi[5][2] = 218.;	deltaPhi[6][2] = 210.;
+	deltaPhi[4][3] = 321.;	deltaPhi[5][3] = 319.;	deltaPhi[6][3] = 317.;
+	deltaPhi[4][4] = 93.;	deltaPhi[5][4] = 96.;	deltaPhi[6][4] = 99.;
+	deltaPhi[4][5] = 180.;	deltaPhi[5][5] = 180.;	deltaPhi[6][5] = 180.;
+	deltaPhi[4][6] = 267.;	deltaPhi[5][6] = 263.;	deltaPhi[6][6] = 260.;*/
+
 	deltaPhi[0][0] = 26.;	deltaPhi[1][0] = 38.;	deltaPhi[2][0] = 42.;
-	deltaPhi[0][1] = 132.;	deltaPhi[1][1] = 139.;	deltaPhi[2][1] = 317.;
-	deltaPhi[0][2] = 228.;	deltaPhi[1][2] = 221.;	deltaPhi[2][2] = 150.;
-	deltaPhi[0][3] = 334.;	deltaPhi[1][3] = 322.;	deltaPhi[2][3] = 210.;
-	deltaPhi[0][4] = 80.;	deltaPhi[1][4] = 89.;	deltaPhi[2][4] = 97.;
-	deltaPhi[0][5] = 180.;	deltaPhi[1][5] = 271.;	deltaPhi[2][5] = 263.;
-	deltaPhi[0][6] = 280.;	deltaPhi[1][6] = 180.;	deltaPhi[2][6] = 345.;
+	deltaPhi[0][1] = 132.;	deltaPhi[1][1] = 139.;	deltaPhi[2][1] = 150.;
+	deltaPhi[0][2] = 228.;	deltaPhi[1][2] = 221.;	deltaPhi[2][2] = 210.;
+	deltaPhi[0][3] = 334.;	deltaPhi[1][3] = 322.;	deltaPhi[2][3] = 317.;
+	deltaPhi[0][4] = 80.;	deltaPhi[1][4] = 89.;	deltaPhi[2][4] = 99.;
+	deltaPhi[0][5] = 180.;	deltaPhi[1][5] = 180.;	deltaPhi[2][5] = 180.;
+	deltaPhi[0][6] = 280.;	deltaPhi[1][6] = 270.;	deltaPhi[2][6] = 260.;
 
 	// Theta groups for Ge
 	groupTheta[0] = 65.0;
 	groupTheta[1] = 90.0;
 	groupTheta[2] = 115.;
 	groupThWidth = 12.5;
+
+	// Theta slices for Ge
+	/*	sliceTheta[0] = 60.0;
+	sliceTheta[1] = 70.0;
+	sliceTheta[2] = 80.0;
+	sliceTheta[3] = 90.0;
+	sliceTheta[4] = 100.0;
+	sliceTheta[5] = 110.0;
+	sliceTheta[6] = 120.0;*/
+
+	sliceTheta[0] = 70.0;
+	sliceTheta[1] = 90.0;
+	sliceTheta[2] = 110.0;
+	//	sliceThWidth = 5.;
+		sliceThWidth = 10.;
+
+	// Gamma-ray energy gates
+	gLow = 1240.;
+	gHigh = 1280.; 
 
 	p = new TH1F("p","Prompt gammas;Energy [keV];Counts per 1 keV",GBINS, GMIN, GMAX );
 	r = new TH1F("r","Random gammas;Energy [keV];Counts per 1 keV",GBINS, GMIN, GMAX );
@@ -171,9 +196,9 @@ void hists::Initialise( doppler dc_, double core_theta[24], double core_phi[24] 
 	}
 
 	// R(t) function histograms
-	for( int i = 0; i < 7; i++ ) {
+	for( int i = 0; i < 7; i++ ) { // Dphi
 
-		for( int j = 0; j < 24; j++ ) {
+		for( int j = 0; j < 24; j++ ) { // cid
 
 			hname = "rthist_d" + dc.convertInt( i ) + "_c" + dc.convertInt( j );
 			htitle = "R(t) function for #Delta#phi = ";
@@ -193,13 +218,13 @@ void hists::Initialise( doppler dc_, double core_theta[24], double core_phi[24] 
 
 		} // j
 
-		for( int j = 0; j < 3; j++ ) {
+		for( int j = 0; j < 3; j++ ) { // theta
 
 			hname = "rthist_d" + dc.convertInt( i ) + "_th" + dc.convertInt( j );
 			htitle = "R(t) function for #Delta#phi = ";
 			htitle += dc.convertFloat( deltaPhi[j][i] );
 			htitle += " and #phi_{#gamma} ~";
-			htitle += dc.convertFloat( groupTheta[j] );
+			htitle += dc.convertFloat( sliceTheta[j] );
 			htitle += ";Plunger distance [#mum];Counts in 2^{+} #rightarrow 0^{+}";
 			rthist_th[j][i] = new TH1F( hname.c_str(), htitle.c_str(), 1000, -0.5, 999.5 );
 
@@ -207,7 +232,7 @@ void hists::Initialise( doppler dc_, double core_theta[24], double core_phi[24] 
 			htitle = "Gamma-ray spectra for #Delta#phi = ";
 			htitle += dc.convertFloat( deltaPhi[j][i] );
 			htitle += " and #phi_{#gamma} ~";
-			htitle += dc.convertFloat( groupTheta[j] );
+			htitle += dc.convertFloat( sliceTheta[j] );
 			htitle += ";Gamma-ray energy [keV];Counts";
 			rtgam_th[j][i] = new TH1F( hname.c_str(), htitle.c_str(), GBINS, GMIN, GMAX );
 
@@ -215,6 +240,16 @@ void hists::Initialise( doppler dc_, double core_theta[24], double core_phi[24] 
 
 	} // i
 
+	// Angular distributions
+	for( int i = 0; i < 7; i++ ) {
+
+		hname = "ang_dist_" + dc.convertInt( i );
+		htitle = "Angular distribution for #theta ~";
+		htitle += dc.convertFloat( sliceTheta[i] );
+		htitle += ";#Delta#phi [deg];Counts in 2^{+} #rightarrow 0^{+}";
+		ang_dist[i] = new TH1F( hname.c_str(), htitle.c_str(), 360, -0.5, 359.5 );
+
+	}
 
 	// Default values for g_clx definitions
 	ppwin = 300.;
@@ -257,7 +292,7 @@ void hists::Fill1h( float GEn, float GTh, float GPh, int cid, vector <float> GCo
 
 	}
 
-	if( cut == 1 ) RtFunc( GEn, GTh, GPh, cid, PEn, Pann, Psec, Pquad );
+	if( cut == 1 ) RtFunc( GEn, GTh, GPh, cid, PEn, Pann, Psec, Pquad, weight );
 	
 	return;
 
@@ -284,7 +319,7 @@ void hists::Fill2h( float GEn, float GTh, float GPh, int cid, vector <float> GCo
 		FillGam2h( GEn, GTh, GPh, cid, PEn, Pann, Psec, Pquad, Bptr, Tptr, weight );
 		FillPar2h( PEn, Pann, Psec, Pquad, Bptr, Tptr, weight );
 
-		RtFunc( GEn, GTh, GPh, cid, PEn[Pptr[1]], Pann[Pptr[1]], Psec[Pptr[1]], Pquad[Pptr[1]] );	
+		RtFunc( GEn, GTh, GPh, cid, PEn[Pptr[1]], Pann[Pptr[1]], Psec[Pptr[1]], Pquad[Pptr[1]], weight );	
 		
 	}
 
@@ -295,7 +330,7 @@ void hists::Fill2h( float GEn, float GTh, float GPh, int cid, vector <float> GCo
 		FillGam2h( GEn, GTh, GPh, cid, PEn, Pann, Psec, Pquad, Bptr, Tptr, weight );
 		FillPar2h( PEn, Pann, Psec, Pquad, Bptr, Tptr, weight );
 		
-		RtFunc( GEn, GTh, GPh, cid, PEn[Pptr[0]], Pann[Pptr[0]], Psec[Pptr[0]], Pquad[Pptr[0]] );	
+		RtFunc( GEn, GTh, GPh, cid, PEn[Pptr[0]], Pann[Pptr[0]], Psec[Pptr[0]], Pquad[Pptr[0]], weight );	
 		
 	}
 
@@ -315,13 +350,13 @@ void hists::Fill2h( float GEn, float GTh, float GPh, int cid, vector <float> GCo
 	
 	else if( cut_0 == 1 ) { // Pptr[0] is a 1p projectile
 	
-		RtFunc( GEn, GTh, GPh, cid, PEn[Pptr[0]], Pann[Pptr[0]], Psec[Pptr[0]], Pquad[Pptr[0]] );	
+		RtFunc( GEn, GTh, GPh, cid, PEn[Pptr[0]], Pann[Pptr[0]], Psec[Pptr[0]], Pquad[Pptr[0]], weight );	
 
 	}
 	
 	else if( cut_1 == 1 ) { // Pptr[1] is a 1p projectile
 
-		RtFunc( GEn, GTh, GPh, cid, PEn[Pptr[1]], Pann[Pptr[1]], Psec[Pptr[1]], Pquad[Pptr[1]] );	
+		RtFunc( GEn, GTh, GPh, cid, PEn[Pptr[1]], Pann[Pptr[1]], Psec[Pptr[1]], Pquad[Pptr[1]], weight );	
 
 	}
 	
@@ -363,9 +398,10 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, int cid, float PEn, Int_
 	// Projectile
 	else if( cut > 0 ){
 	
-		if( weight > 0 ) p_1B->Fill(GEn);
+		if( weight > 0) p_1B->Fill(GEn);
 		else r_1B->Fill(GEn);
 		
+
 		BEn = PEn;
 		//BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"TS");
 		BTh = dc.GetPTh(Pann);
@@ -523,32 +559,23 @@ void hists::FillGamGam2h( float GEn, float GTh, float GPh, vector <float> GCor_G
 	
 }
 
-void hists::RtFunc( float GEn, float GTh, float GPh, int cid, float BEn, int Bann, int Bsec, int Bquad ) {
+void hists::RtFunc( float GEn, float GTh, float GPh, int cid, float BEn, int Bann, int Bsec, int Bquad, float weight ) {
 
-	// Gamma group
-	int p = -1;	
+	//if( weight < 0 ) return; // uncomment to turn off background subtraction
+
+	// Gamma slice
+	int s = -1;	
 	for( int i = 0; i < 3; i++ ) {	
 
-		if( TMath::Abs( GTh*TMath::RadToDeg() - groupTheta[i] ) < groupThWidth ) p = i;
+		if( TMath::Abs( GTh*TMath::RadToDeg() - sliceTheta[i] ) < sliceThWidth ) s = i;
 
 	}
-	if( p < 0 ) return;
 
 	// Delta phi
 	float BPh = dc.GetPPhi( Bquad, Bsec );
 	float dPhi = BPh - GPh;
 	if( dPhi < 0. ) dPhi += 2.0*TMath::Pi();
 	dPhi *= TMath::RadToDeg();
-
-	int q = -1;	
-	for( int i = 0; i < 7; i++ ) {	
-
-		if( TMath::Abs( dPhi - deltaPhi[p][i] ) < 15. ) q = i;
-
-	}
-
-	// Only use combinations that are useful
-	if( q < 0 ) return;
 
 	// Beam in theta (safe Coulex)
 	float BTh = dc.GetPTh( Bann );;
@@ -557,26 +584,34 @@ void hists::RtFunc( float GEn, float GTh, float GPh, int cid, float BEn, int Ban
 	// Doppler correction
 	GEn *= dc.DC( BEn, BTh, BPh, GTh, GPh, dc.GetAb() );
 
+	// Angular distribution
+	if( s >= 0 && GEn > gLow && GEn < gHigh ) {
+
+		ang_dist[s]->Fill( dPhi );
+
+	}
+
+	// Only use combinations for Rt functions that are useful
+	if( s < 0 ) return;
+	int q = -1;	
+	for( int i = 0; i < 7; i++ ) {
+
+		if( TMath::Abs( dPhi - deltaPhi[s][i] ) < 15. ) q = i;
+
+	}
+	if( q < 0 ) return;
+
 	// Gamma spectra
-	rtgam[cid][q]->Fill( GEn );
-	rtgam_th[p][q]->Fill( GEn );
+	rtgam[cid][q]->Fill( GEn, weight);
+	rtgam_th[s][q]->Fill( GEn, weight );
 
 	// Fill Rt function histograms
-	double integral, dIntegral;
-	int plunger_bin, bin_low, bin_high;
+	if( GEn > gLow && GEn < gHigh ) {
 
-	bin_low = rtgam[cid][q]->FindBin( 1220. );
-	bin_high = rtgam[cid][q]->FindBin( 1290. );
+		rthist[cid][q]->Fill( dc.GetPlungerDist(), weight );
+		rthist_th[s][q]->Fill( dc.GetPlungerDist(), weight );
 
-	integral = rtgam[cid][q]->IntegralAndError( bin_low, bin_high, dIntegral );
-	plunger_bin = rthist[cid][q]->FindBin( dc.GetPlungerDist() );
-	rthist[cid][q]->SetBinContent( plunger_bin, integral );
-	rthist[cid][q]->SetBinError( plunger_bin, dIntegral );
-
-	integral = rtgam_th[p][q]->IntegralAndError( bin_low, bin_high, dIntegral );
-	plunger_bin = rthist_th[p][q]->FindBin( dc.GetPlungerDist() );
-	rthist_th[p][q]->SetBinContent( plunger_bin, integral );
-	rthist_th[p][q]->SetBinError( plunger_bin, dIntegral );
+	}
 
 	return;
 
@@ -735,6 +770,18 @@ void hists::AddSpectra(float bg_frac) {
 	
 	GeRatio->Divide(GeReject,GePass);
     
+	int bLow = B_dcB->GetXaxis()->FindBin( gLow );
+	int bHigh = B_dcB->GetXaxis()->FindBin( gHigh );
+	for( int i = 0; i < 7; i++ ) {
+
+		for( int j = 0; j < 24; j++ )
+			rthist[j][i]->Scale( 1.0 / B_dcB->Integral( bLow, bHigh ) );
+			
+		for( int j = 0; j < 3; j++ )
+			rthist_th[j][i]->Scale( 1.0 / B_dcB->Integral( bLow, bHigh ) );
+
+	}
+
 	target_1pev->Add((TH1F*)T1h->ProjectionX());
 	target_2pev->Add((TH1F*)T2h->ProjectionX());
 	target_ev->Add(target_1pev,target_2pev);
