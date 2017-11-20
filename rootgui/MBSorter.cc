@@ -484,6 +484,24 @@ MBSorter::MBSorter() {
 	dop_frame_2->AddFrame( lab_unit_sp,
 						  new TGLayoutHints( kLHintsTop, 2, 2, 5, 5 ) );
 	
+	// Doppler - Plunger distance
+	lab_dop_pd = new TGLabel( dop_frame_0, "Plunger distance" );
+	lab_dop_pd->SetTextJustify( kTextRight );
+	lab_dop_pd->SetMargins( 0, 0, 0, 0 );
+	lab_dop_pd->SetWrapLength( -1 );
+	lab_dop_pd->Resize( 40, lab_dop_pd->GetDefaultHeight() );
+	dop_frame_0->AddFrame( lab_dop_pd,
+						  new TGLayoutHints( kLHintsTop | kLHintsRight, 2, 2, 5, 5 ) );
+	
+	// Units - Plunger distance
+	lab_unit_pd = new TGLabel( dop_frame_2, "µm" );
+	lab_unit_pd->SetTextJustify( 36 );
+	lab_unit_pd->SetMargins( 0, 0, 0, 0 );
+	lab_unit_pd->SetWrapLength( -1 );
+	lab_unit_pd->Resize( 40, lab_unit_pd->GetDefaultHeight() );
+	dop_frame_2->AddFrame( lab_unit_pd,
+						  new TGLayoutHints( kLHintsTop, 2, 2, 5, 5 ) );
+	
 	
 	/////////////////////
 	// Create list box //
@@ -641,23 +659,23 @@ MBSorter::MBSorter() {
 	dop_frame_1->AddFrame( num_dop_at, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
 	num_dop_eb = new TGNumberEntry( dop_frame_1, 5000, 5, -1,
-		TGNumberFormat::kNESInteger, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMin,
-		1, 999999 );
+		TGNumberFormat::kNESInteger, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMinMax,
+		0.00001, 999999 );
 	dop_frame_1->AddFrame( num_dop_eb, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
 	num_dop_ex = new TGNumberEntry( dop_frame_1, 1206, 5, -1,
-		TGNumberFormat::kNESReal, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMin,
-		1, 999999 );
+		TGNumberFormat::kNESReal, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMinMax,
+		0.00001, 999999 );
 	dop_frame_1->AddFrame( num_dop_ex, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
 	num_dop_th = new TGNumberEntry( dop_frame_1, 2000, 5, -1,
-		TGNumberFormat::kNESReal, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMin,
-		1, 999999 );
+		TGNumberFormat::kNESReal, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMinMax,
+		0.00001, 999999 );
 	dop_frame_1->AddFrame( num_dop_th, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
 	num_dop_id = new TGNumberEntry( dop_frame_1, 1000, 5, -1,
-		TGNumberFormat::kNESReal, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMin,
-		1, 999999 );
+		TGNumberFormat::kNESReal, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMinMax,
+		0.00001, 999999 );
 	dop_frame_1->AddFrame( num_dop_id, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
 	num_dop_cd = new TGNumberEntry( dop_frame_1, 21.1, 5, -1,
@@ -679,6 +697,11 @@ MBSorter::MBSorter() {
 		TGNumberFormat::kNESReal, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMinMax,
 		1, 100 );
 	dop_frame_1->AddFrame( num_dop_sp, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
+	
+	num_dop_pd = new TGNumberEntry( dop_frame_1, 50., 5, -1,
+		TGNumberFormat::kNESReal, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMinMax,
+		0.00001, 999999 );
+	dop_frame_1->AddFrame( num_dop_pd, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
 	
 	///////////////////////////
@@ -799,19 +822,19 @@ MBSorter::MBSorter() {
 	// Defaults //
 	//////////////
 	
-	text_daq_dir->SetText( "/mbdata/miniball/is547-171025" );
-	text_local_dir->SetText( "/media/MinballBackup/is547/medfiles" );
-	text_med_pre->SetText( "206Hg" );
+	text_daq_dir->SetText( "/mbdata/miniball/is628-171106" );
+	text_local_dir->SetText( "/media/MinballBackup/is628/medfiles" );
+	text_med_pre->SetText( "22Ne" );
 
-	text_add_file->SetText( "206Hg_104Pd_pos4_060" );
+	text_add_file->SetText( "22Ne_001" );
 
-	text_settings->SetText( "/media/MinballBackup/is547/config/MBSettings2017_CLX_noBD.dat" );
+	text_settings->SetText( "/media/MinballBackup/is628/config/MBSettings2017_CLX_noBD.dat" );
 	check_source->SetOn();
 
-	text_outfile->SetText( "/media/MinballBackup/is547/rootfiles/206Pb_104Pd_xxx-yyy" );
-	text_calfile->SetText( "/media/MinballBackup/is547/config/is547.cal" );
-	text_config->SetText( "/media/MinballBackup/is547/config/config-is547.dat" );
-	text_cutfile->SetText( "/media/MinballBackup/is547/config/cutfile-is562.root:Bcut:Tcut" );
+	text_outfile->SetText( "/media/MinballBackup/is628/rootfiles/22Ne_93Nb_0050um" );
+	text_calfile->SetText( "/media/MinballBackup/is628/config/is628-offline.cal" );
+	text_config->SetText( "/media/MinballBackup/is628/config/config-is628.dat" );
+	text_cutfile->SetText( "/media/MinballBackup/is628/config/cutfile-is628.root:Bcut:Tcut" );
 
 	check_cdpad->SetOn();
 	//check_singles->SetOn();
@@ -820,18 +843,19 @@ MBSorter::MBSorter() {
 	//check_config->SetOn();
 	check_cutfile->SetOn();
 
-	num_dop_zb->SetNumber( 80 );
-	num_dop_zt->SetNumber( 46 );
-	num_dop_ab->SetNumber( 206 );
-	num_dop_at->SetNumber( 104 );
-	num_dop_eb->SetNumber( 4200 );
-	num_dop_ex->SetNumber( 1069 );
-	num_dop_th->SetNumber( 2.0 );
-	num_dop_id->SetNumber( 1.0 );
-	num_dop_cd->SetNumber( 24.6 );
-	num_dop_ro->SetNumber( 242.6 );
+	num_dop_zb->SetNumber( 10 );
+	num_dop_zt->SetNumber( 41 );
+	num_dop_ab->SetNumber( 22 );
+	num_dop_at->SetNumber( 93 );
+	num_dop_eb->SetNumber( 5505 );
+	num_dop_ex->SetNumber( 1400 );
+	num_dop_th->SetNumber( 3.90 );
+	num_dop_id->SetNumber( 1.95 );
+	num_dop_cd->SetNumber( 34.2 );
+	num_dop_ro->SetNumber( 243.8 );
 	num_dop_dl->SetNumber( 0.7 );
 	num_dop_sp->SetNumber( 26.2 );
+	num_dop_sp->SetNumber( 50. );
 
 	////////////////////
 	// Button presses //
@@ -894,7 +918,7 @@ void MBSorter::on_del_clicked() {
 void MBSorter::on_rsync_clicked() {
 	
 	// Slot to react to rsync button
-	TString cmd = "rsync -avz ";
+	TString cmd = "nice rsync -avz ";
 	cmd += "miniball@hpdaqpc:";
 	cmd += text_daq_dir->GetText();
 	cmd += "/";
@@ -1103,9 +1127,58 @@ void MBSorter::on_tdriv_clicked() {
 	inputfile = text_outfile->GetText();
 	inputfile += "_tree.root";
 	outputfile = text_outfile->GetText();
-	outputfile += "_mnt.root";
+	outputfile += "_tdriv.root";
 	
-	cmd = "TDRIVAna -i " + inputfile + " -o " + outputfile;
+	cmd = "TDRIVAna";
+
+	if( check_config->IsOn() ) {
+
+		cmd += " -c ";
+		cmd += text_config->GetText();
+
+	}
+
+	else {
+
+		cmd += " -Zb ";
+		cmd += convertInt( num_dop_zb->GetIntNumber() );
+		cmd += " -Ab ";
+		cmd += convertInt( num_dop_ab->GetIntNumber() );
+		cmd += " -Zt ";
+		cmd += convertInt( num_dop_zt->GetIntNumber() );
+		cmd += " -At ";
+		cmd += convertInt( num_dop_at->GetIntNumber() );
+		cmd += " -Eb ";
+		cmd += convertInt( num_dop_eb->GetIntNumber() );
+		cmd += " -Ex ";
+		cmd += convertInt( num_dop_ex->GetIntNumber() );
+		cmd += " -thick ";
+		cmd += convertFloat( num_dop_th->GetNumber() );
+		cmd += " -depth ";
+		cmd += convertFloat( num_dop_id->GetNumber() );
+		cmd += " -cddist ";
+		cmd += convertFloat( num_dop_cd->GetNumber() );
+		cmd += " -cdoffset ";
+		cmd += convertFloat( num_dop_ro->GetNumber() );
+		cmd += " -deadlayer ";
+		cmd += convertFloat( num_dop_dl->GetNumber() );
+		cmd += " -plunger ";
+		cmd += convertFloat( num_dop_pd->GetNumber() );
+
+	}
+
+	if( check_cutfile->IsOn() ) {
+
+		cmd += " -cut ";
+		cmd += text_cutfile->GetText();
+
+	}
+
+	cmd += " -i ";
+	cmd += inputfile;
+	cmd += " -o ";
+	cmd += outputfile;
+
 
 	cout << endl << cmd << endl << endl;
 	gSystem->Exec( cmd );
