@@ -1101,7 +1101,7 @@ int main(int argc, char* argv[]) {
 		    for( k = 0; k < gen_array.size(); k++ ) {
 
 		      if( j == k ) continue;
-		      gg->Fill( gen_array[i], gen_array[j] );
+		      gg->Fill( gen_array[j], gen_array[k] );
 
 		    }
 
