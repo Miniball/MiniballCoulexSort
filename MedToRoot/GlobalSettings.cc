@@ -43,6 +43,14 @@ GlobalSettings::GlobalSettings( unsigned int argc, char* argv[] ) {
 
 	}
 
+	if( fFirstEvent > fLastEvent && fLastEvent > 0 ) {
+
+		cerr << "Error, first event is greater than last event: ";
+		cerr << fFirstEvent << " < " << fLastEvent << endl;
+		exit(1);
+
+	}
+
 	unsigned short i;
 
 	size_t LastDot = fMedFile.rfind('.');

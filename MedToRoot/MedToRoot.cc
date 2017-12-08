@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
 		// get med buffer and call med-hdsubs
 		unsigned int eventType = 0;
 		
-		eventType = mbs_next_event(mbs);	// next event 
+		eventType = mbs_next_event( mbs );	// next event 
 		if( eventType == MBS_ETYPE_EOF ) {	// end of file?
 
 			printf( "End of file %s\n", Settings->MedFile() );
@@ -86,7 +86,11 @@ int main(int argc, char* argv[]) {
 		}
 
 		// check #of processed events
-		else if( nofProcessedEvents < Settings->FirstEvent() ) continue;
+		else if( nofProcessedEvents < Settings->FirstEvent() && nofProcessedEvents > 0 ) {
+
+			status = eventBuilder->TrashEvent( mbs );
+
+		}
 
 		// Let's get building!!
 		else {

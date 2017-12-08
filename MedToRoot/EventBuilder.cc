@@ -317,6 +317,20 @@ EventBuilder::~EventBuilder()
     }
 }
 
+int EventBuilder::TrashEvent(const MBSDataIO * mbs) {
+
+	if( Settings->VerboseLevel() > 1 )
+		cout << endl << "start of " << __PRETTY_FUNCTION__ << endl;
+
+	if( Settings->VerboseLevel() > 3 )
+		cout << "clearing unpackedEvent = " << hex << unpackedEvent << dec << endl;
+
+	unpackedEvent->ClearEvt();
+
+	return 0;
+
+}
+
 int EventBuilder::ProcessEvent(const MBSDataIO * mbs)
 {
   if(Settings->VerboseLevel() > 1)
