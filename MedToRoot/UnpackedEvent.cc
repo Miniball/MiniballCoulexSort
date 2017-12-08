@@ -1349,7 +1349,7 @@ bool UnpackedEvent::DecodeScaler(int SubEventID, int SubEventWordCount, char* Su
 
       return false;
     }
-  
+
   //data consists of two words for each channel
   for(i = 0; i < SubEventWordCount/2; i++)
     {
@@ -1367,6 +1367,7 @@ bool UnpackedEvent::DecodeScaler(int SubEventID, int SubEventWordCount, char* Su
 	}
     }
     
+
   Scaler.AddSubEvent(CurrentSubEvent);
 
   fScalerData = true;

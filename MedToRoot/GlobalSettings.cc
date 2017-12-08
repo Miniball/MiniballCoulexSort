@@ -48,14 +48,20 @@ GlobalSettings::GlobalSettings( unsigned int argc, char* argv[] ) {
 	size_t LastDot = fMedFile.rfind('.');
 
 	fOnBeamFile = fMedFile;
-	// replace the tailing .med with OnBeam.root
-	if( fSourceRun )
+
+	if( fSourceRun ) {
+
 		fOnBeamFile.replace( LastDot, fMedFile.length()-LastDot, "_Source.root" );
-	else
+
+	}
+
+	else {
+
 		fOnBeamFile.replace( LastDot, fMedFile.length()-LastDot, "_OnBeam.root" );
  
+	}
+
 	fOnBeamBackgroundFile = fMedFile;
-	// replace the tailing .med with OnBeamBackground.root
 	fOnBeamBackgroundFile.replace( LastDot, fMedFile.length()-LastDot, "_OnBeamBackground.root" );
 
 	fOffBeamFile = fMedFile;
@@ -67,7 +73,7 @@ GlobalSettings::GlobalSettings( unsigned int argc, char* argv[] ) {
 	// read the settings from file
 	fSettings = new TEnv( fSettingsFile.c_str() );
 
-	fSettings->ReadFile(fSettingsFile.c_str(),kEnvLocal);
+	fSettings->ReadFile( fSettingsFile.c_str(), kEnvLocal );
 
 	ReadSettings();
 	ReadUnpackerSettings();
@@ -96,6 +102,7 @@ GlobalSettings::GlobalSettings( unsigned int argc, char* argv[] ) {
 		<<"Marabou Dgf Module Offset = "<<fMarabouDgfModuleOffset<<endl
 		<<"Marabou Adc Module Offset = "<<fMarabouAdcModuleOffset<<endl
 		<<"Number of Caens = "<<fNofCaenAdc<<endl
+		<<"First Event = "<<fFirstEvent<<endl
 		<<"Last Event = "<<fLastEvent<<endl
 		<<"Verbose Level = "<<fVerboseLevel<<endl
 		<<".med-file = "<<fMedFile<<endl
@@ -107,7 +114,7 @@ GlobalSettings::GlobalSettings( unsigned int argc, char* argv[] ) {
 
 	if( !Verify() ) {
 
-		cerr<<"Sorry, the settings file "<<fSettingsFile<<" is not of the correct format"<<endl;
+		cerr << "Sorry, the settings file " << fSettingsFile << " is not of the correct format" << endl;
 		exit(1);
 
 	}
@@ -134,7 +141,7 @@ void GlobalSettings::ReadUnpackerSettings() {
 
 	if( fSettings == NULL ) {
 
-		cerr<<__PRETTY_FUNCTION__<<": you need to create a new TEnv first, fSettings in NULL!"<<endl;
+		cerr << __PRETTY_FUNCTION__ << ": you need to create a new TEnv first, fSettings in NULL!" << endl;
 		exit(1);
 
 	}
@@ -192,7 +199,7 @@ void GlobalSettings::ReadUnpackerSettings() {
 	fMesytecAdc = fSettings->GetValue("Mesytec.Adc", false);
 	fSPEDEChamb = fSettings->GetValue("SPEDE.Chamb", false);
 	fNofCaenAdc = fSettings->GetValue("NumberOf.CaenAdc", 0);
-	if( !fMesytecAdc ) fNofCaenAdc = 0;
+	if( fMesytecAdc == false ) fNofCaenAdc = 0;
 	fTypeOfSetup = fSettings->GetValue("TypeOf.Setup", 1);
 	fDgfInitDelay = fSettings->GetValue("Dgf.Init.Delay", 65556);
 
@@ -249,6 +256,7 @@ ostream& operator <<(ostream &os,const GlobalSettings &obj) {
 	<<"SuperCycle Channel = "<<obj.fSuperCycleChannel<<endl
 	<<"Marabou Dgf Module Offset = "<<obj.fMarabouDgfModuleOffset<<endl
 	<<"Marabou Adc Module Offset = "<<obj.fMarabouAdcModuleOffset<<endl
+	<<"First Event = "<<obj.fFirstEvent<<endl
 	<<"Last Event = "<<obj.fLastEvent<<endl
 	<<"Verbose Level = "<<obj.fVerboseLevel<<endl
 	<<".med-file = "<<obj.fMedFile<<endl
@@ -280,22 +288,22 @@ bool GlobalSettings::Verify() {
 	// check that the number of modules are consistent
 	if( fNumberOfAdcModules != fLastAdc - fFirstAdc + 1 ) {
 
-	  cerr << "number of adcs wrong" << endl;
-	  return false;
+		cerr << "number of adcs wrong" << endl;
+		return false;
 
 	}
 
 	// check that module number ranges make sense
 	if( fLastMiniballDgf < fFirstMiniballDgf ) {
 
-	  cerr << "last miniball wrong" << endl;
-	  return false;
+		cerr << "last miniball wrong" << endl;
+		return false;
 
 	}
 
 	if( fLastAdc < fFirstAdc ) {
 
-		cerr<<"last adc wrong"<<endl;
+		cerr << "last adc wrong" << endl;
 		return false;
 
 	}
@@ -303,8 +311,8 @@ bool GlobalSettings::Verify() {
 	// check that module numbers don't overlap
 	if( fFirstAdc <= fLastMiniballDgf ) {
 
-	  cerr << "first adc wrong" << endl;
-	  return false;
+		cerr << "first adc wrong" << endl;
+		return false;
 
 	}
 
@@ -324,8 +332,8 @@ bool GlobalSettings::Verify() {
 
 	if( fFirstAdc <= fBeamdumpDgf && fBeamdumpDgf > 0 ) {
 
-	  cerr << "first adc/beam dump wrong" << endl;
-	  return false;
+		cerr << "first adc/beam dump wrong" << endl;
+		return false;
 
 	}
 
@@ -361,8 +369,8 @@ bool GlobalSettings::Verify() {
 
 	if( fRealTimeIndex == 0xffff ) {
 
-	  cerr << "real time wrong" << endl;
-	  return false;
+		cerr << "real time wrong" << endl;
+		return false;
 
 	}
 

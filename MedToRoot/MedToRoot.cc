@@ -40,10 +40,10 @@ int main(int argc, char* argv[]) {
 	
 	printf( "opening file %s ...\n", Settings->MedFile() );
 	
-	mbs = mbs_open_file(Settings->MedFile(), "F", 0x4000, NULL);
+	mbs = mbs_open_file( Settings->MedFile(), "F", 0x4000, NULL );
 	
 	// if error when opening file
-	if( mbs == NULL ) printf("couldn't open file %s -> exit!!!\n", Settings->MedFile());
+	if( mbs == NULL ) printf( "couldn't open file %s -> exit!!!\n", Settings->MedFile() );
 	
 	//EventBuilder instance
 	EventBuilder* eventBuilder = new EventBuilder( Settings );
@@ -87,15 +87,17 @@ int main(int argc, char* argv[]) {
 
 		// check #of processed events
 		else if( nofProcessedEvents < Settings->FirstEvent() ) continue;
-		else if( nofProcessedEvents == Settings->FirstEvent() ) {
 
-			cout << "Processing event number " << setw(7) << nofProcessedEvents << "\r";
-			cout.flush();
-	
-		}
-
+		// Let's get building!!
 		else {
 
+			if( nofProcessedEvents == Settings->FirstEvent() ) {
+
+				cout << "Processing event number " << setw(7) << nofProcessedEvents << "\r";
+				cout.flush();
+
+			}
+	
 			status = eventBuilder->ProcessEvent( mbs );
 
 		}

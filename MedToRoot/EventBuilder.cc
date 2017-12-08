@@ -86,7 +86,7 @@ EventBuilder::EventBuilder(GlobalSettings* settings)
 
   if(OnBeamTree == NULL)
     {
-      cerr<<__PRETTY_FUNCTION__<<": Error, couldn't create tree, exiting ... "<<endl;
+      cerr << __PRETTY_FUNCTION__ << ": Error, couldn't create tree, exiting ... " << endl;
       exit(2);
     }
 
@@ -328,6 +328,7 @@ int EventBuilder::ProcessEvent(const MBSDataIO * mbs)
     {
       cout<<"clearing unpackedEvent = "<<hex<<unpackedEvent<<dec<<endl;
     }
+
 
   unpackedEvent->ClearEvt(); // Was Clear - changed by Nigel 31/7/2017
 
