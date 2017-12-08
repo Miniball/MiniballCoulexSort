@@ -59,15 +59,6 @@ int main(int argc, char* argv[]) {
 	
 		}
 		
-		// check #of processed events
-		if( nofProcessedEvents < Settings->FirstEvent() ) continue;
-		if( nofProcessedEvents == Settings->FirstEvent() ) {
-
-			cout << "Processing event number " << setw(7) << nofProcessedEvents << "\r";
-			cout.flush();
-	
-		}
-
 		// get med buffer and call med-hdsubs
 		unsigned int eventType = 0;
 		
@@ -92,6 +83,15 @@ int main(int argc, char* argv[]) {
 			printf( "Aborting\n" );
 			break;
 
+		}
+
+		// check #of processed events
+		else if( nofProcessedEvents < Settings->FirstEvent() ) continue;
+		else if( nofProcessedEvents == Settings->FirstEvent() ) {
+
+			cout << "Processing event number " << setw(7) << nofProcessedEvents << "\r";
+			cout.flush();
+	
 		}
 
 		else {
