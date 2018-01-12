@@ -6,10 +6,13 @@ SUBDIRS = common \
 		  TDRIVAna \
 		  rootgui
 
-all: $(SUBDIRS)
+all: MKDIR_P $(SUBDIRS)
 
 $(SUBDIRS):
 	$(MAKE) -C $@
 
-.PHONY: all $(SUBDIRS)
+MKDIR_P:
+	mkdir -p lib bin
+
+.PHONY: all MKDIR_P $(SUBDIRS)
 
