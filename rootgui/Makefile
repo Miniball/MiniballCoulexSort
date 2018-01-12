@@ -13,6 +13,7 @@ else
 	DICTEXT   := _dict.pcm
 endif
 
+BIN_DIR     := ../bin
 LIB_DIR     := ../lib
 MED_DIR     := ../MedToRoot
 ANA_INC     := -I../CLXAna -I../MntAna -I../TDRIVAna
@@ -35,6 +36,7 @@ MBSorter.o: MBSorter.cc
 
 mb_sorter: mb_sorter.cc $(OBJECTS)
 	$(CPP) $(CFLAGS) $(INCLUDES) $< $(OBJECTS) -o $@ $(LIBS)
+	cp $@ $(BIN_DIR)
 
 # Root stuff
 DEPENDENCIES = MBSorter.hh \
