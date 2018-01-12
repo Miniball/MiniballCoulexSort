@@ -435,7 +435,7 @@ float doppler::GetPPhi( int quad, int seg ) {
 float doppler::GetPPhi( int quad, int seg, float offset ) { 
 
 	// Returns phi angle from quadrant and ohm strip number in radians 
-	float ph_det[4] = { 0.+cdoffset, 90.+cdoffset, 180.+cdoffset, 270.+cdoffset };
+	float ph_det[4] = { (float)0+cdoffset, (float)90+cdoffset, (float)180+cdoffset, (float)270+cdoffset };
 	float pphi = ( ph_det[quad] + seg * 7.0 );
 	if( pphi < 360. ) return pphi * TMath::DegToRad();
 	else return ( pphi - 360. ) * TMath::DegToRad();

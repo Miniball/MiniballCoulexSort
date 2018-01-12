@@ -34,7 +34,7 @@ class doppler : public TObject {
 	static bool	CutG_en2hit( double BEn, double TEn );
 	static Double_t	GetTarDist();
 	static Double_t	GetPTh(Double_t anno);
-	static Double_t	GetPPhi(Int_t quad, Int_t seg, Double_t offset=242.6);//TODO Check this
+	static Double_t	GetPPhi(Int_t quad, Int_t seg, float offset=242.6);//TODO Check this
 	static Double_t	GetTTh(Double_t Banno, Double_t BEn);
 	static Double_t	GetBTh(Double_t Tanno);
 	static Double_t	GetQPhi(Int_t quad, Int_t seg);

@@ -320,9 +320,9 @@ Double_t doppler::GetPTh(Double_t anno) {
 	return TMath::ATan((9.+(15.5-anno)*2.)/GetTarDist());
 }
 
-Double_t doppler::GetPPhi(Int_t quad, Int_t seg, Double_t offset) {//TODO make sure this is right
+Double_t doppler::GetPPhi(Int_t quad, Int_t seg, float offset) {//TODO make sure this is right
 	/* Returns phi angle from quadrant and ohm strip number in radians */
-	double ph_det[4]={ 0.+offset, 90.+offset, 180.+offset, 270.+offset };
+	float ph_det[4] = { (float)0+offset, (float)90+offset, (float)180+offset, (float)270+offset };
 	double pphi = ( ph_det[quad] + seg * 7.0 );
 	if( pphi < 360. ) return pphi * TMath::DegToRad();
 	else return ( pphi - 360. ) * TMath::DegToRad();
