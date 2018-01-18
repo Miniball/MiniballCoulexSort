@@ -3,4 +3,5 @@
 *.o
 *Dictionary.cc
 *Dictionary.h
+*.pcm
 MedToRoot

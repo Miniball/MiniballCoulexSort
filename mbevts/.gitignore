@@ -1,4 +1,5 @@
 # Ignore gedit temporary files
 *~
 *.o
+*.pcm
 

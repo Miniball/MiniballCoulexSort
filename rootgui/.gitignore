@@ -3,4 +3,5 @@
 *.o
 *_dict.cc
 *_dict.h
+*.pcm
 mb_sorter

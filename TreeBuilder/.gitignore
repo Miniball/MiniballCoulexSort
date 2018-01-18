@@ -3,6 +3,7 @@
 *.o
 *Dictionary.cc
 *Dictionary.h
+*.pcm
 TreeBuilder
 NeSort
 AQ4Sort
