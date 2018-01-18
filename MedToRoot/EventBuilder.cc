@@ -298,26 +298,21 @@ EventBuilder::EventBuilder(GlobalSettings* settings)
 
 }
 
-EventBuilder::~EventBuilder()
-{
-  //cout<<__PRETTY_FUNCTION__<<endl;
-  if(Settings != NULL)
-    {
-      delete Settings;
-    }
+EventBuilder::~EventBuilder() {
+	
+	//cout<<__PRETTY_FUNCTION__<<endl;
+	if( Settings != NULL )
+		delete Settings;
 
-  if(unpackedEvent != NULL)
-    {
-      delete unpackedEvent;
-    }
+	if( unpackedEvent != NULL )
+		delete unpackedEvent;
 
-  if(eventBuffer != NULL)
-    {
-      delete eventBuffer;
-    }
+	if( eventBuffer != NULL )
+		delete eventBuffer;
+
 }
 
-int EventBuilder::TrashEvent(const MBSDataIO * mbs) {
+int EventBuilder::TrashEvent() {
 
 	if( Settings->VerboseLevel() > 1 )
 		cout << endl << "start of " << __PRETTY_FUNCTION__ << endl;

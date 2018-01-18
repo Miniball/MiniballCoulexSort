@@ -1709,7 +1709,7 @@ void _mbs_show_fheader(MBSDataIO *mbs, FILE *out) {
 	fprintf(out, "  FILE HEADER: %s, buf# %d", mbs->device, mbs->nof_buffers);
 	fprintf(out, "\n==============================================================================\n");
 
-	fprintf(out, "  Header length        : %d bytes\n", sizeof(s_filhe));
+	fprintf(out, "  Header length        : %lu bytes\n", sizeof(s_filhe));
 	fprintf(out, "  Length w/o header    : %d words\n", fh->filhe_dlen);
 	fprintf(out, "  Type                 : File header [%d,%d]\n",
 										fh->filhe_type, fh->filhe_subtype);
@@ -1767,7 +1767,7 @@ void _mbs_show_bheader(MBSDataIO *mbs, FILE *out) {
 	fprintf(out, "  BUFFER HEADER: %s, buf# %d (%d)", mbs->device, mbs->nof_buffers, mbs->cur_bufno);
 	fprintf(out, "\n==============================================================================\n");
 
-	fprintf(out, "  Header length        : %d bytes\n", sizeof(s_bufhe));
+	fprintf(out, "  Header length        : %lu bytes\n", sizeof(s_bufhe));
 	fprintf(out, "  Length w/o header    : %d words\n", bh->l_dlen);
 	fprintf(out, "  Type                 : %s [%d,%d]\n",
 							(mbs->buftype)->descr, bh->i_type, bh->i_subtype);
@@ -1817,7 +1817,7 @@ void _mbs_show_evhe_10_1(MBSDataIO *mbs, FILE *out) {
 	fprintf(out, "  EVENT HEADER: %s, buf# %d (%d), evt# %d", mbs->device, mbs->nof_buffers, mbs->cur_bufno, mbs->evtno);
 	fprintf(out, "\n==============================================================================\n");
 
-	fprintf(out, "  Header length        : %d bytes\n", sizeof(s_vehe));
+	fprintf(out, "  Header length        : %lu bytes\n", sizeof(s_vehe));
 	fprintf(out, "  Data length          : %d words\n", eh->l_dlen);
 	fprintf(out, "  Type                 : %s [%d,%d]\n",
 							(mbs->evttype)->descr, eh->i_type, eh->i_subtype);
@@ -1850,7 +1850,7 @@ void _mbs_show_sev_10_1(MBSDataIO *mbs, FILE *out) {
 					mbs->device, mbs->nof_buffers, mbs->cur_bufno, mbs->evtno, mbs->sevtno);
 	fprintf(out, "\n==============================================================================\n");
 
-	fprintf(out, "  Header length        : %d bytes\n", sizeof(s_veshe));
+	fprintf(out, "  Header length        : %lu bytes\n", sizeof(s_veshe));
 	fprintf(out, "  Data length          : %d words\n", sh->l_dlen);
 	fprintf(out, "  Type                 : %s [%d,%d]\n",
 							(mbs->sevttype)->descr, sh->i_type, sh->i_subtype);
@@ -1950,7 +1950,7 @@ void _mbs_show_sev_short(MBSDataIO *mbs, FILE *out) {
 					mbs->device, mbs->nof_buffers, mbs->cur_bufno, mbs->evtno, mbs->sevtno);
 	fprintf(out, "\n==============================================================================\n");
 
-	fprintf(out, "  Header length        : %d bytes\n", sizeof(s_veshe));
+	fprintf(out, "  Header length        : %lu bytes\n", sizeof(s_veshe));
 	fprintf(out, "  Data length          : %d words\n", sh->l_dlen);
 	fprintf(out, "  Type                 : %s [%d,%d]\n",
 							(mbs->sevttype)->descr, sh->i_type, sh->i_subtype);
@@ -1992,7 +1992,7 @@ void _mbs_show_sev_long(MBSDataIO *mbs, FILE *out) {
 					mbs->device, mbs->nof_buffers, mbs->cur_bufno, mbs->evtno, mbs->sevtno);
 	fprintf(out, "\n==============================================================================\n");
 
-	fprintf(out, "  Header length        : %d bytes\n", sizeof(s_veshe));
+	fprintf(out, "  Header length        : %lu bytes\n", sizeof(s_veshe));
 	fprintf(out, "  Data length          : %d words\n", sh->l_dlen);
 	fprintf(out, "  Type                 : %s [%d,%d]\n",
 							(mbs->sevttype)->descr, sh->i_type, sh->i_subtype);
@@ -2153,7 +2153,7 @@ void _mbs_show_sev_9000_1(MBSDataIO *mbs, FILE *out) {
 					mbs->device, mbs->nof_buffers, mbs->cur_bufno, mbs->evtno, mbs->sevtno);
 	fprintf(out, "\n==============================================================================\n");
 
-	fprintf(out, "  Header length        : %d bytes\n", sizeof(s_veshe));
+	fprintf(out, "  Header length        : %lu bytes\n", sizeof(s_veshe));
 	fprintf(out, "  Data length          : %d words\n", sh->l_dlen);
 	fprintf(out, "  Type                 : %s [%d,%d]\n",
 							(mbs->sevttype)->descr, sh->i_type, sh->i_subtype);
@@ -2233,7 +2233,7 @@ void _mbs_show_sev_9000_2(MBSDataIO *mbs, FILE *out) {
 					mbs->device, mbs->nof_buffers, mbs->cur_bufno, mbs->evtno, mbs->sevtno);
 	fprintf(out, "\n==============================================================================\n");
 
-	fprintf(out, "  Header length        : %d bytes\n", sizeof(s_veshe));
+	fprintf(out, "  Header length        : %lu bytes\n", sizeof(s_veshe));
 	fprintf(out, "  Data length          : %d words\n", sh->l_dlen);
 	fprintf(out, "  Type                 : %s [%d,%d]\n",
 							(mbs->sevttype)->descr, sh->i_type, sh->i_subtype);
@@ -2276,7 +2276,7 @@ void _mbs_show_sev_raw(MBSDataIO *mbs, FILE *out) {
 					mbs->device, mbs->nof_buffers, mbs->cur_bufno, mbs->evtno, mbs->sevtno);
 	fprintf(out, "\n==============================================================================\n");
 
-	fprintf(out, "  Header length        : %d bytes\n", sizeof(s_veshe));
+	fprintf(out, "  Header length        : %lu bytes\n", sizeof(s_veshe));
 	fprintf(out, "  Data length          : %d words\n", sh->l_dlen);
 	fprintf(out, "  Type                 : %s [%d,%d]\n",
 							(mbs->sevttype)->descr, sh->i_type, sh->i_subtype);

@@ -12,8 +12,8 @@ int main( int argc, char *argv[] ) {
 	vector<string> inputfilenames;
 	float		GammaEnergy;
 	int			Zb = 0, Zt = 0, Ab = 0, At = 0;
-	float		Eb = 0, Ex = 0, thick = 0, depth = 0;
-	float		cddist = 0, cdoffset = 242.6;
+	float		Eb = 0.0, Ex = 0.0, thick = 0.0, depth = 0.0;
+	float		cddist = 0.0, cdoffset = 242.6;
 	float		deadlayer = 0.7;
 	float		spededist = 23.6;
 
@@ -132,11 +132,11 @@ int main( int argc, char *argv[] ) {
 		Ab = config->GetValue( "Ab", -1 );
 		Zt = config->GetValue( "Zt", -1 );
 		At = config->GetValue( "At", -1 );
-		Eb = config->GetValue( "Eb", -1 );
-		Ex = config->GetValue( "Ex", -1 );
-		thick = config->GetValue( "thick", -1 );
-		depth = config->GetValue( "depth", -1 );
-		cddist = config->GetValue( "cddist", -1 );
+		Eb = config->GetValue( "Eb", -1.0 );
+		Ex = config->GetValue( "Ex", -1.0 );
+		thick = config->GetValue( "thick", -1.0 );
+		depth = config->GetValue( "depth", -1.0 );
+		cddist = config->GetValue( "cddist", -1.0 );
 		cdoffset = config->GetValue( "cdoffset", 242.6 );
 		deadlayer = config->GetValue( "deadlayer", 0.7 );
 		spededist = config->GetValue( "spededist", 23.6 );

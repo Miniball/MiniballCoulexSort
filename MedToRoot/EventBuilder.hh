@@ -22,7 +22,7 @@ public:
   EventBuilder(GlobalSettings*);
   ~EventBuilder();
 
-  int TrashEvent(const MBSDataIO * mbs);
+  int TrashEvent();
   int ProcessEvent(const MBSDataIO * mbs);
 
   void BuildEvent();

@@ -88,7 +88,7 @@ int main(int argc, char* argv[]) {
 		// check #of processed events
 		else if( nofProcessedEvents < Settings->FirstEvent() && nofProcessedEvents > 0 ) {
 
-			status = eventBuilder->TrashEvent( mbs );
+			status = eventBuilder->TrashEvent();
 
 		}
 

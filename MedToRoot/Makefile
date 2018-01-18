@@ -86,6 +86,6 @@ MedToRootDictionary.o: MedToRootDictionary.cc MedToRootDictionary$(DICTEXT)
 #--------------------------------------------------
 clean:
 	rm -f MedToRoot *.o $(MED_DIR)/*.o $(MBEVTS_DIR)/*.o
-	rm -f MedToRootDictionary.cc MedToRootDictionary$(DICTEXT) 
-	@cd $(COMMON_DIR); make clean
+	rm -f MedToRootDictionary.cc MedToRootDictionary$(DICTEXT)
+	rm -f $(LIB_DIR)/MedToRootDictionary$(DICTEXT)
 
