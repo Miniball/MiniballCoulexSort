@@ -15,3 +15,4 @@ TDRIVAna_20171101
 *.xcuserstate
 *.xcsettings
 *.plist
+*/*.dSYM
