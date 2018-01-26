@@ -89,6 +89,7 @@ class hists {
 	
 	// Testing
 	TH1F *multp, *multr;
+	TH1F *velo, *velo2;
 	TH1F *GeReject, *GePass, *GeRatio;
 	TH2F *GeAng;
 #ifdef GEANG

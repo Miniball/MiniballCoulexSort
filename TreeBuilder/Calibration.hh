@@ -33,6 +33,7 @@ public:
 	}
 	double DgfEnergy(int dgf, int chan, unsigned short raw);
 	double AdcEnergy(int adc, int chan, unsigned short raw);
+	double AdcTime(int adc);
 	int PosFBCDRing(int Quad, unsigned short raw);
 	int PosFBCDStrip(int Quad, unsigned short raw);
 	int PosRing(int Quad, unsigned short raw);
@@ -55,6 +56,8 @@ private:
 	vector< vector<double> > fFCDPosRing;
 	vector< vector<double> > fBCDPosStrip;
 	vector< vector<double> > fBCDPosRing;
+
+	vector<double> fAdcTime;
 
 	double fBeamdumpOffset;
 	double fBeamdumpGain;

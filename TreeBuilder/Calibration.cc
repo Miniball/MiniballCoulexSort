@@ -64,11 +64,14 @@ void Calibration::ReadCalibration() {
 	if( fVerbose > 1 ) cout << "reading adcs" << endl;
 	fAdcOffset.resize(fNofAdcs);
 	fAdcGain.resize(fNofAdcs);
+	fAdcTime.resize(fNofAdcs);
 
 	for(int adc=0; adc<fNofAdcs; adc++){
 
 		fAdcOffset[adc].resize(fNofAdcChans);
 		fAdcGain[adc].resize(fNofAdcChans);
+
+		fAdcTime[adc] = config->GetValue( Form("adc_%d.TimeOffset", adc ) , 0.0 );
 
 		for(int chan=0; chan<fNofAdcChans; chan++){
 
@@ -230,18 +233,32 @@ double Calibration::DgfEnergy(int dgf, int chan, unsigned short raw){
 
 }
 
-double Calibration::AdcEnergy(int adc, int chan, unsigned short raw){
-
-	if( (adc>-1) && (adc<fNofAdcs) && (chan>-1) && (chan<fNofAdcChans) ) {
+double Calibration::AdcEnergy( int adc, int chan, unsigned short raw ) {
 	
+	if( adc >= 0 && adc < fNofAdcs && chan >= 0 && chan < fNofAdcChans ) {
+		
 		return ((fAdcGain[adc][chan]*( raw +0.5 - fRand->Uniform())) + fAdcOffset[adc][chan]);
-
+		
 	}
 	
 	else cerr << "adc " << adc << " channel " << chan << " not found!" << endl;
-
+	
 	return -1;
+	
+}
 
+double Calibration::AdcTime( int adc ){
+	
+	if( adc >= 0 && adc < fNofAdcs ) {
+		
+		return fAdcTime[adc];
+		
+	}
+	
+	else cerr << "adc " << adc << " not found!" << endl;
+	
+	return -1;
+	
 }
 
 int Calibration::PosFBCDRing(int Quad, unsigned short raw){ // PosStrip CD for CREX2016

@@ -458,7 +458,7 @@ MBSorter::MBSorter() {
 						  new TGLayoutHints( kLHintsTop | kLHintsRight, 2, 2, 5, 5 ) );
 	
 	// Units - Dead layer
-	lab_unit_dl = new TGLabel( dop_frame_2, "µm" );
+	lab_unit_dl = new TGLabel( dop_frame_2, "mm" );
 	lab_unit_dl->SetTextJustify( 36 );
 	lab_unit_dl->SetMargins( 0, 0, 0, 0 );
 	lab_unit_dl->SetWrapLength( -1 );
@@ -688,7 +688,7 @@ MBSorter::MBSorter() {
 		-999, 999 );
 	dop_frame_1->AddFrame( num_dop_ro, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
-	num_dop_dl = new TGNumberEntry( dop_frame_1, 0.7, 5, -1,
+	num_dop_dl = new TGNumberEntry( dop_frame_1, 0.0007, 5, -1,
 		TGNumberFormat::kNESReal, TGNumberFormat::kNEANonNegative, TGNumberFormat::kNELLimitMinMax,
 		0, 10 );
 	dop_frame_1->AddFrame( num_dop_dl, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
@@ -853,7 +853,7 @@ MBSorter::MBSorter() {
 	num_dop_id->SetNumber( 1.95 );
 	num_dop_cd->SetNumber( 34.2 );
 	num_dop_ro->SetNumber( 243.8 );
-	num_dop_dl->SetNumber( 0.7 );
+	num_dop_dl->SetNumber( 0.0007 );
 	num_dop_sp->SetNumber( 26.2 );
 	num_dop_sp->SetNumber( 50. );
 

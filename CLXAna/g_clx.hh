@@ -80,11 +80,14 @@ class g_clx : public TObject {
 	int             file;
 
 	float			GammaEnergy;
-	int				Zb, Zt, Ab, At;
+	int				Zb, Zt;
+	float			Ab, At;
 	float			Eb, Ex, thick, depth;
 	float			cddist, cdoffset;
 	float			deadlayer;
+	float			contaminant;
 	float			spededist;
+	float			bg_frac;
 	TCutG			*Bcut, *Tcut;
 	
 	// List of branches

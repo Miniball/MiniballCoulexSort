@@ -11,11 +11,14 @@ int main( int argc, char *argv[] ) {
 	string outputfilename, configfilename, cutfilename;
 	vector<string> inputfilenames;
 	float		GammaEnergy;
-	int			Zb = 0, Zt = 0, Ab = 0, At = 0;
+	int			Zb = 0, Zt = 0;
+	float		Ab = 0, At = 0;
 	float		Eb = 0.0, Ex = 0.0, thick = 0.0, depth = 0.0;
 	float		cddist = 0.0, cdoffset = 242.6;
-	float		deadlayer = 0.7;
+	float		deadlayer = 0.0007;
+	float		contaminant = 0.0;
 	float		spededist = 23.6;
+	float		bg_frac = -1.0;
 
 	CommandLineInterface* interface = new CommandLineInterface();
 
@@ -34,7 +37,9 @@ int main( int argc, char *argv[] ) {
 	interface->Add("-cddist", "cddist", &cddist );
 	interface->Add("-cdoffset", "cdoffset", &cdoffset );
 	interface->Add("-deadlayer", "deadlayer", &deadlayer );
+	interface->Add("-contaminant", "contaminant", &contaminant );
 	interface->Add("-spededist", "spededist", &spededist );
+	interface->Add("-bg_frac", "bg_frac", &bg_frac );
 
 	interface->CheckFlags( argc, argv );
 
@@ -129,17 +134,19 @@ int main( int argc, char *argv[] ) {
 		TEnv *config = new TEnv( configfilename.c_str() );
 
 		Zb = config->GetValue( "Zb", -1 );
-		Ab = config->GetValue( "Ab", -1 );
+		Ab = config->GetValue( "Ab", -1.0 );
 		Zt = config->GetValue( "Zt", -1 );
-		At = config->GetValue( "At", -1 );
+		At = config->GetValue( "At", -1.0 );
 		Eb = config->GetValue( "Eb", -1.0 );
 		Ex = config->GetValue( "Ex", -1.0 );
 		thick = config->GetValue( "thick", -1.0 );
 		depth = config->GetValue( "depth", -1.0 );
 		cddist = config->GetValue( "cddist", -1.0 );
 		cdoffset = config->GetValue( "cdoffset", 242.6 );
-		deadlayer = config->GetValue( "deadlayer", 0.7 );
+		deadlayer = config->GetValue( "deadlayer", 0.0007 );
+		contaminant = config->GetValue( "contaminant", 0.0 );
 		spededist = config->GetValue( "spededist", 23.6 );
+		bg_frac = config->GetValue( "bg_frac", -1.0 );
 
 	}
 
@@ -160,7 +167,9 @@ int main( int argc, char *argv[] ) {
 		x.cddist = cddist;
 		x.cdoffset = cdoffset;
 		x.deadlayer = deadlayer;
+		x.contaminant = contaminant;
 		x.spededist = spededist;
+		x.bg_frac = bg_frac;
 
 	}
 

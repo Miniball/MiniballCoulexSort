@@ -7,28 +7,9 @@
 
 TRandom3 doppler::rand = 1;
 
-double doppler::BTELoss_pars[6] = { -0.88, 0.91, -0.064, -27., 4.5, -0.16 };
-double doppler::TTELoss_pars[6] = { -0.88, 0.91, -0.064, -27., 4.5, -0.16 };
-double doppler::BSELoss_pars[6] = { 3.6, -0.15, 0.010, -37., 6.1, -0.22 };
-double doppler::TSELoss_pars[6] = { 3.6, -0.15, 0.010, -37., 6.1, -0.22 };
-
-double doppler::SP_function( double *x, double *par ) { // energy units of keV
-	 
-	 double SP_nucl = par[0] + par[1] * TMath::Log( x[0] );
-	 SP_nucl += par[2] * TMath::Log( x[0] ) * TMath::Log( x[0] );
-	 SP_nucl = TMath::Exp( SP_nucl );
-	 
-	 double SP_elec = par[3] + par[4] * TMath::Log( x[0] );
-	 SP_elec += par[5] * TMath::Log( x[0] ) * TMath::Log( x[0] );
-	 SP_elec = TMath::Exp( SP_elec );
-	 
-	 return SP_nucl + SP_elec;
-	 
-}
-
-void doppler::ExpDefs( int Zb_, int Ab_, int Zt_, int At_, float Eb_, float Ex_, float thick_,
-						float depth_, float cddist_, float cdoffset_, float deadlayer_, float spededist_,
-						TCutG *Bcut_, TCutG *Tcut_ ) {
+void doppler::ExpDefs( int Zb_, float Ab_, int Zt_, float At_, float Eb_, float Ex_, float thick_,
+						float depth_, float cddist_, float cdoffset_, float deadlayer_, float contaminant_,
+						float spededist_, TCutG *Bcut_, TCutG *Tcut_ ) {
 
 	Zb = Zb_;
 	Ab = Ab_;
@@ -41,6 +22,7 @@ void doppler::ExpDefs( int Zb_, int Ab_, int Zt_, int At_, float Eb_, float Ex_,
 	cddist = cddist_;
 	cdoffset = cdoffset_;
 	deadlayer = deadlayer_;
+	contaminant = contaminant_;
 	spededist = spededist_;
 	Bcut = Bcut_;
 	Tcut = Tcut_;
@@ -49,14 +31,19 @@ void doppler::ExpDefs( int Zb_, int Ab_, int Zt_, int At_, float Eb_, float Ex_,
 
 }
 
-bool doppler::stoppingpowers( bool BT, bool TT, bool BS, bool TS ) {
+bool doppler::stoppingpowers( bool BT, bool TT, bool BA, bool TA, bool BC, bool TC ) {
 
 	bool success = true;
+	
+	for( int i = 0; i < 6; i++ )
+		gSP[i] = new TGraph();
 
 	if( BT ) success *= stoppingpowers( "BT" );
 	if( TT ) success *= stoppingpowers( "TT" );
-	if( BS ) success *= stoppingpowers( "BS" );
-	if( TS ) success *= stoppingpowers( "TS" );
+	if( BA ) success *= stoppingpowers( "BA" );
+	if( TA ) success *= stoppingpowers( "TA" );
+	if( BC ) success *= stoppingpowers( "BC" );
+	if( TC ) success *= stoppingpowers( "TC" );
 
 	return success;
 
@@ -76,19 +63,65 @@ bool doppler::stoppingpowers( string opt ) {
 		"Bk","Cf","Es","Fm","Md","No","Lr","Rf","Db","Sg","Bh","Hs",
 		"Mt","Ds" };
 
+	unsigned int index = 0; // BT = 0, TT = 1, BA = 2, TA = 3
 	string srimfile = "./srim/"; // prefix
-	if( opt.substr(0,1) == "B" ) srimfile += convertInt(Ab) + gElName[Zb-1];
-	else if( opt.substr(0,1) == "T" ) srimfile += convertInt(At) + gElName[Zt-1];
-	else {
-		cout << "opt must equal BT, TT, BS or TS \n";
-		return false;
+	string title = "Stopping powers for ";
+	
+	// Beam or target like..?
+	if( opt.substr(0,1) == "B" ) {
+		
+		srimfile += convertInt(Ab+0.5) + gElName[Zb-1];
+		title += convertInt(Ab+0.5) + gElName[Zb-1];
+		
 	}
-	 
-	if( opt.substr(1,1) == "T" ) srimfile += "_" + convertInt(At) + gElName[Zt-1] + ".txt";
-	else if( opt.substr(1,1) == "S" ) srimfile += "_Si.txt";
+	
+	else if( opt.substr(0,1) == "T" ) {
+
+		srimfile += convertInt(At+0.5) + gElName[Zt-1];
+		title += convertInt(At+0.5) + gElName[Zt-1];
+		index++;
+		
+	}
+	
 	else {
-		cout << "opt must equal BT, TT, BS or TS \n";
+		
+		cout << "opt must equal BT, TT, BA, TA, BC or TC \n";
 		return false;
+	
+	}
+	
+	// Target, contaminant or alumium dead layer..?
+	if( opt.substr(1,1) == "T" ) {
+		
+		srimfile += "_" + convertInt(At+0.5) + gElName[Zt-1] + ".txt";
+		title += " in " + convertInt(At+0.5) + gElName[Zt-1];
+		title += ";Ion energy [keV];Stopping power [MeV/(mg/cm^2)]";
+		
+	}
+	
+	else if( opt.substr(1,1) == "A" ) {
+		
+		srimfile += "_Al.txt";
+		title += " in the Al dead layer";
+		title += ";Ion energy [keV];Stopping power [MeV/mm]";
+		index += 2;
+		
+	}
+	
+	else if( opt.substr(1,1) == "C" ) {
+		
+		srimfile += "_contaminant.txt";
+		title += " in the contaminant layer";
+		title += ";Ion energy [keV];Stopping power [MeV/(mg/cm^2)]";
+		index += 4;
+		
+	}
+	
+	else {
+		
+		cout << "opt must equal BT, TT, BA or TA \n";
+		return false;
+
 	}
 	 
 	ifstream infile;
@@ -100,19 +133,9 @@ bool doppler::stoppingpowers( string opt ) {
 		return false;
 		  
 	}
-	 
-	TGraph *gSP = new TGraph();
-	string title = "Stopping powers for ";
-	if( opt.substr(0,1) == "B" ) title += convertInt(Ab) + gElName[Zb-1];
-	else if( opt.substr(0,1) == "T" )  title += convertInt(At) + gElName[Zt-1];
-	if( opt.substr(1,1) == "T" ) title += " in " + convertInt(At) + gElName[Zt-1];
-	else if( opt.substr(1,1) == "S" ) title += " in the Si dead layer";
-	title += ";Ion energy [keV];Stopping power [MeV/(mg/cm^2)]";
-	gSP->SetTitle( title.c_str() );
-	 
-	double limits[2] = { 8E2, 1E6 };
-	TF1 *fSP = new TF1( "fSP", SP_function, limits[0], limits[1], 6 );
-	 
+
+	gSP[index]->SetTitle( title.c_str() );
+
 	string line, units, tmp_str;
 	stringstream line_ss;
 	bool endflag = false;
@@ -144,7 +167,7 @@ bool doppler::stoppingpowers( string opt ) {
 		
 		total = nucl + elec ; // MeV / ( mg / cm^2 )
 		
-		gSP->SetPoint( p, BEn, total );
+		gSP[index]->SetPoint( p, BEn, total );
 		  
 		// Get next line
 		getline( infile, line );
@@ -156,23 +179,10 @@ bool doppler::stoppingpowers( string opt ) {
 		  
 	}
 	 
-	if( opt == "BT" ) fSP->SetParameters( BTELoss_pars );
-	else if( opt == "TT" ) fSP->SetParameters( TTELoss_pars );
-	else if( opt == "BS" ) fSP->SetParameters( BSELoss_pars );
-	else if( opt == "TS" ) fSP->SetParameters( TSELoss_pars );
-	 
-	gSP->Fit( fSP, "QRWM" );
-	 
-	if( opt == "BT" ) fSP->GetParameters( BTELoss_pars );
-	else if( opt == "TT" ) fSP->GetParameters( TTELoss_pars );
-	else if( opt == "BS" ) fSP->GetParameters( BSELoss_pars );
-	else if( opt == "TS" ) fSP->GetParameters( TSELoss_pars );
-
-	 
 	TCanvas *c = new TCanvas();
-	gSP->Draw("A*");
-	//gSP->GetXaxis()->SetTitleOffset(1.3);
-	//gSP->GetYaxis()->SetTitleOffset(1.3);
+	gSP[index]->Draw("A*");
+	//gSP[index]->GetXaxis()->SetTitleOffset(1.3);
+	//gSP[index]->GetYaxis()->SetTitleOffset(1.3);
 	//TGaxis::SetMaxDigits(3);
 	string pdfname = srimfile.substr( 0, srimfile.find_last_of(".") ) + ".pdf";
 	c->SetLogx();
@@ -231,7 +241,7 @@ int doppler::Cut( float PEn, float anno, int quad ) {
 		double g = 0, h = 0, i = 0, n=0;
 		double ang = GetPTh(anno) * TMath::RadToDeg();
 		
-		if( Ab == 22 ) {
+		if( (int)(Ab+0.5) == 22 ) {
 
 			//need fixing
 			a = 57.706; b = 0.0120384; c = -0.00478394;
@@ -239,7 +249,7 @@ int doppler::Cut( float PEn, float anno, int quad ) {
 			d = 20; e = 0; f = 0;
 		}
 
-		else if( Ab == 140 && Zb == 60 ) {
+		else if( (int)(Ab+0.5) == 140 && Zb == 60 ) {
 
 			a = 576.308; b = 6.98955; c = -0.462751; l = 0.00418589;
 			d = -123.133; e = 45.6129; f = -1.28252; k = 0.00979219;
@@ -247,7 +257,7 @@ int doppler::Cut( float PEn, float anno, int quad ) {
 
 		}
 
-		else if( Ab == 142 && Zb == 62 ) {
+		else if( (int)(Ab+0.5) == 142 && Zb == 62 ) {
 
 			a	=	786.059;	b	=	-8.20774;	c	=	-0.0760138;	l	=	0.0009756319;
 			d	=	22.8353;	e	=	33.2133;	f	=	-0.955229;	k	=	0.0071980504;
@@ -384,10 +394,10 @@ float doppler::GetSpedeDist() {
 }
 
 float doppler::GetCDDeadLayer() {
-
-	// Return dead layer of the Si in um
+	
+	// Return dead layer of the Al in mm
 	return deadlayer;
-
+	
 }
 
 int doppler::GetZb() {
@@ -397,7 +407,7 @@ int doppler::GetZb() {
 
 }
 
-int doppler::GetAb() {
+float doppler::GetAb() {
 
 	// Return A of the projectile
 	return Ab;
@@ -411,7 +421,7 @@ int doppler::GetZt() {
 
 }
 
-int doppler::GetAt() {
+float doppler::GetAt() {
 
 	// Return A of the target
 	return At;
@@ -496,109 +506,124 @@ float doppler::GetBTh( float Tanno ) {
 
 float doppler::GetTEn( float BEn, float Banno ) {
 
-	// Returns energy of target using energy and angle of Rn 
-	double dist, angle;
-
 	// energy at interaction point
-	double Ereac = (float)Eb*(float)Ab - GetELoss( (float)Eb*(float)Ab, depth, 0, "BT" );
+	double Ereac = (float)Eb * (float)Ab;
+	Ereac -= GetELoss( Ereac, contaminant, 0, "BC" );
+	Ereac -= GetELoss( Ereac, depth, 0, "BT" );
+
+	// Correct for dead layer loss
+	double dist = TMath::Abs( deadlayer / TMath::Cos( GetPTh( Banno ) ) );
+	double Eproj = BEn + GetELoss( BEn, dist, 1, "BA" );
 
 	// Trace energy loss back through target to get energy at interaction point
-	double Eproj = BEn + GetELoss(BEn,deadlayer,1,"BS"); // correct for dead layer loss first
-	dist = TMath::Abs((double)(thick-depth)/TMath::Cos(GetPTh(Banno)));
-	Eproj += GetELoss(Eproj,dist,1,"BT");
+	dist = TMath::Abs( ( thick - depth ) / TMath::Cos( GetPTh( Banno ) ) );
+	Eproj += GetELoss( Eproj, dist, 1, "BT" );
 
 	double Etarg = Ereac - Eproj;
-	if( Etarg < 0. ) return 0.1; // recoil is stopped in target
+	if( Etarg < 0.1 ) return 0.1; // recoil is stopped in target
 
-	angle = GetTTh(Banno,BEn);
+	double angle = GetTTh( Banno, BEn );
 	if( angle < 0.501*TMath::Pi() && angle > 0.499*TMath::Pi() ) return 0.1; // stopped
 
-	dist = TMath::Abs((double)(thick-depth)/TMath::Cos(angle));
-	Etarg -= GetELoss(Etarg,dist,0,"TT");
+	dist = TMath::Abs( ( thick - depth ) / TMath::Cos( angle ) );
+	Etarg -= GetELoss( Etarg, dist, 0, "TT" );
 
-	if( Etarg < 0 ) return 0.1;
+	if( Etarg < 0.1 ) return 0.1;
 	else return Etarg;
 	
 }
 
 float doppler::GetBEn( float TEn, float Tanno ) {
 
-	// Returns energy of Rn using energy and angle of target
-	double dist, angle;
-
 	// energy at interaction point
-	double Ereac = (float)Eb*(float)Ab - GetELoss((float)Eb*(float)Ab,depth,0,"BT");
+	double Ereac = (float)Eb * (float)Ab;
+	Ereac -= GetELoss( Ereac, contaminant, 0, "BC" );
+	Ereac -= GetELoss( Ereac, depth, 0, "BT" );
+	
+	// Correct for dead layer loss
+	double dist = TMath::Abs( deadlayer / TMath::Cos( GetPTh( Tanno ) ) );
+	double Etarg = TEn + GetELoss( TEn, dist, 1, "TA" );
 
 	// Trace energy loss back through target to get energy at interaction point
-	double Etarg = TEn + GetELoss(TEn,deadlayer,1,"TS"); // correct for dead layer loss first
-	dist = TMath::Abs((double)(thick-depth)/TMath::Cos(GetPTh(Tanno)));
-	Etarg += GetELoss(Etarg,dist,1,"TT");
+	dist = TMath::Abs( ( thick - depth ) / TMath::Cos( GetPTh( Tanno ) ) );
+	Etarg += GetELoss( Etarg, dist, 1, "TT" );
 
 	double Eproj = Ereac - Etarg;
-	if( Eproj < 0. ) return 0.1; // projectile is stopped in target
-	
-	angle = GetBTh(Tanno);
+	if( Eproj < 0.1 ) return 0.1; // projectile is stopped in target
+
+	double angle = GetBTh( Tanno );
 	if( angle < 0.501*TMath::Pi() && angle > 0.499*TMath::Pi() ) return 0.1; // stopped
 
-	dist = TMath::Abs((double)(thick-depth)/TMath::Cos(angle));
-	Eproj -= GetELoss(Eproj,dist,0,"BT");
+	dist = TMath::Abs( ( thick - depth ) / TMath::Cos( angle ) );
+	Eproj -= GetELoss( Eproj, dist, 0, "BT" );
 
-	if( Eproj < 0 ) return 0.1;
+	if( Eproj < 0.1 ) return 0.1;
 	else return Eproj;
 	
 }
 
 float doppler::GetELoss( float Ei, float dist, int opt, string combo ) {
 
-	// Returns the energy loss at a given initial energy and distance travelled in the target or Si dead layer
+	// Returns the energy loss at a given initial energy and distance travelled in the target or Al dead layer
 	// Ei is the initial energy in keV
 	// dist is the distance travelled in the target in mg/cm2
 	// opt = 0 calculates normal energy loss as particle moves through target (default)
 	// opt = 1 calculates energy increase, i.e. tracing particle back to reaction point
-	// combo = "BT", "TT", "BS" or "TS" for the beam in target, target in target,
-	// beam in Si or target in Si, respectively.
-	// The energy dependent function is a phenomenological considering electronic + nuclear
-	// Each function is of the form: ln(StopPow) = a + b*ln(x-d) + c*ln(x-d)^2 
+	// combo = "BT", "TT", "BA" or "TA" for the beam in target, target in target,
+	// beam in Al or target in Al, respectively.
 	// Stopping power data is taken from SRIM the output files must be placed in the './srim/'
-	// folder with the format 62Fe_109Ag.txt, 62Fe_Si.txt, 109Ag_109Ag.txt or 109Ag_Si.txt,
-	// for combo = "BT", "TT", "BS" and "TS", repsectively.
+	// folder with the format 62Fe_109Ag.txt, 62Fe_Al.txt, 109Ag_109Ag.txt or 109Ag_Al.txt,
+	// for combo = "BT", "TT", "BA" and "TA", repsectively.
 	
 	double dedx = 0;
 	int Nmeshpoints = 20; // number of steps to take in integration
 	double dx = dist/(double)Nmeshpoints;
-	double E[1] = {Ei};
+	double E = Ei;
 	
-	for( int i=0; i<Nmeshpoints; i++ ){
+	for( int i = 0; i < Nmeshpoints; i++ ){
 
-		if( E[0] < 1000. ) break; // when we fall below 1 MeV we assume maximum energy loss
+		if( E < 1000. ) break; // when we fall below 1 MeV we assume maximum energy loss
 
-		if( combo == "BT" ) dedx = SP_function( E, BTELoss_pars );
-		else if( combo == "TT" ) dedx = SP_function( E, TTELoss_pars );
-		else if( combo == "BS" ) dedx = SP_function( E, BSELoss_pars );
-		else if( combo == "TS" ) dedx = SP_function( E, TSELoss_pars );
+		if( combo == "BT" ) dedx = gSP[0]->Eval(E);
+		else if( combo == "TT" ) dedx = gSP[1]->Eval(E);
+		else if( combo == "BA" ) dedx = gSP[2]->Eval(E);
+		else if( combo == "TA" ) dedx = gSP[3]->Eval(E);
+		else if( combo == "BC" ) dedx = gSP[4]->Eval(E);
+		else if( combo == "TC" ) dedx = gSP[5]->Eval(E);
 
-		if(opt==1) {
-			E[0] += 1000.*dedx*dx;
-		} else { 
-			E[0] -= 1000.*dedx*dx;
-		}
+		if( opt == 1 )
+			E += 1000.*dedx*dx;
+
+		else
+			E -= 1000.*dedx*dx;
 		
 	}
 	
-	//if( opt == 0 && combo == "BT" ) cout << "Eloss = " << (Ei - E[0]) << endl;
+	//if( opt == 0 && combo == "BT" ) cout << "Eloss = " << Ei - E << endl;
 	
-	if( opt == 0 ) return (Ei - E[0]);
-	else return (E[0] - Ei);
+	if( opt == 0 ) return Ei - E;
+	else return E - Ei;
 
 }
 
 float doppler::GammaAng( float PTh, float PPhi, float GTh, float GPhi ) {
-
+	
 	// Returns angle between particle and gamma	in radians
-
+	
 	double costheta = sin(PTh)*sin(GTh)*cos(PPhi-GPhi)+(cos(PTh)*cos(GTh));
 	
-	return acos( costheta );
+	return TMath::ACos( costheta );
+	
+}
+
+float doppler::Beta( float Ek, float m ) {
+	
+	// Returns beta after Taylor expansion to third order
+	
+	double beta2 = -0.5 * m + TMath::Sqrt( m * ( 0.25 * m + 1.5 * Ek ) );
+	beta2 /= 0.75 * m;
+	
+	return TMath::Sqrt( beta2 );
 	
 }
 
@@ -607,7 +632,8 @@ float doppler::DC( float PEn, float PTh, float PPhi, float GTh, float GPhi, floa
 	// Returns Doppler correction factor for given particle and gamma
 	// angular combination.  Factors in detected particle energy too
 	
-	double beta = TMath::Sqrt( 2*PEn / (A*931494.028) );
+	double beta = Beta( PEn, A * u_mass() );
+//	double beta = TMath::Sqrt( 2.0*PEn / ( A * u_mass() ) );
 	double gamma = 1. / TMath::Sqrt( 1. - beta*beta );
 	double costheta = sin(PTh)*sin(GTh)*cos(PPhi-GPhi)+(cos(PTh)*cos(GTh));
 	
@@ -623,7 +649,7 @@ float doppler::DC_elec( float een, float PEn, float PTh, float PPhi, float GTh, 
 	// Returns Doppler correction factor for given particle and electron
 	// angular combination.  Factors in detected particle energy too
 	
-	double beta = TMath::Sqrt( 2*PEn / (A*931494.028) );
+	double beta = TMath::Sqrt( 2*PEn / ( A * u_mass() ) );
 	double mass_e = 511.;
 	double gamma = 1. / TMath::Sqrt( 1. - beta*beta );
 	double costheta = sin(PTh)*sin(GTh)*cos(PPhi-GPhi)+(cos(PTh)*cos(GTh));

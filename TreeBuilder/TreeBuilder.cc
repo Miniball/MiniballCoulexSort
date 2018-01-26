@@ -131,13 +131,13 @@ int main(int argc, char* argv[]) {
 	TTree* g_clx = new TTree( "g_clx", "g_clx" );
 	g_clx->Branch( "mbevts", "mbevts", &write_mb_evts );
 	// ------------------------------------------------------------------------ //
- 
-  
+	
+	
 	// ------------------------------------------------------------------------ //
 	// Hard-coded parameters... TODO read in from file?
 	// ------------------------------------------------------------------------ //
 	// How many ticks need to align the prompt, in ticks.
-	Double_t dtAdc[4] = {-5.1,-10.0,-4.8,-4.1};  // IS628
+	//Double_t dtAdc[4] = {-5.1,-10.0,-4.8,-4.1};  // IS628
 	//Double_t dtAdc[4] = {-5.1,-10.0,-5.2,-6.1};  // IS547
 	//Double_t dtAdc[4] = {-6.2,-11.4,-5.2,-6.8};  // IS562
 	//Double_t dtAdc[4] = {-4.9,-10.2,-5.3,-3.8};  // IS546
@@ -145,25 +145,34 @@ int main(int argc, char* argv[]) {
 	//Double_t dtAdc[4] = {14.0,15.5,16.5,8.0};  // IS558
 	//Double_t dtAdc[4] = {14.0,15.5,16.5,8.0};  // IS553
 	//Double_t dtAdc[4] = {35.0,38.0,40.0,30.0};  // IS553 - timestamp corrected
-  
+
 	// IS553
-	Double_t tMinPrompt = -12., tMaxPrompt = 6.;
-	Double_t tMinRandom = 12., tMaxRandom = 30.;
+	Double_t tMinPrompt = -12., tMaxPrompt = 6.;		// 18 ticks
+	Double_t tMinRandom = 8., tMaxRandom = 47.;			// 39 ticks
 	Double_t tMinDelayed = -50., tMaxDelayed = -50.;
  
-	Double_t tMinPromptElectron = -6., tMaxPromptElectron = 6.;
-	Double_t tMinRandomElectron = 18., tMaxRandomElectron = 30.;
+	Double_t tMinPromptElectron = -6., tMaxPromptElectron = 6.;		// 12 ticks
+	Double_t tMinRandomElectron = 7., tMaxRandomElectron = 33.;	// = (39/18)*12 = 26
  
-	Double_t WeightPR = abs(tMinPrompt-tMaxPrompt)/abs(tMinRandom-tMaxRandom);
+	Double_t WeightPR = TMath::Abs( tMinPrompt - tMaxPrompt );
+	WeightPR /= TMath::Abs( tMinRandom - tMaxRandom );
 	
-	if( verbose ) cout << "WeightPR: " << WeightPR << endl;
+	cout << "WeightPR: " << WeightPR << endl;
 
 	Double_t Threshold_CDRing_E[4] = {120.,120.,120.,120.};
 	Double_t Threshold_CDStrip_E[4] = {120.,120.,160.,130.};
 	Double_t Threshold_CDPad_E[4] = {50.,50.,50.,50.};
 	// ------------------------------------------------------------------------ //
  
-
+	
+	// ------------------------------------------------------------------------ //
+	// Hard-coded parameters... Now read from file
+	// ------------------------------------------------------------------------ //
+	// How many ticks need to align the prompt peak for each adc?
+	double dtAdc[4];
+	for( unsigned int i = 0; i < 4; i++ ) dtAdc[i] = Cal->AdcTime(i);
+	
+	
 
 	// ------------------------------------------------------------------------ //
 	// Variables
