@@ -2,8 +2,9 @@
 .PHONY: clean all
 
 ROOTCFLAGS	:= $(shell root-config --cflags)
-ROOTLIBS    := $(shell root-config --libs)
-ROOTVER     := $(shell root-config --version | head -c1)
+ROOTINC		:= $(shell root-config --prefix)/include
+ROOTLIBS	:= $(shell root-config --libs)
+ROOTVER		:= $(shell root-config --version | head -c1)
 
 ifeq ($(ROOTVER),5)
 	ROOTDICT  := rootcint
@@ -14,8 +15,9 @@ else
 endif
 
 
-BIN_DIR    = ../bin
+BIN_DIR     = ../bin
 LIB_DIR     = ../lib
+COMMON_DIR  = ../common
 MBEVTS_DIR  = ../mbevts
 
 LIBS        := $(ROOTLIBS) -L$(LIB_DIR)
@@ -25,7 +27,7 @@ CC          := $(shell root-config --cc)
 CPP         := $(shell root-config --cxx)
 CFLAGS      := -pedantic -Wall -g -O3 $(ROOTCFLAGS) -fPIC -Wno-unused-variable -Wno-long-long
 
-INCLUDES  = -I$(MBEVTS_DIR) -I./
+INCLUDES  = -I$(MBEVTS_DIR) -I$(COMMON_DIR) -I$(ROOTINC) -I./
 
 all: MntAna
 
@@ -43,22 +45,22 @@ MntAna: MntAna.cc $(OBJECTS) ExpDefs.hh
 	cp MntAna $(BIN_DIR)/
 
 g_clx.o: g_clx.cc g_clx.hh
-	$(CPP) $(CFLAGS) -c $< -o $@
+	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(MBEVTS_DIR)/mbevts.o: $(MBEVTS_DIR)/mbevts.cc $(MBEVTS_DIR)/mbevts.hh
-	$(CPP) $(CFLAGS) -c $< -o $@
+	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 doppler.o: doppler.cc doppler.hh
-	$(CPP) $(CFLAGS) -c $< -o $@
+	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 hists.o: hists.cc hists.hh
-	$(CPP) $(CFLAGS) -c $< -o $@
+	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 MBGeometry.o: MBGeometry.cc MBGeometry.hh
-	$(CPP) $(CFLAGS) -c $< -o $@
+	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 SpedeGeometry.o: SpedeGeometry.cc SpedeGeometry.hh
-	$(CPP) $(CFLAGS) -c $< -o $@
+	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
 	rm -f $(MBEVTS_DIR)/*.o *.o
