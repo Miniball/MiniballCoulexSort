@@ -162,6 +162,16 @@ int main(int argc, char* argv[]) {
 	Double_t Threshold_CDRing_E[4] = {120.,120.,120.,120.};
 	Double_t Threshold_CDStrip_E[4] = {120.,120.,160.,130.};
 	Double_t Threshold_CDPad_E[4] = {50.,50.,50.,50.};
+	
+	// Crap segments list (i.e. those that need to be vetoed)
+	// Counting from 0 to 167, i.e. including cores - clu*21 + core*7 + seg
+	bool veto_gamma = false;
+	unsigned int gSeg;
+	vector< unsigned int > dead_segments;
+	dead_segments.push_back( 106 ); // clu 5, core 0, seg 1 = 18A1
+	dead_segments.push_back( 107 ); // clu 5, core 0, seg 2 = 18A2
+	
+	
 	// ------------------------------------------------------------------------ //
  
 	
@@ -171,8 +181,6 @@ int main(int argc, char* argv[]) {
 	// How many ticks need to align the prompt peak for each adc?
 	double dtAdc[4];
 	for( unsigned int i = 0; i < 4; i++ ) dtAdc[i] = Cal->AdcTime(i);
-	
-	
 
 	// ------------------------------------------------------------------------ //
 	// Variables
@@ -261,6 +269,8 @@ int main(int argc, char* argv[]) {
 	free_dgf->GetXaxis()->SetTitle("Number of free DGF's");
 	TH1F* hABmult = new TH1F("hABmult","hABmult",4,-0.5,3.5);
 	hABmult->GetXaxis()->SetTitle("Addback multiplicity");
+	TH1F* cd_debug = new TH1F("cd_debug","cd_debug",4,-0.5,3.5);
+	cd_debug->GetXaxis()->SetTitle("CD debugging");
 
 	// time differences
 	TH1F* tdiff_gp = new TH1F("tdiff_gp","tdiff_gp",201,-100.5,100.5);
@@ -366,9 +376,16 @@ int main(int argc, char* argv[]) {
 	T_BeamDump->GetXaxis()->SetTitle("Time of the Beam Dump [s]");
 
 	// particle-spectra
+	TDirectory *cd_dir = outfile->mkdir("CD_spec");
+	cd_dir->cd();
 	TH2F *CD_front_energy[4], *CD_front_energy_cal[4];
 	TH2F *CD_back_energy[4], *CD_back_energy_cal[4];
-	TH2F *CD_front_back[4];
+	TH2F *CD_front_back[4][j];
+	vector< string > cd_hname;
+	cd_hname.push_back( "CD_front_back_%d_1v1" );
+	cd_hname.push_back( "CD_front_back_%d_1vn" );
+	cd_hname.push_back( "CD_front_back_%d_nv1" );
+	cd_hname.push_back( "CD_front_back_%d_nvn" );
 	
 	for( i = 0; i < 4; i++ ) {
 			
@@ -386,21 +403,32 @@ int main(int argc, char* argv[]) {
 		CD_back_energy_cal[i]->GetXaxis()->SetTitle("Strip number");
 		CD_back_energy_cal[i]->GetYaxis()->SetTitle("Energy particle [MeV]");
 		
-		CD_front_back[i] = new TH2F(Form("CD_front_back_%d",i),Form("CD_front_back_%d",i),PBINS,PMIN,PMAX,PBINS,PMIN,PMAX);
-		CD_front_back[i]->GetXaxis()->SetTitle("Front Energy particle [MeV]");
-		CD_front_back[i]->GetYaxis()->SetTitle("Back Energy particle [MeV]");
+		for( j = 0; j < 4; j++ ) {
+
+			CD_front_back[i][j] = new TH2F(Form(cd_hname[j].c_str(),i),Form(cd_hname[j].c_str(),i),PBINS,PMIN,PMAX,PBINS,PMIN,PMAX);
+			CD_front_back[i][j]->GetXaxis()->SetTitle("Front Energy particle [MeV]");
+			CD_front_back[i][j]->GetYaxis()->SetTitle("Back Energy particle [MeV]");
+		
+		}
 		
 	}
+	
+	gDirectory->cd("/");
 
 	// Ionisation chamber
+	TDirectory *ic_dir = outfile->mkdir("IC_spec");
+	ic_dir->cd();
 	TH2F* dEE = NULL;
 	if( ionch ) dEE = new TH2F( "dEE", "ionisation chamber;E_{rest};delta-E", 4096, -0.5, 4095.5, 4096, -0.5, 4095.5 );
+	gDirectory->cd("/");
 
 	// CD-pad detector, freely triggered
 	TH1F *padE_sum = NULL, *padE[4], *padE_cal[4];
 	TH2F *cd_dEE_sum, *cd_dEE_anti, *cd_dEE[4];
 	if( cdpad ) {
 	
+		TDirectory *pad_dir = outfile->mkdir("PAD_spec");
+		pad_dir->cd();
 		padE_sum = new TH1F( "padE_sum", "Energy on the PAD detector;Energy [keV];", 4096, -0.5, 4095.5 );
 		cd_dEE_sum = new TH2F( "cd_dEE_sum", "dE-E of the CD-PAD;Energy [keV];Energy [keV];", 4096, -2., 16382., 4096, -2., 16382. );
 		cd_dEE_anti = new TH2F( "cd_dEE_anti", "dE-E of the CD-PAD not in coincidence with same quadrant;Energy [keV];Energy [keV];", 4096, -2., 16382., 4096, -2., 16382. );
@@ -412,7 +440,9 @@ int main(int argc, char* argv[]) {
 			cd_dEE[i] = new TH2F( Form("cd_dEE%d",i), "dE-E of the CD-PAD;Energy [keV];Energy [keV];", 4096, -2., 16382., 4096, -2., 16382. );
 
 		}
-		
+
+		gDirectory->cd("/");
+
 	}
 	// ------------------------------------------------------------------------ //
 
@@ -539,6 +569,7 @@ int main(int argc, char* argv[]) {
 
 			ab_evt = false;
 			ab_mul = 0;
+			veto_gamma = false;
 			dgf_num = event->Dgf(j)->ModuleNumber();
 			dgf_ch  = event->Dgf(j)->Channel();
 			dgf_en  = event->Dgf(j)->Energy();
@@ -580,6 +611,22 @@ int main(int argc, char* argv[]) {
 					
 						// We don't care if it's the same event
 						if( k == j ) continue;
+						
+						// Get global segment number (0-167)
+						gSeg = ( dgf_num / 2 ) * 7;
+						if( dgf_num2 % 2 == 0 ) gSeg += dgf_ch2;
+						else gSeg += dgf_ch2+3;
+						
+						// Is it a crap segment?
+						for( unsigned int ds = 0; ds < dead_segments.size(); ds++ ) {
+							
+							if( gSeg == dead_segments[ds] ) {
+								
+								veto_gamma = true;
+								
+							}
+
+						}
 
 						// time difference between cores
 						if( dgf_ch2 == 0 && dgf_num2 % 2 == 0 )
@@ -601,6 +648,9 @@ int main(int argc, char* argv[]) {
 					} // k
 
 					// Found highest energy segment
+					
+					// Do the veto of crap segments
+					if( veto_gamma ) continue;
 
 					// Check previous gammas
 					for( l = 0; l < gen_array.size(); l++ ) {
@@ -817,9 +867,10 @@ int main(int argc, char* argv[]) {
 
 				Chan_back.push_back( cd_stripid[adc_num][0] );
 				Ener_back.push_back( cd_stripenergy[adc_num][0] );
+				
+				CD_front_back[adc_num][0]->Fill( cd_ringenergy[adc_num][0]/1000., cd_stripenergy[adc_num][0]/1000. );
 
-				CD_front_back[adc_num]->Fill( cd_ringenergy[adc_num][0]/1000., cd_stripenergy[adc_num][0]/1000. );
-
+				cd_debug->Fill(0);
 				CounterAdcCDFired[adc_num]++;
 
 			} // 1 vs. 1
@@ -854,7 +905,7 @@ int main(int argc, char* argv[]) {
 
 					}
 
-					CD_front_back[adc_num]->Fill(
+					CD_front_back[adc_num][1]->Fill(
 						cd_ringenergy[adc_num][0]/1000., cd_stripenergy[adc_num][k]/1000. );
 
 				} // k
@@ -871,6 +922,7 @@ int main(int argc, char* argv[]) {
 				Chan_back.push_back( StripNum );
 				Ener_back.push_back( StripEnergy );
 
+				cd_debug->Fill(1);
 				CounterAdcCDFired[adc_num]++;
 
 			} // 1 vs. N
@@ -905,7 +957,7 @@ int main(int argc, char* argv[]) {
 
 					}
 
-					CD_front_back[adc_num]->Fill(
+					CD_front_back[adc_num][2]->Fill(
 						cd_ringenergy[adc_num][k]/1000., cd_stripenergy[adc_num][0]/1000. );
 
 				} // k
@@ -922,6 +974,7 @@ int main(int argc, char* argv[]) {
 				Chan_front.push_back( RingNum );
 				Ener_front.push_back( RingEnergy );
 
+				cd_debug->Fill(2);
 				CounterAdcCDFired[adc_num]++;
 
 			} // N vs. 1
@@ -942,6 +995,9 @@ int main(int argc, char* argv[]) {
 					RingEnergy = 0;
 					for( k = 0; k < cd_ringenergy[adc_num].size(); k++ ) {
 
+						CD_front_back[adc_num][3]->Fill(
+							cd_ringenergy[adc_num][k]/1000., cd_stripenergy[adc_num][0]/1000. );
+						
 						// Check highest energy that we've not already used
 						if( cd_ringenergy[adc_num][k] > RingEnergy && !cd_ringused[adc_num][k] ) {
 
@@ -977,6 +1033,7 @@ int main(int argc, char* argv[]) {
 					Chan_front.push_back( RingNum );
 					Ener_front.push_back( RingEnergy );
 
+					cd_debug->Fill(3);
 					CounterAdcCDFired[adc_num]++;
 
 				} // while RingMult

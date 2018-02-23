@@ -184,7 +184,7 @@ int main(int argc, char* argv[]) {
 			dgf_num = event->Dgf(j)->ModuleNumber();
 			dgf_ch  = event->Dgf(j)->Channel();
 			dgf_en  = event->Dgf(j)->Energy();
-				
+			
 			if( 0 <= dgf_num && dgf_num < 48 && 0 <= dgf_ch && dgf_ch < 4 ) {
 
 				GammaEnergy = Cal->DgfEnergy( dgf_num, dgf_ch, dgf_en );
