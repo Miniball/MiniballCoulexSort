@@ -1,0 +1,68 @@
+\hypertarget{class_particle_range}{}\section{Particle\+Range Class Reference}
+\label{class_particle_range}\index{Particle\+Range@{Particle\+Range}}
+
+
+Class for reading and interpolating range data from \textquotesingle{}zrange\textquotesingle{}.  
+
+
+
+
+{\ttfamily \#include $<$Particle\+Range.\+hh$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_particle_range_a4273029166d7a6220bfd1728b6c18f69}\label{class_particle_range_a4273029166d7a6220bfd1728b6c18f69}} 
+\hyperlink{class_particle_range_a4273029166d7a6220bfd1728b6c18f69}{Particle\+Range} ()
+\begin{DoxyCompactList}\small\item\em Initialize values of Emin, Emax, Estep. \end{DoxyCompactList}\item 
+void \hyperlink{class_particle_range_ac1e0da5aca629369e93caf8e883da624}{Read} (const std\+::string \&filename)
+\begin{DoxyCompactList}\small\item\em Read an output file of zrange. \end{DoxyCompactList}\item 
+float \hyperlink{class_particle_range_a433dead3f85fe19ee1675934b65acf3f}{Get\+Range} (int energy) const
+\begin{DoxyCompactList}\small\item\em Get the range for a given particle energy. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class for reading and interpolating range data from \textquotesingle{}zrange\textquotesingle{}. 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_particle_range_a433dead3f85fe19ee1675934b65acf3f}\label{class_particle_range_a433dead3f85fe19ee1675934b65acf3f}} 
+\index{Particle\+Range@{Particle\+Range}!Get\+Range@{Get\+Range}}
+\index{Get\+Range@{Get\+Range}!Particle\+Range@{Particle\+Range}}
+\subsubsection{\texorpdfstring{Get\+Range()}{GetRange()}}
+{\footnotesize\ttfamily float Particle\+Range\+::\+Get\+Range (\begin{DoxyParamCaption}\item[{int}]{energy }\end{DoxyParamCaption}) const}
+
+
+
+Get the range for a given particle energy. 
+
+If the energy is too high, 1m is returned. If it is to low, 0 is returned.
+
+\begin{DoxyReturn}{Returns}
+The range for this particle energy. 
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em energy} & Particle energy in keV. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_particle_range_ac1e0da5aca629369e93caf8e883da624}\label{class_particle_range_ac1e0da5aca629369e93caf8e883da624}} 
+\index{Particle\+Range@{Particle\+Range}!Read@{Read}}
+\index{Read@{Read}!Particle\+Range@{Particle\+Range}}
+\subsubsection{\texorpdfstring{Read()}{Read()}}
+{\footnotesize\ttfamily void Particle\+Range\+::\+Read (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filename }\end{DoxyParamCaption})}
+
+
+
+Read an output file of zrange. 
+
+These files have three columns\+: particle energy \mbox{[}MeV\mbox{]}, range \mbox{[}um\mbox{]}, and range uncertainty \mbox{[}um\mbox{]}. The zrange data are interpolated in Estep steps between Emin and Emax. 
+\begin{DoxyParams}{Parameters}
+{\em filename} & The name of the file to read. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Med\+To\+Root/Particle\+Range.\+hh\item 
+Med\+To\+Root/Particle\+Range.\+cc\end{DoxyCompactItemize}

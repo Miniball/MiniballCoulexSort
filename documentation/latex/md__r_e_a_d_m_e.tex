@@ -1,0 +1,44 @@
+Analysis code for M\+I\+N\+I\+B\+A\+LL experiments at I\+S\+O\+L\+DE. This code is designed to take the raw med data files and convert them to R\+O\+OT trees, then subsequently analyse them to produce particle-\/gated, Doppler corrected spectra. It is broken down in to 3 parts\+:
+
+\subsubsection*{Med\+To\+Root}
+
+Based on (read\+: essentially a copy of) code from Vinzenz Bilstein. Written originally for transfer expeirments with T-\/\+R\+EX, adapted for Coulex with C-\/\+R\+EX and now finally for Coulex with S\+P\+E\+DE or with the standard Coulex configuration.
+
+\subsubsection*{Tree\+Builder}
+
+Written by Liam Gaffney, inpsired by initial work by Andres Illan Sison. Daniel Cox implemented S\+P\+E\+DE into this code performed a lot of testing. This takes the converted R\+O\+OT file and build an \textquotesingle{}mbevts\textquotesingle{} tree of particle-\/gamma(-\/gamma) events that can be used for analysing Coulex events.
+
+\subsubsection*{Tree\+Ana}
+
+The g\+\_\+clx part of this is based on codes by Oliver Niedemeier, with contributions by Nigel Warr and Michael Albers. However, it has been completely rewritten by Liam Gaffney to include separate classes for filling histograms and performing Doppler correction. There is still much work to do and the current iteration is being developed by Liam Gaffney (C\+E\+RN) and Daniel Cox (University of Jyväskylä) for the S\+P\+E\+DE parts.
+
+\subsubsection*{Basic process for analysis}
+
+To generate initial root file 
+\begin{DoxyCode}
+cd MedToRoot
+make
+./MedToRoot -mf data\_file.med - sf setting\_file.dat -so
+\end{DoxyCode}
+ data\+\_\+file\+\_\+\+Scaler.\+root \& data\+\_\+file\+\_\+\+Source.\+root will be created.
+
+Scaler file is needed during the experiment and Source file is needed for analysis.
+
+
+\begin{DoxyCode}
+cd TreeBuilder
+make
+./TreeBuilder -i data\_file\_Source1.root [data\_file\_Source2.root ...] -o Output\_tree.root -c
+       calibration\_file.dat
+\end{DoxyCode}
+ This step takes a number of possible flags\+: \mbox{[}-\/s \+: singles\mbox{]} \mbox{[}-\/addback \+: addback\mbox{]} \mbox{[}-\/crex \+: C\+R\+EX\mbox{]} \mbox{[}-\/spede \+: S\+P\+E\+DE\mbox{]} \mbox{[}-\/cdpad \+: C\+D-\/\+P\+AD\mbox{]} \mbox{[}-\/ionch \+: Ion\+Chamber\mbox{]} \mbox{[}-\/vl \+: verbose\mbox{]}
+
+Generated file can now be used as input to final analysis code
+
+
+\begin{DoxyCode}
+cd ../TreeAna
+make
+./g\_clx -i Output\_tree.root -o Final\_Output\_hists.root
+\end{DoxyCode}
+ 

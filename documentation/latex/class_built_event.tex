@@ -1,0 +1,98 @@
+\hypertarget{class_built_event}{}\section{Built\+Event Class Reference}
+\label{class_built_event}\index{Built\+Event@{Built\+Event}}
+Inheritance diagram for Built\+Event\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_built_event}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_built_event_a6191c8fda84fcc3ab2ce774db393db18}\label{class_built_event_a6191c8fda84fcc3ab2ce774db393db18}} 
+{\bfseries Built\+Event} (unsigned short, \hyperlink{class_adc_sub_event}{Adc\+Sub\+Event} $\ast$, long long, bool, bool, bool)
+\item 
+\mbox{\Hypertarget{class_built_event_ae9580318d1344acfc33d4e603d31f058}\label{class_built_event_ae9580318d1344acfc33d4e603d31f058}} 
+{\bfseries Built\+Event} (unsigned short, unsigned short, \hyperlink{class_dgf_sub_event}{Dgf\+Sub\+Event} $\ast$)
+\item 
+\mbox{\Hypertarget{class_built_event_a332515d3db4d4e0b324a4584090d78e3}\label{class_built_event_a332515d3db4d4e0b324a4584090d78e3}} 
+void {\bfseries Clear\+Evt} ()
+\item 
+\mbox{\Hypertarget{class_built_event_a3f521359cd9e884f3eaba119ef8f6102}\label{class_built_event_a3f521359cd9e884f3eaba119ef8f6102}} 
+void {\bfseries Add\+Particle} (unsigned short, \hyperlink{class_adc_sub_event}{Adc\+Sub\+Event} $\ast$, long long, bool, bool, bool)
+\item 
+\mbox{\Hypertarget{class_built_event_ae7e96358bcd4b95f4908ed0eff1be292}\label{class_built_event_ae7e96358bcd4b95f4908ed0eff1be292}} 
+void {\bfseries Add\+Gamma} (unsigned short, unsigned short, \hyperlink{class_dgf_sub_event}{Dgf\+Sub\+Event} $\ast$, unsigned short)
+\item 
+\mbox{\Hypertarget{class_built_event_a4c1868b1cd5d9e2e143db1feebe51b40}\label{class_built_event_a4c1868b1cd5d9e2e143db1feebe51b40}} 
+void {\bfseries Add\+Timing} (long long Ebis\+Time, long long T1\+Time, long long Super\+Cycle\+Time)
+\item 
+\mbox{\Hypertarget{class_built_event_ad3dfcf9a541516c8c9bc391ca91e8748}\label{class_built_event_ad3dfcf9a541516c8c9bc391ca91e8748}} 
+void {\bfseries Event\+Number} (long long Event\+Number)
+\item 
+\mbox{\Hypertarget{class_built_event_a71a6879f3cb5a2d2714c17152c569c41}\label{class_built_event_a71a6879f3cb5a2d2714c17152c569c41}} 
+void {\bfseries Sub\+Event\+Number} (unsigned short Sub\+Event\+Number)
+\item 
+\mbox{\Hypertarget{class_built_event_a1e50f0e800d504e04dbf62ddd9ba9b0d}\label{class_built_event_a1e50f0e800d504e04dbf62ddd9ba9b0d}} 
+size\+\_\+t {\bfseries Number\+Of\+Adcs} ()
+\item 
+\mbox{\Hypertarget{class_built_event_a5c01e6c2ada2435c6d7309dc7cb2fa5c}\label{class_built_event_a5c01e6c2ada2435c6d7309dc7cb2fa5c}} 
+size\+\_\+t {\bfseries Number\+Of\+Dgfs} ()
+\item 
+\mbox{\Hypertarget{class_built_event_aac0e9789b3e193a60c28a8c7643c37c1}\label{class_built_event_aac0e9789b3e193a60c28a8c7643c37c1}} 
+long long {\bfseries Ebis\+Time} ()
+\item 
+\mbox{\Hypertarget{class_built_event_adbe7cecefb72c1429bb46fb38839b6ed}\label{class_built_event_adbe7cecefb72c1429bb46fb38839b6ed}} 
+long long {\bfseries T1\+Time} ()
+\item 
+\mbox{\Hypertarget{class_built_event_a3bcfcdef39836deeae613b1feadce8ca}\label{class_built_event_a3bcfcdef39836deeae613b1feadce8ca}} 
+long long {\bfseries Super\+Cycle\+Time} ()
+\item 
+\mbox{\Hypertarget{class_built_event_a699e90b7621ae7e8e139c0f9f7ac36df}\label{class_built_event_a699e90b7621ae7e8e139c0f9f7ac36df}} 
+long long {\bfseries Event\+Number} ()
+\item 
+\mbox{\Hypertarget{class_built_event_a634ff74c48a2414782e5b55a606d9c02}\label{class_built_event_a634ff74c48a2414782e5b55a606d9c02}} 
+unsigned short {\bfseries Sub\+Event\+Number} ()
+\item 
+\mbox{\Hypertarget{class_built_event_aa031a6f9f75054f4bcd34a5ae0434211}\label{class_built_event_aa031a6f9f75054f4bcd34a5ae0434211}} 
+\hyperlink{class_adc_data}{Adc\+Data} $\ast$ {\bfseries Adc} (size\+\_\+t Index)
+\item 
+\mbox{\Hypertarget{class_built_event_ad0baf9c54126df4ef5be7110283d1a4d}\label{class_built_event_ad0baf9c54126df4ef5be7110283d1a4d}} 
+\hyperlink{class_dgf_data}{Dgf\+Data} $\ast$ {\bfseries Dgf} (size\+\_\+t Index)
+\item 
+\mbox{\Hypertarget{class_built_event_a264f67ad32d955fa2ff389c923bc69b0}\label{class_built_event_a264f67ad32d955fa2ff389c923bc69b0}} 
+bool {\bfseries Coincident} (\hyperlink{class_global_settings}{Global\+Settings} $\ast$, long long)
+\item 
+\mbox{\Hypertarget{class_built_event_af5244b5b93aa8e0adfcaf3fa70be5617}\label{class_built_event_af5244b5b93aa8e0adfcaf3fa70be5617}} 
+long long {\bfseries Get\+Time} ()
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_built_event_a03d3a46cd8ffa584750f814895a36719}\label{class_built_event_a03d3a46cd8ffa584750f814895a36719}} 
+long long {\bfseries ebis\+Time}
+\item 
+\mbox{\Hypertarget{class_built_event_a7a57667e365324e20b3cd27411bf27a4}\label{class_built_event_a7a57667e365324e20b3cd27411bf27a4}} 
+long long {\bfseries t1\+Time}
+\item 
+\mbox{\Hypertarget{class_built_event_af4382a0a57b77db32d3934fa2764109f}\label{class_built_event_af4382a0a57b77db32d3934fa2764109f}} 
+long long {\bfseries super\+Cycle\+Time}
+\item 
+\mbox{\Hypertarget{class_built_event_a2492458c6571f5bbbb4d4083b380bf33}\label{class_built_event_a2492458c6571f5bbbb4d4083b380bf33}} 
+long long {\bfseries event\+Number}
+\item 
+\mbox{\Hypertarget{class_built_event_aee8cf8caf851007431c754ae7a176d01}\label{class_built_event_aee8cf8caf851007431c754ae7a176d01}} 
+unsigned short {\bfseries sub\+Event\+Number}
+\item 
+\mbox{\Hypertarget{class_built_event_adeb272a29e4b64150197eb14d8f99d9c}\label{class_built_event_adeb272a29e4b64150197eb14d8f99d9c}} 
+vector$<$ \hyperlink{class_adc_data}{Adc\+Data} $>$ {\bfseries adc\+Data}
+\item 
+\mbox{\Hypertarget{class_built_event_acec847a035bef94b9820e31d1d1468ee}\label{class_built_event_acec847a035bef94b9820e31d1d1468ee}} 
+vector$<$ \hyperlink{class_dgf_data}{Dgf\+Data} $>$ {\bfseries dgf\+Data}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Med\+To\+Root/Built\+Event.\+hh\item 
+Med\+To\+Root/Built\+Event.\+cc\end{DoxyCompactItemize}
