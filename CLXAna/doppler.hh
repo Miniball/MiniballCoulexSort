@@ -24,6 +24,10 @@ using namespace std;
 //# include "ExpDefs.hh"
 //#endif
 
+/// The doppler class has a whole suite of functions for performing the
+/// Doppler correction, including: calculating kinematics, energy loss,
+/// particle gating, gamma-ray angles, particle angles, etc.
+
 class doppler : public TObject {
 
 	public:

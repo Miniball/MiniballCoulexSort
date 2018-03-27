@@ -16,6 +16,10 @@
 
 using namespace std;
 
+/// A class to read in the calibration file in ROOT's TConfig format.
+/// Each ADC and DGF channel can have offset, gain and quadratic terms.
+/// There is potential to include the demux of T/C-REX in here too.
+
 class Calibration {
 
 public:

@@ -30,6 +30,14 @@
 #endif
 
 void g_clx::Loop( string outputfilename ) {
+	
+	/// This is the main logic routine for sorting the data.
+	/// It shouldn't really be played with, except there are still some
+	/// harcoded values that don't really make sense anymore.
+	/// The ones that are useful will be moved to the config file/input
+	/// and the ones that aren't will be deleted.
+	/// You will also find the Miniball cluster angles hardcoded here too.
+	/// They will eventually be moved to the TreeBuilder stage.
 
 	if( fChain == 0 ) return;
 

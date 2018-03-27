@@ -23,6 +23,14 @@ using namespace std;
 
 using namespace std;
 
+
+/// The hists class is used to define all histograms for the analysis.
+/// Crucially it defines a set of functions to be called, rather than
+/// filling each histogram individually with every call in g_clx::Loop.
+/// This has the advantage of not repeating fill commands and therefore
+/// reducing the potential for copy/paste errors.
+/// Please try to use these functions as much as is reasonably possible.
+
 class hists {
 
 	// Declare histos : 

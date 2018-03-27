@@ -11,6 +11,8 @@ void doppler::ExpDefs( int Zb_, float Ab_, int Zt_, float At_, float Eb_, float 
 						float depth_, float cddist_, float cdoffset_, float deadlayer_, float contaminant_,
 						float spededist_, TCutG *Bcut_, TCutG *Tcut_ ) {
 
+	/// Initialisation of experimental definitions from command line of config file
+	
 	Zb = Zb_;
 	Ab = Ab_;
 	Zt = Zt_;
@@ -33,6 +35,8 @@ void doppler::ExpDefs( int Zb_, float Ab_, int Zt_, float At_, float Eb_, float 
 
 bool doppler::stoppingpowers( bool BT, bool TT, bool BA, bool TA, bool BC, bool TC ) {
 
+	/// Initialisation of stopping powers
+	
 	bool success = true;
 	
 	for( int i = 0; i < 6; i++ )
@@ -51,6 +55,9 @@ bool doppler::stoppingpowers( bool BT, bool TT, bool BA, bool TA, bool BC, bool 
 
 bool doppler::stoppingpowers( string opt ) {
 	 
+	/// Open stopping power files and make TGraphs of data
+	/// naming convention of files...
+	
 	string gElName[110] = {
 		"H","He","Li","Be","B","C","N","O","F","Ne","Na","Mg",
 		"Al","Si","P","S","Cl","Ar","K","Ca","Sc","Ti","V","Cr",
@@ -196,9 +203,13 @@ bool doppler::stoppingpowers( string opt ) {
 
 int doppler::Cut( float PEn, float anno, int quad ) {
 
-	// Check if entry passes any particle gates
-	// Function returns 1 for projectile or 0 for target
-	// -1 is returned if particle is outside of gates
+	/// Check if entry passes any particle gates
+	/// Function returns 1 for projectile or 0 for target
+	/// -1 is returned if particle is outside of gates.
+	/// Graphical cuts are used if they are given in the config file
+	/// or on the command line with the -cut option.
+	/// If not, there are some default polynomials defined here that
+	/// you are welcome to change, but not encouraged to do so.
 
 	int identity = -1;
 	int str = quad*16 + anno;
@@ -218,8 +229,6 @@ int doppler::Cut( float PEn, float anno, int quad ) {
 
 		double a = 349.07, b = -4.997, c = -0.0145;
 		
-		if( Ab < 143 ) a -= 25.;
-
 		if( PEn/1000. <= ( a + b*ang + c*ang*ang ) && anno < 15 )
 
 			identity = 1; // beam
@@ -239,46 +248,7 @@ int doppler::Cut( float PEn, float anno, int quad ) {
 		double a = 497.602, b = -4.67677, c = -0.0274333, l=0;
 		double d = 435.186, e = -7.84811, f = 0.0199164, k=0;
 		double g = 0, h = 0, i = 0, n=0;
-		double ang = GetPTh(anno) * TMath::RadToDeg();
 		
-		if( (int)(Ab+0.5) == 22 ) {
-
-			//need fixing
-			a = 57.706; b = 0.0120384; c = -0.00478394;
-			//d = 20; e = 0.0120384; f = -0.00478394;
-			d = 20; e = 0; f = 0;
-		}
-
-		else if( (int)(Ab+0.5) == 140 && Zb == 60 ) {
-
-			a = 576.308; b = 6.98955; c = -0.462751; l = 0.00418589;
-			d = -123.133; e = 45.6129; f = -1.28252; k = 0.00979219;
-			g = 506.363; h = -6.52989; i = -0.162027; n = 0.00222857;
-
-		}
-
-		else if( (int)(Ab+0.5) == 142 && Zb == 62 ) {
-
-			a	=	786.059;	b	=	-8.20774;	c	=	-0.0760138;	l	=	0.0009756319;
-			d	=	22.8353;	e	=	33.2133;	f	=	-0.955229;	k	=	0.0071980504;
-			g	=	274.263;	h	=	11.925;		i	=	-0.558269;	n	=	0.0048949597;
-
-			//a = 935.41021; b = -9.7672106; c = -0.090456422; l = 0.001161002;
-			//d = 27.174007; e = 39.523827; f = -1.13672251; k = 0.00856568;
-			//g = 326.37297; h = 14.19075; i = -0.66434011; n = 0.005825002;
-
-		}
-
-		else if( Ab == 140 ) {
-
-			// Hack to use strip number instead of angle
-			ang = anno;
-			a = 290.000; b = 8.28043; c = 0.567469;
-			d = 127.447; e = 13.3571; f = 0.415562;
-			g = 44.9824; h = 2.83287; i = 1.10326; 
-
-		}
-
 		if( PEn/1000. <= ( a + b*ang + c*ang*ang + l*ang*ang*ang ) &&
 			PEn/1000. >= ( d + e*ang + f*ang*ang + k*ang*ang*ang ) )
 
@@ -297,9 +267,11 @@ int doppler::Cut( float PEn, float anno, int quad ) {
 
 int doppler::Cut_2p( float PEn1, float anno1, int quad1, float PEn2, float anno2, int quad2 ) {
 
-	// Check if entry passes the 2 particle condition
-	// Return value is 1 if target is p1 or 2 if p2	
-	// -1 is returned if condition is not filled
+	/// Check if entry passes the 2 particle condition
+	/// Return value is 1 if target is p1 or 2 if target is p2
+	/// -1 is returned if condition is not filled
+	/// It calls Cut() twice with each of the two particles passed to this function.
+	/// If one of them is a particle and one of them is a target, then you get a good return
 	int identity=-1;
 
 	// inverse kinematics, include overlap region
@@ -349,8 +321,8 @@ int doppler::Cut_2p( float PEn1, float anno1, int quad1, float PEn2, float anno2
 
 bool doppler::CutG_en2hit( float BEn, float TEn ) {
 
-	// Returns true or false if the 2d graphical cut on beam and target enegry passes
-	// Look into the "en2hit" histogram after changing return value of this function
+	/// Returns true or false if the 2d graphical cut on beam and target enegry passes
+	/// Look into the "en2hit" histogram after changing return value of this function
 
 	TCutG *cutg = new TCutG("CUTG",18);
 	cutg->SetPoint(0,94.485,426.337);
@@ -381,70 +353,80 @@ bool doppler::CutG_en2hit( float BEn, float TEn ) {
 
 float doppler::GetCDOffset() {
 
-	// Return offset of the CD in the phi rotation from vertical
+	/// Return offset of the CD in the phi rotation from vertical in degrees
+	
 	return cdoffset;
 
 }
 
 float doppler::GetSpedeDist() {
 
-	// Return distance of Spede detector
+	/// Return distance of Spede detector in mm
+	
 	return spededist;
 
 }
 
 float doppler::GetCDDeadLayer() {
 	
-	// Return dead layer of the Al in mm
+	/// Return dead layer of the Al in mm
+	
 	return deadlayer;
 	
 }
 
 int doppler::GetZb() {
 
-	// Return Z of the projectile
+	/// Return Z of the projectile as an int
+	
 	return Zb;
 
 }
 
 float doppler::GetAb() {
 
-	// Return A of the projectile
+	/// Return A of the projectile as a float
+	
 	return Ab;
 
 }
 
 int doppler::GetZt() {
 
-	// Return Z of the target
+	/// Return Z of the target as an int
+	
 	return Zt;
 
 }
 
 float doppler::GetAt() {
 
-	// Return A of the target
+	/// Return A of the target as a float
+	
 	return At;
 
 }
 
 float doppler::GetPTh( float anno ) {
 
-	// Returns theta angle from ann strip number in radians
+	/// Returns theta angle from ann strip number in radians
+	
 	return TMath::ATan( (9.+(15.5-anno)*2.) / cddist );
 
 }
 
 float doppler::GetPPhi( int quad, int seg ) { 
 
-	// Returns phi angle from quadrant and ohm strip number in radians 
+	/// Returns phi angle from quadrant and ohm strip number in radians
+	
 	return GetPPhi( quad, seg, cdoffset );
 
 }
 
 float doppler::GetPPhi( int quad, int seg, float offset ) { 
 
-	// Returns phi angle from quadrant and ohm strip number in radians 
+	/// Returns phi angle from quadrant and ohm strip number in radians
+	
 	float ph_det[4] = { (float)0+cdoffset, (float)90+cdoffset, (float)180+cdoffset, (float)270+cdoffset };
 	float pphi = ( ph_det[quad] + seg * 7.0 );
 	if( pphi < 360. ) return pphi * TMath::DegToRad();
@@ -454,14 +436,16 @@ float doppler::GetPPhi( int quad, int seg, float offset ) {
 
 float doppler::GetQPhi( int quad, int seg ) {
 
-	// Returns phi angle of B/T using angle of T/B
+	/// Returns phi angle of B/T using angle of T/B
+	
 	return GetPPhi( quad, seg, cdoffset ) + TMath::Pi();
 
 }
 
 float doppler::GetTTh( float Banno, float BEn ) {
 
-	// Returns theta angle of T using angle and energy of B
+	/// Returns theta angle of T using angle and energy of B
+	
 	double tau = (float)Ab/(float)At;
 	double Eprime = (float)Eb*(float)Ab - (float)Ex*(1+tau);
 	double epsilon = TMath::Sqrt((float)Eb*(float)Ab/Eprime);
@@ -488,7 +472,8 @@ float doppler::GetTTh( float Banno, float BEn ) {
 
 float doppler::GetBTh( float Tanno ) {
 
-	// Returns theta angle of B using angle and energy of T
+	/// Returns theta angle of B using angle and energy of T
+	
 	double tau = (float)Ab/(float)At;
 	double Eprime = (float)Eb*(float)Ab - (float)Ex*(1+tau);
 	double epsilon = TMath::Sqrt((float)Eb*(float)Ab/Eprime);
@@ -506,6 +491,10 @@ float doppler::GetBTh( float Tanno ) {
 
 float doppler::GetTEn( float BEn, float Banno ) {
 
+	/// Function to calculate the energy of the recoiling target
+	/// given the energy and the angle of the scattered beam
+	/// Returns the energy after the target in keV
+	
 	// energy at interaction point
 	double Ereac = (float)Eb * (float)Ab;
 	Ereac -= GetELoss( Ereac, contaminant, 0, "BC" );
@@ -535,6 +524,10 @@ float doppler::GetTEn( float BEn, float Banno ) {
 
 float doppler::GetBEn( float TEn, float Tanno ) {
 
+	/// Function to calculate the energy of the scattered beam
+	/// given the energy and the angle of the recoiling target
+	/// Returns the energy after the target in keV
+	
 	// energy at interaction point
 	double Ereac = (float)Eb * (float)Ab;
 	Ereac -= GetELoss( Ereac, contaminant, 0, "BC" );
@@ -564,16 +557,18 @@ float doppler::GetBEn( float TEn, float Tanno ) {
 
 float doppler::GetELoss( float Ei, float dist, int opt, string combo ) {
 
-	// Returns the energy loss at a given initial energy and distance travelled in the target or Al dead layer
-	// Ei is the initial energy in keV
-	// dist is the distance travelled in the target in mg/cm2
-	// opt = 0 calculates normal energy loss as particle moves through target (default)
-	// opt = 1 calculates energy increase, i.e. tracing particle back to reaction point
-	// combo = "BT", "TT", "BA" or "TA" for the beam in target, target in target,
-	// beam in Al or target in Al, respectively.
-	// Stopping power data is taken from SRIM the output files must be placed in the './srim/'
-	// folder with the format 62Fe_109Ag.txt, 62Fe_Al.txt, 109Ag_109Ag.txt or 109Ag_Al.txt,
-	// for combo = "BT", "TT", "BA" and "TA", repsectively.
+	/// Returns the energy loss at a given initial energy and distance travelled
+	/// in the target, the contaminant layer or Al dead layer
+	/// Ei is the initial energy in keV, return value is also in keV
+	/// dist is the distance travelled in the target in mg/cm2
+	/// opt = 0 calculates normal energy loss as particle moves through target (default)
+	/// opt = 1 calculates energy increase, i.e. tracing particle back to reaction point
+	/// combo = "BT", "TT", "BC", "TC", "BA" or "TA" for the beam in target, target in target,
+	/// beam in contaminant, target in contaminant, beam in Al or target in Al, respectively.
+	/// Stopping power data is taken from SRIM the output files must be placed in the './srim/'
+	/// folder with the format 62Fe_109Ag.txt, 62Fe_Al.txt, 109Ag_109Ag.txt or 109Ag_Al.txt,
+	/// for combo = "BT", "TT", "BA" and "TA", repsectively.
+	/// The srim file should be in units of MeV/(mg/cm^2)
 	
 	double dedx = 0;
 	int Nmeshpoints = 20; // number of steps to take in integration
@@ -608,7 +603,7 @@ float doppler::GetELoss( float Ei, float dist, int opt, string combo ) {
 
 float doppler::GammaAng( float PTh, float PPhi, float GTh, float GPhi ) {
 	
-	// Returns angle between particle and gamma	in radians
+	/// Returns angle between particle and gamma	in radians
 	
 	double costheta = sin(PTh)*sin(GTh)*cos(PPhi-GPhi)+(cos(PTh)*cos(GTh));
 	
@@ -618,7 +613,7 @@ float doppler::GammaAng( float PTh, float PPhi, float GTh, float GPhi ) {
 
 float doppler::Beta( float Ek, float m ) {
 	
-	// Returns beta after Taylor expansion to third order
+	/// Returns beta after Taylor expansion to third order
 	
 	double beta2 = -0.5 * m + TMath::Sqrt( m * ( 0.25 * m + 1.5 * Ek ) );
 	beta2 /= 0.75 * m;
@@ -629,8 +624,8 @@ float doppler::Beta( float Ek, float m ) {
 
 float doppler::DC( float PEn, float PTh, float PPhi, float GTh, float GPhi, float A ) {
 
-	// Returns Doppler correction factor for given particle and gamma
-	// angular combination.  Factors in detected particle energy too
+	/// Returns Doppler correction factor for given particle and gamma
+	/// angular combination.  Factors in detected particle energy too
 	
 	double beta = Beta( PEn, A * u_mass() );
 //	double beta = TMath::Sqrt( 2.0*PEn / ( A * u_mass() ) );
@@ -646,8 +641,8 @@ float doppler::DC( float PEn, float PTh, float PPhi, float GTh, float GPhi, floa
 
 float doppler::DC_elec( float een, float PEn, float PTh, float PPhi, float GTh, float GPhi, float A ) {
 
-	// Returns Doppler correction factor for given particle and electron
-	// angular combination.  Factors in detected particle energy too
+	/// Returns Doppler correction factor for given particle and electron
+	/// angular combination.  Factors in detected particle energy too
 	
 	double beta = TMath::Sqrt( 2*PEn / ( A * u_mass() ) );
 	double mass_e = 511.;
@@ -664,6 +659,8 @@ float doppler::DC_elec( float een, float PEn, float PTh, float PPhi, float GTh, 
 
 string doppler::convertInt( int number ) {
 	
+	/// Convert an integer into a string
+	
 	stringstream ss;
 	ss << number;
 	return ss.str();
@@ -671,6 +668,8 @@ string doppler::convertInt( int number ) {
 }
 
 string doppler::convertFloat( float number ) {
+	
+	/// Convert an float into a string
 	
 	stringstream ss;
 	ss << number;

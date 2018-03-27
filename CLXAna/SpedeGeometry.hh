@@ -14,10 +14,11 @@ using namespace std;
 #define NSECTOR 8
 #define NSPEDE NRING*NSECTOR
 
-// ---------------------------------------------------------------------------
-// Miniball Geometry class
-// ---------------------------------------------------------------------------
-//class SpedeGeometry : public TObject {
+/// ---------------------------------------------------------------------------
+/// SPEDE Geometry class
+/// ---------------------------------------------------------------------------
+/// A class for the geometry of SPEDE
+
 class SpedeGeometry {
 
 	public:

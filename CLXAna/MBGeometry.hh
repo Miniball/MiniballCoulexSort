@@ -19,10 +19,14 @@ using namespace std;
 #define NCLU 8
 #define NSEG 18
 
-// ---------------------------------------------------------------------------
-// Miniball Geometry class
-// ---------------------------------------------------------------------------
-//class MBGeometry : public TObject {
+/// --------------------------------------------------------------------
+/// Miniball Geometry class
+/// --------------------------------------------------------------------
+/// A geometry class that converts cluster angles read from the Miniball
+/// frame into real-life angles for the analysis.
+/// You can have theta and phi angles of the centres of each cluster,
+/// crystal and segment in frame geometry or true/beam geometry.
+
 class MBGeometry {
 
 	public:

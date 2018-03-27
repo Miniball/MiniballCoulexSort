@@ -15,6 +15,13 @@
 #endif
 
 void hists::Initialise( doppler dc_ ) {
+	
+	/// Initialise all of the histograms that you want to fill
+	/// If you add a new one, be careful not to break your memory limit.
+	/// This causes unknown behaviour and may not give any errors.
+	/// In the best case, you have a segmentation violation and you cannot
+	/// work out where it comes from... Try deleting some histograms.
+	/// Whatever you do, make sure you declare them in hists.hh file.
 
 	dc = dc_;
 
