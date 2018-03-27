@@ -36,7 +36,10 @@ LFLAGS    = -O2 -g
 O_FILES = Calibration.o \
 		$(MBEVTS_DIR)/mbevts.o
 
-all: TreeBuilder NeSort AQ4Sort
+all: MKDIR_P TreeBuilder NeSort AQ4Sort
+
+MKDIR_P:
+	mkdir -p $(BIN_DIR) $(LIB_DIR)
 
 TreeBuilder: TreeBuilder.cc $(O_FILES) TreeBuilderDictionary.o
 	$(CPP) $(CFLAGS) $(INCLUDES) TreeBuilder.cc $(O_FILES) TreeBuilderDictionary.o $(LIBS) -o $@

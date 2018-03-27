@@ -26,7 +26,10 @@ LIBS     := $(ROOTGLIBS) -L$(LIB_DIR) -lCLXAna -lTDRIVAna -lMntAna -lTreeBuilder
 
 INCLUDES := $(ANA_DIR)
 
-all: mb_sorter
+all: MKDIR_P mb_sorter
+
+MKDIR_P:
+	mkdir -p $(BIN_DIR) $(LIB_DIR)
 
 OBJECTS = MBSorter.o \
           mb_sorter_dict.o

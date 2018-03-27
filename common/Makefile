@@ -16,7 +16,10 @@ INCLUDES	= -I./
 LFLAGS		=  -g 
 LIBS 		= $(ALLIBS)
 
-all: libCommandLineInterface.a
+all: MKDIR_P libCommandLineInterface.a
+
+MKDIR_P:
+	mkdir -p $(BIN_DIR) $(LIB_DIR)
 
 lib%.a: %.o
 	$(AR) cru $@ $^

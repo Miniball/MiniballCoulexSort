@@ -43,7 +43,10 @@ O_FILES = BuiltEvent.o \
         $(MED_DIR)/mbsio.o \
         $(MED_DIR)/byte_order.o
 
-all: MedToRoot
+all: MKDIR_P MedToRoot
+
+MKDIR_P:
+	mkdir -p $(BIN_DIR) $(LIB_DIR)
 
 MedToRoot: MedToRoot.cc $(O_FILES) MedToRootDictionary.o
 	$(CPP) $(CFLAGS) $(INCLUDES) MedToRoot.cc $(O_FILES) MedToRootDictionary.o $(LIBS) -o $@

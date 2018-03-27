@@ -29,7 +29,10 @@ CFLAGS      := -pedantic -Wall -g -O3 $(ROOTCFLAGS) -fPIC -Wno-unused-variable -
 
 INCLUDES  = -I$(MBEVTS_DIR) -I$(COMMON_DIR) -I$(ROOTINC) -I./
 
-all: CLXAna
+all: MKDIR_P CLXAna
+
+MKDIR_P:
+	mkdir -p $(BIN_DIR) $(LIB_DIR)
 
 OBJECTS = g_clx.o \
           $(MBEVTS_DIR)/mbevts.o \
