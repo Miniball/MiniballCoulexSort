@@ -53,7 +53,7 @@ class MBGeometry {
 		double GetSegTheta( int core, int seg );
 		double GetSegPhi( int core, int seg );
 
-		// Get theta of a vector in Miniball system (return deg)
+		/// Get theta of a vector in Miniball system (return deg)
 		inline double MBTheta(TVector3 &v) {
 			double mytheta = v.Phi() * TMath::RadToDeg();
 			double myphi = v.Theta() * TMath::RadToDeg();
@@ -64,7 +64,7 @@ class MBGeometry {
 			return mytheta;
 	   	};
 
-		// Get phi of a vector in Miniball system (return deg)
+		/// Get phi of a vector in Miniball system (return deg)
 		inline double MBPhi(TVector3 &v) {
 			double mytheta = v.Phi() * TMath::RadToDeg();
 			double myphi = v.Theta() * TMath::RadToDeg();
@@ -75,12 +75,12 @@ class MBGeometry {
 			return myphi;
 		};
 
-		// Get true theta of a vector (return deg)
+		/// Get true theta of a vector (return deg)
 		inline double TrueTheta(TVector3 &v) {
 			return std::acos(v.x() / v.Mag()) * TMath::RadToDeg();
 		};
 
-		// Get the true phi of a vector (return deg)
+		/// Get the true phi of a vector (return deg)
 		inline double TruePhi(TVector3 &v) {
 			TVector3 v2(-v.y(), v.z(), v.x());
  			double phi = v2.Phi() * TMath::RadToDeg();

@@ -49,46 +49,48 @@ class g_clx : public TObject {
 	//mbevts          *mbevts;
 	UInt_t          fUniqueID;
 	UInt_t          fBits;
-	float           gen;
-	int             cid;
-	int             sid;
-	int             cluid;
-	float           tha;
-	float           pha;
-	vector <float>  gcor_gen;
-	vector <int>    gcor_cid;
-	vector <int>    gcor_sid;
-	vector <int>    gcor_cluid;
-	vector <float>  gcor_tha;
-	vector <float>  gcor_pha;
-	vector <float>  gcor_gtd;
-	vector <float>  pen;
-	vector <double> time;
-	vector <double> sst;
-	vector <float>  td;
-	vector <int>    ann;
-	vector <int>    sec;
-	vector <int>    det;
-	vector <int>    coin;
-	int             laser;
-	int             pr_hits;
-	int             rndm_hits;
-	int             del_hits;
-	vector <int>    pr_ptr;
-	vector <int>    rndm_ptr;
-	vector <int>    del_ptr;
+	float           gen;		///< gamma-ray energy in keV
+	int             cid;		///< core ID from 0 to 23
+	int             sid;		///< segment ID from 0 to 6 (zero is the core)
+	int             cluid;		///< cluster ID from 0 to 7
+	float           tha;		///< gamma-ray theta angle in radians (not yet implemented)
+	float           pha;		///< gamm-ray phi angle in radians (not yet implemented)
+	vector <float>  gcor_gen;	///< vector of correlated gamma-ray energies in keV
+	vector <int>    gcor_cid;	///< vector of correlated core IDs
+	vector <int>    gcor_sid;	///< vector of correlated segment IDs
+	vector <int>    gcor_cluid;	///< vector of correlated cluster IDs
+	vector <float>  gcor_tha;	///< vector of correlated theta angles
+	vector <float>  gcor_pha;	///< vector of correlated phi angles
+	vector <float>  gcor_gtd;	///< vector of time-difference to original gamma-ray
+	vector <float>  pen;		///< particle energies
+	vector <double> time;		///< particle timestamps
+	vector <double> sst;		///< supercycle timestamps
+	vector <float>  td;			///< particle-gamma time difference in 25 ns timestamps
+	vector <int>    ann;		///< annular (front) strip ID of particle (0 = outer; 15 inner)
+	vector <int>    sec;		///< secular (back) strip ID of particle (0 to 12; clockwise wrt beam)
+	vector <int>    det;		///< detector (quadrant) number of particle
+	vector <int>    coin;		///< coincidence flag: 0 = prompt, 1 = random, 2 = delayed, -1 = none
+	int             laser;		///< laser on/off flag: 1 = on, 0 = off
+	int             pr_hits;	///< number of prompt hits
+	int             rndm_hits;	///< number of random hits
+	int             del_hits;	///< number of delayed hits
+	vector <int>    pr_ptr;		///< pointer to prompt hits in particle vector/array
+	vector <int>    rndm_ptr;	///< pointer to random hits in particle vector/array
+	vector <int>    del_ptr;	///< pointer to delayed hits in particle vector/array
 	int             file;
 
 	float			GammaEnergy;
 	int				Zb, Zt;
 	float			Ab, At;
 	float			Eb, Ex, thick, depth;
-	float			cddist, cdoffset;
-	float			deadlayer;
-	float			contaminant;
-	float			spededist;
-	float			bg_frac;
-	TCutG			*Bcut, *Tcut;
+	float			cddist;			///< CD to target distance in mm
+	float			cdoffset;		///< phi rotation of CD wrt to (det=0;sec=0) at vertical
+	float			deadlayer;		///< deadlayer thickness in mm
+	float			contaminant;	///< contaminant layer thickness in mg/cm^2
+	float			spededist;		///< SPEDE to target distance in mm
+	float			bg_frac;		///< ratio of prompt and random background subtraction (negative)
+	TCutG			*Bcut;			///< Graphical cut for beam-like particles
+	TCutG			*Tcut;			///< Graphical cut for target-like particles
 	
 	// List of branches
 	TBranch        *b_mbevts_fUniqueID;   //!
