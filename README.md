@@ -17,7 +17,7 @@ To generate initial root file
 ```
 cd MedToRoot
 make
-./MedToRoot -mf data_file.med - sf setting_file.dat -so
+./MedToRoot -mf data_file.med -sf settings_file.dat -so
 ```
 data_file_Scaler.root & data_file_Source.root will be created.
 
@@ -26,17 +26,18 @@ Scaler file is needed during the experiment and Source file is needed for analys
 ```
 cd TreeBuilder
 make
-./TreeBuilder -i data_file_Source1.root [data_file_Source2.root ...] -o Output_tree.root -c calibration_file.dat
+./TreeBuilder -i data_file1_Source.root [data_file2_Source.root ...] -o Output_tree.root -c calibration_file.dat
 ```
 This step takes a number of possible flags:
-        [-s                      : singles]
-        [-addback                : addback]
-        [-crex                   : CREX]
-        [-spede                  : SPEDE]
-        [-cdpad                  : CD-PAD]
-        [-ionch                  : IonChamber]
-        [-vl                     : verbose]
-
+```
+	[-s                      : singles]
+	[-addback                : addback]
+	[-crex                   : CREX]
+	[-spede                  : SPEDE]
+	[-cdpad                  : CD-PAD]
+	[-ionch                  : IonChamber]
+	[-vl                     : verbose]
+```
 Generated file can now be used as input to final analysis code
 
 ```
