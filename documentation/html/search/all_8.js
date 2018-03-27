@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['loop',['Loop',['../classg__clx.html#a9d5de859df4bfbb746726661ff1d24a9',1,'g_clx']]]
+  ['initialise',['Initialise',['../classhists.html#affb3dcaefba3b63d20bbe438030e2f81',1,'hists']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['read',['Read',['../class_particle_range.html#ac1e0da5aca629369e93caf8e883da624',1,'ParticleRange']]]
+  ['expdefs',['ExpDefs',['../classdoppler.html#ac628277148db1641251745f86ba3dc52',1,'doppler']]]
 ];

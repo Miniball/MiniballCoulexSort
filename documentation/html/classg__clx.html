@@ -66,6 +66,11 @@ $(function() {
 <div class="title">g_clx Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Main class for gamma-particle coinidence analysis.  
+ <a href="classg__clx.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_c_l_x_ana_2g__clx_8hh_source.html">g_clx.hh</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for g_clx:</div>
 <div class="dyncontent">
@@ -406,7 +411,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>At</b></td></tr>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>plunger</b></td></tr>
 <tr class="separator:aee52e53d2cd780936d648225402d8bcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Main class for gamma-particle coinidence analysis. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a9d5de859df4bfbb746726661ff1d24a9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9d5de859df4bfbb746726661ff1d24a9">&#9670;&nbsp;</a></span>Loop()</h2>
 
@@ -430,7 +437,7 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>plunger</b></td></tr
   </tr>
 </table>
 </div><div class="memdoc">
-<p>doppler::stoppingpowers( ZP, ZT, AP, AT, "BS" ) || // beam in silicon </p>
+<p>This is the main logic routine for sorting the data. It shouldn't really be played with, except there are still some harcoded values that don't really make sense anymore. The ones that are useful will be moved to the config file/input and the ones that aren't will be deleted. You will also find the Miniball cluster angles hardcoded here too. They will eventually be moved to the TreeBuilder stage. </p>
 
 </div>
 </div>

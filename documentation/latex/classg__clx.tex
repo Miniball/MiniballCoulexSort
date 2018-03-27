@@ -1,5 +1,14 @@
 \hypertarget{classg__clx}{}\section{g\+\_\+clx Class Reference}
 \label{classg__clx}\index{g\+\_\+clx@{g\+\_\+clx}}
+
+
+Main class for gamma-\/particle coinidence analysis.  
+
+
+
+
+{\ttfamily \#include $<$g\+\_\+clx.\+hh$>$}
+
 Inheritance diagram for g\+\_\+clx\+:\begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -337,6 +346,9 @@ float {\bfseries plunger}
 \end{DoxyCompactItemize}
 
 
+\subsection{Detailed Description}
+Main class for gamma-\/particle coinidence analysis. 
+
 \subsection{Member Function Documentation}
 \mbox{\Hypertarget{classg__clx_a9d5de859df4bfbb746726661ff1d24a9}\label{classg__clx_a9d5de859df4bfbb746726661ff1d24a9}} 
 \index{g\+\_\+clx@{g\+\_\+clx}!Loop@{Loop}}
@@ -344,7 +356,7 @@ float {\bfseries plunger}
 \subsubsection{\texorpdfstring{Loop()}{Loop()}}
 {\footnotesize\ttfamily void g\+\_\+clx\+::\+Loop (\begin{DoxyParamCaption}\item[{string}]{outputfilename }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
 
-doppler\+::stoppingpowers( ZP, ZT, AP, AT, \char`\"{}\+B\+S\char`\"{} ) $\vert$$\vert$ // beam in silicon 
+This is the main logic routine for sorting the data. It shouldn\textquotesingle{}t really be played with, except there are still some harcoded values that don\textquotesingle{}t really make sense anymore. The ones that are useful will be moved to the config file/input and the ones that aren\textquotesingle{}t will be deleted. You will also find the Miniball cluster angles hardcoded here too. They will eventually be moved to the Tree\+Builder stage. 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 

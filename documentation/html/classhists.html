@@ -66,11 +66,15 @@ $(function() {
 <div class="title">hists Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>A class for making Coulex analysis histograms.  
+ <a href="classhists.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_c_l_x_ana_2hists_8hh_source.html">hists.hh</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:affb3dcaefba3b63d20bbe438030e2f81"><td class="memItemLeft" align="right" valign="top"><a id="affb3dcaefba3b63d20bbe438030e2f81"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Initialise</b> (<a class="el" href="classdoppler.html">doppler</a> dc_)</td></tr>
+<tr class="memitem:affb3dcaefba3b63d20bbe438030e2f81"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhists.html#affb3dcaefba3b63d20bbe438030e2f81">Initialise</a> (<a class="el" href="classdoppler.html">doppler</a> dc_)</td></tr>
 <tr class="separator:affb3dcaefba3b63d20bbe438030e2f81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98cf7d91940c6d77105d07b0783399ee"><td class="memItemLeft" align="right" valign="top"><a id="a98cf7d91940c6d77105d07b0783399ee"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>Set_ppwin</b> (float user_ppwin)</td></tr>
@@ -601,6 +605,29 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>ge_angles</b> [GEBI
 double&#160;</td><td class="memItemRight" valign="bottom"><b>phi_angles</b> [PHIBINS]</td></tr>
 <tr class="separator:a639b52545a8bfc7b248a33f5660f8082"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A class for making Coulex analysis histograms. </p>
+<p>The hists class is used to define all histograms for the analysis. Crucially it defines a set of functions to be called, rather than filling each histogram individually with every call in <a class="el" href="classg__clx.html#a9d5de859df4bfbb746726661ff1d24a9">g_clx::Loop</a>. This has the advantage of not repeating fill commands and therefore reducing the potential for copy/paste errors. Please try to use these functions as much as is reasonably possible. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="affb3dcaefba3b63d20bbe438030e2f81"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#affb3dcaefba3b63d20bbe438030e2f81">&#9670;&nbsp;</a></span>Initialise()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void hists::Initialise </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classdoppler.html">doppler</a>&#160;</td>
+          <td class="paramname"><em>dc_</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Initialise all of the histograms that you want to fill If you add a new one, be careful not to break your memory limit. This causes unknown behaviour and may not give any errors. In the best case, you have a segmentation violation and you cannot work out where it comes from... Try deleting some histograms. Whatever you do, make sure you declare them in hists.hh file. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>CLXAna/<a class="el" href="_c_l_x_ana_2hists_8hh_source.html">hists.hh</a></li>
 <li>CLXAna/hists.cc</li>

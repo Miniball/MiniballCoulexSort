@@ -1,10 +1,18 @@
 \hypertarget{classhists}{}\section{hists Class Reference}
 \label{classhists}\index{hists@{hists}}
+
+
+A class for making Coulex analysis histograms.  
+
+
+
+
+{\ttfamily \#include $<$hists.\+hh$>$}
+
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classhists_affb3dcaefba3b63d20bbe438030e2f81}\label{classhists_affb3dcaefba3b63d20bbe438030e2f81}} 
-void {\bfseries Initialise} (\hyperlink{classdoppler}{doppler} dc\+\_\+)
+void \hyperlink{classhists_affb3dcaefba3b63d20bbe438030e2f81}{Initialise} (\hyperlink{classdoppler}{doppler} dc\+\_\+)
 \item 
 \mbox{\Hypertarget{classhists_a98cf7d91940c6d77105d07b0783399ee}\label{classhists_a98cf7d91940c6d77105d07b0783399ee}} 
 void {\bfseries Set\+\_\+ppwin} (float user\+\_\+ppwin)
@@ -535,6 +543,20 @@ double {\bfseries ge\+\_\+angles} \mbox{[}G\+E\+B\+I\+NS\mbox{]}
 double {\bfseries phi\+\_\+angles} \mbox{[}P\+H\+I\+B\+I\+NS\mbox{]}
 \end{DoxyCompactItemize}
 
+
+\subsection{Detailed Description}
+A class for making Coulex analysis histograms. 
+
+The hists class is used to define all histograms for the analysis. Crucially it defines a set of functions to be called, rather than filling each histogram individually with every call in \hyperlink{classg__clx_a9d5de859df4bfbb746726661ff1d24a9}{g\+\_\+clx\+::\+Loop}. This has the advantage of not repeating fill commands and therefore reducing the potential for copy/paste errors. Please try to use these functions as much as is reasonably possible. 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classhists_affb3dcaefba3b63d20bbe438030e2f81}\label{classhists_affb3dcaefba3b63d20bbe438030e2f81}} 
+\index{hists@{hists}!Initialise@{Initialise}}
+\index{Initialise@{Initialise}!hists@{hists}}
+\subsubsection{\texorpdfstring{Initialise()}{Initialise()}}
+{\footnotesize\ttfamily void hists\+::\+Initialise (\begin{DoxyParamCaption}\item[{\hyperlink{classdoppler}{doppler}}]{dc\+\_\+ }\end{DoxyParamCaption})}
+
+Initialise all of the histograms that you want to fill If you add a new one, be careful not to break your memory limit. This causes unknown behaviour and may not give any errors. In the best case, you have a segmentation violation and you cannot work out where it comes from... Try deleting some histograms. Whatever you do, make sure you declare them in hists.\+hh file. 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 

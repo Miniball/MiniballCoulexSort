@@ -23,6 +23,7 @@ using namespace std;
 
 using namespace std;
 
+/// A class for making Coulex analysis histograms
 
 /// The hists class is used to define all histograms for the analysis.
 /// Crucially it defines a set of functions to be called, rather than

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['getrange',['GetRange',['../class_particle_range.html#a433dead3f85fe19ee1675934b65acf3f',1,'ParticleRange']]]
+  ['beta',['Beta',['../classdoppler.html#a28eb084d224fdb58fda1d6f6c61dd232',1,'doppler']]]
 ];

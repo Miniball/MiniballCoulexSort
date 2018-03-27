@@ -11,6 +11,7 @@ TDRIVAna_20171101
 .DS_Store
 */.DS_Store
 */.dSYM
+*.xcworkspace
 *.xcworkspacedata
 *.xcuserstate
 *.xcsettings

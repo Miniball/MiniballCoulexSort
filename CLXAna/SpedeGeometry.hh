@@ -14,6 +14,8 @@ using namespace std;
 #define NSECTOR 8
 #define NSPEDE NRING*NSECTOR
 
+/// Functions to convert SPEDE angles from detector measurements
+
 /// ---------------------------------------------------------------------------
 /// SPEDE Geometry class
 /// ---------------------------------------------------------------------------

@@ -38,7 +38,7 @@ using namespace std;
 # include "../mbevts/mbevts.hh"
 #endif
 
-// Fixed size dimensions of array or collections stored in the TTree if any.
+/// Main class for gamma-particle coinidence analysis
 
 class g_clx : public TObject {
 	public :

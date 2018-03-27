@@ -19,6 +19,8 @@ using namespace std;
 #define NCLU 8
 #define NSEG 18
 
+/// Functions to convert Miniball angles read from the frame
+
 /// --------------------------------------------------------------------
 /// Miniball Geometry class
 /// --------------------------------------------------------------------

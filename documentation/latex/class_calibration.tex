@@ -1,5 +1,9 @@
 \hypertarget{class_calibration}{}\section{Calibration Class Reference}
 \label{class_calibration}\index{Calibration@{Calibration}}
+
+
+{\ttfamily \#include $<$Calibration.\+hh$>$}
+
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -43,6 +47,9 @@ int {\bfseries Pos\+Strip} (int Quad, unsigned short raw)
 int {\bfseries Strip\+Pos\+Barrel} (unsigned short strraw, unsigned short rearraw)
 \end{DoxyCompactItemize}
 
+
+\subsection{Detailed Description}
+A class to read in the calibration file in R\+O\+OT\textquotesingle{}s T\+Config format. Each A\+DC and D\+GF channel can have offset, gain and quadratic terms. There is potential to include the demux of T/\+C-\/\+R\+EX in here too. 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 

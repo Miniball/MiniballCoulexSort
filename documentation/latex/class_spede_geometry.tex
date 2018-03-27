@@ -1,25 +1,28 @@
 \hypertarget{class_spede_geometry}{}\section{Spede\+Geometry Class Reference}
 \label{class_spede_geometry}\index{Spede\+Geometry@{Spede\+Geometry}}
+
+
+Functions to convert S\+P\+E\+DE angles from detector measurements.  
+
+
+
+
+{\ttfamily \#include $<$Spede\+Geometry.\+hh$>$}
+
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{class_spede_geometry_aff2cf68512c9a78eb117ff1ea44e95f0}\label{class_spede_geometry_aff2cf68512c9a78eb117ff1ea44e95f0}} 
-void {\bfseries Setup\+Spede} ()
+void \hyperlink{class_spede_geometry_aff2cf68512c9a78eb117ff1ea44e95f0}{Setup\+Spede} ()
 \item 
-\mbox{\Hypertarget{class_spede_geometry_ae79185d5c0e1d21a1a26ef824038ce9c}\label{class_spede_geometry_ae79185d5c0e1d21a1a26ef824038ce9c}} 
-void {\bfseries Setup\+Spede} (double user\+\_\+r, double user\+\_\+alpha)
+void \hyperlink{class_spede_geometry_ae79185d5c0e1d21a1a26ef824038ce9c}{Setup\+Spede} (double user\+\_\+r, double user\+\_\+alpha)
 \item 
-\mbox{\Hypertarget{class_spede_geometry_ad17f4485ee83860a40082d8c8af5237c}\label{class_spede_geometry_ad17f4485ee83860a40082d8c8af5237c}} 
-void {\bfseries Set\+SpedeR} (double user\+\_\+r)
+void \hyperlink{class_spede_geometry_ad17f4485ee83860a40082d8c8af5237c}{Set\+SpedeR} (double user\+\_\+r)
 \item 
-\mbox{\Hypertarget{class_spede_geometry_a94c3f5b2dbf4490db7d72514c8abe340}\label{class_spede_geometry_a94c3f5b2dbf4490db7d72514c8abe340}} 
-void {\bfseries Set\+Spede\+Alpha} (double user\+\_\+alpha)
+void \hyperlink{class_spede_geometry_a94c3f5b2dbf4490db7d72514c8abe340}{Set\+Spede\+Alpha} (double user\+\_\+alpha)
 \item 
-\mbox{\Hypertarget{class_spede_geometry_a05865b0752fb518337a9a16f8fba9085}\label{class_spede_geometry_a05865b0752fb518337a9a16f8fba9085}} 
-double {\bfseries Get\+Spede\+Theta} (int seg)
+double \hyperlink{class_spede_geometry_a05865b0752fb518337a9a16f8fba9085}{Get\+Spede\+Theta} (int seg)
 \item 
-\mbox{\Hypertarget{class_spede_geometry_a93bd92636bce1259b189bb17275d238d}\label{class_spede_geometry_a93bd92636bce1259b189bb17275d238d}} 
-double {\bfseries Get\+Spede\+Phi} (int seg)
+double \hyperlink{class_spede_geometry_a93bd92636bce1259b189bb17275d238d}{Get\+Spede\+Phi} (int seg)
 \item 
 \mbox{\Hypertarget{class_spede_geometry_aff2cf68512c9a78eb117ff1ea44e95f0}\label{class_spede_geometry_aff2cf68512c9a78eb117ff1ea44e95f0}} 
 void {\bfseries Setup\+Spede} ()
@@ -58,6 +61,54 @@ double {\bfseries Get\+Spede\+Theta} (int seg)
 double {\bfseries Get\+Spede\+Phi} (int seg)
 \end{DoxyCompactItemize}
 
+
+\subsection{Detailed Description}
+Functions to convert S\+P\+E\+DE angles from detector measurements. 
+
+
+
+ \subsubsection*{S\+P\+E\+DE Geometry class }
+
+A class for the geometry of S\+P\+E\+DE 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_spede_geometry_a93bd92636bce1259b189bb17275d238d}\label{class_spede_geometry_a93bd92636bce1259b189bb17275d238d}} 
+\index{Spede\+Geometry@{Spede\+Geometry}!Get\+Spede\+Phi@{Get\+Spede\+Phi}}
+\index{Get\+Spede\+Phi@{Get\+Spede\+Phi}!Spede\+Geometry@{Spede\+Geometry}}
+\subsubsection{\texorpdfstring{Get\+Spede\+Phi()}{GetSpedePhi()}}
+{\footnotesize\ttfamily double Spede\+Geometry\+::\+Get\+Spede\+Phi (\begin{DoxyParamCaption}\item[{int}]{seg }\end{DoxyParamCaption})}
+
+Get a segment phi angle in degrees \mbox{\Hypertarget{class_spede_geometry_a05865b0752fb518337a9a16f8fba9085}\label{class_spede_geometry_a05865b0752fb518337a9a16f8fba9085}} 
+\index{Spede\+Geometry@{Spede\+Geometry}!Get\+Spede\+Theta@{Get\+Spede\+Theta}}
+\index{Get\+Spede\+Theta@{Get\+Spede\+Theta}!Spede\+Geometry@{Spede\+Geometry}}
+\subsubsection{\texorpdfstring{Get\+Spede\+Theta()}{GetSpedeTheta()}}
+{\footnotesize\ttfamily double Spede\+Geometry\+::\+Get\+Spede\+Theta (\begin{DoxyParamCaption}\item[{int}]{seg }\end{DoxyParamCaption})}
+
+Get a segment theta angle in degrees \mbox{\Hypertarget{class_spede_geometry_a94c3f5b2dbf4490db7d72514c8abe340}\label{class_spede_geometry_a94c3f5b2dbf4490db7d72514c8abe340}} 
+\index{Spede\+Geometry@{Spede\+Geometry}!Set\+Spede\+Alpha@{Set\+Spede\+Alpha}}
+\index{Set\+Spede\+Alpha@{Set\+Spede\+Alpha}!Spede\+Geometry@{Spede\+Geometry}}
+\subsubsection{\texorpdfstring{Set\+Spede\+Alpha()}{SetSpedeAlpha()}}
+{\footnotesize\ttfamily void Spede\+Geometry\+::\+Set\+Spede\+Alpha (\begin{DoxyParamCaption}\item[{double}]{user\+\_\+alpha }\end{DoxyParamCaption})}
+
+Set the measured rotation of Spede with respect to the vertical \mbox{\Hypertarget{class_spede_geometry_ad17f4485ee83860a40082d8c8af5237c}\label{class_spede_geometry_ad17f4485ee83860a40082d8c8af5237c}} 
+\index{Spede\+Geometry@{Spede\+Geometry}!Set\+SpedeR@{Set\+SpedeR}}
+\index{Set\+SpedeR@{Set\+SpedeR}!Spede\+Geometry@{Spede\+Geometry}}
+\subsubsection{\texorpdfstring{Set\+Spede\+R()}{SetSpedeR()}}
+{\footnotesize\ttfamily void Spede\+Geometry\+::\+Set\+SpedeR (\begin{DoxyParamCaption}\item[{double}]{user\+\_\+r }\end{DoxyParamCaption})}
+
+Set the measured distance to Spede from target \mbox{\Hypertarget{class_spede_geometry_aff2cf68512c9a78eb117ff1ea44e95f0}\label{class_spede_geometry_aff2cf68512c9a78eb117ff1ea44e95f0}} 
+\index{Spede\+Geometry@{Spede\+Geometry}!Setup\+Spede@{Setup\+Spede}}
+\index{Setup\+Spede@{Setup\+Spede}!Spede\+Geometry@{Spede\+Geometry}}
+\subsubsection{\texorpdfstring{Setup\+Spede()}{SetupSpede()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Spede\+Geometry\+::\+Setup\+Spede (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Main routine for setting up S\+P\+E\+DE \mbox{\Hypertarget{class_spede_geometry_ae79185d5c0e1d21a1a26ef824038ce9c}\label{class_spede_geometry_ae79185d5c0e1d21a1a26ef824038ce9c}} 
+\index{Spede\+Geometry@{Spede\+Geometry}!Setup\+Spede@{Setup\+Spede}}
+\index{Setup\+Spede@{Setup\+Spede}!Spede\+Geometry@{Spede\+Geometry}}
+\subsubsection{\texorpdfstring{Setup\+Spede()}{SetupSpede()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Spede\+Geometry\+::\+Setup\+Spede (\begin{DoxyParamCaption}\item[{double}]{user\+\_\+r,  }\item[{double}]{user\+\_\+alpha }\end{DoxyParamCaption})}
+
+Setup S\+P\+E\+DE with coordinate values 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 

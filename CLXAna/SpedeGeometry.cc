@@ -22,8 +22,9 @@ SpedeGeometry::~SpedeGeometry(){
 
 }
 
-// Set a user defined distance to Spede from target
 void SpedeGeometry::SetSpedeR( double user_r ) {
+
+	/// Set the measured distance to Spede from target
 
 	// Set the user value (mm)
 	r = user_r;
@@ -32,9 +33,10 @@ void SpedeGeometry::SetSpedeR( double user_r ) {
 
 }
 
-// Set a user defined rotation of Spede
 void SpedeGeometry::SetSpedeAlpha( double user_alpha ) {
 
+	/// Set the measured rotation of Spede with respect to the vertical
+	
 	// Set the user value
 	alpha = user_alpha;
 
@@ -42,24 +44,27 @@ void SpedeGeometry::SetSpedeAlpha( double user_alpha ) {
 
 }
 
-// Get a segment theta
 double SpedeGeometry::GetSpedeTheta( int seg ) {
+
+	/// Get a segment theta angle in degrees
 
 	// Return theta from segment offset
 	return seg_spede[seg].Theta() * TMath::RadToDeg();
 
 }
 
-// Get a segment theta
 double SpedeGeometry::GetSpedePhi( int seg ) {
+
+	/// Get a segment phi angle in degrees
 
 	// Return theta from segment offset
 	return seg_spede[seg].Phi() * TMath::RadToDeg();
 
 }
 
-// Setup the cluster with coordinate values
 void SpedeGeometry::SetupSpede( double user_r, double user_alpha ) {
+
+	/// Setup SPEDE with coordinate values
 
 	// Set the user value
 	r = user_r;
@@ -71,8 +76,9 @@ void SpedeGeometry::SetupSpede( double user_r, double user_alpha ) {
 
 }
 
-// Setup cluster main routine
 void SpedeGeometry::SetupSpede() {
+
+	/// Main routine for setting up SPEDE
 
 	double r_ring[NRING];
 	double theta_pos, x_pos, y_pos;
