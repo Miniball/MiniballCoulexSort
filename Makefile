@@ -16,3 +16,10 @@ MKDIR_P:
 
 .PHONY: all MKDIR_P $(SUBDIRS)
 
+clean:
+	@echo "Cleaning up everything..." ;
+	for dir in $(SUBDIRS); do\
+		$(MAKE) -C $$dir clean; \
+	done
+
+
