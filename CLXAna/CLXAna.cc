@@ -4,6 +4,29 @@
 #include "CLXAna.hh"
 
 #ifndef __CINT__
+
+void PrintInput() {
+	
+	cout << "Zb = " << Zb << endl;
+	cout << "Ab = " << Ab << endl;
+	cout << "Zt = " << Zt << endl;
+	cout << "At = " << At << endl;
+	cout << "Eb = " << Eb << " keV/u" << endl;
+	cout << "Ex = " << Ex << " keV" << endl;
+	cout << "thick = " << thick << " mg/cm2" << endl;
+	cout << "depth = " << depth << " mg/cm2" << endl;
+	cout << "zoffset = " << zoffset << " mm" << endl;
+	cout << "cddist = " << cddist << " mm" << endl;
+	cout << "cdoffset = " << cdoffset << " degrees" << endl;
+	cout << "deadlayer = " << deadlayer << " mm" << endl;
+	cout << "contaminant = " << contaminant << " mg/cm2" << endl;
+	cout << "spededist = " << spededist << " mm" << endl;
+	cout << "bg_frac = " << bg_frac << endl;
+	
+	return;
+	
+}
+
 int main( int argc, char *argv[] ) {
 
 	int j = 0;
@@ -180,30 +203,29 @@ int main( int argc, char *argv[] ) {
 		x.contaminant = contaminant;
 		x.spededist = spededist;
 		x.bg_frac = bg_frac;
+		
+		cout << "Input parameters:" << endl;
+		PrintInput();
 
 	}
 
 	// In case something is missing, print out what we have and quit
 	else {
 
-		cout << "Zb = " << Zb << endl;
-		cout << "Ab = " << Ab << endl;
-		cout << "Zt = " << Zt << endl;
-		cout << "At = " << At << endl;
-		cout << "Eb = " << Eb << endl;
-		cout << "Ex = " << Ex << endl;
-		cout << "thick = " << thick << endl;
-		cout << "depth = " << depth << endl;
-		cout << "zoffset = " << zoffset << endl;
-		cout << "cddist = " << cddist << endl;
-		cout << "cdoffset = " << cdoffset << endl;
+		cout << "Some input is missing, please check:" << endl;
+		PrintInput();
+		cout << "Exiting..." << endl;
 
 		return 0;
 
 	}
 
+	
 	// Run sort
+	cout << "Begin g_clx loop." << endl;
 	x.Loop( outputfilename );
+
+	cout << "Finished." << endl;
 
 	return 0;
 
