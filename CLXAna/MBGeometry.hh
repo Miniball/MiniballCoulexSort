@@ -39,11 +39,12 @@ class MBGeometry {
 
 		// Set values of theta and phi the cluster
 		void SetupCluster();
-		void SetupCluster( double user_theta, double user_phi, double user_alpha, double user_r );
+		void SetupCluster( double user_theta, double user_phi, double user_alpha, double user_r, double user_z );
 		void SetCluTheta( double user_theta );
 		void SetCluPhi( double user_phi );
 		void SetCluAlpha( double user_alpha );
 		void SetCluR( double user_r );
+		void SetCluZ( double user_z );
 
 		// Get values of theta and phi the core
 		double GetCoreTheta( int core );
@@ -93,11 +94,12 @@ class MBGeometry {
 	private:
 	
 		// Current values of theta, phi, alpha and r
-		double theta;	// deg
-		double phi;		// deg
-		double alpha;	// deg
-		double r; 		// mm
-		
+		double theta;	///< theta angle in deg
+		double phi;		///< phi angle in deg
+		double alpha;	///< alpha angle in deg
+		double r; 		///< distance from target to detector in mm
+		double z; 		///< distance from target to origin (beam direction is positive) in mm
+	
 		// Cluster offset vectors
 		TVector3 clu_offset;
 
@@ -106,6 +108,10 @@ class MBGeometry {
 
 		// Core offset vectors
 		TVector3 det_offset[3];
+	
+		// Offset of the cluster in beam direction
+		TVector3 mbzoffset;	///< Offset of target from origin in direction of beam in mm.
+							///< This shift is independent of the CD detector distance which is relative.
 
 	//ClassDef(MBGeometry, 1);
 	

@@ -19,7 +19,8 @@ int main( int argc, char *argv[] ) {
 	float		Ex = 0.0;			///< excitation energy of Coulex in keV
 	float		thick = 0.0;		///< thickness of the target in mg/cm^2
 	float		depth = 0.0;		///< interaction depth in target in mg/cm^2
-	float		cddist = 0.0;		///< CD to target distance in mm
+	float		zoffset = 0.0;		///< offset of the target with respect to the origin in mm (beam direction positive)
+	float		cddist = 0.0;		///< relative distance between the CD and target in mm
 	float		cdoffset = 242.6;	///< phi rotation of CD wrt to (det=0;sec=0) at vertical
 	float		deadlayer = 0.0007;	///< CD dead layer (aluminium) thickness in mm
 	float		contaminant = 0.0;	///< contaminant layer thickness in mg/cm^2
@@ -40,6 +41,7 @@ int main( int argc, char *argv[] ) {
 	interface->Add("-Ex", "Ex", &Ex );
 	interface->Add("-thick", "thick", &thick );
 	interface->Add("-depth", "depth", &depth );
+	interface->Add("-zoffset", "zoffset", &zoffset );
 	interface->Add("-cddist", "cddist", &cddist );
 	interface->Add("-cdoffset", "cdoffset", &cdoffset );
 	interface->Add("-deadlayer", "deadlayer", &deadlayer );
@@ -147,6 +149,7 @@ int main( int argc, char *argv[] ) {
 		Ex = config->GetValue( "Ex", -1.0 );
 		thick = config->GetValue( "thick", -1.0 );
 		depth = config->GetValue( "depth", -1.0 );
+		zoffset = config->GetValue( "zoffset", 0.0 );
 		cddist = config->GetValue( "cddist", -1.0 );
 		cdoffset = config->GetValue( "cdoffset", 242.6 );
 		deadlayer = config->GetValue( "deadlayer", 0.0007 );
@@ -170,6 +173,7 @@ int main( int argc, char *argv[] ) {
 		x.Ex = Ex;
 		x.thick = thick;
 		x.depth = depth;
+		x.zoffset = zoffset;
 		x.cddist = cddist;
 		x.cdoffset = cdoffset;
 		x.deadlayer = deadlayer;
@@ -190,6 +194,7 @@ int main( int argc, char *argv[] ) {
 		cout << "Ex = " << Ex << endl;
 		cout << "thick = " << thick << endl;
 		cout << "depth = " << depth << endl;
+		cout << "zoffset = " << zoffset << endl;
 		cout << "cddist = " << cddist << endl;
 		cout << "cdoffset = " << cdoffset << endl;
 

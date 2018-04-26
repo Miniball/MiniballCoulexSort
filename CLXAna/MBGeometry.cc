@@ -57,14 +57,25 @@ void MBGeometry::SetCluAlpha( double user_alpha ) {
 }
 
 void MBGeometry::SetCluR( double user_r ) {
-
+	
 	/// Set the distance between the target and face of the cluster
 	
 	// Set the user value (mm)
 	r = user_r;
-
+	
 	return;
+	
+}
 
+void MBGeometry::SetCluZ( double user_z ) {
+	
+	/// Set the distance between the origin and the target position along the beam axis
+	
+	// Set the user value (mm)
+	z = user_z;
+	
+	return;
+	
 }
 
 double MBGeometry::GetSegTheta( int core, int seg ) {
@@ -116,15 +127,21 @@ double MBGeometry::GetCorePhi( int core ) {
 
 }
 
-void MBGeometry::SetupCluster( double user_theta, double user_phi, double user_alpha, double user_r ) {
+void MBGeometry::SetupCluster( double user_theta, double user_phi, double user_alpha, double user_r, double user_z ) {
 
 	/// Setup the cluster with coordinate values
+	/// \param user_theta is in the MB frame of reference [degrees]
+	/// \param user_phi is in the MB frame of reference [degrees]
+	/// \param user_alpha is in the MB frame of reference [degrees]
+	/// \param user_r is distance from target to detector [mm]
+	/// \param user_z is distance from target to origin in beam direction [mm]
 
 	// Set the user value
 	theta = user_theta * TMath::DegToRad();
 	phi = user_phi * TMath::DegToRad();
 	alpha = user_alpha * TMath::DegToRad();
 	r = user_r;
+	z = user_z;
 	if( phi > TMath::Pi() ) theta = TMath::Pi() - theta;
 
 	SetupCluster();
@@ -207,6 +224,12 @@ void MBGeometry::SetupCluster() {
 		seg_offset[i].RotateX(myphi);
 		seg_offset[i].RotateZ(mytheta);
 	}
+	
+	// Shift Miniball so that target it as origin
+	mbzoffset.SetXYZ( -1.0*z, 0.0, 0.0 );
+	clu_offset += mbzoffset;
+	for( UInt_t i = 0; i < 3; i++ )  det_offset[i] += mbzoffset;
+	for( UInt_t i = 0; i < 18; i++ ) seg_offset[i] += mbzoffset;
  
  	return;
  	

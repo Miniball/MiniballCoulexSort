@@ -99,7 +99,7 @@ void g_clx::Loop( string outputfilename ) {
 	MBGeometry mbg;	
 	for( int i = 0; i < 8; i++ ) { // loop over clusters
 
-		mbg.SetupCluster( clu_theta[i], clu_phi[i], clu_alpha[i], clu_r[i] );
+		mbg.SetupCluster( clu_theta[i], clu_phi[i], clu_alpha[i], clu_r[i], zoffset );
 
 		for( unsigned int j = 0; j < 3; j++ ) { // loop over cores
 

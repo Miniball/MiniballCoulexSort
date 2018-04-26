@@ -83,7 +83,8 @@ class g_clx : public TObject {
 	int				Zb, Zt;
 	float			Ab, At;
 	float			Eb, Ex, thick, depth;
-	float			cddist;			///< CD to target distance in mm
+	float			zoffset;		///< offset of the target with respect to the origin in mm (beam direction positive)
+	float			cddist;			///< relative distance between the CD and target in mm
 	float			cdoffset;		///< phi rotation of CD wrt to (det=0;sec=0) at vertical
 	float			deadlayer;		///< deadlayer thickness in mm
 	float			contaminant;	///< contaminant layer thickness in mg/cm^2
