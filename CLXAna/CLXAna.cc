@@ -29,44 +29,6 @@ void PrintInput() {
 
 int main( int argc, char *argv[] ) {
 
-	int j = 0;
-
-	string outputfilename, configfilename, cutfilename;
-	vector<string> inputfilenames;
-	float		GammaEnergy;
-	int			Zb = 0;				///< Z of the beam
-	int			Zt = 0;				///< Z of the target
-	float		Ab = 0;				///< mass of the beam in u
-	int			At = 0;				///< mass of the target in u
-	float		Eb = 0.0;			///< incident beam energy in keV/u
-	float		Ex = 0.0;			///< excitation energy of Coulex in keV
-	float		thick = 0.0;		///< thickness of the target in mg/cm^2
-	float		depth = 0.0;		///< interaction depth in target in mg/cm^2
-	float		zoffset = 0.0;		///< offset of the target with respect to the origin in mm (beam direction positive)
-	float		cddist = 0.0;		///< relative distance between the CD and target in mm
-	float		cdoffset = 242.6;	///< phi rotation of CD wrt to (det=0;sec=0) at vertical
-	float		deadlayer = 0.0007;	///< CD dead layer (aluminium) thickness in mm
-	float		contaminant = 0.0;	///< contaminant layer thickness in mg/cm^2
-	float		spededist = 23.6;	///< SPEDE to target distance in mm
-	float		bg_frac = -1.0;		///< ratio of prompt and random background subtraction (negative)
-
-void PrintInput() {
-
-    cout << "Zb = " << Zb << endl;
-	cout << "Ab = " << Ab << endl;
-	cout << "Zt = " << Zt << endl;
-	cout << "At = " << At << endl;
-	cout << "Eb = " << Eb << endl;
-	cout << "Ex = " << Ex << endl;
-	cout << "thick = " << thick << endl;
-	cout << "depth = " << depth << endl;
-	cout << "cddist = " << cddist << endl;
-	cout << "cdoffset = " << cdoffset << endl;
-}
-
-int main( int argc, char *argv[] ) {
->>>>>>> efa9403ef4a86d9571a10c05d3b65587be2944c6
-	
 	CommandLineInterface* interface = new CommandLineInterface();
 
 	interface->Add("-i", "inputfiles", &inputfilenames );

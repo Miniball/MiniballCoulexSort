@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['fcurrent',['fCurrent',['../classg__clx.html#a4ebe765901e5abf5d740a59edd2796d3',1,'g_clx']]],
-  ['ftimestampchannel',['fTimestampChannel',['../class_global_settings.html#abc63389c34c21eba6a25723442e825a2',1,'GlobalSettings']]],
-  ['ftimestampmoduleoffset',['fTimestampModuleOffset',['../class_global_settings.html#a97d325770bf95368ee70d0e336032cc6',1,'GlobalSettings']]],
-  ['funiqueid',['fUniqueID',['../classg__clx.html#abf3f260c2d2f9884a9f6b041f54ec94a',1,'g_clx']]]
+  ['bcut',['Bcut',['../classg__clx.html#aac4c4ec97958e7de623f4da6ce18e201',1,'g_clx']]],
+  ['bg_5ffrac',['bg_frac',['../classg__clx.html#ad9d34b2f15cdb59de8b46f1f68280c5c',1,'g_clx']]],
+  ['builtevents',['BuiltEvents',['../class_event_buffer.html#a18101f4a449fbf92fa3c946b0924fb10',1,'EventBuffer']]]
 ];

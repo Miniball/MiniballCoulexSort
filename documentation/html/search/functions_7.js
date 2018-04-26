@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['particlerange',['ParticleRange',['../class_particle_range.html#a4273029166d7a6220bfd1728b6c18f69',1,'ParticleRange']]]
+  ['mbphi',['MBPhi',['../class_m_b_geometry.html#a399568d67bb83801ef6a2dbe963a535e',1,'MBGeometry']]],
+  ['mbtheta',['MBTheta',['../class_m_b_geometry.html#af4adfb858000405b21f79a6bf10c3c37',1,'MBGeometry']]]
 ];
