@@ -19,6 +19,17 @@ void \hyperlink{class_particle_range_ac1e0da5aca629369e93caf8e883da624}{Read} (c
 \begin{DoxyCompactList}\small\item\em Read an output file of zrange. \end{DoxyCompactList}\item 
 float \hyperlink{class_particle_range_a433dead3f85fe19ee1675934b65acf3f}{Get\+Range} (int energy) const
 \begin{DoxyCompactList}\small\item\em Get the range for a given particle energy. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_particle_range_a372def02fdf702b34d72f202fabaeddf}\label{class_particle_range_a372def02fdf702b34d72f202fabaeddf}} 
+int \hyperlink{class_particle_range_a372def02fdf702b34d72f202fabaeddf}{Emin}
+\begin{DoxyCompactList}\small\item\em Minimum energy for the interpolated values. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_particle_range_a19d2250d887faabb709687b9702f07cf}\label{class_particle_range_a19d2250d887faabb709687b9702f07cf}} 
+int \hyperlink{class_particle_range_a19d2250d887faabb709687b9702f07cf}{Estep}
+\begin{DoxyCompactList}\small\item\em Energy step for the interpolation. \end{DoxyCompactList}\item 
+std\+::vector$<$ float $>$ \hyperlink{class_particle_range_ad9189754855416cfab8079c6baf97217}{values}
+\begin{DoxyCompactList}\small\item\em Interpolated values, in steps of Estep starting from Emin. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
@@ -61,6 +72,19 @@ These files have three columns\+: particle energy \mbox{[}MeV\mbox{]}, range \mb
 \hline
 \end{DoxyParams}
 
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_particle_range_ad9189754855416cfab8079c6baf97217}\label{class_particle_range_ad9189754855416cfab8079c6baf97217}} 
+\index{Particle\+Range@{Particle\+Range}!values@{values}}
+\index{values@{values}!Particle\+Range@{Particle\+Range}}
+\subsubsection{\texorpdfstring{values}{values}}
+{\footnotesize\ttfamily std\+::vector$<$float$>$ Particle\+Range\+::values\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Interpolated values, in steps of Estep starting from Emin. 
+
+This list may not go up to Emax if the zrange output file does not contain enough values. 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 

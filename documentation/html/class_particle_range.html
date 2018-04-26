@@ -60,6 +60,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="class_particle_range-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">ParticleRange Class Reference</div>  </div>
@@ -83,6 +84,20 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a433dead3f85fe19ee1675934b65acf3f"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_particle_range.html#a433dead3f85fe19ee1675934b65acf3f">GetRange</a> (int energy) const</td></tr>
 <tr class="memdesc:a433dead3f85fe19ee1675934b65acf3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the range for a given particle energy.  <a href="#a433dead3f85fe19ee1675934b65acf3f">More...</a><br /></td></tr>
 <tr class="separator:a433dead3f85fe19ee1675934b65acf3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a372def02fdf702b34d72f202fabaeddf"><td class="memItemLeft" align="right" valign="top"><a id="a372def02fdf702b34d72f202fabaeddf"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_particle_range.html#a372def02fdf702b34d72f202fabaeddf">Emin</a></td></tr>
+<tr class="memdesc:a372def02fdf702b34d72f202fabaeddf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimum energy for the interpolated values. <br /></td></tr>
+<tr class="separator:a372def02fdf702b34d72f202fabaeddf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19d2250d887faabb709687b9702f07cf"><td class="memItemLeft" align="right" valign="top"><a id="a19d2250d887faabb709687b9702f07cf"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_particle_range.html#a19d2250d887faabb709687b9702f07cf">Estep</a></td></tr>
+<tr class="memdesc:a19d2250d887faabb709687b9702f07cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Energy step for the interpolation. <br /></td></tr>
+<tr class="separator:a19d2250d887faabb709687b9702f07cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9189754855416cfab8079c6baf97217"><td class="memItemLeft" align="right" valign="top">std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_particle_range.html#ad9189754855416cfab8079c6baf97217">values</a></td></tr>
+<tr class="memdesc:ad9189754855416cfab8079c6baf97217"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interpolated values, in steps of Estep starting from Emin.  <a href="#ad9189754855416cfab8079c6baf97217">More...</a><br /></td></tr>
+<tr class="separator:ad9189754855416cfab8079c6baf97217"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class for reading and interpolating range data from 'zrange'. </p>
@@ -139,6 +154,32 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="ad9189754855416cfab8079c6baf97217"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9189754855416cfab8079c6baf97217">&#9670;&nbsp;</a></span>values</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;float&gt; ParticleRange::values</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Interpolated values, in steps of Estep starting from Emin. </p>
+<p>This list may not go up to Emax if the zrange output file does not contain enough values. </p>
 
 </div>
 </div>

@@ -10,13 +10,14 @@
 
 #include "MBGeometry.hh"
 
-// Constructor and destructor
+// Constructor
 MBGeometry::MBGeometry(){
 
 	//cout << "constructor" << endl;
 
 }
 
+// Destructor
 MBGeometry::~MBGeometry(){
 
 	//cout << "destructor" << endl;
@@ -24,8 +25,6 @@ MBGeometry::~MBGeometry(){
 }
 
 void MBGeometry::SetCluTheta( double user_theta ) {
-
-	/// Set the theta angle measured from the frame
 
 	// Set the user value
 	theta = user_theta;
@@ -35,8 +34,6 @@ void MBGeometry::SetCluTheta( double user_theta ) {
 }
 
 void MBGeometry::SetCluPhi( double user_phi ) {
-
-	/// Set the phi angle measured from the frame
 	
 	// Set the user value
 	phi = user_phi;
@@ -47,8 +44,6 @@ void MBGeometry::SetCluPhi( double user_phi ) {
 
 void MBGeometry::SetCluAlpha( double user_alpha ) {
 
-	/// Set the alpha angle measured from the frame
-	
 	// Set the user value
 	alpha = user_alpha;
 
@@ -57,9 +52,7 @@ void MBGeometry::SetCluAlpha( double user_alpha ) {
 }
 
 void MBGeometry::SetCluR( double user_r ) {
-	
-	/// Set the distance between the target and face of the cluster
-	
+
 	// Set the user value (mm)
 	r = user_r;
 	
@@ -68,9 +61,7 @@ void MBGeometry::SetCluR( double user_r ) {
 }
 
 void MBGeometry::SetCluZ( double user_z ) {
-	
-	/// Set the distance between the origin and the target position along the beam axis
-	
+
 	// Set the user value (mm)
 	z = user_z;
 	
@@ -79,8 +70,6 @@ void MBGeometry::SetCluZ( double user_z ) {
 }
 
 double MBGeometry::GetSegTheta( int core, int seg ) {
-
-	/// Get the theta angle of a segment with respect to the beam
 	
 	// Calculate the segment number
 	int segNo = core*6 + seg;
@@ -94,8 +83,6 @@ double MBGeometry::GetSegTheta( int core, int seg ) {
 }
 
 double MBGeometry::GetSegPhi( int core, int seg ) {
-
-	/// Get the phi angle of a segment with respect to the beam
 	
 	// Calculate the segment number
 	int segNo = core*6 + seg;
@@ -109,18 +96,13 @@ double MBGeometry::GetSegPhi( int core, int seg ) {
 }
 
 double MBGeometry::GetCoreTheta( int core ) {
-
-	/// Get the theta angle of the core with respect to the beam
 	
 	// Return theta from segment offset
 	return TrueTheta( det_offset[core] );
 
 }
 
-// Get a core phi
 double MBGeometry::GetCorePhi( int core ) {
-
-	/// Get the phi angle of the core with respect to the beam
 	
 	// Return phi from segment offset
 	return TruePhi( det_offset[core] );
@@ -128,13 +110,6 @@ double MBGeometry::GetCorePhi( int core ) {
 }
 
 void MBGeometry::SetupCluster( double user_theta, double user_phi, double user_alpha, double user_r, double user_z ) {
-
-	/// Setup the cluster with coordinate values
-	/// \param user_theta is in the MB frame of reference [degrees]
-	/// \param user_phi is in the MB frame of reference [degrees]
-	/// \param user_alpha is in the MB frame of reference [degrees]
-	/// \param user_r is distance from target to detector [mm]
-	/// \param user_z is distance from target to origin in beam direction [mm]
 
 	// Set the user value
 	theta = user_theta * TMath::DegToRad();
@@ -151,8 +126,6 @@ void MBGeometry::SetupCluster( double user_theta, double user_phi, double user_a
 }
 
 void MBGeometry::SetupCluster() {
-
-	/// Setup cluster main routine
 
 	Double_t R = DIST_CORE_CORNER * 0.5; // average distance from centre of capsule to center of segment
 
