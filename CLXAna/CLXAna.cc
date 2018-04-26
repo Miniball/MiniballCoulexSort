@@ -49,6 +49,23 @@ int main( int argc, char *argv[] ) {
 	float		contaminant = 0.0;	///< contaminant layer thickness in mg/cm^2
 	float		spededist = 23.6;	///< SPEDE to target distance in mm
 	float		bg_frac = -1.0;		///< ratio of prompt and random background subtraction (negative)
+
+void PrintInput() {
+
+    cout << "Zb = " << Zb << endl;
+	cout << "Ab = " << Ab << endl;
+	cout << "Zt = " << Zt << endl;
+	cout << "At = " << At << endl;
+	cout << "Eb = " << Eb << endl;
+	cout << "Ex = " << Ex << endl;
+	cout << "thick = " << thick << endl;
+	cout << "depth = " << depth << endl;
+	cout << "cddist = " << cddist << endl;
+	cout << "cdoffset = " << cdoffset << endl;
+}
+
+int main( int argc, char *argv[] ) {
+>>>>>>> efa9403ef4a86d9571a10c05d3b65587be2944c6
 	
 	CommandLineInterface* interface = new CommandLineInterface();
 
@@ -217,14 +234,12 @@ int main( int argc, char *argv[] ) {
 		cout << "Exiting..." << endl;
 
 		return 0;
-
 	}
-
 	
 	// Run sort
 	cout << "Begin g_clx loop." << endl;
 	x.Loop( outputfilename );
-
+	
 	cout << "Finished." << endl;
 
 	return 0;
