@@ -25,7 +25,7 @@ float		GammaEnergy;
 int			Zb = 0;				///< Z of the beam
 int			Zt = 0;				///< Z of the target
 float		Ab = 0;				///< mass of the beam in u
-int			At = 0;				///< mass of the target in u
+float		At = 0;				///< mass of the target in u
 float		Eb = 0.0;			///< incident beam energy in keV/u
 float		Ex = 0.0;			///< excitation energy of Coulex in keV
 float		thick = 0.0;		///< thickness of the target in mg/cm^2

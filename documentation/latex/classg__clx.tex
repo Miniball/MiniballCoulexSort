@@ -18,25 +18,24 @@ Inheritance diagram for g\+\_\+clx\+:\begin{figure}[H]
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classg__clx_aa619daf508fe1d6bddb000af26630f31}\label{classg__clx_aa619daf508fe1d6bddb000af26630f31}} 
-{\bfseries g\+\_\+clx} (T\+Tree $\ast$tree=0)
+\hyperlink{classg__clx_aa619daf508fe1d6bddb000af26630f31}{g\+\_\+clx} (T\+Tree $\ast$tree=0)
 \item 
+\mbox{\Hypertarget{classg__clx_adbe899d82aba9fc16ec17f47c0ce894e}\label{classg__clx_adbe899d82aba9fc16ec17f47c0ce894e}} 
+virtual \hyperlink{classg__clx_adbe899d82aba9fc16ec17f47c0ce894e}{$\sim$g\+\_\+clx} ()
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classg__clx_ab4c53e12e70c3671ff8895fc388dd7d2}\label{classg__clx_ab4c53e12e70c3671ff8895fc388dd7d2}} 
-virtual Int\+\_\+t {\bfseries Get\+Entry} (Long64\+\_\+t entry)
-\item 
+virtual Int\+\_\+t \hyperlink{classg__clx_ab4c53e12e70c3671ff8895fc388dd7d2}{Get\+Entry} (Long64\+\_\+t entry)
+\begin{DoxyCompactList}\small\item\em Read contents of entry. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classg__clx_a0aab3745bdb3db08757c974eebffbe39}\label{classg__clx_a0aab3745bdb3db08757c974eebffbe39}} 
-virtual Long64\+\_\+t {\bfseries Load\+Tree} (Long64\+\_\+t entry)
-\item 
-\mbox{\Hypertarget{classg__clx_a92531261155ea15bee6b74c7e491132a}\label{classg__clx_a92531261155ea15bee6b74c7e491132a}} 
-virtual void {\bfseries Init} (T\+Tree $\ast$tree)
+virtual Long64\+\_\+t \hyperlink{classg__clx_a0aab3745bdb3db08757c974eebffbe39}{Load\+Tree} (Long64\+\_\+t entry)
+\begin{DoxyCompactList}\small\item\em Set the environment to read one entry. \end{DoxyCompactList}\item 
+virtual void \hyperlink{classg__clx_a92531261155ea15bee6b74c7e491132a}{Init} (T\+Tree $\ast$tree)
 \item 
 virtual void \hyperlink{classg__clx_a9d5de859df4bfbb746726661ff1d24a9}{Loop} (string outputfilename)
 \item 
-\mbox{\Hypertarget{classg__clx_a1fe81316168bc18dc2325ca5595577a9}\label{classg__clx_a1fe81316168bc18dc2325ca5595577a9}} 
-virtual Bool\+\_\+t {\bfseries Notify} ()
+virtual Bool\+\_\+t \hyperlink{classg__clx_a1fe81316168bc18dc2325ca5595577a9}{Notify} ()
 \item 
-\mbox{\Hypertarget{classg__clx_ae86183470c7bb8db45753aa4c86f1d41}\label{classg__clx_ae86183470c7bb8db45753aa4c86f1d41}} 
-virtual void {\bfseries Show} (Long64\+\_\+t entry=-\/1)
+virtual void \hyperlink{classg__clx_ae86183470c7bb8db45753aa4c86f1d41}{Show} (Long64\+\_\+t entry=-\/1)
 \item 
 \mbox{\Hypertarget{classg__clx_a8d0a8ed3a7cc55ca97aeb77f4183d3b8}\label{classg__clx_a8d0a8ed3a7cc55ca97aeb77f4183d3b8}} 
 {\bfseries Class\+Def} (\hyperlink{classg__clx}{g\+\_\+clx}, 1)
@@ -352,14 +351,41 @@ float {\bfseries plunger}
 \subsection{Detailed Description}
 Main class for gamma-\/particle coinidence analysis. 
 
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classg__clx_aa619daf508fe1d6bddb000af26630f31}\label{classg__clx_aa619daf508fe1d6bddb000af26630f31}} 
+\index{g\+\_\+clx@{g\+\_\+clx}!g\+\_\+clx@{g\+\_\+clx}}
+\index{g\+\_\+clx@{g\+\_\+clx}!g\+\_\+clx@{g\+\_\+clx}}
+\subsubsection{\texorpdfstring{g\+\_\+clx()}{g\_clx()}}
+{\footnotesize\ttfamily g\+\_\+clx\+::g\+\_\+clx (\begin{DoxyParamCaption}\item[{T\+Tree $\ast$}]{tree = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+Constructor if parameter tree is not specified (or zero), probably crash 
+
 \subsection{Member Function Documentation}
-\mbox{\Hypertarget{classg__clx_a9d5de859df4bfbb746726661ff1d24a9}\label{classg__clx_a9d5de859df4bfbb746726661ff1d24a9}} 
+\mbox{\Hypertarget{classg__clx_a92531261155ea15bee6b74c7e491132a}\label{classg__clx_a92531261155ea15bee6b74c7e491132a}} 
+\index{g\+\_\+clx@{g\+\_\+clx}!Init@{Init}}
+\index{Init@{Init}!g\+\_\+clx@{g\+\_\+clx}}
+\subsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily virtual void g\+\_\+clx\+::\+Init (\begin{DoxyParamCaption}\item[{T\+Tree $\ast$}]{tree }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+The \hyperlink{classg__clx_a92531261155ea15bee6b74c7e491132a}{Init()} function is called when the selector needs to initialize a new tree or chain. Typically here the branch addresses and branch pointers of the tree will be set. It is normally not necessary to make changes to the generated code, but the routine can be extended by the user if needed. \hyperlink{classg__clx_a92531261155ea15bee6b74c7e491132a}{Init()} will be called many times when running on P\+R\+O\+OF (once per file to be processed). \mbox{\Hypertarget{classg__clx_a9d5de859df4bfbb746726661ff1d24a9}\label{classg__clx_a9d5de859df4bfbb746726661ff1d24a9}} 
 \index{g\+\_\+clx@{g\+\_\+clx}!Loop@{Loop}}
 \index{Loop@{Loop}!g\+\_\+clx@{g\+\_\+clx}}
 \subsubsection{\texorpdfstring{Loop()}{Loop()}}
 {\footnotesize\ttfamily void g\+\_\+clx\+::\+Loop (\begin{DoxyParamCaption}\item[{string}]{outputfilename }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
 
-This is the main logic routine for sorting the data. It shouldn\textquotesingle{}t really be played with, except there are still some harcoded values that don\textquotesingle{}t really make sense anymore. The ones that are useful will be moved to the config file/input and the ones that aren\textquotesingle{}t will be deleted. You will also find the Miniball cluster angles hardcoded here too. They will eventually be moved to the Tree\+Builder stage. 
+This is the main logic routine for sorting the data. It shouldn\textquotesingle{}t really be played with, except there are still some harcoded values that don\textquotesingle{}t really make sense anymore. The ones that are useful will be moved to the config file/input and the ones that aren\textquotesingle{}t will be deleted. You will also find the Miniball cluster angles hardcoded here too. They will eventually be moved to the Tree\+Builder stage. \hyperlink{classdoppler_ad91321c9c9220fff724e5e0982e1a8b8}{doppler\+::stoppingpowers}( ZP, ZT, AP, AT, \char`\"{}\+B\+S\char`\"{} ) $\vert$$\vert$ // beam in silicon \mbox{\Hypertarget{classg__clx_a1fe81316168bc18dc2325ca5595577a9}\label{classg__clx_a1fe81316168bc18dc2325ca5595577a9}} 
+\index{g\+\_\+clx@{g\+\_\+clx}!Notify@{Notify}}
+\index{Notify@{Notify}!g\+\_\+clx@{g\+\_\+clx}}
+\subsubsection{\texorpdfstring{Notify()}{Notify()}}
+{\footnotesize\ttfamily virtual Bool\+\_\+t g\+\_\+clx\+::\+Notify (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+The \hyperlink{classg__clx_a1fe81316168bc18dc2325ca5595577a9}{Notify()} function is called when a new file is opened. This can be either for a new T\+Tree in a T\+Chain or when when a new T\+Tree is started when using P\+R\+O\+OF. It is normally not necessary to make changes to the generated code, but the routine can be extended by the user if needed. The return value is currently not used. \mbox{\Hypertarget{classg__clx_ae86183470c7bb8db45753aa4c86f1d41}\label{classg__clx_ae86183470c7bb8db45753aa4c86f1d41}} 
+\index{g\+\_\+clx@{g\+\_\+clx}!Show@{Show}}
+\index{Show@{Show}!g\+\_\+clx@{g\+\_\+clx}}
+\subsubsection{\texorpdfstring{Show()}{Show()}}
+{\footnotesize\ttfamily virtual void g\+\_\+clx\+::\+Show (\begin{DoxyParamCaption}\item[{Long64\+\_\+t}]{entry = {\ttfamily -\/1} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Print contents of entry. If entry is not specified, print current entry 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 

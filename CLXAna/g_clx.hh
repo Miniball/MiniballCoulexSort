@@ -126,13 +126,45 @@ class g_clx : public TObject {
 	TBranch        *b_mbevts_del_ptr;   //!
 	TBranch        *b_mbevts_file;   //!
 	
+	/// Constructor: if parameter tree is not specified (or zero), probably crash
 	g_clx( TTree *tree = 0 );
+
+	/// Destructor
 	virtual ~g_clx();
+
+	/// Read contents of entry.
 	virtual Int_t		GetEntry( Long64_t entry );
+
+	/// Set the environment to read one entry
 	virtual Long64_t	LoadTree( Long64_t entry );
+
+	/// The Init() function is called when the selector needs to initialize
+	/// a new tree or chain. Typically here the branch addresses and branch
+	/// pointers of the tree will be set.
+	/// It is normally not necessary to make changes to the generated
+	/// code, but the routine can be extended by the user if needed.
+	/// Init() will be called many times when running on PROOF
+	/// (once per file to be processed).
 	virtual void		Init( TTree *tree );
+
+	/// This is the main logic routine for sorting the data.
+	/// It shouldn't really be played with, except there are still some
+	/// harcoded values that don't really make sense anymore.
+	/// The ones that are useful will be moved to the config file/input
+	/// and the ones that aren't will be deleted.
+	/// You will also find the Miniball cluster angles hardcoded here too.
+	/// They will eventually be moved to the TreeBuilder stage.
 	virtual void		Loop( string outputfilename );
+
+	/// The Notify() function is called when a new file is opened. This
+	/// can be either for a new TTree in a TChain or when when a new TTree
+	/// is started when using PROOF. It is normally not necessary to make changes
+	/// to the generated code, but the routine can be extended by the
+	/// user if needed. The return value is currently not used.
 	virtual Bool_t		Notify();
+
+	/// Print contents of entry.
+	/// If entry is not specified, print current entry
 	virtual void		Show( Long64_t entry = -1 );
 	
 	ClassDef(g_clx,1);
@@ -142,44 +174,41 @@ class g_clx : public TObject {
 #endif
 
 #ifdef g_clx_cxx
-g_clx::g_clx(TTree *tree) : fChain(0) {
-	// if parameter tree is not specified (or zero), probably crash
+g_clx::g_clx( TTree *tree ) : fChain(0) {
 	
 	if( tree != 0 )	Init(tree);
 	
 }
 
 g_clx::~g_clx() {
-	if (!fChain) return;
+	
+	if( !fChain ) return;
 	delete fChain->GetCurrentFile();
+	
 }
 
 Int_t g_clx::GetEntry(Long64_t entry) {
-	// Read contents of entry.
-	if (!fChain) return 0;
+
+	if( !fChain ) return 0;
 	return fChain->GetEntry(entry);
+
 }
 
 Long64_t g_clx::LoadTree(Long64_t entry) {
-	// Set the environment to read one entry
-	if (!fChain) return -5;
+
+	if( !fChain ) return -5;
 	Long64_t centry = fChain->LoadTree(entry);
-	if (centry < 0) return centry;
-	if (fChain->GetTreeNumber() != fCurrent) {
+	if( centry < 0 ) return centry;
+	if( fChain->GetTreeNumber() != fCurrent ) {
 		fCurrent = fChain->GetTreeNumber();
 		Notify();
 	}
+	
 	return centry;
+
 }
 
-void g_clx::Init(TTree *tree) {
-	// The Init() function is called when the selector needs to initialize
-	// a new tree or chain. Typically here the branch addresses and branch
-	// pointers of the tree will be set.
-	// It is normally not necessary to make changes to the generated
-	// code, but the routine can be extended by the user if needed.
-	// Init() will be called many times when running on PROOF
-	// (once per file to be processed).
+void g_clx::Init( TTree *tree ) {
 	
 	// Set branch addresses and branch pointers
 	if (!tree) return;
@@ -222,20 +251,15 @@ void g_clx::Init(TTree *tree) {
 }
 
 Bool_t g_clx::Notify() {
-	// The Notify() function is called when a new file is opened. This
-	// can be either for a new TTree in a TChain or when when a new TTree
-	// is started when using PROOF. It is normally not necessary to make changes
-	// to the generated code, but the routine can be extended by the
-	// user if needed. The return value is currently not used.
 	
 	return kTRUE;
 }
 
-void g_clx::Show(Long64_t entry) {
-	/* Print contents of entry.	*/
-	/* If entry is not specified, print current entry */
+void g_clx::Show( Long64_t entry ) {
+	
 	if (!fChain) return;
 	fChain->Show(entry);
+	
 }
 
 #endif // #ifdef g_clx_cxx

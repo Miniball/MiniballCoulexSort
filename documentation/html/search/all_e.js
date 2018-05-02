@@ -1,10 +1,22 @@
 var searchData=
 [
-  ['tcut',['Tcut',['../classg__clx.html#adeec87c9054ed3ebe42cb6c563570e74',1,'g_clx']]],
-  ['td',['td',['../classg__clx.html#a911b31884177102bccf5952da7f48dd4',1,'g_clx']]],
-  ['tha',['tha',['../classg__clx.html#a1add23d784b2694a2f680b855480d95f',1,'g_clx']]],
-  ['theta',['theta',['../class_m_b_geometry.html#a1bdb9b371a2cd9839cf471e501ba3e73',1,'MBGeometry']]],
-  ['time',['time',['../classg__clx.html#a5c07b4406a965d58f0e89bb9da646e16',1,'g_clx']]],
-  ['truephi',['TruePhi',['../class_m_b_geometry.html#a718d9c7fcc4a5fb8b9ecaabdc7a0503f',1,'MBGeometry']]],
-  ['truetheta',['TrueTheta',['../class_m_b_geometry.html#afd393f9db7182de7fb19f0c934edb383',1,'MBGeometry']]]
+  ['scalersubevent',['ScalerSubEvent',['../class_scaler_sub_event.html',1,'']]],
+  ['sec',['sec',['../classg__clx.html#a4803632898349130e80e0237f8b0e1b0',1,'g_clx']]],
+  ['seg_5foffset',['seg_offset',['../class_m_b_geometry.html#a09539c16aa50b8a85866443ea0d8ffbd',1,'MBGeometry']]],
+  ['setclualpha',['SetCluAlpha',['../class_m_b_geometry.html#a0d4868b0360a6e5534918a9813540015',1,'MBGeometry']]],
+  ['setcluphi',['SetCluPhi',['../class_m_b_geometry.html#a74142f84cf6317d52ae39c0e0ff8a87e',1,'MBGeometry']]],
+  ['setclur',['SetCluR',['../class_m_b_geometry.html#a292c4326421c78871667e91c3694ae35',1,'MBGeometry']]],
+  ['setclutheta',['SetCluTheta',['../class_m_b_geometry.html#a9a2a8c9609141be92d7ba30e6087aa30',1,'MBGeometry']]],
+  ['setcluz',['SetCluZ',['../class_m_b_geometry.html#aa6b9d54c7157e8c65e2b208fcef8222c',1,'MBGeometry']]],
+  ['setspedealpha',['SetSpedeAlpha',['../class_spede_geometry.html#a94c3f5b2dbf4490db7d72514c8abe340',1,'SpedeGeometry']]],
+  ['setspeder',['SetSpedeR',['../class_spede_geometry.html#ad17f4485ee83860a40082d8c8af5237c',1,'SpedeGeometry']]],
+  ['setupcluster',['SetupCluster',['../class_m_b_geometry.html#a4d98a38f0dc1ca6a4a73477dde5cdd8d',1,'MBGeometry::SetupCluster()'],['../class_m_b_geometry.html#ac3751c8eb94c051b402c30cb14cba462',1,'MBGeometry::SetupCluster(double user_theta, double user_phi, double user_alpha, double user_r, double user_z)']]],
+  ['setupspede',['SetupSpede',['../class_spede_geometry.html#aff2cf68512c9a78eb117ff1ea44e95f0',1,'SpedeGeometry::SetupSpede()'],['../class_spede_geometry.html#ae79185d5c0e1d21a1a26ef824038ce9c',1,'SpedeGeometry::SetupSpede(double user_r, double user_alpha)']]],
+  ['show',['Show',['../classg__clx.html#ae86183470c7bb8db45753aa4c86f1d41',1,'g_clx']]],
+  ['sid',['sid',['../classg__clx.html#a04f33012ec56804fca6978885732bc8f',1,'g_clx']]],
+  ['sisscaler',['SISScaler',['../class_s_i_s_scaler.html',1,'']]],
+  ['spededist',['spededist',['../classg__clx.html#aca4cd80422665dab4188cbf82bb569ce',1,'g_clx']]],
+  ['spedegeometry',['SpedeGeometry',['../class_spede_geometry.html',1,'']]],
+  ['sst',['sst',['../classg__clx.html#af07a6345ceec1ac6ffad91105eb7a3a1',1,'g_clx']]],
+  ['stoppingpowers',['stoppingpowers',['../classdoppler.html#ad91321c9c9220fff724e5e0982e1a8b8',1,'doppler::stoppingpowers(bool BT, bool TT, bool BA, bool TA, bool BC, bool TC)'],['../classdoppler.html#a4be762591578e28f8e9d646475ca943a',1,'doppler::stoppingpowers(string opt)']]]
 ];

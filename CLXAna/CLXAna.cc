@@ -31,25 +31,25 @@ int main( int argc, char *argv[] ) {
 
 	CommandLineInterface* interface = new CommandLineInterface();
 
-	interface->Add("-i", "inputfiles", &inputfilenames );
-	interface->Add("-o", "outputfile", &outputfilename );
-	interface->Add("-c", "configfile", &configfilename );
-	interface->Add("-cut", "cutfile", &cutfilename );
+	interface->Add("-i", "Input file list", &inputfilenames );
+	interface->Add("-o", "Output file name", &outputfilename );
+	interface->Add("-c", "Configuration file", &configfilename );
+	interface->Add("-cut", "Cutfile [cutfile.root:Bcut:Tcut]", &cutfilename );
 	interface->Add("-Zb", "Zb", &Zb );
 	interface->Add("-Ab", "Ab", &Ab );
 	interface->Add("-Zt", "Zt", &Zt );
 	interface->Add("-At", "At", &At );
 	interface->Add("-Eb", "Eb", &Eb );
 	interface->Add("-Ex", "Ex", &Ex );
-	interface->Add("-thick", "thick", &thick );
-	interface->Add("-depth", "depth", &depth );
-	interface->Add("-zoffset", "zoffset", &zoffset );
-	interface->Add("-cddist", "cddist", &cddist );
-	interface->Add("-cdoffset", "cdoffset", &cdoffset );
-	interface->Add("-deadlayer", "deadlayer", &deadlayer );
-	interface->Add("-contaminant", "contaminant", &contaminant );
-	interface->Add("-spededist", "spededist", &spededist );
-	interface->Add("-bg_frac", "bg_frac", &bg_frac );
+	interface->Add("-thick", "Target thickness (mg/cm^2)", &thick );
+	interface->Add("-depth", "Depth of interation in target (mg/cm^2)", &depth );
+	interface->Add("-zoffset", "Offset of target position from origin of array (mm)", &zoffset );
+	interface->Add("-cddist", "Relative distance of CD and target (mm)", &cddist );
+	interface->Add("-cdoffset", "Rotation of CD detector about phi from vertical (deg)", &cdoffset );
+	interface->Add("-deadlayer", "Thickness of Si dead layer (mm)", &deadlayer );
+	interface->Add("-contaminant", "Thickness of contaminant layer on target (mg/cm^2)", &contaminant );
+	interface->Add("-spededist", "Relative distance of SPEDE and target (mm)", &spededist );
+	interface->Add("-bg_frac", "Ratio of prompt and random for background subtraction", &bg_frac );
 
 	interface->CheckFlags( argc, argv );
 

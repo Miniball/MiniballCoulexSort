@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['read',['Read',['../class_particle_range.html#ac1e0da5aca629369e93caf8e883da624',1,'ParticleRange']]]
+  ['particlerange',['ParticleRange',['../class_particle_range.html#a4273029166d7a6220bfd1728b6c18f69',1,'ParticleRange']]]
 ];

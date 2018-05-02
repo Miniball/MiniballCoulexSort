@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['_7embgeometry',['~MBGeometry',['../class_m_b_geometry.html#a6359b9d13d3b062ac2153087fc1b172b',1,'MBGeometry']]]
+  ['truephi',['TruePhi',['../class_m_b_geometry.html#a718d9c7fcc4a5fb8b9ecaabdc7a0503f',1,'MBGeometry']]],
+  ['truetheta',['TrueTheta',['../class_m_b_geometry.html#afd393f9db7182de7fb19f0c934edb383',1,'MBGeometry']]]
 ];

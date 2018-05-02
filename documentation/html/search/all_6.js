@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['g_5fclx',['g_clx',['../classg__clx.html',1,'']]],
+  ['g_5fclx',['g_clx',['../classg__clx.html',1,'g_clx'],['../classg__clx.html#aa619daf508fe1d6bddb000af26630f31',1,'g_clx::g_clx()']]],
   ['gammaang',['GammaAng',['../classdoppler.html#a6dca381f91f2267abefadd62cf66f69f',1,'doppler']]],
   ['gcor_5fcid',['gcor_cid',['../classg__clx.html#a6b6ebd8ff95dd7bcb5d8210419f77315',1,'g_clx']]],
   ['gcor_5fcluid',['gcor_cluid',['../classg__clx.html#ab7835b315dfc98870852f2295d6328b2',1,'g_clx']]],
@@ -19,6 +19,7 @@ var searchData=
   ['getcorephi',['GetCorePhi',['../class_m_b_geometry.html#a39f685610ae0e68e547a46f8ef992599',1,'MBGeometry']]],
   ['getcoretheta',['GetCoreTheta',['../class_m_b_geometry.html#a42aa536f15017724812712b0f8a77c12',1,'MBGeometry']]],
   ['geteloss',['GetELoss',['../classdoppler.html#a64570ec784dabd6e17cf836489450527',1,'doppler']]],
+  ['getentry',['GetEntry',['../classg__clx.html#ab4c53e12e70c3671ff8895fc388dd7d2',1,'g_clx']]],
   ['getpphi',['GetPPhi',['../classdoppler.html#a0f57a8f4a8c369c14d52e62dd3833f2e',1,'doppler::GetPPhi(int quad, int seg)'],['../classdoppler.html#ac8f059cc77214a954be534a85c748a3c',1,'doppler::GetPPhi(int quad, int seg, float offset)']]],
   ['getpth',['GetPTh',['../classdoppler.html#a1415bdb47dbb9d5eba7f14a64bd3693e',1,'doppler']]],
   ['getqphi',['GetQPhi',['../classdoppler.html#a7c3afd05ed9ddb8c5bedc0de905acd0b',1,'doppler']]],
