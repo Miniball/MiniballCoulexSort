@@ -41,24 +41,25 @@ CLXAna -i Output_tree.root -o Final_Output_hists.root
 ```
 This step takes a number of possible inputs:
 ```
-[-i           <vector<string>>: inputfiles]
-[-o           <string        >: outputfile]
-[-c           <string        >: configfile]
-[-cut         <string        >: cutfile]
+[-i           <vector<string>>: Input file list]
+[-o           <string        >: Output file name]
+[-c           <string        >: Configuration file]
+[-cut         <string        >: Cutfile [cutfile.root:Bcut:Tcut]]
 [-Zb          <int           >: Zb]
 [-Ab          <float         >: Ab]
 [-Zt          <int           >: Zt]
 [-At          <float         >: At]
 [-Eb          <float         >: Eb]
 [-Ex          <float         >: Ex]
-[-thick       <float         >: thick]
-[-depth       <float         >: depth]
-[-cddist      <float         >: cddist]
-[-cdoffset    <float         >: cdoffset]
-[-deadlayer   <float         >: deadlayer]
-[-contaminant <float         >: contaminant]
-[-spededist   <float         >: spededist]
-[-bg_frac     <float         >: bg_frac]
+[-thick       <float         >: Target thickness (mg/cm^2)]
+[-depth       <float         >: Depth of interation in target (mg/cm^2)]
+[-zoffset     <float         >: Offset of target position from origin of array (mm)]
+[-cddist      <float         >: Relative distance of CD and target (mm)]
+[-cdoffset    <float         >: Rotation of CD detector about phi from vertical (deg)]
+[-deadlayer   <float         >: Thickness of Si dead layer (mm)]
+[-contaminant <float         >: Thickness of contaminant layer on target (mg/cm^2)]
+[-spededist   <float         >: Relative distance of SPEDE and target (mm)]
+[-bg_frac     <float         >: Ratio of prompt and random for background subtraction]
 ```
 
 
