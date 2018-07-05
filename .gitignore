@@ -10,10 +10,9 @@ MedToRoot_liam
 TDRIVAna_20171101
 .DS_Store
 */.DS_Store
-*/.dSYM
+*/*.dSYM/*
 *.xcworkspace
 *.xcworkspacedata
 *.xcuserstate
 *.xcsettings
 *.plist
-*/*.dSYM
