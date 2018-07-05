@@ -39,7 +39,7 @@ void g_clx::Loop( string outputfilename ) {
 	// Create doppler instance and set experimental parameters
 	doppler dc;
 	dc.ExpDefs( Zb, Ab, Zt, At, Eb, Ex, thick, depth, cddist, cdoffset,
-					deadlayer, contaminant, spededist, Bcut, Tcut );
+					deadlayer, contaminant, spededist, Bcut, Tcut, srim );
 
 	// Fit stopping power curves from the srim output files
 	// Comment out to use the default parameters in doppler.hh

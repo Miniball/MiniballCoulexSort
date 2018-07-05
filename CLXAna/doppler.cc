@@ -9,7 +9,7 @@ TRandom3 doppler::rand = 1;
 
 void doppler::ExpDefs( int Zb_, float Ab_, int Zt_, float At_, float Eb_, float Ex_, float thick_,
 						float depth_, float cddist_, float cdoffset_, float deadlayer_, float contaminant_,
-						float spededist_, TCutG *Bcut_, TCutG *Tcut_ ) {
+						float spededist_, TCutG *Bcut_, TCutG *Tcut_, string srimfile_ ) {
 
 	/// Initialisation of experimental definitions from command line of config file
 	
@@ -28,12 +28,13 @@ void doppler::ExpDefs( int Zb_, float Ab_, int Zt_, float At_, float Eb_, float 
 	spededist = spededist_;
 	Bcut = Bcut_;
 	Tcut = Tcut_;
+	srimfile = srimfile_;
 
 	return;
 
 }
 
-bool doppler::stoppingpowers( bool BT, bool TT, bool BA, bool TA, bool BC, bool TC ) {
+bool doppler::stoppingpowers( bool BT, bool TT, bool BS, bool TS, bool BC, bool TC ) {
 
 	/// Initialisation of stopping powers
 	
@@ -44,10 +45,10 @@ bool doppler::stoppingpowers( bool BT, bool TT, bool BA, bool TA, bool BC, bool 
 
 	if( BT ) success *= stoppingpowers( "BT" );
 	if( TT ) success *= stoppingpowers( "TT" );
-	if( BA ) success *= stoppingpowers( "BA" );
-	if( TA ) success *= stoppingpowers( "TA" );
-	if( BC ) success *= stoppingpowers( "BC" );
-	if( TC ) success *= stoppingpowers( "TC" );
+	if( BS ) success *= stoppingpowers( "BS" );
+	if( TS ) success *= stoppingpowers( "TS" );
+	if( BC && contaminant >= 0 ) success *= stoppingpowers( "BC" );
+	if( TC && contaminant >= 0 ) success *= stoppingpowers( "TC" );
 
 	return success;
 
@@ -70,21 +71,20 @@ bool doppler::stoppingpowers( string opt ) {
 		"Bk","Cf","Es","Fm","Md","No","Lr","Rf","Db","Sg","Bh","Hs",
 		"Mt","Ds" };
 
-	unsigned int index = 0; // BT = 0, TT = 1, BA = 2, TA = 3
-	string srimfile = "./srim/"; // prefix
+	unsigned int index = 0; // BT = 0, TT = 1, BS = 2, TS = 3
 	string title = "Stopping powers for ";
 	
 	// Beam or target like..?
 	if( opt.substr(0,1) == "B" ) {
 		
-		srimfile += convertInt(Ab+0.5) + gElName[Zb-1];
+		srimfile += "/" + convertInt(Ab+0.5) + gElName[Zb-1];
 		title += convertInt(Ab+0.5) + gElName[Zb-1];
 		
 	}
 	
 	else if( opt.substr(0,1) == "T" ) {
 
-		srimfile += convertInt(At+0.5) + gElName[Zt-1];
+		srimfile += "/" + convertInt(At+0.5) + gElName[Zt-1];
 		title += convertInt(At+0.5) + gElName[Zt-1];
 		index++;
 		
@@ -92,12 +92,12 @@ bool doppler::stoppingpowers( string opt ) {
 	
 	else {
 		
-		cout << "opt must equal BT, TT, BA, TA, BC or TC \n";
+		cout << "opt must equal BT, TT, BS, TS, BC or TC \n";
 		return false;
 	
 	}
 	
-	// Target, contaminant or alumium dead layer..?
+	// Target, contaminant or silicon dead layer..?
 	if( opt.substr(1,1) == "T" ) {
 		
 		srimfile += "_" + convertInt(At+0.5) + gElName[Zt-1] + ".txt";
@@ -106,10 +106,10 @@ bool doppler::stoppingpowers( string opt ) {
 		
 	}
 	
-	else if( opt.substr(1,1) == "A" ) {
+	else if( opt.substr(1,1) == "S" ) {
 		
-		srimfile += "_Al.txt";
-		title += " in the Al dead layer";
+		srimfile += "_Si.txt";
+		title += " in the Si dead layer";
 		title += ";Ion energy [keV];Stopping power [MeV/mm]";
 		index += 2;
 		
@@ -126,7 +126,7 @@ bool doppler::stoppingpowers( string opt ) {
 	
 	else {
 		
-		cout << "opt must equal BT, TT, BA or TA \n";
+		cout << "opt must equal BT, TT, BS or TS \n";
 		return false;
 
 	}
@@ -369,7 +369,7 @@ float doppler::GetSpedeDist() {
 
 float doppler::GetCDDeadLayer() {
 	
-	/// Return dead layer of the Al in mm
+	/// Return dead layer of the Si in mm
 	
 	return deadlayer;
 	
@@ -497,12 +497,12 @@ float doppler::GetTEn( float BEn, float Banno ) {
 	
 	// energy at interaction point
 	double Ereac = (float)Eb * (float)Ab;
-	Ereac -= GetELoss( Ereac, contaminant, 0, "BC" );
+	if( contaminant >= 0 ) Ereac -= GetELoss( Ereac, contaminant, 0, "BC" );
 	Ereac -= GetELoss( Ereac, depth, 0, "BT" );
 
 	// Correct for dead layer loss
 	double dist = TMath::Abs( deadlayer / TMath::Cos( GetPTh( Banno ) ) );
-	double Eproj = BEn + GetELoss( BEn, dist, 1, "BA" );
+	double Eproj = BEn + GetELoss( BEn, dist, 1, "BS" );
 
 	// Trace energy loss back through target to get energy at interaction point
 	dist = TMath::Abs( ( thick - depth ) / TMath::Cos( GetPTh( Banno ) ) );
@@ -530,12 +530,12 @@ float doppler::GetBEn( float TEn, float Tanno ) {
 	
 	// energy at interaction point
 	double Ereac = (float)Eb * (float)Ab;
-	Ereac -= GetELoss( Ereac, contaminant, 0, "BC" );
+	if( contaminant >= 0 ) Ereac -= GetELoss( Ereac, contaminant, 0, "BC" );
 	Ereac -= GetELoss( Ereac, depth, 0, "BT" );
 	
 	// Correct for dead layer loss
 	double dist = TMath::Abs( deadlayer / TMath::Cos( GetPTh( Tanno ) ) );
-	double Etarg = TEn + GetELoss( TEn, dist, 1, "TA" );
+	double Etarg = TEn + GetELoss( TEn, dist, 1, "TS" );
 
 	// Trace energy loss back through target to get energy at interaction point
 	dist = TMath::Abs( ( thick - depth ) / TMath::Cos( GetPTh( Tanno ) ) );
@@ -558,16 +558,16 @@ float doppler::GetBEn( float TEn, float Tanno ) {
 float doppler::GetELoss( float Ei, float dist, int opt, string combo ) {
 
 	/// Returns the energy loss at a given initial energy and distance travelled
-	/// in the target, the contaminant layer or Al dead layer
+	/// in the target, the contaminant layer or Si dead layer
 	/// Ei is the initial energy in keV, return value is also in keV
 	/// dist is the distance travelled in the target in mg/cm2
 	/// opt = 0 calculates normal energy loss as particle moves through target (default)
 	/// opt = 1 calculates energy increase, i.e. tracing particle back to reaction point
-	/// combo = "BT", "TT", "BC", "TC", "BA" or "TA" for the beam in target, target in target,
-	/// beam in contaminant, target in contaminant, beam in Al or target in Al, respectively.
+	/// combo = "BT", "TT", "BC", "TC", "BS" or "TS" for the beam in target, target in target,
+	/// beam in contaminant, target in contaminant, beam in Si or target in Si, respectively.
 	/// Stopping power data is taken from SRIM the output files must be placed in the './srim/'
-	/// folder with the format 62Fe_109Ag.txt, 62Fe_Al.txt, 109Ag_109Ag.txt or 109Ag_Al.txt,
-	/// for combo = "BT", "TT", "BA" and "TA", repsectively.
+	/// folder with the format 62Fe_109Ag.txt, 62Fe_Si.txt, 109Ag_109Ag.txt or 109Ag_Si.txt,
+	/// for combo = "BT", "TT", "BS" and "TS", repsectively.
 	/// The srim file should be in units of MeV/(mg/cm^2)
 	
 	double dedx = 0;
@@ -581,8 +581,8 @@ float doppler::GetELoss( float Ei, float dist, int opt, string combo ) {
 
 		if( combo == "BT" ) dedx = gSP[0]->Eval(E);
 		else if( combo == "TT" ) dedx = gSP[1]->Eval(E);
-		else if( combo == "BA" ) dedx = gSP[2]->Eval(E);
-		else if( combo == "TA" ) dedx = gSP[3]->Eval(E);
+		else if( combo == "BS" ) dedx = gSP[2]->Eval(E);
+		else if( combo == "TS" ) dedx = gSP[3]->Eval(E);
 		else if( combo == "BC" ) dedx = gSP[4]->Eval(E);
 		else if( combo == "TC" ) dedx = gSP[5]->Eval(E);
 

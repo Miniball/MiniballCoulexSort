@@ -22,6 +22,7 @@ void PrintInput() {
 	cout << "contaminant = " << contaminant << " mg/cm2" << endl;
 	cout << "spededist = " << spededist << " mm" << endl;
 	cout << "bg_frac = " << bg_frac << endl;
+	cout << "srim = " << srim << endl;
 	
 	return;
 	
@@ -50,6 +51,7 @@ int main( int argc, char *argv[] ) {
 	interface->Add("-contaminant", "Thickness of contaminant layer on target (mg/cm^2)", &contaminant );
 	interface->Add("-spededist", "Relative distance of SPEDE and target (mm)", &spededist );
 	interface->Add("-bg_frac", "Ratio of prompt and random for background subtraction", &bg_frac );
+	interface->Add("-srim", "Directory containing the SRIM files", &srim );
 
 	interface->CheckFlags( argc, argv );
 
@@ -155,9 +157,10 @@ int main( int argc, char *argv[] ) {
 		cddist = config->GetValue( "cddist", -1.0 );
 		cdoffset = config->GetValue( "cdoffset", 242.6 );
 		deadlayer = config->GetValue( "deadlayer", 0.0007 );
-		contaminant = config->GetValue( "contaminant", 0.0 );
+		contaminant = config->GetValue( "contaminant", -1.0 );
 		spededist = config->GetValue( "spededist", 23.6 );
 		bg_frac = config->GetValue( "bg_frac", -1.0 );
+		srim = config->GetValue( "srim", "./srim" );
 
 	}
 
@@ -182,6 +185,7 @@ int main( int argc, char *argv[] ) {
 		x.contaminant = contaminant;
 		x.spededist = spededist;
 		x.bg_frac = bg_frac;
+		x.srim = srim;
 		
 		cout << "Input parameters:" << endl;
 		PrintInput();

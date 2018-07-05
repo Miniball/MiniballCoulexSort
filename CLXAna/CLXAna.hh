@@ -34,8 +34,9 @@ float		zoffset = 242.6;	///< offset of the target with respect to the origin in 
 float		cddist = 0.0;		///< CD to target distance in mm
 float		cdoffset = 242.6;	///< phi rotation of CD wrt to (det=0;sec=0) at vertical
 float		deadlayer = 0.0007;	///< CD dead layer (aluminium) thickness in mm
-float		contaminant = 0.0;	///< contaminant layer thickness in mg/cm^2
+float		contaminant = -1.0;	///< contaminant layer thickness in mg/cm^2 (negative means no contaminant)
 float		spededist = 23.6;	///< SPEDE to target distance in mm
 float		bg_frac = -1.0;		///< ratio of prompt and random background subtraction (negative)
+string      srim = "./srim";	///< directory containing the SRIM output files for Doppler correction
 
 void PrintInput();

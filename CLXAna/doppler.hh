@@ -36,7 +36,8 @@ class doppler : public TObject {
 
 	void	ExpDefs( int Zb_, float Ab_, int Zt_, float At_, float Eb_, float Ex_, float thick_,
 						float depth_, float cddist_, float cdoffset_, float deadlayer_,
-						 float contaminant_, float spededist_, TCutG *Bcut_, TCutG *Tcut_ );
+						float contaminant_, float spededist_, TCutG *Bcut_, TCutG *Tcut_,
+						string srimfile_ );
 	int		Cut( float PEn, float anno, int quad );
 	int		Cut_2p( float PEn1, float anno1, int quad1, float PEn2, float anno2, int quad2 );
 	bool	CutG_en2hit( float BEn, float TEn );
@@ -60,7 +61,7 @@ class doppler : public TObject {
 	float	Beta( float Ek, float m );
 	float	DC( float PEn, float PTh, float PPhi, float GTh, float GPhi, float A );
 	float	DC_elec( float een, float PEn, float PTh, float PPhi, float GTh, float GPhi, float A );
-	bool	stoppingpowers( bool BT, bool TT, bool BA, bool TA, bool BC, bool TC );
+	bool	stoppingpowers( bool BT, bool TT, bool BS, bool TS, bool BC, bool TC );
 	bool	stoppingpowers( string opt );
 
 	static string	convertInt( int number );
@@ -82,6 +83,7 @@ class doppler : public TObject {
 	float	spededist;
 	float	bg_frac;
 	TCutG	*Bcut, *Tcut;
+	string  srimfile;
 	
 	ClassDef(doppler,1);
 

@@ -92,6 +92,7 @@ class g_clx : public TObject {
 	float			bg_frac;		///< ratio of prompt and random background subtraction (negative)
 	TCutG			*Bcut;			///< Graphical cut for beam-like particles
 	TCutG			*Tcut;			///< Graphical cut for target-like particles
+	string			srim;			///< Directory containing the srim files
 	
 	// List of branches
 	TBranch        *b_mbevts_fUniqueID;   //!
