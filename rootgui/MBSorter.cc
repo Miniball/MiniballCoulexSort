@@ -153,10 +153,15 @@ MBSorter::MBSorter() {
 	sub_frame_13->SetName( "sub_frame_13" );
 	sub_frame_11->AddFrame( sub_frame_13, new TGLayoutHints( kLHintsTop | kLHintsExpandX ) );
 	
-	// Sub frame 14 - Analysis check buttons
+	// Sub frame 14 - SRIM directory
 	sub_frame_14 = new TGHorizontalFrame( sub_frame_11, 700, 45 );
 	sub_frame_14->SetName( "sub_frame_14" );
 	sub_frame_11->AddFrame( sub_frame_14, new TGLayoutHints( kLHintsTop | kLHintsExpandX ) );
+	
+	// Sub frame 15 - Analysis check buttons
+	sub_frame_15 = new TGHorizontalFrame( sub_frame_11, 700, 45 );
+	sub_frame_15->SetName( "sub_frame_15" );
+	sub_frame_11->AddFrame( sub_frame_15, new TGLayoutHints( kLHintsTop | kLHintsExpandX ) );
 	
 	// Doppler frame 0 - Labels
 	dop_frame_0 = new TGVerticalFrame( right_frame, 30, 360 );
@@ -266,6 +271,15 @@ MBSorter::MBSorter() {
 	lab_cutfile->SetWrapLength( -1 );
 	lab_cutfile->Resize( 80, lab_cutfile->GetDefaultHeight() );
 	sub_frame_13->AddFrame( lab_cutfile,
+						  new TGLayoutHints( kLHintsLeft | kFixedWidth, 2, 2, 2, 2 ) );
+	
+	// SRIM directory
+	lab_srimdir = new TGLabel( sub_frame_14, "SRIM file directory" );
+	lab_srimdir->SetTextJustify( 36 );
+	lab_srimdir->SetMargins( 0, 0, 0, 0 );
+	lab_srimdir->SetWrapLength( -1 );
+	lab_srimdir->Resize( 80, lab_srimdir->GetDefaultHeight() );
+	sub_frame_14->AddFrame( lab_srimdir,
 						  new TGLayoutHints( kLHintsLeft | kFixedWidth, 2, 2, 2, 2 ) );
 	
 	// Doppler - Zb
@@ -590,6 +604,13 @@ MBSorter::MBSorter() {
 	text_cutfile->Resize( 370, text_cutfile->GetDefaultHeight() );
 	sub_frame_13->AddFrame( text_cutfile, new TGLayoutHints( kLHintsRight | kLHintsExpandX, 2, 2, 2, 2 ) );
 	
+	// SRIM directory
+	text_srimdir = new TGTextEntry( sub_frame_14 );
+	text_srimdir->SetMaxLength( 4096 );
+	text_srimdir->SetAlignment( kTextLeft );
+	text_srimdir->Resize( 370, text_srimdir->GetDefaultHeight() );
+	sub_frame_14->AddFrame( text_srimdir, new TGLayoutHints( kLHintsRight | kLHintsExpandX, 2, 2, 2, 2 ) );
+	
 	
 	//////////////////////////
 	// Create check buttons //
@@ -622,11 +643,11 @@ MBSorter::MBSorter() {
 	check_verbose = new TGCheckButton( sub_frame_10, "Verbose" );
 	sub_frame_10->AddFrame( check_verbose, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
-	check_config = new TGCheckButton( sub_frame_14, "Use config file" );
-	sub_frame_14->AddFrame( check_config, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
+	check_config = new TGCheckButton( sub_frame_15, "Use config file" );
+	sub_frame_15->AddFrame( check_config, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
-	check_cutfile = new TGCheckButton( sub_frame_14, "Use cut file" );
-	sub_frame_14->AddFrame( check_cutfile, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
+	check_cutfile = new TGCheckButton( sub_frame_15, "Use cut file" );
+	sub_frame_15->AddFrame( check_cutfile, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
 	
 	///////////////////////////
@@ -822,19 +843,20 @@ MBSorter::MBSorter() {
 	// Defaults //
 	//////////////
 	
-	text_daq_dir->SetText( "/mbdata/miniball/is628-171106" );
-	text_local_dir->SetText( "/media/MinballBackup/is628/medfiles" );
+	text_daq_dir->SetText( "/mbdata/miniball/setup-180524" );
+	text_local_dir->SetText( "/run/media/MiniballAnalysis/setup2018/medfiles" );
 	text_med_pre->SetText( "22Ne" );
 
 	text_add_file->SetText( "22Ne_001" );
 
-	text_settings->SetText( "/media/MinballBackup/is628/config/MBSettings2017_CLX_noBD.dat" );
+	text_settings->SetText( "/run/media/MiniballAnalysis/is644/config/MBSettings2017_CLX_noBD.dat" );
 	check_source->SetOn();
 
-	text_outfile->SetText( "/media/MinballBackup/is628/rootfiles/22Ne_93Nb_0050um" );
-	text_calfile->SetText( "/media/MinballBackup/is628/config/is628-offline.cal" );
-	text_config->SetText( "/media/MinballBackup/is628/config/config-is628.dat" );
-	text_cutfile->SetText( "/media/MinballBackup/is628/config/cutfile-is628.root:Bcut:Tcut" );
+	text_outfile->SetText( "/run/media/MiniballAnalysis/is644/rootfiles/22Ne_93Nb_0050um" );
+	text_calfile->SetText( "/run/media/MiniballAnalysis/is644/config/is628-offline.cal" );
+	text_config->SetText( "/run/media/MiniballAnalysis/is644/config/config-is628.dat" );
+	text_cutfile->SetText( "/run/media/MiniballAnalysis/is644/config/cutfile-is628.root:Bcut:Tcut" );
+	text_srimdir->SetText( "/run/media/MiniballAnalysis/srim" );
 
 	check_cdpad->SetOn();
 	//check_singles->SetOn();
@@ -843,15 +865,15 @@ MBSorter::MBSorter() {
 	//check_config->SetOn();
 	check_cutfile->SetOn();
 
-	num_dop_zb->SetNumber( 10 );
-	num_dop_zt->SetNumber( 41 );
-	num_dop_ab->SetNumber( 22 );
-	num_dop_at->SetNumber( 93 );
-	num_dop_eb->SetNumber( 5505 );
-	num_dop_ex->SetNumber( 1400 );
-	num_dop_th->SetNumber( 3.90 );
-	num_dop_id->SetNumber( 1.95 );
-	num_dop_cd->SetNumber( 34.2 );
+	num_dop_zb->SetNumber( 36 );
+	num_dop_zt->SetNumber( 82 );
+	num_dop_ab->SetNumber( 96 );
+	num_dop_at->SetNumber( 208 );
+	num_dop_eb->SetNumber( 4800 );
+	num_dop_ex->SetNumber( 550 );
+	num_dop_th->SetNumber( 2.0 );
+	num_dop_id->SetNumber( 1.0 );
+	num_dop_cd->SetNumber( 28.6 );
 	num_dop_ro->SetNumber( 243.8 );
 	num_dop_dl->SetNumber( 0.0007 );
 	num_dop_sp->SetNumber( 26.2 );
@@ -1065,9 +1087,9 @@ void MBSorter::on_ana_clicked() {
 		cmd += " -At ";
 		cmd += convertInt( num_dop_at->GetIntNumber() );
 		cmd += " -Eb ";
-		cmd += convertInt( num_dop_eb->GetIntNumber() );
+		cmd += convertFloat( num_dop_eb->GetNumber() );
 		cmd += " -Ex ";
-		cmd += convertInt( num_dop_ex->GetIntNumber() );
+		cmd += convertFloat( num_dop_ex->GetNumber() );
 		cmd += " -thick ";
 		cmd += convertFloat( num_dop_th->GetNumber() );
 		cmd += " -depth ";
@@ -1080,6 +1102,8 @@ void MBSorter::on_ana_clicked() {
 		cmd += convertFloat( num_dop_dl->GetNumber() );
 		cmd += " -spededist ";
 		cmd += convertFloat( num_dop_sp->GetNumber() );
+		cmd += " -srim ";
+		cmd += text_srimdir->GetText();
 
 	}
 
@@ -1149,9 +1173,9 @@ void MBSorter::on_tdriv_clicked() {
 		cmd += " -At ";
 		cmd += convertInt( num_dop_at->GetIntNumber() );
 		cmd += " -Eb ";
-		cmd += convertInt( num_dop_eb->GetIntNumber() );
+		cmd += convertFloat( num_dop_eb->GetNumber() );
 		cmd += " -Ex ";
-		cmd += convertInt( num_dop_ex->GetIntNumber() );
+		cmd += convertFloat( num_dop_ex->GetNumber() );
 		cmd += " -thick ";
 		cmd += convertFloat( num_dop_th->GetNumber() );
 		cmd += " -depth ";

@@ -49,7 +49,8 @@ protected:
 	TGVerticalFrame     *sub_frame_11;		// sub frame for Analysis buttons/boxes
 	TGHorizontalFrame   *sub_frame_12;		// sub-sub frame for configuration file
 	TGHorizontalFrame   *sub_frame_13;		// sub-sub frame for kinematic cut file
-	TGHorizontalFrame   *sub_frame_14;		// sub-sub frame for Analysis check buttons
+	TGHorizontalFrame   *sub_frame_14;		// sub-sub frame for SRIM directory
+	TGHorizontalFrame   *sub_frame_15;		// sub-sub frame for Analysis check buttons
 	
 	// Separators
 	TGHorizontal3DLine  *fHorizontal_0;
@@ -71,6 +72,7 @@ protected:
 	TGLabel				*lab_calfile;		// label for calibration file
 	TGLabel				*lab_config;		// label for configuration file
 	TGLabel				*lab_cutfile;		// label for kinematic cutfile
+	TGLabel				*lab_srimdir;		// label for SRIM directory
 	TGLabel				*lab_dop_zb;		// label for Z of beam
 	TGLabel				*lab_dop_zt;		// label for Z of target
 	TGLabel				*lab_dop_ab;		// label for A of beam
@@ -111,6 +113,7 @@ protected:
 	TGTextEntry         *text_calfile;		// text entry for calibration file
 	TGTextEntry         *text_config;		// text entry for configuration file
 	TGTextEntry         *text_cutfile;		// text entry for kinematic cutfile
+	TGTextEntry         *text_srimdir;		// text entry for SRIM directory
 
 	// Number entries
 	TGNumberEntry		*num_last_entry;	// number for the last entry flag
