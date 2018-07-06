@@ -612,6 +612,9 @@ int main(int argc, char* argv[]) {
 						// We don't care if it's the same event
 						if( k == j ) continue;
 						
+						// Make sure it's a Miniball DGF
+						if( dgf_num2 < 0 || dgf_num2 > 47 ) continue;
+
 						// Get global segment number (0-167)
 						gSeg = ( dgf_num / 2 ) * 7;
 						if( dgf_num2 % 2 == 0 ) gSeg += dgf_ch2;
