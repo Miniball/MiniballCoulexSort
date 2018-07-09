@@ -743,7 +743,7 @@ MBSorter::MBSorter() {
 		0.00001, 999999 );
 	dop_frame_1->AddFrame( num_dop_pd, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
-	num_dop_bg = new TGNumberEntry( dop_frame_1, -1., 5, -1,
+	num_dop_bg = new TGNumberEntry( dop_frame_1, -0.461538, 5, -1,
 		TGNumberFormat::kNESReal, TGNumberFormat::kNEAAnyNumber, TGNumberFormat::kNELLimitMinMax,
 		-999, 999 );
 	dop_frame_1->AddFrame( num_dop_bg, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
