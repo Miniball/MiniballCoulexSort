@@ -73,18 +73,19 @@ bool doppler::stoppingpowers( string opt ) {
 
 	unsigned int index = 0; // BT = 0, TT = 1, BS = 2, TS = 3
 	string title = "Stopping powers for ";
+	string srimfilename = srimfile;
 	
 	// Beam or target like..?
 	if( opt.substr(0,1) == "B" ) {
 		
-		srimfile += "/" + convertInt(Ab+0.5) + gElName[Zb-1];
+		srimfilename += "/" + convertInt(Ab+0.5) + gElName[Zb-1];
 		title += convertInt(Ab+0.5) + gElName[Zb-1];
 		
 	}
 	
 	else if( opt.substr(0,1) == "T" ) {
 
-		srimfile += "/" + convertInt(At+0.5) + gElName[Zt-1];
+		srimfilename += "/" + convertInt(At+0.5) + gElName[Zt-1];
 		title += convertInt(At+0.5) + gElName[Zt-1];
 		index++;
 		
@@ -100,7 +101,7 @@ bool doppler::stoppingpowers( string opt ) {
 	// Target, contaminant or silicon dead layer..?
 	if( opt.substr(1,1) == "T" ) {
 		
-		srimfile += "_" + convertInt(At+0.5) + gElName[Zt-1] + ".txt";
+		srimfilename += "_" + convertInt(At+0.5) + gElName[Zt-1] + ".txt";
 		title += " in " + convertInt(At+0.5) + gElName[Zt-1];
 		title += ";Ion energy [keV];Stopping power [MeV/(mg/cm^2)]";
 		
@@ -108,7 +109,7 @@ bool doppler::stoppingpowers( string opt ) {
 	
 	else if( opt.substr(1,1) == "S" ) {
 		
-		srimfile += "_Si.txt";
+		srimfilename += "_Si.txt";
 		title += " in the Si dead layer";
 		title += ";Ion energy [keV];Stopping power [MeV/mm]";
 		index += 2;
@@ -117,7 +118,7 @@ bool doppler::stoppingpowers( string opt ) {
 	
 	else if( opt.substr(1,1) == "C" ) {
 		
-		srimfile += "_contaminant.txt";
+		srimfilename += "_contaminant.txt";
 		title += " in the contaminant layer";
 		title += ";Ion energy [keV];Stopping power [MeV/(mg/cm^2)]";
 		index += 4;
@@ -132,11 +133,11 @@ bool doppler::stoppingpowers( string opt ) {
 	}
 	 
 	ifstream infile;
-	infile.open( srimfile.c_str(), ios::in );
+	infile.open( srimfilename.c_str(), ios::in );
 	 
 	if( !infile.is_open() ) {
 		  
-		cout << "Cannot open " << srimfile << endl;
+		cout << "Cannot open " << srimfilename << endl;
 		return false;
 		  
 	}
@@ -191,7 +192,7 @@ bool doppler::stoppingpowers( string opt ) {
 	//gSP[index]->GetXaxis()->SetTitleOffset(1.3);
 	//gSP[index]->GetYaxis()->SetTitleOffset(1.3);
 	//TGaxis::SetMaxDigits(3);
-	string pdfname = srimfile.substr( 0, srimfile.find_last_of(".") ) + ".pdf";
+	string pdfname = srimfilename.substr( 0, srimfilename.find_last_of(".") ) + ".pdf";
 	c->SetLogx();
 	c->SaveAs( pdfname.c_str() );
 	 
