@@ -69,7 +69,7 @@ MBSorter::MBSorter() {
 	centre_frame->AddFrame( fHorizontal_1, new TGLayoutHints( kLHintsLeft | kLHintsTop, 2, 2, 2, 2 ) );
 	
 	// Centre frame 2 - TreeBuilder
-	comp_frame_2 = new TGCompositeFrame( centre_frame, 800, 90, kHorizontalFrame | kFixedWidth );
+	comp_frame_2 = new TGCompositeFrame( centre_frame, 800, 135, kHorizontalFrame | kFixedWidth );
 	comp_frame_2->SetName( "comp_frame_2" );
 	centre_frame->AddFrame( comp_frame_2, new TGLayoutHints( kLHintsExpandX ) );
 	
@@ -79,7 +79,7 @@ MBSorter::MBSorter() {
 	centre_frame->AddFrame( fHorizontal_2, new TGLayoutHints( kLHintsLeft | kLHintsTop, 2, 2, 2, 2 ) );
 	
 	// Centre frame 3 - CLXAna
-	comp_frame_3 = new TGCompositeFrame( centre_frame, 800, 90, kHorizontalFrame | kFixedWidth );
+	comp_frame_3 = new TGCompositeFrame( centre_frame, 800, 180, kHorizontalFrame | kFixedWidth );
 	comp_frame_3->SetName( "comp_frame_3" );
 	centre_frame->AddFrame( comp_frame_3, new TGLayoutHints( kLHintsExpandX ) );
 	
@@ -139,7 +139,7 @@ MBSorter::MBSorter() {
 	sub_frame_7->AddFrame( sub_frame_10, new TGLayoutHints( kLHintsBottom | kLHintsExpandX ) );
 	
 	// Sub frame 11 - Analysis boxes
-	sub_frame_11 = new TGVerticalFrame( comp_frame_3, 700, 90 );
+	sub_frame_11 = new TGVerticalFrame( comp_frame_3, 700, 180 );
 	sub_frame_11->SetName( "sub_frame_11" );
 	comp_frame_3->AddFrame( sub_frame_11, new TGLayoutHints( kLHintsLeft ) );
 	
@@ -517,6 +517,25 @@ MBSorter::MBSorter() {
 						  new TGLayoutHints( kLHintsTop, 2, 2, 5, 5 ) );
 	
 	
+	// Doppler - Background fraction
+	lab_dop_bg = new TGLabel( dop_frame_0, "Background fraction" );
+	lab_dop_bg->SetTextJustify( kTextRight );
+	lab_dop_bg->SetMargins( 0, 0, 0, 0 );
+	lab_dop_bg->SetWrapLength( -1 );
+	lab_dop_bg->Resize( 40, lab_dop_bg->GetDefaultHeight() );
+	dop_frame_0->AddFrame( lab_dop_bg,
+						  new TGLayoutHints( kLHintsTop | kLHintsRight, 2, 2, 5, 5 ) );
+	
+	// Units - Background fraction
+	lab_unit_bg = new TGLabel( dop_frame_2, "" );
+	lab_unit_bg->SetTextJustify( 36 );
+	lab_unit_bg->SetMargins( 0, 0, 0, 0 );
+	lab_unit_bg->SetWrapLength( -1 );
+	lab_unit_bg->Resize( 40, lab_unit_bg->GetDefaultHeight() );
+	dop_frame_2->AddFrame( lab_unit_bg,
+						  new TGLayoutHints( kLHintsTop, 2, 2, 5, 5 ) );
+	
+	
 	/////////////////////
 	// Create list box //
 	/////////////////////
@@ -724,6 +743,11 @@ MBSorter::MBSorter() {
 		0.00001, 999999 );
 	dop_frame_1->AddFrame( num_dop_pd, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
+	num_dop_bg = new TGNumberEntry( dop_frame_1, -1., 5, -1,
+		TGNumberFormat::kNESReal, TGNumberFormat::kNEAAnyNumber, TGNumberFormat::kNELLimitMinMax,
+		-999, 999 );
+	dop_frame_1->AddFrame( num_dop_bg, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
+	
 	
 	///////////////////////////
 	// Create action buttons //
@@ -843,20 +867,20 @@ MBSorter::MBSorter() {
 	// Defaults //
 	//////////////
 	
-	text_daq_dir->SetText( "/mbdata/miniball/setup-180524" );
-	text_local_dir->SetText( "/run/media/MiniballAnalysis/setup2018/medfiles" );
+	text_daq_dir->SetText( "/mbdata/miniball/is644-180708" );
+	text_local_dir->SetText( "/run/media/miniball/MiniballAnalysis/is644/medfiles" );
 	text_med_pre->SetText( "22Ne" );
 
-	text_add_file->SetText( "22Ne_001" );
+	text_add_file->SetText( "22Ne_196Pt_019" );
 
-	text_settings->SetText( "/run/media/MiniballAnalysis/is644/config/MBSettings2017_CLX_noBD.dat" );
+	text_settings->SetText( "/run/media/miniball/MiniballAnalysis/is644/config/MBSettings2018_CLX.dat" );
 	check_source->SetOn();
 
-	text_outfile->SetText( "/run/media/MiniballAnalysis/is644/rootfiles/22Ne_93Nb_0050um" );
-	text_calfile->SetText( "/run/media/MiniballAnalysis/is644/config/is628-offline.cal" );
-	text_config->SetText( "/run/media/MiniballAnalysis/is644/config/config-is628.dat" );
-	text_cutfile->SetText( "/run/media/MiniballAnalysis/is644/config/cutfile-is628.root:Bcut:Tcut" );
-	text_srimdir->SetText( "/run/media/MiniballAnalysis/srim" );
+	text_outfile->SetText( "/run/media/miniball/MiniballAnalysis/is644/rootfiles/22Ne_196Pt" );
+	text_calfile->SetText( "/run/media/miniball/MiniballAnalysis/is644/config/is644-offline.cal" );
+	text_config->SetText( "/run/media/miniball/MiniballAnalysis/is644/config/config-is644.dat" );
+	text_cutfile->SetText( "/run/media/miniball/MiniballAnalysis/is644/config/cutfile-is644.root:Bcut:Tcut" );
+	text_srimdir->SetText( "/run/media/miniball/MiniballAnalysis/srim" );
 
 	check_cdpad->SetOn();
 	//check_singles->SetOn();

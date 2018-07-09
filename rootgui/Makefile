@@ -10,7 +10,7 @@ ifeq ($(ROOTVER),5)
 	DICTEXT   := .h
 else
 	ROOTDICT  := rootcling
-	DICTEXT   := _dict.pcm
+	DICTEXT   := _rdict.pcm
 endif
 
 BIN_DIR     := ../bin
@@ -50,6 +50,7 @@ mb_sorter_dict.o: mb_sorter_dict.cc
 
 mb_sorter_dict.cc: $(DEPENDENCIES)
 	$(ROOTDICT) -f $@ -c $(INCLUDES) $(DEPENDENCIES)
+	cp mb_sorter_dict$(DICTEXT) $(LIB_DIR)
 
 
 clean:
