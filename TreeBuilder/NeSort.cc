@@ -16,11 +16,13 @@ int main(int argc, char* argv[]) {
 	string OutputFile;
 	string CalibrationFile;
 	bool verbose = false;
+	bool pgated = false;
 	CommandLineInterface* interface = new CommandLineInterface();
 
 	interface->Add("-i", "inputfiles", &InputFiles );
 	interface->Add("-o", "outputfile", &OutputFile );
 	interface->Add("-c", "calibrationfile", &CalibrationFile );
+	interface->Add("-p", "particlegated", &pgated );
 	interface->Add("-vl", "verbose", &verbose );
 
 	interface->CheckFlags(argc, argv);
@@ -87,7 +89,14 @@ int main(int argc, char* argv[]) {
 	float GammaEnergy = 0.;
 	float GammaEnergyCore[24];
 	int dgf_num, dgf_ch, dgf_en;
+	int adc_num;
+	double dgf_t, adc_t;
+	bool veto = false;
  
+	// How many ticks need to align the prompt peak for each adc?
+	double dtAdc[4];
+	for( unsigned int i = 0; i < 4; i++ ) dtAdc[i] = Cal->AdcTime(i);
+
 	// ------ Histograms ------ //
 
 	// Histogram errors
@@ -164,7 +173,27 @@ int main(int argc, char* argv[]) {
 			dgf_num = event->Dgf(j)->ModuleNumber();
 			dgf_ch  = event->Dgf(j)->Channel();
 			dgf_en  = event->Dgf(j)->Energy();
+			dgf_t   = event->Dgf(j)->Time();
+
+			// Check particle coincidence
+			veto = true;
+			if( !pgated ) {
+
+				for( k = 0; k < event->NumberOfAdcs(); k++ ) {
+
+					adc_num = event->Adc(j)->ModuleNumber();
+					adc_t = event->Adc(j)->Time();
+					if( adc_num < 0 || adc_num > 3 ) continue; 
+			
+					if( TMath::Abs( adc_t - dgf_t + dtAdc[adc_num] ) < 20. ) veto = false; 
+
+				} // k
+
+			} // pgated
+			else veto = false;
 				
+			if( veto ) continue;
+
 			if( 0 <= dgf_num && dgf_num < 48 && dgf_num%2 == 0 && dgf_ch == 0 ) {
 
 				GammaEnergy = Cal->DgfEnergy( dgf_num, dgf_ch, dgf_en );
@@ -184,7 +213,26 @@ int main(int argc, char* argv[]) {
 			dgf_num = event->Dgf(j)->ModuleNumber();
 			dgf_ch  = event->Dgf(j)->Channel();
 			dgf_en  = event->Dgf(j)->Energy();
+			dgf_t   = event->Dgf(j)->Time();
 			
+			// Check particle coincidence
+			veto = true;
+			if( !pgated ) {
+
+				for( k = 0; k < event->NumberOfAdcs(); k++ ) {
+
+					adc_num = event->Adc(j)->ModuleNumber();
+					adc_t = event->Adc(j)->Time();
+					if( adc_num < 0 || adc_num > 3 ) continue; 
+			
+					if( TMath::Abs( adc_t - dgf_t + dtAdc[adc_num] ) < 20. ) veto = false; 
+
+				} // k
+
+			} // pgated
+			else veto = false;
+				
+			if( veto ) continue;
 			if( 0 <= dgf_num && dgf_num < 48 && 0 <= dgf_ch && dgf_ch < 4 ) {
 
 				GammaEnergy = Cal->DgfEnergy( dgf_num, dgf_ch, dgf_en );

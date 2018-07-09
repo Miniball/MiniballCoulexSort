@@ -168,8 +168,8 @@ int main(int argc, char* argv[]) {
 	bool veto_gamma = false;
 	unsigned int gSeg;
 	vector< unsigned int > dead_segments;
-	dead_segments.push_back( 106 ); // clu 5, core 0, seg 1 = 18A1
-	dead_segments.push_back( 107 ); // clu 5, core 0, seg 2 = 18A2
+	//dead_segments.push_back( 106 ); // clu 5, core 0, seg 1 = 18A1
+	//dead_segments.push_back( 107 ); // clu 5, core 0, seg 2 = 18A2
 	
 	
 	// ------------------------------------------------------------------------ //
@@ -599,7 +599,7 @@ int main(int argc, char* argv[]) {
 			
 					MaxSegClu = dgf_num / 6;
 					MaxSegCore = dgf_num % 6 / 2;
-					MaxSegId = 0; // initialise as core (if no segment hit (dead), use core!)						
+					MaxSegId = 0; // initialise as core (if no segment hit (dead), use core!)
 
 					// Check for highest energy segment in same detector
 					for( k = 0; k < event->NumberOfDgfs(); k++ ) {
@@ -735,7 +735,7 @@ int main(int argc, char* argv[]) {
 						PartEnergy = Cal->AdcEnergy( adc_num, adc_ch, adc_en );
 
 						E_part_ann[adc_num][adc_ch]->Fill( adc_en );
-						E_part_ann_cal[adc_num][adc_ch]->Fill( PartEnergy/1000. );						
+						E_part_ann_cal[adc_num][adc_ch]->Fill( PartEnergy/1000. );
 
 						CD_front_energy[adc_num]->Fill( adc_ch, adc_en );
 						CD_front_energy_cal[adc_num]->Fill( adc_ch, PartEnergy/1000. );
