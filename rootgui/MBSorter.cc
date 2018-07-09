@@ -1126,6 +1126,8 @@ void MBSorter::on_ana_clicked() {
 		cmd += convertFloat( num_dop_dl->GetNumber() );
 		cmd += " -spededist ";
 		cmd += convertFloat( num_dop_sp->GetNumber() );
+		cmd += " -bg_frac ";
+		cmd += convertFloat( num_dop_bg->GetNumber() );
 		cmd += " -srim ";
 		cmd += text_srimdir->GetText();
 
