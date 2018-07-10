@@ -181,8 +181,8 @@ int main(int argc, char* argv[]) {
 
 				for( k = 0; k < event->NumberOfAdcs(); k++ ) {
 
-					adc_num = event->Adc(j)->ModuleNumber();
-					adc_t = event->Adc(j)->Time();
+					adc_num = event->Adc(k)->ModuleNumber();
+					adc_t = event->Adc(k)->Time();
 					if( adc_num < 0 || adc_num > 3 ) continue; 
 			
 					if( TMath::Abs( adc_t - dgf_t + dtAdc[adc_num] ) < 20. ) veto = false; 
@@ -221,8 +221,8 @@ int main(int argc, char* argv[]) {
 
 				for( k = 0; k < event->NumberOfAdcs(); k++ ) {
 
-					adc_num = event->Adc(j)->ModuleNumber();
-					adc_t = event->Adc(j)->Time();
+					adc_num = event->Adc(k)->ModuleNumber();
+					adc_t = event->Adc(k)->Time();
 					if( adc_num < 0 || adc_num > 3 ) continue; 
 			
 					if( TMath::Abs( adc_t - dgf_t + dtAdc[adc_num] ) < 20. ) veto = false; 
