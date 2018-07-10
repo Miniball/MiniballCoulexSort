@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
 	interface->Add("-o", "outputfile", &OutputFile );
 	interface->Add("-c", "calibrationfile", &CalibrationFile );
 	interface->Add("-p", "particlegated", &pgated );
-	interface->Add("-vl", "verbose", &verbose );
+	interface->Add("-v", "verbose", &verbose );
 
 	interface->CheckFlags(argc, argv);
 
@@ -177,7 +177,7 @@ int main(int argc, char* argv[]) {
 
 			// Check particle coincidence
 			veto = true;
-			if( !pgated ) {
+			if( pgated ) {
 
 				for( k = 0; k < event->NumberOfAdcs(); k++ ) {
 
@@ -217,7 +217,7 @@ int main(int argc, char* argv[]) {
 			
 			// Check particle coincidence
 			veto = true;
-			if( !pgated ) {
+			if( pgated ) {
 
 				for( k = 0; k < event->NumberOfAdcs(); k++ ) {
 
