@@ -24,12 +24,11 @@ class Calibration {
 
 public:
 
-	Calibration();
-	Calibration(const char*);
+	Calibration( string filename );
 	~Calibration();
 	void ReadCalibration();
 	void PrintCalibration();
-	void SetFile(const char* filename){
+	void SetFile( string filename ){
 		fInputFile = filename;
 	}
 	const string InputFile(){
@@ -61,7 +60,14 @@ private:
 	vector< vector<double> > fBCDPosStrip;
 	vector< vector<double> > fBCDPosRing;
 
+	vector< vector<double> > fClusterTheta;
+	vector< vector<double> > fClusterPhi;
+	vector< vector<double> > fClusterR;
+	vector< vector<double> > fClusterAlpha;
+
 	vector<double> fAdcTime;
+
+	double zoffset;
 
 	double fBeamdumpOffset;
 	double fBeamdumpGain;
@@ -75,6 +81,7 @@ private:
 	int fNofAdcsCD;
 	int fNofAdcChans;
 	int fNofCDSegm;
+	int fNofClusters;
  
 	double fFWHMPosMux;
 	vector<double> fLimitFBCD;

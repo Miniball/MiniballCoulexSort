@@ -4,9 +4,7 @@
 using namespace std;
 using namespace TMath;
 
-Calibration::Calibration() {}
-
-Calibration::Calibration( const char* filename ) {
+Calibration::Calibration( string filename ) {
 
 	SetFile( filename );
 	fVerbose = 0;
@@ -16,13 +14,14 @@ Calibration::Calibration( const char* filename ) {
 	fNofAdcChans = 32;
 	fNofAdcsCD = 4;
 	fNofCDSegm = 16; // 16: Only one CD
+	fNofClusters = 8;
 	fBeamdumpDgf = 53;
 	RawRandomized = 0.;
 	fFWHMPosMux = 6.;
 	fLimitFBCD.resize(fNofAdcs);
 	ReadCalibration();
 	fRand = new TRandom();
-	if( fVerbose > 0 ) PrintCalibration();
+	//if( fVerbose ) PrintCalibration();
 		
 }
 
@@ -35,7 +34,7 @@ Calibration::~Calibration() {
 void Calibration::ReadCalibration() {
 
 	TEnv *config = new TEnv(fInputFile.data());
-	if( fVerbose > 1 ) cout << "reading dgfs" << endl;
+	if( fVerbose ) cout << "reading dgfs" << endl;
 	fDgfOffset.resize(fNofDgfs);
 	fDgfGain.resize(fNofDgfs);
 	fDgfGainQuadr.resize(fNofDgfs);
@@ -56,12 +55,12 @@ void Calibration::ReadCalibration() {
 
 	}
 	
-	if( fVerbose > 1 ) cout << "reading beamdump" << endl;
+	if( fVerbose ) cout << "reading beamdump" << endl;
 	fBeamdumpOffset = config->GetValue(Form("dgf_%d_%d.Offset", fBeamdumpDgf, 0),0.);
 	fBeamdumpGain = config->GetValue(Form("dgf_%d_%d.Gain", fBeamdumpDgf, 0),1.);
 	fBeamdumpGainQuadr = config->GetValue(Form("dgf_%d_%d.GainQuadr", fBeamdumpDgf, 0),0.);
 
-	if( fVerbose > 1 ) cout << "reading adcs" << endl;
+	if( fVerbose ) cout << "reading adcs" << endl;
 	fAdcOffset.resize(fNofAdcs);
 	fAdcGain.resize(fNofAdcs);
 	fAdcTime.resize(fNofAdcs);
@@ -82,7 +81,7 @@ void Calibration::ReadCalibration() {
 
 	}
   
-	if( fVerbose > 1 ) cout << "reading FCD Pos" << endl;
+	if( fVerbose ) cout << "reading FCD Pos" << endl;
 	fFCDPosStrip.resize(fNofAdcsCD);
 	fFCDPosRing.resize(fNofAdcsCD);
 		
@@ -100,14 +99,14 @@ void Calibration::ReadCalibration() {
 
 	}
 
-	if( fVerbose > 1 ) cout << "reading limit FCD-BCD Pos" << endl;
+	if( fVerbose ) cout << "reading limit FCD-BCD Pos" << endl;
 	for(int adc=0; adc<fNofAdcsCD; adc++){
 
 	    fLimitFBCD[adc] = config->GetValue(Form("FBCD.LimitPos.Adc.%d", adc),650.);
 
 	}
   
-	if( fVerbose > 1 ) cout << "reading BCD Pos" << endl;
+	if( fVerbose ) cout << "reading BCD Pos" << endl;
 	fBCDPosStrip.resize(fNofAdcsCD);
 	fBCDPosRing.resize(fNofAdcsCD);
 
@@ -125,6 +124,22 @@ void Calibration::ReadCalibration() {
 
 	}
   
+	if( fVerbose ) cout << "reading Miniball angles" << endl;
+	fClusterTheta.resize(fNofClusters);
+	fClusterPhi.resize(fNofClusters);
+	fClusterAlpha.resize(fNofClusters);
+	fClusterR.resize(fNofClusters);
+
+	for( int clu=0; clu < fNofClusters; clu++ ) {
+
+		fClusterTheta[clu] = config->GetValue( Form("Cluster.%d.Theta", clu), 0. );
+		fClusterPhi[clu] =   config->GetValue( Form("Cluster.%d.Phi", clu), 0. );
+		fClusterAlpha[clu] = config->GetValue( Form("Cluster.%d.Alpha", clu), 0. );
+		fClusterR[clu] =     config->GetValue( Form("Cluster.%d.R", clu), 0. );
+		
+
+	}
+
 	delete config;
 	
 }
