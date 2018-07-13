@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
 
 	if( tr == NULL ) {
 
-		cout << "could not find tree caltr in file " << endl;
+		cout << "could not find tree tr in file " << endl;
 
 		for( unsigned int i=0; i < InputFiles.size(); i++ ) {
 
@@ -104,8 +104,8 @@ int main(int argc, char* argv[]) {
 
 	}
 
-	Calibration *Cal = new Calibration( CalibrationFile.c_str() );
-	if(verbose) Cal->PrintCalibration();
+	Calibration *Cal = new Calibration( CalibrationFile );
+	//if( verbose ) Cal->PrintCalibration();
   
 	BuiltEvent* event = new BuiltEvent;
 
@@ -232,6 +232,9 @@ int main(int argc, char* argv[]) {
 	bool ab_evt = false;
 	unsigned short ab_mul = 0;
 
+	float gamma_theta[8][3][6];
+	float gamma_phi[8][3][6];
+
 	vector<unsigned int> Quad; // 0: Top, 1: Bottom, 2: Left and 3; Right
 	vector<unsigned int> Elem_fired; // 0: FCD, 1: Barrel, 2: BCD and 3: Pad
 	vector<unsigned int> Chan_front; // Rings for CDs, Total Energy for Pad or Strips for Barrel
@@ -315,6 +318,7 @@ int main(int argc, char* argv[]) {
 	gDirectory->cd("/");
 	
 	// Particle spectra for every segment
+	TH2F* part = new TH2F("part","part",16,-0.5,15.5,1000,0,1000);
 	TH1F* E_part_ann[4][16];
 	TH1F* E_part_ann_cal[4][16];
 	TH1F* E_part_sec[4][12];
@@ -445,6 +449,30 @@ int main(int argc, char* argv[]) {
 
 	}
 	// ------------------------------------------------------------------------ //
+
+	// ------------------------------------------------------------------------ //
+	// Setup Miniball angles
+	// ------------------------------------------------------------------------ //
+	MBGeometry mbg;	
+	for( int i = 0; i < 8; i++ ) { // loop over clusters
+
+		mbg.SetupCluster( clu_theta[i], clu_phi[i], clu_alpha[i], clu_r[i], zoffset );
+
+		for( unsigned int j = 0; j < 3; j++ ) { // loop over cores
+
+			gamma_theta[i][j][0] = mbg.GetCoreTheta(j) * TMath::DegToRad();
+			gamma_phi[i][j][0] = mbg.GetCorePhi(j) * TMath::DegToRad();
+
+			for( int k = 0; k < 6; k++ ) { // loop over segments
+
+				gamma_theta[i][j][k+1] = mbg.GetSegTheta(j,k) * TMath::DegToRad();
+				gamma_phi[i][j][k+1] = mbg.GetSegPhi(j,k) * TMath::DegToRad();
+
+			}
+
+		}
+
+	}
 
 
 	// ------------------------------------------------------------------------ //
@@ -734,6 +762,7 @@ int main(int argc, char* argv[]) {
 						
 						PartEnergy = Cal->AdcEnergy( adc_num, adc_ch, adc_en );
 
+						part->Fill( adc_ch, PartEnergy/1000. );
 						E_part_ann[adc_num][adc_ch]->Fill( adc_en );
 						E_part_ann_cal[adc_num][adc_ch]->Fill( PartEnergy/1000. );
 
