@@ -22,6 +22,7 @@ void mbevts::Initialize() {
 	
 	pen.resize(0);
 	time.resize(0);
+	t1t.resize(0);
 	sst.resize(0);
 	td.resize(0);
 	ann.resize(0);
@@ -30,6 +31,7 @@ void mbevts::Initialize() {
 	coin.resize(0);
 	pr_ptr.resize(0);
 	rndm_ptr.resize(0);
+	del_ptr.resize(0);
 	
 	laser=-1;
 	pr_hits=0;
@@ -58,6 +60,7 @@ void mbevts::CopyData(mbevts* src) {
 	
 	pen = src->pen;
 	time = src->time;
+	t1t = src->t1t;
 	sst = src->sst;
 	td = src->td;
 	ann = src->ann;
@@ -214,7 +217,7 @@ int mbevts::GetSec( int nr ) {
 
 }
 
-void mbevts::SetPart( float en, int a, int s, double t, double ss, float ctd,
+void mbevts::SetPart( float en, int a, int s, double t, double ss, double t1, float ctd,
 							int co, int quad, int laserflag ) { 
 
 	laser=laserflag;
@@ -223,6 +226,7 @@ void mbevts::SetPart( float en, int a, int s, double t, double ss, float ctd,
 	ann.push_back( a );
 	sec.push_back( s );
 	time.push_back( t );
+	t1t.push_back( t1 );
 	sst.push_back( ss );
 	td.push_back( ctd );
 	det.push_back( quad );
