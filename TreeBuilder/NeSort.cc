@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
 	interface->Add("-i", "inputfiles", &InputFiles );
 	interface->Add("-o", "outputfile", &OutputFile );
 	interface->Add("-c", "calibrationfile", &CalibrationFile );
-	interface->Add("-p", "particlegated", &pgated );
+	interface->Add("-p", "pgated", &pgated );
 	interface->Add("-v", "verbose", &verbose );
 
 	interface->CheckFlags(argc, argv);
@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
 
 	}
 
-	Calibration *Cal = new Calibration( CalibrationFile.c_str() );
+	Calibration *Cal = new Calibration( CalibrationFile );
 	if(verbose) Cal->PrintCalibration();
   
 	BuiltEvent* event = new BuiltEvent;

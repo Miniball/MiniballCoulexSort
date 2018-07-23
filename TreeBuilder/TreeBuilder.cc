@@ -1,5 +1,4 @@
 #include "TreeBuilder.hh"
-
 #define PBINS 800
 #define PRANGE 800
 #define PMIN -1.0*PRANGE/PBINS
@@ -136,20 +135,11 @@ int main(int argc, char* argv[]) {
 	// ------------------------------------------------------------------------ //
 	// Hard-coded parameters... TODO read in from file?
 	// ------------------------------------------------------------------------ //
-	// How many ticks need to align the prompt, in ticks.
-	//Double_t dtAdc[4] = {-5.1,-10.0,-4.8,-4.1};  // IS628
-	//Double_t dtAdc[4] = {-5.1,-10.0,-5.2,-6.1};  // IS547
-	//Double_t dtAdc[4] = {-6.2,-11.4,-5.2,-6.8};  // IS562
-	//Double_t dtAdc[4] = {-4.9,-10.2,-5.3,-3.8};  // IS546
-	//Double_t dtAdc[4] = {-13.0,-11.5,-9.0,-11.0};  // IS558
-	//Double_t dtAdc[4] = {14.0,15.5,16.5,8.0};  // IS558
-	//Double_t dtAdc[4] = {14.0,15.5,16.5,8.0};  // IS553
-	//Double_t dtAdc[4] = {35.0,38.0,40.0,30.0};  // IS553 - timestamp corrected
 
 	// IS553
 	Double_t tMinPrompt = -12., tMaxPrompt = 6.;		// 18 ticks
 	Double_t tMinRandom = 8., tMaxRandom = 47.;			// 39 ticks
-	Double_t tMinDelayed = -50., tMaxDelayed = -50.;
+	Double_t tMinDelayed = -31., tMaxDelayed = -13.;	// 18 ticks
  
 	Double_t tMinPromptElectron = -6., tMaxPromptElectron = 6.;		// 12 ticks
 	Double_t tMinRandomElectron = 7., tMaxRandomElectron = 33.;	// = (39/18)*12 = 26
@@ -228,12 +218,12 @@ int main(int argc, char* argv[]) {
 	vector<unsigned short> clu_array;
 	vector<unsigned short> cid_array;
 	vector<unsigned short> sid_array;
-	vector<float> sen_array;
+	vector<float> sen_array; 
 	bool ab_evt = false;
 	unsigned short ab_mul = 0;
 
-	float gamma_theta[8][3][6];
-	float gamma_phi[8][3][6];
+	float gamma_theta[8][3][7];
+	float gamma_phi[8][3][7];
 
 	vector<unsigned int> Quad; // 0: Top, 1: Bottom, 2: Left and 3; Right
 	vector<unsigned int> Elem_fired; // 0: FCD, 1: Barrel, 2: BCD and 3: Pad
@@ -449,14 +439,15 @@ int main(int argc, char* argv[]) {
 
 	}
 	// ------------------------------------------------------------------------ //
-
+	
 	// ------------------------------------------------------------------------ //
 	// Setup Miniball angles
 	// ------------------------------------------------------------------------ //
 	MBGeometry mbg;	
 	for( int i = 0; i < 8; i++ ) { // loop over clusters
 
-		mbg.SetupCluster( clu_theta[i], clu_phi[i], clu_alpha[i], clu_r[i], zoffset );
+		mbg.SetupCluster( Cal->ClusterTheta(i), Cal->ClusterPhi(i),
+			Cal->ClusterAlpha(i), Cal->ClusterR(i), Cal->ZOffset());
 
 		for( unsigned int j = 0; j < 3; j++ ) { // loop over cores
 
@@ -1121,8 +1112,8 @@ int main(int argc, char* argv[]) {
 			mb_evts[GammaCtr]->SetCluid( clu_array[j] );
 			mb_evts[GammaCtr]->SetCid( cid_array[j] );
 			mb_evts[GammaCtr]->SetSid( sid_array[j] );
-			mb_evts[GammaCtr]->SetTheta( 0. );
-			mb_evts[GammaCtr]->SetPhi( 0. );
+			mb_evts[GammaCtr]->SetTheta( gamma_theta[clu_array[j]][cid_array[j]%3][sid_array[j]] );
+			mb_evts[GammaCtr]->SetPhi( gamma_phi[clu_array[j]][cid_array[j]%3][sid_array[j]] );
 				
 			// Do particles
 			for( k = 0; k < Ener_front.size(); k++ ) {
@@ -1158,8 +1149,8 @@ int main(int argc, char* argv[]) {
 
 				// Add particle
 				mb_evts[GammaCtr]->SetPart( Ener_front[k], (int)Chan_front[k], (int)Chan_back[k],
-					(double)time[k], (double)event->SuperCycleTime()/1000000, (float)tdiffPG,
-					(int)coinc_flag, Quad[k], (int)laser[k] );
+					(double)time[k], (double)event->SuperCycleTime(), (double)event->T1Time(),
+					(float)tdiffPG,	(int)coinc_flag, Quad[k], (int)laser[k] );
 					
 				PartCtr++;
 
@@ -1177,8 +1168,8 @@ int main(int argc, char* argv[]) {
 				mb_evts[GammaCtr]->SetCorGamCid( cid_array[l] );
 				mb_evts[GammaCtr]->SetCorGamSid( sid_array[l] );
 				mb_evts[GammaCtr]->SetCorGamGtd( gtd_array[l] - gtd_array[j] );
-				mb_evts[GammaCtr]->SetCorGamTheta( 0. );
-				mb_evts[GammaCtr]->SetCorGamPhi( 0. );
+				mb_evts[GammaCtr]->SetCorGamTheta( gamma_theta[clu_array[l]][cid_array[l]%3][sid_array[l]] );
+				mb_evts[GammaCtr]->SetCorGamPhi( gamma_theta[clu_array[l]][cid_array[l]%3][sid_array[l]] );
 				
 			} // End search for correlated gammas
 			

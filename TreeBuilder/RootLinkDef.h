@@ -3,5 +3,6 @@
 #pragma link off all classes;
 #pragma link off all functions;
 #pragma link C++ class Calibration+;
+#pragma link C++ class MBGeometry+;
 #pragma link C++ class mbevts+;
 #endif

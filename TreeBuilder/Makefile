@@ -34,6 +34,7 @@ INCLUDES  = -I$(MED_DIR)/inc -I$(COMMON_DIR) -I$(MBEVTS_DIR) -I$(MED2R_DIR) -I./
 LFLAGS    = -O2 -g
 
 O_FILES = Calibration.o \
+		  MBGeometry.o \
 		$(MBEVTS_DIR)/mbevts.o
 
 all: MKDIR_P TreeBuilder NeSort AQ4Sort
@@ -63,6 +64,7 @@ AQ4Sort: AQ4Sort.cc $(O_FILES) AQ4SortDictionary.o
 #---- Root stuff
 
 DEPENDENCIES = Calibration.hh \
+			MBGeometry.hh \
 			$(MED2R_DIR)/BuiltEvent.hh \
 			$(MED2R_DIR)/Datas.hh \
 			$(MED2R_DIR)/Modules.hh \

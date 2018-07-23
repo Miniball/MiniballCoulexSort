@@ -131,14 +131,15 @@ void Calibration::ReadCalibration() {
 	fClusterR.resize(fNofClusters);
 
 	for( int clu=0; clu < fNofClusters; clu++ ) {
-
-		fClusterTheta[clu] = config->GetValue( Form("Cluster.%d.Theta", clu), 0. );
-		fClusterPhi[clu] =   config->GetValue( Form("Cluster.%d.Phi", clu), 0. );
-		fClusterAlpha[clu] = config->GetValue( Form("Cluster.%d.Alpha", clu), 0. );
-		fClusterR[clu] =     config->GetValue( Form("Cluster.%d.R", clu), 0. );
+		fClusterR[clu] =     config->GetValue( Form("Cluster_%d.R", clu), 0. );
+		fClusterTheta[clu] = config->GetValue( Form("Cluster_%d.Theta", clu), 0. );
+		fClusterPhi[clu] =   config->GetValue( Form("Cluster_%d.Phi", clu), 0. );
+		fClusterAlpha[clu] = config->GetValue( Form("Cluster_%d.Alpha", clu), 0. );
 		
 
 	}
+
+	zoffset = config->GetValue( "zoffset", 0. );
 
 	delete config;
 	
@@ -273,6 +274,68 @@ double Calibration::AdcTime( int adc ){
 	else cerr << "adc " << adc << " not found!" << endl;
 	
 	return -1;
+	
+}
+
+double Calibration::ClusterTheta( int clu ){
+	
+	if( clu >= 0 && clu < fNofClusters ) {
+		
+		return fClusterTheta[clu];
+		
+	}
+	
+	else cerr << "Cluster " << clu << " not found!" << endl;
+	
+	return -1;
+	
+}
+
+double Calibration::ClusterPhi( int clu ){
+	
+	if( clu >= 0 && clu < fNofClusters ) {
+		
+		return fClusterPhi[clu];
+		
+	}
+	
+	else cerr << "Cluster " << clu << " not found!" << endl;
+	
+	return -1;
+	
+}
+
+double Calibration::ClusterAlpha( int clu ){
+	
+	if( clu >= 0 && clu < fNofClusters ) {
+		
+		return fClusterAlpha[clu];
+		
+	}
+	
+	else cerr << "Cluster " << clu << " not found!" << endl;
+	
+	return -1;
+	
+}
+
+double Calibration::ClusterR( int clu ){
+	
+	if( clu >= 0 && clu < fNofClusters ) {
+		
+		return fClusterR[clu];
+		
+	}
+	
+	else cerr << "Cluster " << clu << " not found!" << endl;
+	
+	return -1;
+	
+}
+
+double Calibration::ZOffset(){
+
+	return zoffset;
 	
 }
 
