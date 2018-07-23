@@ -8,7 +8,7 @@
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hypertarget{class_calibration_a981f7a519754aecbdd3fbd837a5b5762}{{\bfseries Calibration} (const char $\ast$)}\label{class_calibration_a981f7a519754aecbdd3fbd837a5b5762}
+\hypertarget{class_calibration_a8ac7c98e774549cbf0db954983c118cc}{{\bfseries Calibration} (string filename)}\label{class_calibration_a8ac7c98e774549cbf0db954983c118cc}
 
 \item 
 \hypertarget{class_calibration_ad675a1c74ecd23e3af37fcffdeeed246}{void {\bfseries Read\-Calibration} ()}\label{class_calibration_ad675a1c74ecd23e3af37fcffdeeed246}
@@ -17,7 +17,7 @@
 \hypertarget{class_calibration_af224d188d64080db8d14eb0ddbb909f7}{void {\bfseries Print\-Calibration} ()}\label{class_calibration_af224d188d64080db8d14eb0ddbb909f7}
 
 \item 
-\hypertarget{class_calibration_aec8340a8b2134c9cb51b685c928c4cee}{void {\bfseries Set\-File} (const char $\ast$filename)}\label{class_calibration_aec8340a8b2134c9cb51b685c928c4cee}
+\hypertarget{class_calibration_a8fe1671f5fa525d684b75f381b680f50}{void {\bfseries Set\-File} (string filename)}\label{class_calibration_a8fe1671f5fa525d684b75f381b680f50}
 
 \item 
 \hypertarget{class_calibration_a10affa676c2fb505d3075d23c3bf0157}{const string {\bfseries Input\-File} ()}\label{class_calibration_a10affa676c2fb505d3075d23c3bf0157}
@@ -30,6 +30,21 @@
 
 \item 
 \hypertarget{class_calibration_a860b3c2c4a2350009bbbf337aa56a212}{double {\bfseries Adc\-Time} (int adc)}\label{class_calibration_a860b3c2c4a2350009bbbf337aa56a212}
+
+\item 
+\hypertarget{class_calibration_af66b845428db545238c5a49d5edadccd}{double {\bfseries Cluster\-Theta} (int clu)}\label{class_calibration_af66b845428db545238c5a49d5edadccd}
+
+\item 
+\hypertarget{class_calibration_a7d041b9f530257c9f717bcaaaef4b200}{double {\bfseries Cluster\-Phi} (int clu)}\label{class_calibration_a7d041b9f530257c9f717bcaaaef4b200}
+
+\item 
+\hypertarget{class_calibration_ad2ead82be397c3017dd98e490232abd2}{double {\bfseries Cluster\-Alpha} (int clu)}\label{class_calibration_ad2ead82be397c3017dd98e490232abd2}
+
+\item 
+\hypertarget{class_calibration_ae30896b904d2d041f4b76effe283bc93}{double {\bfseries Cluster\-R} (int clu)}\label{class_calibration_ae30896b904d2d041f4b76effe283bc93}
+
+\item 
+\hypertarget{class_calibration_ada9c3b036839143214a5e41b90f2a78e}{double {\bfseries Z\-Offset} ()}\label{class_calibration_ada9c3b036839143214a5e41b90f2a78e}
 
 \item 
 \hypertarget{class_calibration_a65ab7c201643a2bc8cb366b9ac20ab3b}{int {\bfseries Pos\-F\-B\-C\-D\-Ring} (int Quad, unsigned short raw)}\label{class_calibration_a65ab7c201643a2bc8cb366b9ac20ab3b}
@@ -86,7 +101,22 @@
 \hypertarget{class_calibration_a76aaf9355d2e29501ddc97028d9cb02a}{vector$<$ vector$<$ double $>$ $>$ {\bfseries f\-B\-C\-D\-Pos\-Ring}}\label{class_calibration_a76aaf9355d2e29501ddc97028d9cb02a}
 
 \item 
+\hypertarget{class_calibration_a36c09ce185cc30ee60468f0aa5389cfc}{vector$<$ double $>$ {\bfseries f\-Cluster\-Theta}}\label{class_calibration_a36c09ce185cc30ee60468f0aa5389cfc}
+
+\item 
+\hypertarget{class_calibration_a10bc108b3509126dff358fc6de052441}{vector$<$ double $>$ {\bfseries f\-Cluster\-Phi}}\label{class_calibration_a10bc108b3509126dff358fc6de052441}
+
+\item 
+\hypertarget{class_calibration_a8955f576f03e78c846e62a86207493c8}{vector$<$ double $>$ {\bfseries f\-Cluster\-R}}\label{class_calibration_a8955f576f03e78c846e62a86207493c8}
+
+\item 
+\hypertarget{class_calibration_a8b7ad3ce59b00024a9380c1d752dcddc}{vector$<$ double $>$ {\bfseries f\-Cluster\-Alpha}}\label{class_calibration_a8b7ad3ce59b00024a9380c1d752dcddc}
+
+\item 
 \hypertarget{class_calibration_ad17489696497c9913e8fed070988fa28}{vector$<$ double $>$ {\bfseries f\-Adc\-Time}}\label{class_calibration_ad17489696497c9913e8fed070988fa28}
+
+\item 
+\hypertarget{class_calibration_ade913c7df571f0a30478efe4c9623de2}{double {\bfseries zoffset}}\label{class_calibration_ade913c7df571f0a30478efe4c9623de2}
 
 \item 
 \hypertarget{class_calibration_abecda979659e8f0a7768f9969fb143fe}{double {\bfseries f\-Beamdump\-Offset}}\label{class_calibration_abecda979659e8f0a7768f9969fb143fe}
@@ -117,6 +147,9 @@
 
 \item 
 \hypertarget{class_calibration_ab03c449889b48d77b59ddf242a68ef59}{int {\bfseries f\-Nof\-C\-D\-Segm}}\label{class_calibration_ab03c449889b48d77b59ddf242a68ef59}
+
+\item 
+\hypertarget{class_calibration_a9bbc91e22f4b6ec9b7c42fc7025cdbab}{int {\bfseries f\-Nof\-Clusters}}\label{class_calibration_a9bbc91e22f4b6ec9b7c42fc7025cdbab}
 
 \item 
 \hypertarget{class_calibration_a1e62c67cc989b99f6fc991deabf1641b}{double {\bfseries f\-F\-W\-H\-M\-Pos\-Mux}}\label{class_calibration_a1e62c67cc989b99f6fc991deabf1641b}

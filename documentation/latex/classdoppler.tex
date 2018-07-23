@@ -19,7 +19,7 @@ Inheritance diagram for doppler\-:\begin{figure}[H]
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \hyperlink{classdoppler_ac628277148db1641251745f86ba3dc52}{Exp\-Defs} (int Zb\-\_\-, float Ab\-\_\-, int Zt\-\_\-, float At\-\_\-, float Eb\-\_\-, float Ex\-\_\-, float thick\-\_\-, float depth\-\_\-, float cddist\-\_\-, float cdoffset\-\_\-, float deadlayer\-\_\-, float contaminant\-\_\-, float spededist\-\_\-, T\-Cut\-G $\ast$Bcut\-\_\-, T\-Cut\-G $\ast$Tcut\-\_\-)
+void \hyperlink{classdoppler_aec4f49113b347c342672485368b2ad8c}{Exp\-Defs} (int Zb\-\_\-, float Ab\-\_\-, int Zt\-\_\-, float At\-\_\-, float Eb\-\_\-, float Ex\-\_\-, float thick\-\_\-, float depth\-\_\-, float cddist\-\_\-, float cdoffset\-\_\-, float deadlayer\-\_\-, float contaminant\-\_\-, float spededist\-\_\-, T\-Cut\-G $\ast$Bcut\-\_\-, T\-Cut\-G $\ast$Tcut\-\_\-, string srimfile\-\_\-)
 \item 
 int \hyperlink{classdoppler_aa3debb227d73f7cdea5b02e4c202cb19}{Cut} (float P\-En, float anno, int quad)
 \item 
@@ -67,7 +67,7 @@ float \hyperlink{classdoppler_a7f08d93d2bfa269f8c22ac71b604b09a}{D\-C} (float P\
 \item 
 float \hyperlink{classdoppler_ad8387753c2288d464b64579a23d3bc4e}{D\-C\-\_\-elec} (float een, float P\-En, float P\-Th, float P\-Phi, float G\-Th, float G\-Phi, float A)
 \item 
-bool \hyperlink{classdoppler_ad91321c9c9220fff724e5e0982e1a8b8}{stoppingpowers} (bool B\-T, bool T\-T, bool B\-A, bool T\-A, bool B\-C, bool T\-C)
+bool \hyperlink{classdoppler_a0ab0f803a7ab47bf2d087ee973ccdbc3}{stoppingpowers} (bool B\-T, bool T\-T, bool B\-S, bool T\-S, bool B\-C, bool T\-C)
 \item 
 bool \hyperlink{classdoppler_a4be762591578e28f8e9d646475ca943a}{stoppingpowers} (string opt)
 \item 
@@ -139,6 +139,9 @@ static string \hyperlink{classdoppler_a0fa8eec8989c81e59ecfb8e09140020c}{convert
 
 \item 
 \hypertarget{classdoppler_a6c9da779ddf01933a0c9c75a48abc865}{T\-Cut\-G $\ast$ {\bfseries Tcut}}\label{classdoppler_a6c9da779ddf01933a0c9c75a48abc865}
+
+\item 
+\hypertarget{classdoppler_ac178a2b7cfd79567a935438032c43c39}{string {\bfseries srimfile}}\label{classdoppler_ac178a2b7cfd79567a935438032c43c39}
 
 \end{DoxyCompactItemize}
 \subsection*{Static Private Attributes}
@@ -237,7 +240,7 @@ Returns Doppler correction factor for given particle and gamma angular combinati
 \item[{float}]{A}
 \end{DoxyParamCaption}
 )}}\label{classdoppler_ad8387753c2288d464b64579a23d3bc4e}
-Returns Doppler correction factor for given particle and electron angular combination. Factors in detected particle energy too \hypertarget{classdoppler_ac628277148db1641251745f86ba3dc52}{\index{doppler@{doppler}!Exp\-Defs@{Exp\-Defs}}
+Returns Doppler correction factor for given particle and electron angular combination. Factors in detected particle energy too \hypertarget{classdoppler_aec4f49113b347c342672485368b2ad8c}{\index{doppler@{doppler}!Exp\-Defs@{Exp\-Defs}}
 \index{Exp\-Defs@{Exp\-Defs}!doppler@{doppler}}
 \subsubsection[{Exp\-Defs}]{\setlength{\rightskip}{0pt plus 5cm}void doppler\-::\-Exp\-Defs (
 \begin{DoxyParamCaption}
@@ -255,9 +258,10 @@ Returns Doppler correction factor for given particle and electron angular combin
 \item[{float}]{contaminant\-\_\-, }
 \item[{float}]{spededist\-\_\-, }
 \item[{T\-Cut\-G $\ast$}]{Bcut\-\_\-, }
-\item[{T\-Cut\-G $\ast$}]{Tcut\-\_\-}
+\item[{T\-Cut\-G $\ast$}]{Tcut\-\_\-, }
+\item[{string}]{srimfile\-\_\-}
 \end{DoxyParamCaption}
-)}}\label{classdoppler_ac628277148db1641251745f86ba3dc52}
+)}}\label{classdoppler_aec4f49113b347c342672485368b2ad8c}
 Initialisation of experimental definitions from command line of config file \hypertarget{classdoppler_a6dca381f91f2267abefadd62cf66f69f}{\index{doppler@{doppler}!Gamma\-Ang@{Gamma\-Ang}}
 \index{Gamma\-Ang@{Gamma\-Ang}!doppler@{doppler}}
 \subsubsection[{Gamma\-Ang}]{\setlength{\rightskip}{0pt plus 5cm}float doppler\-::\-Gamma\-Ang (
@@ -304,7 +308,7 @@ Returns theta angle of B using angle and energy of T \hypertarget{classdoppler_a
 {}
 \end{DoxyParamCaption}
 )}}\label{classdoppler_a2c1aef6db4ad3fc0c98e91d995992706}
-Return dead layer of the Al in mm \hypertarget{classdoppler_ac7725720fab82af5a5a6f02041bc9483}{\index{doppler@{doppler}!Get\-C\-D\-Offset@{Get\-C\-D\-Offset}}
+Return dead layer of the Si in mm \hypertarget{classdoppler_ac7725720fab82af5a5a6f02041bc9483}{\index{doppler@{doppler}!Get\-C\-D\-Offset@{Get\-C\-D\-Offset}}
 \index{Get\-C\-D\-Offset@{Get\-C\-D\-Offset}!doppler@{doppler}}
 \subsubsection[{Get\-C\-D\-Offset}]{\setlength{\rightskip}{0pt plus 5cm}float doppler\-::\-Get\-C\-D\-Offset (
 \begin{DoxyParamCaption}
@@ -321,7 +325,7 @@ Return offset of the C\-D in the phi rotation from vertical in degrees \hypertar
 \item[{string}]{combo}
 \end{DoxyParamCaption}
 )}}\label{classdoppler_a64570ec784dabd6e17cf836489450527}
-Returns the energy loss at a given initial energy and distance travelled in the target, the contaminant layer or Al dead layer Ei is the initial energy in ke\-V, return value is also in ke\-V dist is the distance travelled in the target in mg/cm2 opt = 0 calculates normal energy loss as particle moves through target (default) opt = 1 calculates energy increase, i.\-e. tracing particle back to reaction point combo = \char`\"{}\-B\-T\char`\"{}, \char`\"{}\-T\-T\char`\"{}, \char`\"{}\-B\-C\char`\"{}, \char`\"{}\-T\-C\char`\"{}, \char`\"{}\-B\-A\char`\"{} or \char`\"{}\-T\-A\char`\"{} for the beam in target, target in target, beam in contaminant, target in contaminant, beam in Al or target in Al, respectively. Stopping power data is taken from S\-R\-I\-M the output files must be placed in the './srim/' folder with the format 62\-Fe\-\_\-109\-Ag.\-txt, 62\-Fe\-\_\-\-Al.\-txt, 109\-Ag\-\_\-109\-Ag.\-txt or 109\-Ag\-\_\-\-Al.\-txt, for combo = \char`\"{}\-B\-T\char`\"{}, \char`\"{}\-T\-T\char`\"{}, \char`\"{}\-B\-A\char`\"{} and \char`\"{}\-T\-A\char`\"{}, repsectively. The srim file should be in units of Me\-V/(mg/cm$^\wedge$2) \hypertarget{classdoppler_a0f57a8f4a8c369c14d52e62dd3833f2e}{\index{doppler@{doppler}!Get\-P\-Phi@{Get\-P\-Phi}}
+Returns the energy loss at a given initial energy and distance travelled in the target, the contaminant layer or Si dead layer Ei is the initial energy in ke\-V, return value is also in ke\-V dist is the distance travelled in the target in mg/cm2 opt = 0 calculates normal energy loss as particle moves through target (default) opt = 1 calculates energy increase, i.\-e. tracing particle back to reaction point combo = \char`\"{}\-B\-T\char`\"{}, \char`\"{}\-T\-T\char`\"{}, \char`\"{}\-B\-C\char`\"{}, \char`\"{}\-T\-C\char`\"{}, \char`\"{}\-B\-S\char`\"{} or \char`\"{}\-T\-S\char`\"{} for the beam in target, target in target, beam in contaminant, target in contaminant, beam in Si or target in Si, respectively. Stopping power data is taken from S\-R\-I\-M the output files must be placed in the './srim/' folder with the format 62\-Fe\-\_\-109\-Ag.\-txt, 62\-Fe\-\_\-\-Si.\-txt, 109\-Ag\-\_\-109\-Ag.\-txt or 109\-Ag\-\_\-\-Si.\-txt, for combo = \char`\"{}\-B\-T\char`\"{}, \char`\"{}\-T\-T\char`\"{}, \char`\"{}\-B\-S\char`\"{} and \char`\"{}\-T\-S\char`\"{}, repsectively. The srim file should be in units of Me\-V/(mg/cm$^\wedge$2) \hypertarget{classdoppler_a0f57a8f4a8c369c14d52e62dd3833f2e}{\index{doppler@{doppler}!Get\-P\-Phi@{Get\-P\-Phi}}
 \index{Get\-P\-Phi@{Get\-P\-Phi}!doppler@{doppler}}
 \subsubsection[{Get\-P\-Phi}]{\setlength{\rightskip}{0pt plus 5cm}float doppler\-::\-Get\-P\-Phi (
 \begin{DoxyParamCaption}
@@ -390,18 +394,18 @@ Return Z of the projectile as an int \hypertarget{classdoppler_ac0587ca2b963edec
 {}
 \end{DoxyParamCaption}
 )}}\label{classdoppler_ac0587ca2b963edec86d17dd6dac024ce}
-Return Z of the target as an int \hypertarget{classdoppler_ad91321c9c9220fff724e5e0982e1a8b8}{\index{doppler@{doppler}!stoppingpowers@{stoppingpowers}}
+Return Z of the target as an int \hypertarget{classdoppler_a0ab0f803a7ab47bf2d087ee973ccdbc3}{\index{doppler@{doppler}!stoppingpowers@{stoppingpowers}}
 \index{stoppingpowers@{stoppingpowers}!doppler@{doppler}}
 \subsubsection[{stoppingpowers}]{\setlength{\rightskip}{0pt plus 5cm}bool doppler\-::stoppingpowers (
 \begin{DoxyParamCaption}
 \item[{bool}]{B\-T, }
 \item[{bool}]{T\-T, }
-\item[{bool}]{B\-A, }
-\item[{bool}]{T\-A, }
+\item[{bool}]{B\-S, }
+\item[{bool}]{T\-S, }
 \item[{bool}]{B\-C, }
 \item[{bool}]{T\-C}
 \end{DoxyParamCaption}
-)}}\label{classdoppler_ad91321c9c9220fff724e5e0982e1a8b8}
+)}}\label{classdoppler_a0ab0f803a7ab47bf2d087ee973ccdbc3}
 Initialisation of stopping powers \hypertarget{classdoppler_a4be762591578e28f8e9d646475ca943a}{\index{doppler@{doppler}!stoppingpowers@{stoppingpowers}}
 \index{stoppingpowers@{stoppingpowers}!doppler@{doppler}}
 \subsubsection[{stoppingpowers}]{\setlength{\rightskip}{0pt plus 5cm}bool doppler\-::stoppingpowers (

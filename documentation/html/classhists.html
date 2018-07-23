@@ -108,15 +108,18 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Set_maxrecoil</b> (in
 <tr class="memitem:acfb845682216224712565e7b8a1c3ce2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acfb845682216224712565e7b8a1c3ce2"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>Set_minrecoil</b> (int user_minrecoil)</td></tr>
 <tr class="separator:acfb845682216224712565e7b8a1c3ce2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4cc3927b58899125a7691a50101fb902"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4cc3927b58899125a7691a50101fb902"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Fill1h</b> (float GEn, float GTh, float GPh, vector&lt; float &gt; GCor_GEn, vector&lt; float &gt; GCor_GTh, vector&lt; float &gt; GCor_GPh, vector&lt; int &gt; GCor_GCluID, vector&lt; float &gt; GCor_Gtd, bool electron, float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, float weight=1.0)</td></tr>
-<tr class="separator:a4cc3927b58899125a7691a50101fb902"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cc07e066791f9e8925fbbcfdc00d723"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0cc07e066791f9e8925fbbcfdc00d723"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Fill1h</b> (float GEn, float GTh, float GPh, vector&lt; float &gt; GCor_GEn, vector&lt; float &gt; GCor_GTh, vector&lt; float &gt; GCor_GPh, vector&lt; int &gt; GCor_GCluID, vector&lt; float &gt; GCor_Gtd, bool electron, float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, Int_t T1T, float weight=1.0)</td></tr>
+<tr class="separator:a0cc07e066791f9e8925fbbcfdc00d723"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a84e3dd3dc98652844bbfea63652eb280"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a84e3dd3dc98652844bbfea63652eb280"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>Fill2h</b> (float GEn, float GTh, float GPh, vector&lt; float &gt; GCor_GEn, vector&lt; float &gt; GCor_GTh, vector&lt; float &gt; GCor_GPh, vector&lt; int &gt; GCor_GCluID, vector&lt; float &gt; GCor_Gtd, bool electron, vector&lt; float &gt; PEn, vector&lt; int &gt; Pann, vector&lt; int &gt; Psec, vector&lt; int &gt; Pquad, vector&lt; int &gt; Pptr, vector&lt; float &gt; td, float weight=1.0)</td></tr>
 <tr class="separator:a84e3dd3dc98652844bbfea63652eb280"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a978ae6d9269b5aa0a26365899d3047b2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a978ae6d9269b5aa0a26365899d3047b2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>FillGam1h</b> (float GEn, float GTh, float GPh, float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, Int_t cut, float weight=1.0)</td></tr>
-<tr class="separator:a978ae6d9269b5aa0a26365899d3047b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2129f29167f7fdb68978412d81030844"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2129f29167f7fdb68978412d81030844"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>FillDel2h</b> (float GEn, float GTh, float GPh, vector&lt; float &gt; PEn, vector&lt; int &gt; Pann, vector&lt; int &gt; Psec, vector&lt; int &gt; Pquad, vector&lt; int &gt; Pptr, vector&lt; float &gt; td, float weight=1.0)</td></tr>
+<tr class="separator:a2129f29167f7fdb68978412d81030844"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af555a97407e075689f176db774c87da3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af555a97407e075689f176db774c87da3"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>FillGam1h</b> (float GEn, float GTh, float GPh, float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, Int_t T1T, Int_t cut, float weight=1.0)</td></tr>
+<tr class="separator:af555a97407e075689f176db774c87da3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37e85d4eeab8262c6809d003d83d220e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a37e85d4eeab8262c6809d003d83d220e"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>FillGam2h</b> (float GEn, float GTh, float GPh, vector&lt; float &gt; PEn, vector&lt; int &gt; Pann, vector&lt; int &gt; Psec, vector&lt; int &gt; Pquad, Int_t Bptr, Int_t Tptr, float weight=1.0)</td></tr>
 <tr class="separator:a37e85d4eeab8262c6809d003d83d220e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -126,9 +129,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>FillElec1h</b> (float
 <tr class="memitem:a1734b966a54b280c42524291ddcd60c8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1734b966a54b280c42524291ddcd60c8"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>FillElec2h</b> (float GEn, float GTh, float GPh, vector&lt; float &gt; PEn, vector&lt; int &gt; Pann, vector&lt; int &gt; Psec, vector&lt; int &gt; Pquad, Int_t Bptr, Int_t Tptr, float weight=1.0)</td></tr>
 <tr class="separator:a1734b966a54b280c42524291ddcd60c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d1b75d24747c89c343d15c8826b3ecb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7d1b75d24747c89c343d15c8826b3ecb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>FillGamGam1h</b> (float GEn, float GTh, float GPh, vector&lt; float &gt; GCor_GEn, vector&lt; float &gt; GCor_GTh, vector&lt; float &gt; GCor_GPh, vector&lt; int &gt; GCor_GCluID, vector&lt; float &gt; GCor_Gtd, float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, Int_t cut, float weight=1.0)</td></tr>
-<tr class="separator:a7d1b75d24747c89c343d15c8826b3ecb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7189f12a2d600e8b58affcdc4816638"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae7189f12a2d600e8b58affcdc4816638"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>FillGamGam1h</b> (float GEn, float GTh, float GPh, vector&lt; float &gt; GCor_GEn, vector&lt; float &gt; GCor_GTh, vector&lt; float &gt; GCor_GPh, vector&lt; int &gt; GCor_GCluID, vector&lt; float &gt; GCor_Gtd, float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, Int_t T1T, Int_t cut, float weight=1.0)</td></tr>
+<tr class="separator:ae7189f12a2d600e8b58affcdc4816638"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77c5d523f6064a42098c029ffaa0fbbc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a77c5d523f6064a42098c029ffaa0fbbc"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>FillGamGam2h</b> (float GEn, float GTh, float GPh, vector&lt; float &gt; GCor_GEn, vector&lt; float &gt; GCor_GTh, vector&lt; float &gt; GCor_GPh, vector&lt; int &gt; GCor_GCluID, vector&lt; float &gt; GCor_Gtd, vector&lt; float &gt; PEn, vector&lt; int &gt; Pann, vector&lt; int &gt; Psec, vector&lt; int &gt; Pquad, Int_t Bptr, Int_t Tptr, float weight=1.0)</td></tr>
 <tr class="separator:a77c5d523f6064a42098c029ffaa0fbbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -282,6 +285,42 @@ TH1F *&#160;</td><td class="memItemRight" valign="bottom"><b>T_1hdcT</b></td></t
 <tr class="memitem:a112696b860a04538d5ad6a4d09564eb7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a112696b860a04538d5ad6a4d09564eb7"></a>
 TH1F *&#160;</td><td class="memItemRight" valign="bottom"><b>T_1hdcB</b></td></tr>
 <tr class="separator:a112696b860a04538d5ad6a4d09564eb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b4907e3faa89bba351314cd355139a5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5b4907e3faa89bba351314cd355139a5"></a>
+TH1F *&#160;</td><td class="memItemRight" valign="bottom"><b>B_T1T_dcB</b></td></tr>
+<tr class="separator:a5b4907e3faa89bba351314cd355139a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a339c59a1da0331bd90ff7233144909ac"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a339c59a1da0331bd90ff7233144909ac"></a>
+TH1F *&#160;</td><td class="memItemRight" valign="bottom"><b>B_T1T_dcT</b></td></tr>
+<tr class="separator:a339c59a1da0331bd90ff7233144909ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9fa21da1f614c2fec8eb68c5e2c5473"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab9fa21da1f614c2fec8eb68c5e2c5473"></a>
+TH1F *&#160;</td><td class="memItemRight" valign="bottom"><b>T_T1T_dcB</b></td></tr>
+<tr class="separator:ab9fa21da1f614c2fec8eb68c5e2c5473"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80614a6a56dab57a991cc06ae6132c68"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a80614a6a56dab57a991cc06ae6132c68"></a>
+TH1F *&#160;</td><td class="memItemRight" valign="bottom"><b>T_T1T_dcT</b></td></tr>
+<tr class="separator:a80614a6a56dab57a991cc06ae6132c68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada60aa83ba9c6437607e77392508c783"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ada60aa83ba9c6437607e77392508c783"></a>
+TH1F *&#160;</td><td class="memItemRight" valign="bottom"><b>B_T1T_dcB_p</b></td></tr>
+<tr class="separator:ada60aa83ba9c6437607e77392508c783"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14f74e41530b7005f8f6d5e8844893d1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a14f74e41530b7005f8f6d5e8844893d1"></a>
+TH1F *&#160;</td><td class="memItemRight" valign="bottom"><b>B_T1T_dcT_p</b></td></tr>
+<tr class="separator:a14f74e41530b7005f8f6d5e8844893d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a607aa67b6bb2420930a6fd2428199249"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a607aa67b6bb2420930a6fd2428199249"></a>
+TH1F *&#160;</td><td class="memItemRight" valign="bottom"><b>T_T1T_dcB_p</b></td></tr>
+<tr class="separator:a607aa67b6bb2420930a6fd2428199249"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8014ab96f05466212ca216abb7e4b0a5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8014ab96f05466212ca216abb7e4b0a5"></a>
+TH1F *&#160;</td><td class="memItemRight" valign="bottom"><b>T_T1T_dcT_p</b></td></tr>
+<tr class="separator:a8014ab96f05466212ca216abb7e4b0a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f1835825c668d04a41e8f73c7d3f7a7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4f1835825c668d04a41e8f73c7d3f7a7"></a>
+TH1F *&#160;</td><td class="memItemRight" valign="bottom"><b>B_T1T_dcB_d</b></td></tr>
+<tr class="separator:a4f1835825c668d04a41e8f73c7d3f7a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5993f7ed0ac0b878356872d2252bc759"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5993f7ed0ac0b878356872d2252bc759"></a>
+TH1F *&#160;</td><td class="memItemRight" valign="bottom"><b>B_T1T_dcT_d</b></td></tr>
+<tr class="separator:a5993f7ed0ac0b878356872d2252bc759"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84afdb6b1f62db65df51291c0ce50704"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a84afdb6b1f62db65df51291c0ce50704"></a>
+TH1F *&#160;</td><td class="memItemRight" valign="bottom"><b>T_T1T_dcB_d</b></td></tr>
+<tr class="separator:a84afdb6b1f62db65df51291c0ce50704"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0ebd182a298ed554e906ccee9da47b0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab0ebd182a298ed554e906ccee9da47b0"></a>
+TH1F *&#160;</td><td class="memItemRight" valign="bottom"><b>T_T1T_dcT_d</b></td></tr>
+<tr class="separator:ab0ebd182a298ed554e906ccee9da47b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a397d28ec3c9003601e27a72be08832e8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a397d28ec3c9003601e27a72be08832e8"></a>
 TH1F *&#160;</td><td class="memItemRight" valign="bottom"><b>T_dcB_x</b> [16]</td></tr>
 <tr class="separator:a397d28ec3c9003601e27a72be08832e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -294,6 +333,12 @@ TH1F *&#160;</td><td class="memItemRight" valign="bottom"><b>B_dcB_x</b> [16]</t
 <tr class="memitem:afa5394484ba2e15e132974095715f401"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afa5394484ba2e15e132974095715f401"></a>
 TH1F *&#160;</td><td class="memItemRight" valign="bottom"><b>B_dcT_x</b> [16]</td></tr>
 <tr class="separator:afa5394484ba2e15e132974095715f401"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb0927cbb98334ced64232dfb54dbfd7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acb0927cbb98334ced64232dfb54dbfd7"></a>
+TH1F *&#160;</td><td class="memItemRight" valign="bottom"><b>T_del_2hdcB</b></td></tr>
+<tr class="separator:acb0927cbb98334ced64232dfb54dbfd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3302caaa171f28563fbebecae90f081c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3302caaa171f28563fbebecae90f081c"></a>
+TH1F *&#160;</td><td class="memItemRight" valign="bottom"><b>T_del_2h</b></td></tr>
+<tr class="separator:a3302caaa171f28563fbebecae90f081c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a589d893ec180d1dcab2285d73fefe596"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a589d893ec180d1dcab2285d73fefe596"></a>
 TH1F *&#160;</td><td class="memItemRight" valign="bottom"><b>gam_dcB</b></td></tr>
 <tr class="separator:a589d893ec180d1dcab2285d73fefe596"><td class="memSeparator" colspan="2">&#160;</td></tr>

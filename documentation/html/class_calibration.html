@@ -94,18 +94,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a981f7a519754aecbdd3fbd837a5b5762"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a981f7a519754aecbdd3fbd837a5b5762"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Calibration</b> (const char *)</td></tr>
-<tr class="separator:a981f7a519754aecbdd3fbd837a5b5762"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ac7c98e774549cbf0db954983c118cc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8ac7c98e774549cbf0db954983c118cc"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Calibration</b> (string filename)</td></tr>
+<tr class="separator:a8ac7c98e774549cbf0db954983c118cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad675a1c74ecd23e3af37fcffdeeed246"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad675a1c74ecd23e3af37fcffdeeed246"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>ReadCalibration</b> ()</td></tr>
 <tr class="separator:ad675a1c74ecd23e3af37fcffdeeed246"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af224d188d64080db8d14eb0ddbb909f7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af224d188d64080db8d14eb0ddbb909f7"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>PrintCalibration</b> ()</td></tr>
 <tr class="separator:af224d188d64080db8d14eb0ddbb909f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec8340a8b2134c9cb51b685c928c4cee"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aec8340a8b2134c9cb51b685c928c4cee"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetFile</b> (const char *filename)</td></tr>
-<tr class="separator:aec8340a8b2134c9cb51b685c928c4cee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8fe1671f5fa525d684b75f381b680f50"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8fe1671f5fa525d684b75f381b680f50"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>SetFile</b> (string filename)</td></tr>
+<tr class="separator:a8fe1671f5fa525d684b75f381b680f50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a10affa676c2fb505d3075d23c3bf0157"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a10affa676c2fb505d3075d23c3bf0157"></a>
 const string&#160;</td><td class="memItemRight" valign="bottom"><b>InputFile</b> ()</td></tr>
 <tr class="separator:a10affa676c2fb505d3075d23c3bf0157"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -118,6 +118,21 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>AdcEnergy</b> (int 
 <tr class="memitem:a860b3c2c4a2350009bbbf337aa56a212"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a860b3c2c4a2350009bbbf337aa56a212"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>AdcTime</b> (int adc)</td></tr>
 <tr class="separator:a860b3c2c4a2350009bbbf337aa56a212"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af66b845428db545238c5a49d5edadccd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af66b845428db545238c5a49d5edadccd"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>ClusterTheta</b> (int clu)</td></tr>
+<tr class="separator:af66b845428db545238c5a49d5edadccd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d041b9f530257c9f717bcaaaef4b200"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7d041b9f530257c9f717bcaaaef4b200"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>ClusterPhi</b> (int clu)</td></tr>
+<tr class="separator:a7d041b9f530257c9f717bcaaaef4b200"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2ead82be397c3017dd98e490232abd2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad2ead82be397c3017dd98e490232abd2"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>ClusterAlpha</b> (int clu)</td></tr>
+<tr class="separator:ad2ead82be397c3017dd98e490232abd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae30896b904d2d041f4b76effe283bc93"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae30896b904d2d041f4b76effe283bc93"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>ClusterR</b> (int clu)</td></tr>
+<tr class="separator:ae30896b904d2d041f4b76effe283bc93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada9c3b036839143214a5e41b90f2a78e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ada9c3b036839143214a5e41b90f2a78e"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>ZOffset</b> ()</td></tr>
+<tr class="separator:ada9c3b036839143214a5e41b90f2a78e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a65ab7c201643a2bc8cb366b9ac20ab3b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a65ab7c201643a2bc8cb366b9ac20ab3b"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>PosFBCDRing</b> (int Quad, unsigned short raw)</td></tr>
 <tr class="separator:a65ab7c201643a2bc8cb366b9ac20ab3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -172,9 +187,24 @@ vector&lt; vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign
 <tr class="memitem:a76aaf9355d2e29501ddc97028d9cb02a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a76aaf9355d2e29501ddc97028d9cb02a"></a>
 vector&lt; vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>fBCDPosRing</b></td></tr>
 <tr class="separator:a76aaf9355d2e29501ddc97028d9cb02a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36c09ce185cc30ee60468f0aa5389cfc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a36c09ce185cc30ee60468f0aa5389cfc"></a>
+vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>fClusterTheta</b></td></tr>
+<tr class="separator:a36c09ce185cc30ee60468f0aa5389cfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10bc108b3509126dff358fc6de052441"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a10bc108b3509126dff358fc6de052441"></a>
+vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>fClusterPhi</b></td></tr>
+<tr class="separator:a10bc108b3509126dff358fc6de052441"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8955f576f03e78c846e62a86207493c8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8955f576f03e78c846e62a86207493c8"></a>
+vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>fClusterR</b></td></tr>
+<tr class="separator:a8955f576f03e78c846e62a86207493c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b7ad3ce59b00024a9380c1d752dcddc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8b7ad3ce59b00024a9380c1d752dcddc"></a>
+vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>fClusterAlpha</b></td></tr>
+<tr class="separator:a8b7ad3ce59b00024a9380c1d752dcddc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad17489696497c9913e8fed070988fa28"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad17489696497c9913e8fed070988fa28"></a>
 vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>fAdcTime</b></td></tr>
 <tr class="separator:ad17489696497c9913e8fed070988fa28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade913c7df571f0a30478efe4c9623de2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ade913c7df571f0a30478efe4c9623de2"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>zoffset</b></td></tr>
+<tr class="separator:ade913c7df571f0a30478efe4c9623de2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abecda979659e8f0a7768f9969fb143fe"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abecda979659e8f0a7768f9969fb143fe"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>fBeamdumpOffset</b></td></tr>
 <tr class="separator:abecda979659e8f0a7768f9969fb143fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -205,6 +235,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>fNofAdcChans</b></td><
 <tr class="memitem:ab03c449889b48d77b59ddf242a68ef59"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab03c449889b48d77b59ddf242a68ef59"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>fNofCDSegm</b></td></tr>
 <tr class="separator:ab03c449889b48d77b59ddf242a68ef59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9bbc91e22f4b6ec9b7c42fc7025cdbab"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9bbc91e22f4b6ec9b7c42fc7025cdbab"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>fNofClusters</b></td></tr>
+<tr class="separator:a9bbc91e22f4b6ec9b7c42fc7025cdbab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e62c67cc989b99f6fc991deabf1641b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1e62c67cc989b99f6fc991deabf1641b"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>fFWHMPosMux</b></td></tr>
 <tr class="separator:a1e62c67cc989b99f6fc991deabf1641b"><td class="memSeparator" colspan="2">&#160;</td></tr>
