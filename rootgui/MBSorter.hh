@@ -87,6 +87,7 @@ protected:
 	TGLabel				*lab_dop_sp;		// label for the Spede distance
 	TGLabel				*lab_dop_pd;		// label for the plunger distance
 	TGLabel				*lab_dop_bg;		// label for the background fraction
+	TGLabel				*lab_dop_zo;		// label for the zoffset
 	TGLabel				*lab_unit_zb;		// label for Z of beam
 	TGLabel				*lab_unit_zt;		// label for Z of target
 	TGLabel				*lab_unit_ab;		// label for A of beam
@@ -101,6 +102,7 @@ protected:
 	TGLabel				*lab_unit_sp;		// label for the Spede distance
 	TGLabel				*lab_unit_pd;		// label for the plunger distance
 	TGLabel				*lab_unit_bg;		// label for the background fraction
+	TGLabel				*lab_unit_zo;		// label for the zoffset
 	
 	// Run list box
 	TGListBox           *run_list_box;
@@ -133,6 +135,7 @@ protected:
 	TGNumberEntry		*num_dop_sp;		// number for the Spede distance
 	TGNumberEntry		*num_dop_pd;		// number for the plunger distance
 	TGNumberEntry		*num_dop_bg;		// number for the background fraction
+	TGNumberEntry		*num_dop_zo;		// number for the zoffset
 	
 	// Check buttons
 	TGCheckButton       *check_source;		// check button for source selection

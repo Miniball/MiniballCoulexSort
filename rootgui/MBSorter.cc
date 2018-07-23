@@ -535,6 +535,24 @@ MBSorter::MBSorter() {
 	dop_frame_2->AddFrame( lab_unit_bg,
 						  new TGLayoutHints( kLHintsTop, 2, 2, 5, 5 ) );
 	
+	// Doppler - Z offset
+	lab_dop_zo = new TGLabel( dop_frame_0, "z offset" );
+	lab_dop_zo->SetTextJustify( kTextRight );
+	lab_dop_zo->SetMargins( 0, 0, 0, 0 );
+	lab_dop_zo->SetWrapLength( -1 );
+	lab_dop_zo->Resize( 40, lab_dop_zo->GetDefaultHeight() );
+	dop_frame_0->AddFrame( lab_dop_zo,
+						  new TGLayoutHints( kLHintsTop | kLHintsRight, 2, 2, 5, 5 ) );
+	
+	// Units - Z offset
+	lab_unit_zo = new TGLabel( dop_frame_2, "mm" );
+	lab_unit_zo->SetTextJustify( 36 );
+	lab_unit_zo->SetMargins( 0, 0, 0, 0 );
+	lab_unit_zo->SetWrapLength( -1 );
+	lab_unit_zo->Resize( 40, lab_unit_zo->GetDefaultHeight() );
+	dop_frame_2->AddFrame( lab_unit_zo,
+						  new TGLayoutHints( kLHintsTop, 2, 2, 5, 5 ) );
+	
 	
 	/////////////////////
 	// Create list box //
@@ -748,6 +766,11 @@ MBSorter::MBSorter() {
 		-999, 999 );
 	dop_frame_1->AddFrame( num_dop_bg, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
+	num_dop_zo = new TGNumberEntry( dop_frame_1, 4.8, 5, -1,
+		TGNumberFormat::kNESReal, TGNumberFormat::kNEAAnyNumber, TGNumberFormat::kNELLimitMinMax,
+		-999, 999 );
+	dop_frame_1->AddFrame( num_dop_zo, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
+	
 	
 	///////////////////////////
 	// Create action buttons //
@@ -867,19 +890,19 @@ MBSorter::MBSorter() {
 	// Defaults //
 	//////////////
 	
-	text_daq_dir->SetText( "/mbdata/miniball/is644-180708" );
-	text_local_dir->SetText( "/run/media/miniball/MiniballAnalysis/is644/medfiles" );
-	text_med_pre->SetText( "22Ne" );
+	text_daq_dir->SetText( "/mbdata/miniball/is552-180723" );
+	text_local_dir->SetText( "/run/media/miniball/MiniballAnalysis/is552/medfiles" );
+	text_med_pre->SetText( "22?Ra" );
 
-	text_add_file->SetText( "22Ne_196Pt_019" );
+	text_add_file->SetText( "222Ra_120Sn_pos5_002" );
 
-	text_settings->SetText( "/run/media/miniball/MiniballAnalysis/is644/config/MBSettings2018_CLX.dat" );
+	text_settings->SetText( "/run/media/miniball/MiniballAnalysis/is552/config/MBSettings2018_CLX.dat" );
 	check_source->SetOn();
 
-	text_outfile->SetText( "/run/media/miniball/MiniballAnalysis/is644/rootfiles/22Ne_196Pt" );
-	text_calfile->SetText( "/run/media/miniball/MiniballAnalysis/is644/config/is644-offline.cal" );
-	text_config->SetText( "/run/media/miniball/MiniballAnalysis/is644/config/config-is644.dat" );
-	text_cutfile->SetText( "/run/media/miniball/MiniballAnalysis/is644/config/cutfile-is644.root:Bcut:Tcut" );
+	text_outfile->SetText( "/run/media/miniball/MiniballAnalysis/is552/rootfiles/222Ra_120Sn_xxx-yyy" );
+	text_calfile->SetText( "/run/media/miniball/MiniballAnalysis/is552/config/is644-offline.cal" );
+	text_config->SetText( "/run/media/miniball/MiniballAnalysis/is552/config/config-is552-pos6.dat" );
+	text_cutfile->SetText( "/run/media/miniball/MiniballAnalysis/is552/config/cutfile-is552-pos6.root:Bcut:Tcut" );
 	text_srimdir->SetText( "/run/media/miniball/MiniballAnalysis/srim" );
 
 	check_cdpad->SetOn();
@@ -889,19 +912,21 @@ MBSorter::MBSorter() {
 	//check_config->SetOn();
 	check_cutfile->SetOn();
 
-	num_dop_zb->SetNumber( 36 );
-	num_dop_zt->SetNumber( 82 );
-	num_dop_ab->SetNumber( 96 );
-	num_dop_at->SetNumber( 208 );
-	num_dop_eb->SetNumber( 4800 );
-	num_dop_ex->SetNumber( 550 );
-	num_dop_th->SetNumber( 2.0 );
-	num_dop_id->SetNumber( 1.0 );
+	num_dop_zb->SetNumber( 88 );
+	num_dop_zt->SetNumber( 50 );
+	num_dop_ab->SetNumber( 222 );
+	num_dop_at->SetNumber( 120 );
+	num_dop_eb->SetNumber( 4200 );
+	num_dop_ex->SetNumber( 400 );
+	num_dop_th->SetNumber( 2.1 );
+	num_dop_id->SetNumber( 1.05 );
 	num_dop_cd->SetNumber( 28.6 );
 	num_dop_ro->SetNumber( 243.8 );
 	num_dop_dl->SetNumber( 0.0007 );
 	num_dop_sp->SetNumber( 26.2 );
-	num_dop_sp->SetNumber( 50. );
+	num_dop_bg->SetNumber( -0.461538 );
+	num_dop_pd->SetNumber( 50. );
+	num_dop_zo->SetNumber( 4.8 );
 
 	////////////////////
 	// Button presses //
@@ -1130,6 +1155,8 @@ void MBSorter::on_ana_clicked() {
 		cmd += convertFloat( num_dop_bg->GetNumber() );
 		cmd += " -srim ";
 		cmd += text_srimdir->GetText();
+		cmd += " -zoffset ";
+		cmd += convertFloat( num_dop_zo->GetNumber() );
 
 	}
 
