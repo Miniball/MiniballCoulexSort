@@ -5,10 +5,14 @@
 #define GMAX 4000	// maximum energy in gamma spectra
 #define EBINS 3000	// number of bins in electron spectra
 #define EMAX 6000	// maximum energy in electron spectra
-#define PBINS 800	// number of bins in particle spectra
-#define PMAX 800	// maximum energy in particle spectra
+#define PBINS 600	// number of bins in particle spectra
+#define PMAX 1200	// maximum energy in particle spectra
 #define TBINS 242	// number of bins in tdiff spectra
 #define TMAX 1525	// maximum time in tdiff spectra
+
+#define PTCUT_P 2.45e7	// Proton time cut limit for prompt
+#define PTCUT_D 4.90e7	// Proton time cut limit for delayed
+#define PD_FRAC -0.85	// scaling factor of delayed window for subtraction
 
 #ifndef hist_hh
 # include "hists.hh"
@@ -175,6 +179,31 @@ void hists::Initialise( doppler dc_ ) {
 		B_dcT_x[i] = new TH1F(hname.c_str(),htitle.c_str(),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));	
 		
 	}
+
+	// Proton time gated spectra
+	T_T1T_dcT = new TH1F("T_T1T_dcT","Target gated, prompt proton gated, delayed proton gate subtracted, Doppler corrected #gamma-rays;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	T_T1T_dcB = new TH1F("T_T1T_dcB","Target gated, prompt proton gated, delayed proton gate subtracted, Doppler corrected for scattered projectile;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	T_T1T_dcT_p = new TH1F("T_T1T_dcT_p","Target gated, prompt proton gated, background subtracted, Doppler corrected #gamma-rays;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	T_T1T_dcB_p = new TH1F("T_T1T_dcB_p","Target gated, prompt proton gated, background subtracted, Doppler corrected for scattered projectile;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	T_T1T_dcT_d = new TH1F("T_T1T_dcT_d","Target gated, delayed proton gated, background subtracted, Doppler corrected #gamma-rays;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	T_T1T_dcB_d = new TH1F("T_T1T_dcB_d","Target gated, delayed proton gated, background subtracted, Doppler corrected for scattered projectile;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+
+	B_T1T_dcB = new TH1F("B_T1T_dcB","Beam gated, prompt proton gated, delayed proton gate subtracted, Doppler corrected #gamma-rays;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	B_T1T_dcT = new TH1F("B_T1T_dcT","Beam gated, prompt proton gated, delayed proton gate subtracted, Doppler corrected for target recoil;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	B_T1T_dcB_p = new TH1F("B_T1T_dcB_p","Beam gated, prompt proton gated, background subtracted, Doppler corrected #gamma-rays;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	B_T1T_dcT_p = new TH1F("B_T1T_dcT_p","Beam gated, prompt proton gated, background subtracted, Doppler corrected for target recoil;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	B_T1T_dcB_d = new TH1F("B_T1T_dcB_d","Beam gated, delayed proton gated, background subtracted, Doppler corrected #gamma-rays;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	B_T1T_dcT_d = new TH1F("B_T1T_dcT_d","Beam gated, delayed proton gated, background subtracted, Doppler corrected for target recoil;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+
+//	T_2D_T1T_dcT = new TH2F("T_2D_T1T_dCT", "Target gated, background subtracted, Doppler corrected #gamma-rays vs. Proton time;#Delta T;Energy [keV]", 1000,0,3e8,GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+//	T_2D_T1T_dcB = new TH2F("T_2D_T1T_dCB", "Target gated, background subtracted, Doppler corrected for scattered projectile vs. Proton time;#Delta T;Energy [keV]", 1000,0,3e8,GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+//	B_2D_T1T_dcB = new TH2F("B_2D_T1T_dCB", "Beam gated, background subtracted, Doppler corrected #gamma-rays vs. Proton time;#Delta T;Energy [keV]", 1000,0,3e8,GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+//	B_2D_T1T_dcT = new TH2F("B_2D_T1T_dCT", "Beam gated, background subtracted, Doppler corrected #gamma-rays vs. Proton time;#Delta T;Energy [keV]", 1000,0,3e8,GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+
+
+	// Gated on delayed gamma-rays
+	T_del_2h = new TH1F("T_del_2h","T_2hit, delayed, no DC;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	T_del_2hdcB = new TH1F("T_del_2hdcB","T_2hit, delayed, DC for beam;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	
    
 	// PART : 1 hit
@@ -283,7 +312,7 @@ void hists::Set_minrecoil(int user_minrecoil) {
 
 void hists::Fill1h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, vector <float> GCor_GTh,
 					vector <float> GCor_GPh, vector <int> GCor_CluID, vector <float> GCor_Gtd, bool electron,
-					float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, float weight ) {
+					float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, Int_t T1T, float weight ) {
 
 	if( !electron ) {
 	
@@ -306,9 +335,9 @@ void hists::Fill1h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, ve
 	
 		if( !electron ) {
 	
-			FillGam1h( GEn, GTh, GPh, PEn, Pann, Psec, Pquad, cut, weight );
+			FillGam1h( GEn, GTh, GPh, PEn, Pann, Psec, Pquad, T1T, cut, weight );
 			FillGamGam1h( GEn, GTh, GPh, GCor_GEn, GCor_GTh, GCor_GPh, GCor_CluID, GCor_Gtd,
-							PEn, Pann, Psec, Pquad, cut, weight );
+							PEn, Pann, Psec, Pquad, T1T, cut, weight );
 			PhiCalHists( GEn, GTh, GPh, PEn, Pann, Psec, Pquad, cut, weight );
 		
 		}
@@ -388,7 +417,7 @@ void hists::Fill2h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, ve
 }
 
 void hists::FillGam1h( float GEn, float GTh, float GPh, float PEn, Int_t Pann,
-						Int_t Psec, Int_t Pquad, Int_t cut, float weight ) {
+						Int_t Psec, Int_t Pquad, Int_t T1T, Int_t cut, float weight ) {
 
 
 	float BEn, TEn, BTh, TTh, BPh, TPh;
@@ -418,6 +447,38 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, float PEn, Int_t Pann,
 			
 		}
 
+		// Proton time gated spectra
+		if( T1T >= 0 && T1T < PTCUT_P ) {
+
+			T_T1T_dcB_p->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+			T_T1T_dcT_p->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+
+			if( weight > 0 ) {
+
+				T_T1T_dcB->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+				T_T1T_dcT->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+
+			}
+
+		}
+
+		else if( T1T >= PTCUT_P && T1T < PTCUT_D ) {
+
+			T_T1T_dcB_d->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+			T_T1T_dcT_d->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+
+			if( weight > 0 ) {
+
+				T_T1T_dcB->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), PD_FRAC*weight);
+				T_T1T_dcT->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), PD_FRAC*weight);
+
+			}
+
+		}
+
+//		T_2D_T1T_dcB->Fill(T1T,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+//		T_2D_T1T_dcT->Fill(T1T,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+
 	}
 	
 	// Projectile
@@ -444,7 +505,87 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, float PEn, Int_t Pann,
 		velo->Fill( dc.Beta( BEn, dc.GetAb() * dc.u_mass() ) );
 		velo2->Fill( TMath::Sqrt( 2.0 * BEn / ( dc.GetAb() * dc.u_mass() ) ) );
 		
+		// Proton time gated spectra
+		if( T1T < PTCUT_P ) {
+
+			B_T1T_dcB_p->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+			B_T1T_dcT_p->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+
+			if( weight > 0 ) {
+
+				B_T1T_dcB->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+				B_T1T_dcT->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+
+			}
+
+		}
+
+		else if( T1T >= PTCUT_P && T1T < PTCUT_D ) {
+
+			B_T1T_dcB_d->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+			B_T1T_dcT_d->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+
+			if( weight > 0 ) {
+
+				B_T1T_dcB->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), PD_FRAC*weight);
+				B_T1T_dcT->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), PD_FRAC*weight);
+
+			}
+
+		}
+
+//		B_2D_T1T_dcB->Fill(T1T,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+//		B_2D_T1T_dcT->Fill(T1T,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+
 	}
+
+	return;
+
+}
+
+void hists::FillDel2h( float GEn, float GTh, float GPh, vector<float> PEn, vector<int> Pann,
+					vector<int> Psec, vector<int> Pquad, vector<int> Pptr, vector<float> td,
+					float weight ) {
+
+	int Bptr, Tptr;
+
+	float time_diff = TMath::Abs(td[Pptr[0]]-td[Pptr[1]]);
+	int quad_diff = TMath::Abs(Pquad[Pptr[0]]-Pquad[Pptr[1]]);
+	int cut2 = dc.Cut_2p(PEn[Pptr[0]],Pann[Pptr[0]],Pquad[Pptr[0]],PEn[Pptr[1]],Pann[Pptr[1]],Pquad[Pptr[1]]);
+	bool cutg_0 = dc.CutG_en2hit(PEn[Pptr[1]]/1000.,PEn[Pptr[0]]/1000.);
+	bool cutg_1 = dc.CutG_en2hit(PEn[Pptr[0]]/1000.,PEn[Pptr[1]]/1000.);
+	int cut_0 = dc.Cut(PEn[Pptr[0]],Pann[Pptr[0]],Pquad[Pptr[0]]);
+	int cut_1 = dc.Cut(PEn[Pptr[1]],Pann[Pptr[1]],Pquad[Pptr[1]]);
+
+	if( quad_diff == 2 && time_diff <= ppwin && cut2 == 0 && cutg_0 ) { // target is [0]
+
+		Bptr = Pptr[1];
+		Tptr = Pptr[0];
+		
+	}
+
+	else if( quad_diff == 2 && time_diff <= ppwin && cut2 == 1 && cutg_1 ) { // target is [1]
+
+		Bptr = Pptr[0];
+		Tptr = Pptr[1];
+		
+	}
+
+	else return;
+	
+	int Bann = Pann[Bptr];
+	int Tann = Pann[Tptr];
+	float BEn = PEn[Bptr];
+	BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"BA");
+	float TEn = PEn[Tptr];
+	TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TA");
+	float BTh = dc.GetPTh(Bann);
+	float TTh = dc.GetPTh(Tann);
+	float BPh = dc.GetPPhi(Pquad[Bptr],Psec[Bptr]);
+	float TPh = dc.GetPPhi(Pquad[Tptr],Psec[Tptr]);
+
+	T_del_2h->Fill( GEn, weight );	
+	T_del_2hdcB->Fill( GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight );
 
 	return;
 
@@ -574,7 +715,7 @@ void hists::FillElec2h( float GEn, float GTh, float GPh, vector<float> PEn, vect
 
 void hists::FillGamGam1h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, vector <float> GCor_GTh,
 						 vector <float> GCor_GPh, vector <int> GCor_CluID, vector <float> GCor_Gtd,
-						 float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, int cut, float weight ) {
+						 float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, Int_t T1T, int cut, float weight ) {
 	
 	float BEn = 0, TEn = 0, BTh = 0, TTh = 0, BPh = 0, TPh = 0;
 

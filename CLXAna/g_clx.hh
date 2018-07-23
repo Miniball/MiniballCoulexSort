@@ -64,6 +64,7 @@ class g_clx : public TObject {
 	vector <float>  gcor_gtd;	///< vector of time-difference to original gamma-ray
 	vector <float>  pen;		///< particle energies
 	vector <double> time;		///< particle timestamps
+	vector <double> t1t;		///< T1 timestamps
 	vector <double> sst;		///< supercycle timestamps
 	vector <float>  td;			///< particle-gamma time difference in 25 ns timestamps
 	vector <int>    ann;		///< annular (front) strip ID of particle (0 = outer; 15 inner)
@@ -112,6 +113,7 @@ class g_clx : public TObject {
 	TBranch        *b_mbevts_gcor_gtd;   //!
 	TBranch        *b_mbevts_pen;   //!
 	TBranch        *b_mbevts_time;   //!
+	TBranch        *b_mbevts_t1t;   //!
 	TBranch        *b_mbevts_sst;   //!
 	TBranch        *b_mbevts_td;   //!
 	TBranch        *b_mbevts_ann;   //!
@@ -234,6 +236,7 @@ void g_clx::Init( TTree *tree ) {
 	fChain->SetBranchAddress("gcor_gtd", &gcor_gtd, &b_mbevts_gcor_gtd);
 	fChain->SetBranchAddress("pen", &pen, &b_mbevts_pen);
 	fChain->SetBranchAddress("time", &time, &b_mbevts_time);
+	fChain->SetBranchAddress("t1t", &t1t, &b_mbevts_t1t);
 	fChain->SetBranchAddress("sst", &sst, &b_mbevts_sst);
 	fChain->SetBranchAddress("td", &td, &b_mbevts_td);
 	fChain->SetBranchAddress("ann", &ann, &b_mbevts_ann);

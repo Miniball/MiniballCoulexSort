@@ -60,17 +60,17 @@ class hists {
 	TH2F *gg_dcT, *gg_dcB;
 	TH1F *gg_td, *ge_td;
 	TH1F *gcor_size;
-
-	// Calibrate phi rotation of cd
-#ifdef PHICAL
-	TH1F *phical_dcB[PHI_NSTEPS], *phical_dcT[PHI_NSTEPS];
-#endif
 	 
 	// Background subtracted, Doppler corrected gamma spectra
 	TH1F *B_dcB, *B_dcT, *B_1hdcB, *B_1hdcT;
 	TH1F *T_dcT, *T_dcB, *T_1hdcT, *T_1hdcB;
+	TH1F *B_T1T_dcB, *B_T1T_dcT, *T_T1T_dcB, *T_T1T_dcT;
+	TH1F *B_T1T_dcB_p, *B_T1T_dcT_p, *T_T1T_dcB_p, *T_T1T_dcT_p;
+	TH1F *B_T1T_dcB_d, *B_T1T_dcT_d, *T_T1T_dcB_d, *T_T1T_dcT_d;
+//	TH2F *B_2D_T1T_dcB, *B_2D_T1T_dcT, *T_2D_T1T_dcB, *T_2D_T1T_dcT;
 	TH1F *T_dcB_x[16], *T_dcT_x[16];
 	TH1F *B_dcB_x[16], *B_dcT_x[16];
+	TH1F *T_del_2hdcB, *T_del_2h;
 	TH1F *gam_dcB, *gam_dcT, *T_2hdcB, *T_2hdcT;
    
 	// Background subtracted, Doppler corrected electron spectra
@@ -136,13 +136,15 @@ class hists {
 	// fill functions
 	void Fill1h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, vector <float> GCor_GTh,
 				vector <float> GCor_GPh, vector <int> GCor_GCluID, vector <float> GCor_Gtd,
-				bool electron, float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, float weight=1.0 );
+				bool electron, float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, Int_t T1T, float weight=1.0 );
 	void Fill2h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, vector <float> GCor_GTh,
 				vector <float> GCor_GPh, vector <int> GCor_GCluID, vector <float> GCor_Gtd,
 				bool electron, vector <float> PEn, vector<int> Pann, vector<int> Psec,
 				vector<int> Pquad, vector<int> Pptr, vector <float> td, float weight=1.0 );
+	void FillDel2h( float GEn, float GTh, float GPh, vector <float> PEn, vector<int> Pann, vector<int> Psec,
+					vector<int> Pquad, vector<int> Pptr, vector <float> td, float weight=1.0 );
 	void FillGam1h( float GEn, float GTh, float GPh, float PEn, Int_t Pann,
-					Int_t Psec, Int_t Pquad, Int_t cut, float weight=1.0 );
+					Int_t Psec, Int_t Pquad, Int_t T1T, Int_t cut, float weight=1.0 );
 	void FillGam2h( float GEn, float GTh, float GPh, vector <float> PEn, vector<int> Pann,
 					vector<int> Psec, vector<int> Pquad, Int_t Bptr, Int_t Tptr, float weight=1.0 );
 	void FillElec1h( float GEn, float GTh, float GPh, float PEn, Int_t Pann,
@@ -151,7 +153,7 @@ class hists {
 					vector<int> Psec, vector<int> Pquad, Int_t Bptr, Int_t Tptr, float weight=1.0 );
 	void FillGamGam1h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, vector <float> GCor_GTh,
 					vector <float> GCor_GPh, vector <int> GCor_GCluID, vector <float> GCor_Gtd,
-					float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, Int_t cut, float weight=1.0 );
+					float PEn, Int_t Pann, Int_t Psec, Int_t Pquad, Int_t T1T, Int_t cut, float weight=1.0 );
 	void FillGamGam2h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, vector <float> GCor_GTh,
 					vector <float> GCor_GPh, vector <int> GCor_GCluID, vector <float> GCor_Gtd,
 					vector <float> PEn, vector<int> Pann, vector<int> Psec, vector<int> Pquad,

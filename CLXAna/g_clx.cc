@@ -8,7 +8,7 @@
 //#define TWOPART 		// define to plot every 2p combination
 //#define PHICAL  		// define to plot different CD rotation offsets
 //#define GEANG			// define for plotting Ge angles per cluster
-#define MBGEOMETRY  		// define to overwrite MB angles with MBGeometry routine
+//#define MBGEOMETRY  		// define to overwrite MB angles with MBGeometry routine
 #define SPEDEGEOMETRY	// define to overwrite Spede angles with SpedeGeometry routine
 
 #ifdef PHICAL
@@ -73,17 +73,41 @@ void g_clx::Loop( string outputfilename ) {
 
 	//ifstream angfile;
 
-	// Original values from frame
+	// Original values from frame - 2017
 	//double clu_r[8] = { 135, 135, 135, 135, 135, 135, 135, 135 };
 	//double clu_theta[8] = { 136.7, 48.8, 48.8, 136.7, 135., 42.8, 135., 42.8 };
 	//double clu_phi[8] = { 129.5, 56.4, 132.4, 52.9, 236.6, 235., 310.5, 319. };
 	//double clu_alpha[8] = { 320., 300., 310., 310., 290., 240., 60., 120. }; 
 
-	// Nigel's values from 22Ne data
-	double clu_r[8] = { 95.17, 92.77, 95.38, 91.35, 96.24, 92.57, 97.25, 102.80 };
-	double clu_theta[8] = { 136.33, 45.79, 42.95, 136.98, 131.17, 40.31, 136.72, 32.23 };
-	double clu_phi[8] = { 130.82, 54.99, 133.56, 51.45, 235.24, 233.11, 311.46, 319.63 };
-	double clu_alpha[8] = { 322.00, 61.90, 296.75, 243.75, 294.64, 240.78, 68.85, 110.33 }; 
+	// Nigel's values from 22Ne data - 2017
+	//double clu_r[8] = { 95.17, 92.77, 95.38, 91.35, 96.24, 92.57, 97.25, 102.80 };
+	//double clu_theta[8] = { 136.33, 45.79, 42.95, 136.98, 131.17, 40.31, 136.72, 32.23 };
+	//double clu_phi[8] = { 130.82, 54.99, 133.56, 51.45, 235.24, 233.11, 311.46, 319.63 };
+	//double clu_alpha[8] = { 322.00, 61.90, 296.75, 243.75, 294.64, 240.78, 68.85, 110.33 }; 
+
+	// Rosa's values from frame - 2018
+	//double clu_r[8] = { 96.4, 96.4, 96.4, 96.4, 96.4, 96.4, 96.4, 96.4 };
+	//double clu_theta[8] = { 134.5, 55.5, 55.5, 134.5, 126.0, 47.9, 126.0, 47.9 };
+	//double clu_phi[8] = { 133.0, 62.6, 134.7, 54.1, 230.3, 235.5, 300.6, 313.8 };
+	//double clu_alpha[8] = { 50., 330., 315., 315., 110., 70., 290., 265. }; 
+
+	// Nigel's values from the optimisation - 2018
+	//double clu_r[8] = { 98.88, 99.23, 98.76, 96.51, 94.55, 94.17, 98.33, 95.64 };
+	//double clu_theta[8] = { 144.49, 51.30, 47.60, 144.97, 136.24, 43.80, 132.43, 38.79 };
+	//double clu_phi[8] = { 132.50, 63.18, 134.34, 54.76, 230.79, 235.98, 299.83, 313.43 };
+	//double clu_alpha[8] = { 324.02, 46.39, 54.58, 46.05, 70.15, 108.97, 268.62, 266.35 }; 
+
+	// Joonas's values from the optimisation with +4.8 mm target offset - 2018
+	//double clu_r[8] = { 91.67, 98.12, 97.52, 90.59, 88.63, 94.92, 98.33, 93.15 };
+	//double clu_theta[8] = { 142.61, 48.32, 43.18, 143.80, 134.34, 40.20, 132.43, 33.94 };
+	//double clu_phi[8] = { 133.38, 62.05, 134.97, 53.58, 229.82, 235.14, 299.83, 314.09 };
+	//double clu_alpha[8] = { 322.19, 48.56, 50.35, 46.01, 70.85, 112.07, 268.62, 260.64 }; 
+
+	// Nigel's values from the optimisation with +4.8 mm target offset - 2018
+	//double clu_r[8] = { 91.67, 98.12, 97.52, 90.59, 88.63, 94.92, 98.33, 93.15 };
+	//double clu_theta[8] = { 142.61, 48.32, 43.18, 143.80, 134.34, 40.20, 132.43, 33.94 };
+	//double clu_phi[8] = { 133.38, 62.05, 134.97, 53.58, 229.82, 235.14, 299.83, 314.09 };
+	//double clu_alpha[8] = { 322.19, 48.56, 50.35, 46.01, 70.85, 112.07, 268.62, 260.64 }; 
 
 	double new_theta[8][3][7]; // cluster, crystal segment
 	double new_phi[8][3][7];
@@ -283,19 +307,27 @@ void g_clx::Loop( string outputfilename ) {
 		// Condition on particle detection
 		if( pr_hits==1 && rndm_hits==0 ) 
 			h.Fill1h(gen, tha, pha, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron,
-					 pen[pr_ptr[0]], ann[pr_ptr[0]], sec[pr_ptr[0]], det[pr_ptr[0]], 1.0);
+					 pen[pr_ptr[0]], ann[pr_ptr[0]], sec[pr_ptr[0]], det[pr_ptr[0]], time[pr_ptr[0]]-t1t[pr_ptr[0]], 1.0);
 
 		else if( pr_hits==2 && rndm_hits==0 )
 			h.Fill2h(gen, tha, pha, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron,
 					 pen, ann, sec, det, pr_ptr, td, 1.0);
 
+		else if( del_hits==2 && rndm_hits==0 )
+			h.FillDel2h(gen, tha, pha, pen, ann, sec, det, del_ptr, td, 1.0);
+
 		else if( rndm_hits==1 && pr_hits==0 ) 
 			h.Fill1h(gen, tha, pha, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron,
-					 pen[rndm_ptr[0]], ann[rndm_ptr[0]], sec[rndm_ptr[0]], det[rndm_ptr[0]], bg_frac);
+					 pen[rndm_ptr[0]], ann[rndm_ptr[0]], sec[rndm_ptr[0]], det[rndm_ptr[0]], time[pr_ptr[0]]-t1t[pr_ptr[0]], bg_frac);
 
-		else if( rndm_hits==2 && pr_hits==0 )			
+		else if( rndm_hits==2 && pr_hits==0 ) {
+		
 			h.Fill2h(gen, tha, pha, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron,
 					 pen, ann, sec, det, rndm_ptr, td, bg_frac);
+
+			h.FillDel2h(gen, tha, pha, pen, ann, sec, det, rndm_ptr, td, bg_frac);
+
+		}
 
 	} // for (Long64_t jentry=0; jentry<fChain->GetEntries();jentry++)
 	
