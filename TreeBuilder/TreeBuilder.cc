@@ -365,7 +365,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	TH1F *E_BeamDump[2], *T_BeamDump[2];
-	TH1F *tdiff_BD = new TH1F( "tdiff_BD","tdiff_BD",400,200,200);
+	TH1F *tdiff_BD = new TH1F( "tdiff_BD", "tdiff_BD", 400, -200, 200);
 	TH2F *bd_bd = new TH2F( "bd_bd", "bd_bd", GBINS,GMIN,GMAX, GBINS,GMIN,GMAX );
 	for( i = 0; i < 2; i++ ) {
 			
