@@ -364,10 +364,17 @@ int main(int argc, char* argv[]) {
 		
 	}
 
-	TH1F* E_BeamDump = new TH1F("E_BeamDump","E_BeamDump",GBINS,GMIN,GMAX);
-	E_BeamDump->GetXaxis()->SetTitle("Energy of the Beam Dump [keV]");
-	TH1F* T_BeamDump = new TH1F("T_BeamDump","T_BeamDump",7200,0,7200);	
-	T_BeamDump->GetXaxis()->SetTitle("Time of the Beam Dump [s]");
+	TH1F *E_BeamDump[2], *T_BeamDump[2];
+	TH1F *tdiff_BD = new TH1F( "tdiff_BD","tdiff_BD",400,200,200);
+	TH2F *bd_bd = new TH2F( "bd_bd", "bd_bd", GBINS,GMIN,GMAX, GBINS,GMIN,GMAX );
+	for( i = 0; i < 2; i++ ) {
+			
+		E_BeamDump[i] = new TH1F( Form("E_BeamDump_%d",i), Form("E_BeamDump_%d",i),GBINS,GMIN,GMAX);
+		E_BeamDump[i]->GetXaxis()->SetTitle("Energy of the Beam Dump [keV]");
+		T_BeamDump[i] = new TH1F( Form("T_BeamDump_%d",i), Form("T_BeamDump_%d",i),7200,0,7200);	
+		T_BeamDump[i]->GetXaxis()->SetTitle("Time of the Beam Dump [s]");
+
+	}
 
 	// particle-spectra
 	TDirectory *cd_dir = outfile->mkdir("CD_spec");
@@ -721,11 +728,31 @@ int main(int argc, char* argv[]) {
 					
 			}
 
-			else if( dgf_num == 53 && dgf_ch == 0 ) {
+			else if( dgf_num == 53 && dgf_ch >= 0 && dgf_ch < 2 ) {
 
 				GammaEnergy = Cal->DgfEnergy( dgf_num, dgf_ch, dgf_en );
-				E_BeamDump->Fill(Cal->DgfEnergy(53,0,dgf_en));
-				T_BeamDump->Fill((dgf_t)/40000000);
+				E_BeamDump[dgf_ch]->Fill( Cal->DgfEnergy( 53,0,dgf_en) );
+				T_BeamDump[dgf_ch]->Fill( (dgf_t)/40000000 );
+
+				for( k = 0; k < event->NumberOfDgfs(); k++ ) {
+
+					if( k == j ) continue;
+
+					dgf_num2 = event->Dgf(k)->ModuleNumber();
+					dgf_ch2  = event->Dgf(k)->Channel();
+					dgf_en2  = event->Dgf(k)->Energy();
+					dgf_t2   = event->Dgf(k)->Time();
+
+					GammaEnergy2 = Cal->DgfEnergy( dgf_num2, dgf_ch2, dgf_en2 );
+
+					tdiff_BD->Fill( dgf_t-dgf_t2 );
+
+					if( TMath::Abs( dgf_t-dgf_t2 ) < 80. )
+
+						bd_bd->Fill( GammaEnergy, GammaEnergy2 );
+
+				}
+
 
 			}
 
@@ -1004,6 +1031,9 @@ int main(int argc, char* argv[]) {
 
 			// multiple on the front and multiple on the back
 			else if( cd_ringenergy[adc_num].size() > 1 && cd_stripenergy[adc_num].size() > 1 ) {
+
+				// throw these events away!!!
+				//continue;
 
 				// Loop for multiplicity where separated by >1 rings
 				while( RingMult ) {
