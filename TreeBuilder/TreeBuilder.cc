@@ -737,6 +737,8 @@ int main(int argc, char* argv[]) {
 				for( k = 0; k < event->NumberOfDgfs(); k++ ) {
 
 					if( k == j ) continue;
+					if( dgf_num != 53 ) continue;
+					if( dgf_ch < 0 || dgf_ch > 1 ) continue;
 
 					dgf_num2 = event->Dgf(k)->ModuleNumber();
 					dgf_ch2  = event->Dgf(k)->Channel();
