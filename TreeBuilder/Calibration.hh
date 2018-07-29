@@ -74,9 +74,9 @@ private:
 
 	double zoffset;
 
-	double fBeamdumpOffset;
-	double fBeamdumpGain;
-	double fBeamdumpGainQuadr;
+	vector< double > fBeamdumpOffset;
+	vector< double > fBeamdumpGain;
+	vector< double > fBeamdumpGainQuadr;
   
 	double RawRandomized;
 

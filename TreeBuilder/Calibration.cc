@@ -56,9 +56,18 @@ void Calibration::ReadCalibration() {
 	}
 	
 	if( fVerbose ) cout << "reading beamdump" << endl;
-	fBeamdumpOffset = config->GetValue(Form("dgf_%d_%d.Offset", fBeamdumpDgf, 0),0.);
-	fBeamdumpGain = config->GetValue(Form("dgf_%d_%d.Gain", fBeamdumpDgf, 0),1.);
-	fBeamdumpGainQuadr = config->GetValue(Form("dgf_%d_%d.GainQuadr", fBeamdumpDgf, 0),0.);
+	fBeamdumpOffset.resize(fNofDgfChans);
+	fBeamdumpGain.resize(fNofDgfChans);
+	fBeamdumpGainQuadr.resize(fNofDgfChans);
+
+	for( int chan=0; chan <fNofDgfChans; chan++) {
+
+		fBeamdumpOffset[chan] = config->GetValue(Form("dgf_%d_%d.Offset", fBeamdumpDgf, chan),0.);
+		fBeamdumpGain[chan] = config->GetValue(Form("dgf_%d_%d.Gain", fBeamdumpDgf, chan),1.);
+		fBeamdumpGainQuadr[chan] = config->GetValue(Form("dgf_%d_%d.GainQuadr", fBeamdumpDgf, chan),0.);
+
+	}
+
 
 	if( fVerbose ) cout << "reading adcs" << endl;
 	fAdcOffset.resize(fNofAdcs);
@@ -131,11 +140,11 @@ void Calibration::ReadCalibration() {
 	fClusterR.resize(fNofClusters);
 
 	for( int clu=0; clu < fNofClusters; clu++ ) {
+
 		fClusterR[clu] =     config->GetValue( Form("Cluster_%d.R", clu), 0. );
 		fClusterTheta[clu] = config->GetValue( Form("Cluster_%d.Theta", clu), 0. );
 		fClusterPhi[clu] =   config->GetValue( Form("Cluster_%d.Phi", clu), 0. );
 		fClusterAlpha[clu] = config->GetValue( Form("Cluster_%d.Alpha", clu), 0. );
-		
 
 	}
 
@@ -161,9 +170,13 @@ void Calibration::PrintCalibration(){
 	}
   
 	cout << "Beamdump" << endl;
-	cout << Form("dgf_%d_%d.Offset\t", fBeamdumpDgf, 0) << fBeamdumpOffset << endl;
-	cout << Form("dgf_%d_%d.Gain\t", fBeamdumpDgf, 0) << fBeamdumpGain << endl;
-	cout << Form("dgf_%d_%d.GainQuadr\t", fBeamdumpDgf, 0) << fBeamdumpGainQuadr << endl;
+	for(int chan=0; chan<fNofDgfChans; chan++){
+
+		cout << Form("dgf_%d_%d.Offset\t", fBeamdumpDgf, chan) << fBeamdumpOffset[chan] << endl;
+		cout << Form("dgf_%d_%d.Gain\t", fBeamdumpDgf, chan) << fBeamdumpGain[chan] << endl;
+		cout << Form("dgf_%d_%d.GainQuadr\t", fBeamdumpDgf, chan) << fBeamdumpGainQuadr[chan] << endl;
+
+	}
   
 	cout << "ADCs" << endl;
 	for(int adc=0; adc<fNofAdcs; adc++){
@@ -209,6 +222,8 @@ void Calibration::PrintCalibration(){
 
 	}
 	
+	cout << "zoffset: " << zoffset << endl;
+
 }
 
 double Calibration::DgfEnergy(int dgf, int chan, unsigned short raw){
@@ -232,14 +247,16 @@ double Calibration::DgfEnergy(int dgf, int chan, unsigned short raw){
 
 	}
 
-	else if( dgf == 53 && chan == 0 ) {
+	else if( dgf == 53 && chan => 0 && chan < 4 ) {
 	
 		cout.precision(7);
 		RawRandomized = raw + 0.5 - fRand->Uniform();
 
-		energy = fBeamdumpGainQuadr*TMath::Power(RawRandomized,2) + fBeamdumpGain*RawRandomized + fBeamdumpOffset;
+		energy = fBeamdumpGainQuadr[chan]*TMath::Power(RawRandomized,2);
+		energy += fBeamdumpGain[chan]*RawRandomized;
+		energy += fBeamdumpOffset[chan];
 
-		return energy; //Version 2015 2.0
+		return energy; 
 
 	}
 	
