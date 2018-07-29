@@ -62,9 +62,9 @@ void Calibration::ReadCalibration() {
 
 	for( int chan=0; chan <fNofDgfChans; chan++) {
 
-		fBeamdumpOffset[chan] = config->GetValue(Form("dgf_%d_%d.Offset", fBeamdumpDgf, chan),0.);
-		fBeamdumpGain[chan] = config->GetValue(Form("dgf_%d_%d.Gain", fBeamdumpDgf, chan),1.);
-		fBeamdumpGainQuadr[chan] = config->GetValue(Form("dgf_%d_%d.GainQuadr", fBeamdumpDgf, chan),0.);
+		fBeamdumpOffset[chan] = config->GetValue(Form("dgf_%d_%d.Offset", fBeamdumpDgf, chan), 0.);
+		fBeamdumpGain[chan] = config->GetValue(Form("dgf_%d_%d.Gain", fBeamdumpDgf, chan), 1.);
+		fBeamdumpGainQuadr[chan] = config->GetValue(Form("dgf_%d_%d.GainQuadr", fBeamdumpDgf, chan), 0.);
 
 	}
 

@@ -731,7 +731,7 @@ int main(int argc, char* argv[]) {
 			else if( dgf_num == 53 && dgf_ch >= 0 && dgf_ch < 2 ) {
 
 				GammaEnergy = Cal->DgfEnergy( dgf_num, dgf_ch, dgf_en );
-				E_BeamDump[dgf_ch]->Fill( Cal->DgfEnergy( 53,0,dgf_en) );
+				E_BeamDump[dgf_ch]->Fill( GammaEnergy );
 				T_BeamDump[dgf_ch]->Fill( (dgf_t)/40000000 );
 
 				for( k = 0; k < event->NumberOfDgfs(); k++ ) {
