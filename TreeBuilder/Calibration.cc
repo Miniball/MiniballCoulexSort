@@ -247,7 +247,7 @@ double Calibration::DgfEnergy(int dgf, int chan, unsigned short raw){
 
 	}
 
-	else if( dgf == 53 && chan => 0 && chan < 4 ) {
+	else if( dgf == 53 && chan >= 0 && chan < 4 ) {
 	
 		cout.precision(7);
 		RawRandomized = raw + 0.5 - fRand->Uniform();
