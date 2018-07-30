@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
 	
 	printf( "opening file %s ...\n", Settings->MedFile() );
 	
-	mbs = mbs_open_file( Settings->MedFile(), "F", 0x4000, NULL );
+	mbs = mbs_open_file( Settings->MedFile(), "F", 0x10000, NULL );
 	
 	// if error when opening file
 	if( mbs == NULL ) printf( "couldn't open file %s -> exit!!!\n", Settings->MedFile() );
