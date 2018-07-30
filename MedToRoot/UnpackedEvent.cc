@@ -1,9 +1,9 @@
 #include "UnpackedEvent.hh"
 
 extern "C" {
-  unsigned int mbs_get_event_trigger(const MBSDataIO *mbs);
-  unsigned int mbs_next_sheader(const MBSDataIO *);
-  unsigned int mbs_next_sdata(const MBSDataIO *);
+	unsigned int mbs_get_event_trigger(const MBSDataIO *mbs);
+	unsigned int mbs_next_sheader(const MBSDataIO *);
+	unsigned int mbs_next_sdata(const MBSDataIO *);
 }
 
 ClassImp(GlobalSettings)
@@ -15,248 +15,326 @@ ClassImp(DgfSubEvent)
 ClassImp(AdcSubEvent)
 ClassImp(PatternUnitSubEvent)
 
-UnpackedEvent::UnpackedEvent()
-{
-  cout<<"Warning, default constructor"<<endl;
+UnpackedEvent::UnpackedEvent() {
 
-  EventNumber = 0;
+	cout << "Warning, default constructor" << endl;
 
-  DgfModules.clear();
-  AdcModules.clear();
-  PatternUnits.clear();
-  Scaler.ClearEvt();
-  fDgfScaler.ClearEvt();
-  fBraggChamber.ClearEvt();
+	EventNumber = 0;
 
-  WrongHitPattern = 0;
-  WrongAdcHeader = 0;
-  AdcOverflow = 0;
-  AdcUnderflow = 0;
+	DgfModules.clear();
+	AdcModules.clear();
+	PatternUnits.clear();
+	Scaler.ClearEvt();
+	fDgfScaler.ClearEvt();
+	fBraggChamber.ClearEvt();
 
-  fScalerData = false;
+	WrongHitPattern = 0;
+	WrongAdcHeader = 0;
+	AdcOverflow = 0;
+	AdcUnderflow = 0;
 
-  fBufferTime = 0;
+	fScalerData = false;
+
+	fBufferTime = 0;
+
 }
 
 UnpackedEvent::UnpackedEvent(GlobalSettings* globalSettings)
-  :Settings(globalSettings)
-{
-  //cout<<__PRETTY_FUNCTION__<<endl;
-  unsigned short i;
+  :Settings(globalSettings) {
 
-  EventNumber = 0;
+	//cout<<__PRETTY_FUNCTION__<<endl;
+	unsigned short i;
 
-  DgfModules.resize(Settings->NumberOfDgfModules());
-  AdcModules.resize(Settings->NumberOfAdcModules());
-  PatternUnits.resize(Settings->NumberOfPatternUnits());
+	EventNumber = 0;
 
-  for(i = 0; i < Settings->NumberOfDgfModules(); i++)
-    {
-      DgfModules[i].SetModuleNumber(i);
-    }
+	DgfModules.resize(Settings->NumberOfDgfModules());
+	AdcModules.resize(Settings->NumberOfAdcModules());
+	PatternUnits.resize(Settings->NumberOfPatternUnits());
 
-  for(i = 0; i < Settings->NumberOfAdcModules(); i++)
-    {
-      AdcModules[i].SetModuleNumber(i);
-    }
+	for( i = 0; i < Settings->NumberOfDgfModules(); i++ ) {
 
-  for(i = 0; i < Settings->NumberOfPatternUnits(); i++)
-    {
-      PatternUnits[i].SetModuleNumber(i);
-    }
+		DgfModules[i].SetModuleNumber(i);
 
-  Scaler.SetModuleNumber(0);
+	}
+
+	for( i = 0; i < Settings->NumberOfAdcModules(); i++ ) {
+
+		AdcModules[i].SetModuleNumber(i);
+
+	}
+
+	for( i = 0; i < Settings->NumberOfPatternUnits(); i++ ) {
+
+		PatternUnits[i].SetModuleNumber(i);
+
+	}
+
+	Scaler.SetModuleNumber(0);
   
-  WrongHitPattern = 0;
-  WrongAdcHeader = 0;
-  AdcOverflow = 0;
-  AdcUnderflow = 0;
+	WrongHitPattern = 0;
+	WrongAdcHeader = 0;
+	AdcOverflow = 0;
+	AdcUnderflow = 0;
 
-  fScalerData = false;
+	fScalerData = false;
 
-  fBufferTime = 0;
+	fBufferTime = 0;
+
 }
 
-UnpackedEvent::~UnpackedEvent()
-{
-  //cout<<__PRETTY_FUNCTION__<<endl;
-  DgfModules.clear();
-  AdcModules.clear();
-  PatternUnits.clear();
-  Scaler.ClearEvt();
-  fDgfScaler.ClearEvt();
-  fBraggChamber.ClearEvt();
+UnpackedEvent::~UnpackedEvent() {
+
+	DgfModules.clear();
+	AdcModules.clear();
+	PatternUnits.clear();
+	Scaler.ClearEvt();
+	fDgfScaler.ClearEvt();
+	fBraggChamber.ClearEvt();
+
 }
 
-int UnpackedEvent::ProcessEvent(const MBSDataIO * mbs) 
-{
-  if(Settings->VerboseLevel() > 2)
-    {
-      cout<<endl<<"start of "<<__PRETTY_FUNCTION__<<endl;
-    }
+int UnpackedEvent::ProcessEvent(const MBSDataIO * mbs) {
 
-  switch (mbs_get_event_trigger(mbs))
-    {
-      // dispatch according to trigger number 
+	if( Settings->VerboseLevel() > 2 ) {
 
-    case 1:                                                  // (=kMrbTriggerReadout in DgfCommonIndices.h) 
-      if(Settings->VerboseLevel() > 3)
-	{
-	  cout<<"starting to extract subevents of event "<<EventNumber<<endl;
+		cout << endl << "start of " << __PRETTY_FUNCTION__ << endl;
+
 	}
-      if(ExtractSubevents(mbs)) // extract subevents 
-	{
-	  if(Settings->MesytecAdc())
-	    CorrectMesytecAdcTimestamps();
-	  return 0; 
-	}
-      else
-	{
-	  return 2;
-	}
+
+	switch( mbs_get_event_trigger(mbs) ) {
+
+		// dispatch according to trigger number 
+
+		case 1:  // (=kMrbTriggerReadout in DgfCommonIndices.h) 
+
+			if( Settings->VerboseLevel() > 3 ) {
+
+				cout << "starting to extract subevents of event " << EventNumber << endl;
+
+			}
+
+			if( ExtractSubevents(mbs) ) { // extract subevents 
+
+				if( Settings->MesytecAdc() )
+	    			CorrectMesytecAdcTimestamps();
+
+				return 0; 
+
+			}
+
+			else {
+
+				return 2;
+
+			}
   
-    case 14:                                                 // kMrbTriggerStartAcquisition 
-      cout<<endl<<"Start trigger #14"<<endl<<endl;
-      return 14;
+		case 14:	// kMrbTriggerStartAcquisition 
 
-    case 15:                                                 // kMrbTriggerStopAcquisition 
-      cout<<endl<<"Stop trigger #15"<<endl<<endl;
-      return 15;
+			cout << endl << "Start trigger #14" << endl << endl;
+			return 14;
 
-    default:
-      cout<<"Illegal trigger number - #"<<mbs_get_event_trigger(mbs)<<endl;
-      return 2;
+		case 15:	// kMrbTriggerStopAcquisition 
+
+			cout << endl << "Stop trigger #15" << endl << endl;
+			return 15;
+
+		default:
+
+			cout << "Illegal trigger number - #" << mbs_get_event_trigger(mbs) << endl;
+			return 2;
+
     }
+
 }
 
-bool UnpackedEvent::ExtractSubevents(const MBSDataIO * mbs)
-{
-  if(Settings->VerboseLevel() > 2)
-    {
-      cout<<endl<<"start of "<<__PRETTY_FUNCTION__<<endl;
+bool UnpackedEvent::ExtractSubevents(const MBSDataIO * mbs) {
+
+	if( Settings->VerboseLevel() > 2 ) {
+
+		cout << endl << "start of " << __PRETTY_FUNCTION__ << endl;
+
     }
 
-  // variables needed 
-  unsigned int sevtType;
+	// variables needed 
+	unsigned int sevtType;
   
-  // hd_subs.c clean-up things before start of decoding 
-  ClearEvt();
+	// hd_subs.c clean-up things before start of decoding 
+	ClearEvt();
 
-  // start of loop over subevents of MBS readout buffer 
-  while(true)
-    {
-      sevtType = mbs_next_sheader(mbs);
+	// start of loop over subevents of MBS readout buffer 
+	while(true) {
 
-      if (sevtType == MBS_STYPE_EOE)
-	{
-	  EventNumber++;
-	  return true;       // end of event 
-	}
-      if (sevtType == MBS_STYPE_ABORT) 
-	{                 // error 
-	  cout<<"sevtType == MBS_STYPE_ABORT after call of 'mbs_next_sheader()'"<<endl;
-	  return false;
+		sevtType = mbs_next_sheader(mbs);
+
+		if( sevtType == MBS_STYPE_EOE ) {
+
+			EventNumber++;
+			return true;       // end of event 
+
+		}
+
+		if( sevtType == MBS_STYPE_ABORT ) {	// error 
+
+			cout << "sevtType == MBS_STYPE_ABORT after call of 'mbs_next_sheader()'" << endl;
+			return false;
+
+		}
+
+		sevtType = mbs_next_sdata(mbs);				// next subevent 
+		if (sevtType == MBS_STYPE_ERROR) { 			// error 
+
+			cout << "sevtType == MBS_STYPE_ERROR after call of 'mbs_next_sdata()" << endl;
+			return false;
+
+		}
+
+		if( Settings->VerboseLevel() > 2 ) {
+
+			cout << "type = " << hex << mbs->sevt_otype << dec << endl;
+
+		}
+
+		// Dgf data 
+		if( (Settings->FirstMiniballDgf() <= mbs->sevt_id && mbs->sevt_id <= Settings->LastMiniballDgf()) || mbs->sevt_id == Settings->BeamdumpDgf() ) {
+
+			if( Settings->VerboseLevel() > 2 ) {
+
+				cout << "DGF mbs->sevt_id " << mbs->sevt_id << " mbs->sevt_wc " << mbs->sevt_wc << endl;
+
+			}
+
+			if( !DecodeDgf(mbs->sevt_id, mbs->sevt_wc, mbs->sevt_data) )
+
+				return false;
+
+			else if( Settings->VerboseLevel() > 1 )
+
+				cout << "decode dgf done" << endl;
+
+		}
+
+		// ADC & TDC data 
+		else if( Settings->FirstAdc() <= mbs->sevt_id && mbs->sevt_id <= Settings->LastAdc()-Settings->NofCaenAdc() ) {
+
+			if( !Settings->MesytecAdc() ) {
+
+				if( !DecodeAdc(mbs->sevt_id, mbs->sevt_wc, mbs->sevt_data) )
+
+					return false;
+
+				else if( Settings->VerboseLevel() > 1 )
+
+					cout << "decode Caen adc done" << endl;
+
+			}
+
+			else {
+
+				if( Settings->VerboseLevel() > 2 ) {
+
+					cout << "MADC mbs->sevt_id " << mbs->sevt_id << " mbs->sevt_wc " << mbs->sevt_wc << endl;
+
+				}
+
+				if( !DecodeMesytecAdc(mbs->sevt_id, mbs->sevt_wc, mbs->sevt_data) )
+
+					return false;
+
+				else if( Settings->VerboseLevel() > 1 )
+
+					cout << "decode MADC done" << endl;
+
+			}
+
+		}
+
+		else if( Settings->LastAdc()-Settings->NofCaenAdc() < mbs->sevt_id && mbs->sevt_id <= Settings->LastAdc() ) {
+
+			if( Settings->VerboseLevel() > 2 ) {
+
+				cout << "Caen TDC mbs->sevt_id " << mbs->sevt_id;
+				cout << " mbs->sevt_wc " << mbs->sevt_wc << endl;
+
+			}
+
+			if( !DecodeAdc(mbs->sevt_id, mbs->sevt_wc, mbs->sevt_data) )
+
+				return false;
+
+			else if( Settings->VerboseLevel() > 1 )
+
+				cout << "decode Caen tdc done" << endl;
+
+		}
+
+		// SIS 3600 Pattern Unit 
+		else if( mbs->sevt_id == Settings->PatternUnit() ) {
+
+			if( !DecodeSIS3600PatternUnit(mbs->sevt_id, mbs->sevt_wc, mbs->sevt_data) )
+
+				return false;
+
+			else if( Settings->VerboseLevel() > 1 )
+
+				cout << "decode pu done" << endl;
+
+		}
+
+		// bragg chamber (SIS 3300 sampling adc)
+		else if( mbs->sevt_id == Settings->BraggChamber() ) {
+
+			if( !DecodeBraggChamber(mbs->sevt_id, mbs->sevt_wc, mbs->sevt_data) )
+
+				return false;
+
+			else if( Settings->VerboseLevel() > 1 )
+
+				cout << "decode bragg chamber done" << endl;
+
+		}
+
+		// scaler (SIS 3800???)
+		else if( mbs->sevt_id == Settings->Scaler() ) {
+
+			if( !DecodeScaler(mbs->sevt_id, mbs->sevt_wc, mbs->sevt_data) )
+
+				return false;
+
+			else if( Settings->VerboseLevel() > 1 )
+
+				cout << "decode scaler done" << endl;
+
+		}
+
+		// dgf scaler (internal dgf scaler???)
+		else if( Settings->FirstDgfScaler() <= mbs->sevt_id && mbs->sevt_id <= Settings->LastDgfScaler() ) {
+
+			if( !DecodeDgfScaler(mbs->sevt_id, mbs->sevt_wc, mbs->sevt_data) )
+
+				return false;
+
+			else if( Settings->VerboseLevel() > 1 )
+
+				cout << "decode dgf scaler done" << endl;
+
+		}
+
+		// other 
+		else if( Settings->VerboseLevel() > 0 ) {
+
+			cout << "Unknown subevent id: " << mbs->sevt_id;
+			cout << ", not " << Settings->FirstMiniballDgf() << " - " << Settings->LastMiniballDgf();
+			cout << ", not " << Settings->BeamdumpDgf();
+			cout << ", not " << Settings->FirstAdc() << " - " << Settings->LastAdc();
+			cout << ", not " << Settings->PatternUnit();
+			cout << ", not " << Settings->BraggChamber();
+			cout << ", not " << Settings->Scaler();
+			cout << " and not " << Settings->FirstDgfScaler() << " - " << Settings->LastDgfScaler() << endl;
+
+		}
+
 	}
 
-      sevtType = mbs_next_sdata(mbs); 		       // next subevent 
-      if (sevtType == MBS_STYPE_ERROR)
-	{                 // error 
-	  cout<<"sevtType == MBS_STYPE_ERROR after call of 'mbs_next_sdata()"<<endl;
-	  return false;
-	}
-
-      if(Settings->VerboseLevel() > 2)
-	{
-	  cout<<"type = "<<hex<<mbs->sevt_otype<<dec<<endl;
-	}
-
-      // Dgf data 
-      if((Settings->FirstMiniballDgf() <= mbs->sevt_id && mbs->sevt_id <= Settings->LastMiniballDgf()) || mbs->sevt_id == Settings->BeamdumpDgf())
-	{
-	  if(Settings->VerboseLevel() > 2){
-		cout << "DGF mbs->sevt_id " << mbs->sevt_id << " mbs->sevt_wc " << mbs->sevt_wc <<endl;
-	      }
-	  if(!DecodeDgf(mbs->sevt_id, mbs->sevt_wc, mbs->sevt_data))
-	    return false;
-	  else if(Settings->VerboseLevel() > 1)
-	    cout<<"decode dgf done"<<endl;
-	}
-      // ADC & TDC data 
-      else if(Settings->FirstAdc() <= mbs->sevt_id && mbs->sevt_id <= Settings->LastAdc()-Settings->NofCaenAdc()) 
-	{
-	  if(!Settings->MesytecAdc())
-	    {
-	      if(!DecodeAdc(mbs->sevt_id, mbs->sevt_wc, mbs->sevt_data))
-		return false;
-	      else if(Settings->VerboseLevel() > 1)
-		cout<<"decode Caen adc done"<<endl;
-	    }
-	  else
-	    {
-	      if(Settings->VerboseLevel() > 2){
-		cout << "MADC mbs->sevt_id " << mbs->sevt_id << " mbs->sevt_wc " << mbs->sevt_wc <<endl;
-	      }
-	      if(!DecodeMesytecAdc(mbs->sevt_id, mbs->sevt_wc, mbs->sevt_data))
-		return false;
-	      else if(Settings->VerboseLevel() > 1)
-		cout<<"decode MADC done"<<endl;
-	    }
-	}
-      else if(Settings->LastAdc()-Settings->NofCaenAdc() < mbs->sevt_id && mbs->sevt_id <= Settings->LastAdc()){
-	if(Settings->VerboseLevel() > 2){
-	  cout << "Caen TDC mbs->sevt_id " << mbs->sevt_id << " mbs->sevt_wc " << mbs->sevt_wc <<endl;
-	}
-	if(!DecodeAdc(mbs->sevt_id, mbs->sevt_wc, mbs->sevt_data))
-	  return false;
-	else if(Settings->VerboseLevel() > 1)
-	  cout<<"decode Caen tdc done"<<endl;
-      }
-
-      // SIS 3600 Pattern Unit 
-      else if(mbs->sevt_id == Settings->PatternUnit()) 
-	{
-	  if(!DecodeSIS3600PatternUnit(mbs->sevt_id, mbs->sevt_wc, mbs->sevt_data))
-	    return false;
-	  else if(Settings->VerboseLevel() > 1)
-	    cout<<"decode pu done"<<endl;
-	}
-      // bragg chamber (SIS 3300 sampling adc)
-      else if(mbs->sevt_id == Settings->BraggChamber())
-	{
-	  if(!DecodeBraggChamber(mbs->sevt_id, mbs->sevt_wc, mbs->sevt_data))
-	    return false;
-	  else if(Settings->VerboseLevel() > 1)
-	    cout<<"decode bragg chamber done"<<endl;
-	}
-      // scaler (SIS 3800???)
-      else if(mbs->sevt_id == Settings->Scaler())
-	{
-	  if(!DecodeScaler(mbs->sevt_id, mbs->sevt_wc, mbs->sevt_data))
-	    return false;
-	  else if(Settings->VerboseLevel() > 1)
-	    cout<<"decode scaler done"<<endl;
-	}
-      //dgf scaler (internal dgf scaler???)
-      else if(Settings->FirstDgfScaler() <= mbs->sevt_id && mbs->sevt_id <= Settings->LastDgfScaler())
-	{
-	  if(!DecodeDgfScaler(mbs->sevt_id, mbs->sevt_wc, mbs->sevt_data))
-	    return false;
-	  else if(Settings->VerboseLevel() > 1)
-	    cout<<"decode dgf scaler done"<<endl;
-	}
-      // other 
-      else if(Settings->VerboseLevel() > 0)
-	{
-	  cout<<"Unknown subevent id: "<<mbs->sevt_id
-	      <<", not "<<Settings->FirstMiniballDgf()<<" - "<<Settings->LastMiniballDgf()
-	      <<", not "<<Settings->BeamdumpDgf()
-	      <<", not "<<Settings->FirstAdc()<<" - "<<Settings->LastAdc()
-	      <<", not "<<Settings->PatternUnit() 
-	      <<", not "<<Settings->BraggChamber()
-	      <<", not "<<Settings->Scaler()
-	      <<" and not "<<Settings->FirstDgfScaler()<<" - "<<Settings->LastDgfScaler()<<endl;
-	}
-    }
 }
 
 // subevent id 1-9, type [10,23]: raw dgf data, format 0x101 
@@ -1321,58 +1399,75 @@ bool UnpackedEvent::DecodeBraggChamber(int SubEventID, int SubEventWordCount, ch
 
 
 // subevent 15, type [10,11]: scaler data: 3 scalers a 32 chn a 32 bit (last two are from ppac, not used???)
-bool UnpackedEvent::DecodeScaler(int SubEventID, int SubEventWordCount, char* SubEventData)
-{
-  if(Settings->VerboseLevel() > 2)
-    {
-      cout<<endl<<"start of "<<__PRETTY_FUNCTION__<<endl;
-    }
+bool UnpackedEvent::DecodeScaler(int SubEventID, int SubEventWordCount, char* SubEventData) {
 
-  // needed variables 
-  unsigned short* q;
-  unsigned short i;
-  unsigned int data;
+	if( Settings->VerboseLevel() > 2 )
+		cout << endl << "start of " << __PRETTY_FUNCTION__ << endl;
+
+	// needed variables 
+	unsigned short* q;
+	unsigned short i;
+	unsigned int data;
   
-  if(Settings->VerboseLevel() > 1)
-    {
-      cout<<"read event nr. "<<EventNumber<<": Subevent "<<SubEventID<<": Scaler data, WordCount = "<<SubEventWordCount<<endl;
-    }
+	if( Settings->VerboseLevel() > 1 ) {
 
-  // set HD data pointer q to SubEventData 
-  q = (unsigned short*) SubEventData;
+		cout << "read event nr. " << EventNumber << ": Subevent " << SubEventID;
+		cout << ": Scaler data, WordCount = " << SubEventWordCount << endl;
 
-  ScalerSubEvent CurrentSubEvent;
-
-  if(SubEventWordCount%2 != 0)//there are two words for each channel => total number of words must be even
-    {
-      cerr<<__PRETTY_FUNCTION__<<": Error, I'm expecting even number of words in SubEvent but there are "<<SubEventWordCount<<endl;
-
-      return false;
-    }
-
-  //data consists of two words for each channel
-  for(i = 0; i < SubEventWordCount/2; i++)
-    {
-      data  = ((unsigned int) *q++) << 16;      // high word
-      data  |= (unsigned int) *q++;	         // low word
-      
-      if(data > 0)
-	{
-	  CurrentSubEvent.Add(i, data);
 	}
-      
-      if(Settings->VerboseLevel() > 3)
-	{
-	  cout<<"number of pattern unit events: "<<CurrentSubEvent.Size()<<", last value = "<<CurrentSubEvent.GetLastValue()<<endl;
+
+	// set HD data pointer q to SubEventData 
+	q = (unsigned short*) SubEventData;
+
+	ScalerSubEvent CurrentSubEvent;
+
+	if( SubEventWordCount%2 != 0 ) { // there are two words for each channel => total number of words must be even
+
+		cerr << __PRETTY_FUNCTION__;
+		cerr << ": Error, I'm expecting even number of words in SubEvent but there are ";
+		cerr << SubEventWordCount << endl;
+
+		return false;
+
 	}
+
+	// data consists of two words for each channel
+	for( i = 0; i < SubEventWordCount/2; i++ ) {
+
+		data  = ((unsigned int) *q++) << 16;      // high word
+		data  |= (unsigned int) *q++;	         // low word
+      
+		if( data > 0 ) {
+
+			CurrentSubEvent.Add(i, data);
+
+		}
+      
+		if( Settings->VerboseLevel() > 3 ) {
+
+			if( CurrentSubEvent.Size() > 0 ) {  
+
+				cout << "number of pattern unit events: " << CurrentSubEvent.Size();
+				cout << ", last value = " << CurrentSubEvent.GetLastValue() << endl;
+
+			}
+
+			else {
+
+				cout << "number of pattern unit events: " << CurrentSubEvent.Size() << endl;
+
+			}
+
+		}
+
     }
-    
 
-  Scaler.AddSubEvent(CurrentSubEvent);
+	Scaler.AddSubEvent(CurrentSubEvent);
 
-  fScalerData = true;
+	fScalerData = true;
   
-  return true;
+	return true;
+
 }
 
 // subevent 16, 17, 18, type [10,64]: internal dgf counters:         

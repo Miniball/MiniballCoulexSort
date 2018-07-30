@@ -58,7 +58,7 @@ protected:
 	long long superCycleTime;
 	
 	long long eventNumber;
-	unsigned short subEventNumber;
+	unsigned int subEventNumber;
 	
 	vector <AdcData> adcData;
 	vector <DgfData> dgfData;

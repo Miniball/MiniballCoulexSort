@@ -41,13 +41,13 @@ void BuiltEvent::ClearEvt() {
 
 void BuiltEvent::AddParticle(unsigned short moduleNumber, AdcSubEvent* adcSubEvent, long long time, bool LaserOn, bool FieldUp, bool FieldDown) {
 
-	adcData.push_back(AdcData(moduleNumber, time, adcSubEvent, LaserOn, FieldUp, FieldDown));
+	adcData.push_back( AdcData(moduleNumber, time, adcSubEvent, LaserOn, FieldUp, FieldDown) );
 
 }
 
 void BuiltEvent::AddGamma(unsigned short moduleNumber, unsigned short channel, DgfSubEvent* dgfSubEvent, unsigned short multiplicity) {
 
-	dgfData.push_back(DgfData(moduleNumber, channel, dgfSubEvent, multiplicity));
+	dgfData.push_back( DgfData(moduleNumber, channel, dgfSubEvent, multiplicity) );
 
 }
 
@@ -58,7 +58,7 @@ bool BuiltEvent::Coincident(GlobalSettings* Settings, long long time) {
 	// if there are particles in this event, check whether they are in coincidence
 	if( adcData.size() > 0 ) {
 
-		//loop over all adc events
+		// loop over all adc events
 		for( i = 0; i < adcData.size(); i++ ) {
 			
 			if( Settings->Coincident( time-adcData[i].Time() ) )
@@ -72,13 +72,13 @@ bool BuiltEvent::Coincident(GlobalSettings* Settings, long long time) {
 	
 	else {
 		
-      // loop over all dgf events
-      for( i = 0; i < dgfData.size(); i++ ) {
+		// loop over all dgf events
+		for( i = 0; i < dgfData.size(); i++ ) {
 
-		  if(Settings->Coincident(time-dgfData[i].Time()))
-			  return true;
+			if( Settings->Coincident(time-dgfData[i].Time()) )
+				return true;
 
-	  }
+		}
 
 		return false;
 

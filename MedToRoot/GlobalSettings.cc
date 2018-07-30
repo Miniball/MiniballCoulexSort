@@ -91,7 +91,7 @@ GlobalSettings::GlobalSettings( unsigned int argc, char* argv[] ) {
 		cout<<"Settings are:"<<endl
 		<<"First Miniball Dgf = "<<fFirstMiniballDgf<<endl
 		<<"Last Miniball Dgf = "<<fLastMiniballDgf<<endl
-		<<"Beamdumo Dgf = "<<fBeamdumpDgf<<endl
+		<<"Beamdump Dgf = "<<fBeamdumpDgf<<endl
 		<<"First Adc = "<<fFirstAdc<<endl
 		<<"Last Adc = "<<fLastAdc<<endl
 		<<"Pattern Unit = "<<fPatternUnit<<endl
