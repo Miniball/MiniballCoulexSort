@@ -636,8 +636,7 @@ void EventBuilder::BuildEvent() {
 
 		for( size_t SubEvent = 0; SubEvent < unpackedEvent->GetDgfModule(dgf)->GetNumberOfSubEvents(); SubEvent++ ) {
 
-			if ( unpackedEvent->GetDgfModule(dgf)->GetModuleNumber() != Settings->BeamdumpDgf() ) // TODO remove
-				eventBuffer->AddGamma(unpackedEvent->GetDgfModule(dgf)->GetModuleNumber(), unpackedEvent->GetDgfModule(dgf)->GetSubEvent(SubEvent));
+			eventBuffer->AddGamma(unpackedEvent->GetDgfModule(dgf)->GetModuleNumber(), unpackedEvent->GetDgfModule(dgf)->GetSubEvent(SubEvent));
 
 		}
 
