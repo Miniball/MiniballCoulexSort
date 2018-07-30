@@ -8,6 +8,7 @@ COMMON_DIR = ../common
 MED_DIR    = ./med
 MBEVTS_DIR = ../mbevts
 MED2R_DIR = ../MedToRoot
+MBGEOM_DIR = ../CLXAna
 
 ROOTCFLAGS   := $(shell root-config --cflags)
 ROOTLIBS     := $(shell root-config --libs)
@@ -30,11 +31,11 @@ CPP       = $(shell root-config --cxx)
 
 CFLAGS    = -O2 -pipe -Wall -W -Woverloaded-virtual $(ROOTCFLAGS) -fPIC
 
-INCLUDES  = -I$(MED_DIR)/inc -I$(COMMON_DIR) -I$(MBEVTS_DIR) -I$(MED2R_DIR) -I./
+INCLUDES  = -I$(MED_DIR)/inc -I$(COMMON_DIR) -I$(MBEVTS_DIR) -I$(MED2R_DIR) -I$(MBGEOM_DIR) -I./
 LFLAGS    = -O2 -g
 
 O_FILES = Calibration.o \
-		  MBGeometry.o \
+		$(MBGEOM_DIR)/MBGeometry.o \
 		$(MBEVTS_DIR)/mbevts.o
 
 all: MKDIR_P TreeBuilder NeSort AQ4Sort
@@ -57,6 +58,9 @@ AQ4Sort: AQ4Sort.cc $(O_FILES) AQ4SortDictionary.o
 	$(AR) cru $(LIB_DIR)/libNeSort.a $(O_FILES) AQ4SortDictionary.o
 	cp AQ4Sort $(BIN_DIR)/
 
+$(MBGEOM_DIR)/MBGeometry.o: $(MBGEOM_DIR)/MBGeometry.cc $(MBGEOM_DIR)/MBGeometry.hh
+	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
 %.o: %.cc %.hh
 	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
@@ -64,7 +68,7 @@ AQ4Sort: AQ4Sort.cc $(O_FILES) AQ4SortDictionary.o
 #---- Root stuff
 
 DEPENDENCIES = Calibration.hh \
-			MBGeometry.hh \
+			$(MBGEOM_DIR)/MBGeometry.hh \
 			$(MED2R_DIR)/BuiltEvent.hh \
 			$(MED2R_DIR)/Datas.hh \
 			$(MED2R_DIR)/Modules.hh \
