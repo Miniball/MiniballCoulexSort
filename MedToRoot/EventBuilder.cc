@@ -16,7 +16,7 @@ EventBuilder::EventBuilder() {
 
 	OnBeamFile = NULL;
 	OnBeamTree = NULL;
- 	 OnBeamEvent = NULL;
+ 	OnBeamEvent = NULL;
 
 	OnBeamBackgroundFile = NULL;
 	OnBeamBackgroundTree = NULL;
@@ -40,7 +40,7 @@ EventBuilder::EventBuilder() {
 	NumberOfBytesWrittenToScalerFile = 0;
 	PatternUnitMismatches = 0;
 
-	//Ebis, T1 and SuperCycle pulses
+	// Ebis, T1 and SuperCycle pulses
 	TotalNumberOfEbisPulses = 0;
 	TotalNumberOfT1Pulses = 0;
 	TotalNumberOfSuperCyclePulses = 0;
@@ -64,24 +64,25 @@ EventBuilder::EventBuilder(GlobalSettings* settings)
 	//cout<<__PRETTY_FUNCTION__<<endl;
 	if( Settings->VerboseLevel() > 0 ) {
 
-		cout<<"opening file "<<Settings->OnBeamFile()<<endl;
+		cout << "opening file " << Settings->OnBeamFile() << endl;
 
 	}
 
 	// open on beam file
-	OnBeamFile = new TFile(Settings->OnBeamFile(),"recreate");
+	OnBeamFile = new TFile( Settings->OnBeamFile(), "recreate" );
 
 	if( OnBeamFile == NULL ) {
 
-		cerr<<__PRETTY_FUNCTION__<<": Error, couldn't recreate output file "<<Settings->OnBeamFile()<<", exiting ... "<<endl;
+		cerr << __PRETTY_FUNCTION__ << ": Error, couldn't recreate output file ";
+		cerr << Settings->OnBeamFile() << ", exiting ... " << endl;
 		exit(1);
 
 	}
 
-	if( Settings->VerboseLevel() > 0 ) cout<<"creating tree"<<endl;
+	if( Settings->VerboseLevel() > 0 ) cout << "creating tree" << endl;
 
 	//create on beam tree
-	OnBeamTree = new TTree("tr","Tree for on beam data of Coulex setup@Miniball");
+	OnBeamTree = new TTree( "tr", "Tree for on beam data of Coulex setup@Miniball" );
 
 	if( OnBeamTree == NULL ) {
 
@@ -91,7 +92,7 @@ EventBuilder::EventBuilder(GlobalSettings* settings)
 	}
 
 	if( Settings->VerboseLevel() > 0 )
-		cout<<"attaching branch to tree "<<OnBeamTree->GetName()<<", "<<OnBeamTree->GetTitle()<<endl;
+		cout << "attaching branch to tree " << OnBeamTree->GetName() << ", " << OnBeamTree->GetTitle() << endl;
  
 	//attach branch to on beam tree
 	OnBeamEvent = new BuiltEvent();
@@ -116,12 +117,12 @@ EventBuilder::EventBuilder(GlobalSettings* settings)
 	TotalNumberOfBytesCommittedToOnBeamTree = 0;
 
 	if( Settings->VerboseLevel() > 0 )
-		cout << "opening file " << Settings->OnBeamFile() << endl;
+		cout << "opening file " << Settings->OnBeamBackgroundFile() << endl;
 
-	//open on beam background file
+	// open on beam background file
 	if( !Settings->SourceRun() ) {
 
-		OnBeamBackgroundFile = new TFile(Settings->OnBeamBackgroundFile(),"recreate");
+		OnBeamBackgroundFile = new TFile( Settings->OnBeamBackgroundFile(), "recreate" );
       
 		if( OnBeamBackgroundFile == NULL ) {
 
@@ -133,17 +134,18 @@ EventBuilder::EventBuilder(GlobalSettings* settings)
       
 		if( Settings->VerboseLevel() > 0 ) cout << "creating tree" << endl;
      
-		// create on beam tree
-		OnBeamBackgroundTree = new TTree("tr","Tree for on beam background data of Coulex setup@Miniball");
+		// create on beam background tree
+		OnBeamBackgroundTree = new TTree("bg","Tree for on beam background data of Coulex setup@Miniball");
       
 		if( OnBeamBackgroundTree == NULL ) {
 
-			cerr<<__PRETTY_FUNCTION__<<": Error, couldn't create tree, exiting ... "<<endl;
+			cerr << __PRETTY_FUNCTION__ << ": Error, couldn't create tree, exiting ... " << endl;
 			exit(2);
 
 		}
       
 		// attach branch to on beam background tree
+		OnBeamBackgroundEvent = new BuiltEvent();
 		OnBeamBackgroundTree->Branch("Event","BuiltEvent",&OnBeamBackgroundEvent);
       
 		if( Settings->IncludeScaler() ) {
@@ -160,8 +162,7 @@ EventBuilder::EventBuilder(GlobalSettings* settings)
 			OnBeamBackgroundTree->Branch("BraggChamber","BraggChamber",&fBraggChamber);
 
 		}
-  
-	
+
 		OnBeamBackgroundTree->BranchRef();
       
 		TotalNumberOfBytesCommittedToOnBeamBackgroundTree = 0;
@@ -200,6 +201,7 @@ EventBuilder::EventBuilder(GlobalSettings* settings)
 		}
       
 		// attach branch to off beam tree
+		OffBeamEvent = new BuiltEvent();
 		OffBeamTree->Branch("Event","BuiltEvent",&OffBeamEvent);
       
 		if( Settings->IncludeScaler() ) {
@@ -569,206 +571,260 @@ void EventBuilder::BuildEvent() {
     LaserOn = false;
   
   
-  // ========================== 
-  // START of the EVENTBUILDING 
-  // ========================== 
+	// ========================== 
+	// START of the EVENTBUILDING 
+	// ========================== 
 
 
-  //add particles to event buffer
-  if(!Settings->MesytecAdc())
-    {
-      //cout<<"CAEN ADC"<<endl;
-      // loop over Settings->NumberOfTimestampModules() 
-      for(ts=0; ts < Settings->NumberOfTimestampModules(); ts++) 
-	{ 
-	  // check if timestamping of VME ADC channels is OK
-	  if(AllBadTimestamp[ts]) 
-	    {
-	      cout<<__PRETTY_FUNCTION__<<": read event nr. "<<unpackedEvent->GetEventNumber()-1<<": timestamping error in "<<NumberOfBadTimestamp[ts]<<" CAEN V7X5 modules -> NO ADC channels are processed!"<<endl;
-	    }
-	  else
-	    {      
-	      //loop over adcs
-	      for(int adc = ts*Settings->NumberOfAdcsPerTimestampModule(); adc < (ts+1)*Settings->NumberOfAdcsPerTimestampModule(); adc++)
-		{
-		  // loop over subevents in ADC buffers which are then the first builtevents 
-		  for(VmeSubEvent=0; VmeSubEvent < NumberOfTimestamps[ts]; VmeSubEvent++) 
-		    {
-		      eventBuffer->AddParticle(unpackedEvent->GetAdcModule(adc)->GetModuleNumber(),unpackedEvent->GetAdcModule(adc)->GetSubEvent(VmeSubEvent),unpackedEvent->GetTimestampModule(ts)->GetSubEvent(VmeSubEvent)->GetLongFastTriggerTime(Settings->TimestampChannel()), LaserOn, unpackedEvent->GetPatternUnit(0)->FieldUp(), unpackedEvent->GetPatternUnit(0)->FieldDown());
+	// add particles to event buffer
+	if( !Settings->MesytecAdc() ) {
+
+		// loop over Settings->NumberOfTimestampModules() 
+		for( ts=0; ts < Settings->NumberOfTimestampModules(); ts++ ) { 
+
+		// check if timestamping of VME ADC channels is OK
+		if( AllBadTimestamp[ts] ) {
+
+			cout << __PRETTY_FUNCTION__ << ": read event nr. " << unpackedEvent->GetEventNumber()-1;
+			cout << ": timestamping error in " << NumberOfBadTimestamp[ts];
+			cout << " CAEN V7X5 modules -> NO ADC channels are processed!" << endl;
+
+		}
+
+		else {   
+   
+			// loop over adcs
+			for( int adc = ts*Settings->NumberOfAdcsPerTimestampModule(); adc < (ts+1)*Settings->NumberOfAdcsPerTimestampModule(); adc++ ) {
+
+			// loop over subevents in ADC buffers which are then the first builtevents 
+			for( VmeSubEvent=0; VmeSubEvent < NumberOfTimestamps[ts]; VmeSubEvent++ ) {
+
+				eventBuffer->AddParticle(unpackedEvent->GetAdcModule(adc)->GetModuleNumber(),unpackedEvent->GetAdcModule(adc)->GetSubEvent(VmeSubEvent),unpackedEvent->GetTimestampModule(ts)->GetSubEvent(VmeSubEvent)->GetLongFastTriggerTime(Settings->TimestampChannel()), LaserOn, unpackedEvent->GetPatternUnit(0)->FieldUp(), unpackedEvent->GetPatternUnit(0)->FieldDown());
+
 		    }
+
 		}
+
 	    }
+
 	}
+
     }
-  else
-    {
-      //cout<<endl<<"MADC-32"<<endl; 
-     for(int adc = 0; adc < Settings->NumberOfAdcModules(); adc++)
-	{
-	  // loop over subevents in ADC buffers which are then the first builtevents 
-// 	  cout<<"adc = "<<adc << endl; 
-	  if(adc<Settings->NumberOfAdcModules()-Settings->NofCaenAdc()){
-// 	    cout<<"Valor de la sentencia Settings->NumberOfAdcModules()-Settings->NofCaenAdc() = "<<Settings->NumberOfAdcModules()-Settings->NofCaenAdc()<<endl;
-	    for(VmeSubEvent = 0; VmeSubEvent < unpackedEvent->GetAdcModule(adc)->GetNumberOfSubEvents(); VmeSubEvent++) 
-	      {
-		eventBuffer->AddParticle(unpackedEvent->GetAdcModule(adc)->GetModuleNumber(), unpackedEvent->GetAdcModule(adc)->GetSubEvent(VmeSubEvent), LaserOn, unpackedEvent->GetPatternUnit(0)->FieldUp(), unpackedEvent->GetPatternUnit(0)->FieldDown());
-		//cout<<"VmeSubEvent es = "<<VmeSubEvent<<". unpackedEvent->GetAdcModule(adc)->GetNumberOfSubEvents() es"<<unpackedEvent->GetAdcModule(adc)->GetNumberOfSubEvents()<<endl;
-	      }
-	  }
-	  else{
-	    //cout << ". hit in Caen beamdiagnostic " << endl;
-	  }
+
+	else {
+
+		for( int adc = 0; adc < Settings->NumberOfAdcModules(); adc++ ) {
+
+		// loop over subevents in ADC buffers which are then the first builtevents 
+
+			if( adc<Settings->NumberOfAdcModules()-Settings->NofCaenAdc() ) {
+
+				for( VmeSubEvent = 0; VmeSubEvent < unpackedEvent->GetAdcModule(adc)->GetNumberOfSubEvents(); VmeSubEvent++ ) {
+
+					eventBuffer->AddParticle(unpackedEvent->GetAdcModule(adc)->GetModuleNumber(), unpackedEvent->GetAdcModule(adc)->GetSubEvent(VmeSubEvent), LaserOn, unpackedEvent->GetPatternUnit(0)->FieldUp(), unpackedEvent->GetPatternUnit(0)->FieldDown());
+
+				}
+
+			}
+
+		}
+
 	}
-    }
   
-  //add gammas to event buffer
-  for(int dgf = 0; dgf < unpackedEvent->GetNumberOfDgfModules(); dgf++)
-    {
-      for(size_t SubEvent = 0; SubEvent < unpackedEvent->GetDgfModule(dgf)->GetNumberOfSubEvents(); SubEvent++)
-	{
-// 	  cout<<"adding dgf module "<<unpackedEvent->GetDgfModule(dgf)->GetModuleNumber()<<endl;
-	  eventBuffer->AddGamma(unpackedEvent->GetDgfModule(dgf)->GetModuleNumber(), unpackedEvent->GetDgfModule(dgf)->GetSubEvent(SubEvent));
-	}
+	// add gammas to event buffer
+	for( int dgf = 0; dgf < unpackedEvent->GetNumberOfDgfModules(); dgf++ ) {
+
+		for( size_t SubEvent = 0; SubEvent < unpackedEvent->GetDgfModule(dgf)->GetNumberOfSubEvents(); SubEvent++ ) {
+
+			if ( unpackedEvent->GetDgfModule(dgf)->GetModuleNumber() != Settings->BeamdumpDgf() ) // TODO remove
+				eventBuffer->AddGamma(unpackedEvent->GetDgfModule(dgf)->GetModuleNumber(), unpackedEvent->GetDgfModule(dgf)->GetSubEvent(SubEvent));
+
+		}
+
     }
 
-  //add Ebis, T1 and SuperCycleTimes!
-  eventBuffer->AddTiming(EbisTime, T1Time, SuperCycleTime);
+	// add Ebis, T1 and SuperCycleTimes!
+	eventBuffer->AddTiming(EbisTime, T1Time, SuperCycleTime);
 
-  //set event number
-  eventBuffer->EventNumber(unpackedEvent->GetEventNumber()-1);
+	// set event number
+	eventBuffer->EventNumber(unpackedEvent->GetEventNumber()-1);
 
-  //sort event buffer after time
-  eventBuffer->Sort();
-  //write eventBuffer to file
-  int NumberOfBytesCommitted;
+	// sort event buffer after time
+	eventBuffer->Sort();
 
-  //check whether on or off beam readout
-  if(EbisOn || Settings->SourceRun())
-    {
-      //loop over all event in the buffer and fill them into the tree
-      for(size_t i = 0; i < eventBuffer->NumberOfBuiltEvents(); i++)
-	{
-	  //check whether event is in the user-defined ebis window
-	  if((Settings->EbisWindowLowerEdge() < eventBuffer->GetSortedEvent(i)->GetTime() - EbisTime &&
-	      eventBuffer->GetSortedEvent(i)->GetTime() - EbisTime < Settings->EbisWindowUpperEdge()) ||
-	     Settings->SourceRun())
-	    {
-	      OnBeamEvent = eventBuffer->GetSortedEvent(i);
+	// write eventBuffer to file
+	int NumberOfBytesCommitted;
 
-	      //if the scaler data is to be included and if there actually is scaler data
-	      if(Settings->IncludeScaler() && unpackedEvent->ScalerData())
-		{
-		  fScaler = unpackedEvent->GetScaler();
-		  fDgfScaler = unpackedEvent->GetDgfScaler();
-		  fBraggChamber = unpackedEvent->GetBraggChamber();
+	// check whether on or off beam readout
+	if( EbisOn || Settings->SourceRun() ) {
+
+		// loop over all event in the buffer and fill them into the tree
+		for( size_t i = 0; i < eventBuffer->NumberOfBuiltEvents(); i++ ) {
+
+			// check whether event is in the user-defined ebis window
+			if( (Settings->EbisWindowLowerEdge() < eventBuffer->GetSortedEvent(i)->GetTime() - EbisTime &&
+				eventBuffer->GetSortedEvent(i)->GetTime() - EbisTime < Settings->EbisWindowUpperEdge()) ||
+				Settings->SourceRun()) {
+
+				OnBeamEvent = eventBuffer->GetSortedEvent(i);
+
+				// if the scaler data is to be included and if there actually is scaler data
+				if( Settings->IncludeScaler() && unpackedEvent->ScalerData() ) {
+
+					fScaler = unpackedEvent->GetScaler();
+					fDgfScaler = unpackedEvent->GetDgfScaler();
+					fBraggChamber = unpackedEvent->GetBraggChamber();
+
+				}
+
+				NumberOfBytesCommitted = OnBeamTree->Fill();
+	      
+				if( Settings->VerboseLevel() > 1 ) {
+
+					cout << "filled " << NumberOfBytesCommitted << " bytes into on-beam tree";
+					cout << OnBeamTree->GetName() << ", " << OnBeamTree->GetTitle() << endl;
+
+				}
+	      
+				if( NumberOfBytesCommitted == 0 ) {
+
+					cerr << __PRETTY_FUNCTION__ << ": warning, all branches of tree " << OnBeamTree->GetName();
+					cerr << ", " << OnBeamTree->GetTitle() << " are disabled!!!" << endl;
+
+				}
+
+				if( NumberOfBytesCommitted == -1 ) {
+
+					cerr << __PRETTY_FUNCTION__ << ": error on commiting branches to tree ";
+					cerr << OnBeamTree->GetName() << ", " << OnBeamTree->GetTitle() << ", exiting now!" << endl;
+					exit(1);
+
+				}
+	      
+				TotalNumberOfBytesCommittedToOnBeamTree += NumberOfBytesCommitted;
+
+			}
+
+			else {
+
+				OnBeamBackgroundEvent = eventBuffer->GetSortedEvent(i);
+	      
+				NumberOfBytesCommitted = OnBeamBackgroundTree->Fill();
+	      
+				if( Settings->VerboseLevel() > 1 ) {
+
+					cout << "filled " << NumberOfBytesCommitted << " bytes into on-beam tree";
+					cout << OnBeamBackgroundTree->GetName() << ", " << OnBeamBackgroundTree->GetTitle() << endl;
+
+				}
+	      
+				if( NumberOfBytesCommitted == 0 ) {
+
+					cerr << __PRETTY_FUNCTION__ << ": warning, all branches of tree ";
+					cerr << OnBeamBackgroundTree->GetName() << ", " << OnBeamBackgroundTree->GetTitle();
+					cerr << " are disabled!!!" << endl;
+
+				}
+
+				if( NumberOfBytesCommitted == -1 ) {
+
+					cerr << __PRETTY_FUNCTION__ << ": error on commiting branches to tree ";
+					cerr << OnBeamBackgroundTree->GetName() << ", " << OnBeamBackgroundTree->GetTitle();
+					cerr << ", exiting now!" << endl;
+					exit(1);
+
+				}
+	      
+				TotalNumberOfBytesCommittedToOnBeamBackgroundTree += NumberOfBytesCommitted;
+
+			}
+
 		}
 
-	      NumberOfBytesCommitted = OnBeamTree->Fill();
-	      
-	      if(Settings->VerboseLevel() > 1)
-		{
-		  cout<<"filled "<<NumberOfBytesCommitted<<" bytes into on-beam tree"<<OnBeamTree->GetName()<<", "<<OnBeamTree->GetTitle()<<endl;
-		}
-	      
-	      if(NumberOfBytesCommitted == 0)
-		{
-		  cerr<<__PRETTY_FUNCTION__<<": warning, all branches of tree "<<OnBeamTree->GetName()<<", "<<OnBeamTree->GetTitle()<<" are disabled!!!"<<endl;
-		}
-	      if(NumberOfBytesCommitted == -1)
-		{
-		  cerr<<__PRETTY_FUNCTION__<<": error on commiting branches to tree "<<OnBeamTree->GetName()<<", "<<OnBeamTree->GetTitle()<<", exiting now!"<<endl;
-		  exit(1);
-		}
-	      
-	      TotalNumberOfBytesCommittedToOnBeamTree += NumberOfBytesCommitted;
-	    }
-	  else
-	    {
-	      OnBeamBackgroundEvent = eventBuffer->GetSortedEvent(i);
-	      
-	      NumberOfBytesCommitted = OnBeamBackgroundTree->Fill();
-	      
-	      if(Settings->VerboseLevel() > 1)
-		{
-		  cout<<"filled "<<NumberOfBytesCommitted<<" bytes into on-beam tree"<<OnBeamBackgroundTree->GetName()<<", "<<OnBeamBackgroundTree->GetTitle()<<endl;
-		}
-	      
-	      if(NumberOfBytesCommitted == 0)
-		{
-		  cerr<<__PRETTY_FUNCTION__<<": warning, all branches of tree "<<OnBeamBackgroundTree->GetName()<<", "<<OnBeamBackgroundTree->GetTitle()<<" are disabled!!!"<<endl;
-		}
-	      if(NumberOfBytesCommitted == -1)
-		{
-		  cerr<<__PRETTY_FUNCTION__<<": error on commiting branches to tree "<<OnBeamBackgroundTree->GetName()<<", "<<OnBeamBackgroundTree->GetTitle()<<", exiting now!"<<endl;
-		  exit(1);
-		}
-	      
-	      TotalNumberOfBytesCommittedToOnBeamBackgroundTree += NumberOfBytesCommitted;
-	    }
 	}
-    }
-  else
-    {
-      //loop over all event in the buffer and fill them into the tree
-      for(size_t i = 0; i < eventBuffer->NumberOfBuiltEvents(); i++)
-	{
-	  OffBeamEvent = eventBuffer->GetSortedEvent(i);
 
-	  NumberOfBytesCommitted = OffBeamTree->Fill();
+	else {
 
-	  if(Settings->VerboseLevel() > 1)
-	    {
-	      cout<<"filled "<<NumberOfBytesCommitted<<" bytes into off-beam tree "<<OffBeamTree->GetName()<<", "<<OffBeamTree->GetTitle()<<endl;
-	    }
+		// loop over all event in the buffer and fill them into the tree
+		for( size_t i = 0; i < eventBuffer->NumberOfBuiltEvents(); i++ ) {
+
+			OffBeamEvent = eventBuffer->GetSortedEvent(i);
+
+			NumberOfBytesCommitted = OffBeamTree->Fill();
+
+			if( Settings->VerboseLevel() > 1 ) {
+
+				cout << "filled " << NumberOfBytesCommitted << " bytes into off-beam tree ";
+				cout << OffBeamTree->GetName() << ", " << OffBeamTree->GetTitle() << endl;
+
+			}
 	  
-	  if(NumberOfBytesCommitted == 0)
-	    {
-	      cerr<<__PRETTY_FUNCTION__<<": warning, all branches of tree "<<OffBeamTree->GetName()<<", "<<OffBeamTree->GetTitle()<<" are disabled!!!"<<endl;
-	    }
-	  if(NumberOfBytesCommitted == -1)
-	    {
-	      cerr<<__PRETTY_FUNCTION__<<": error on commiting branches to tree "<<OffBeamTree->GetName()<<", "<<OffBeamTree->GetTitle()<<", exiting now!"<<endl;
-	      exit(1);
-	    }
+			if( NumberOfBytesCommitted == 0 ) {
 
-	  TotalNumberOfBytesCommittedToOffBeamTree += NumberOfBytesCommitted;
-	}
-    }//else of EbisOn
+				cerr << __PRETTY_FUNCTION__ << ": warning, all branches of tree ";
+				cerr << OffBeamTree->GetName() << ", " << OffBeamTree->GetTitle();
+				cerr << " are disabled!!!" << endl;
 
-  // ========================== 
-  // START of the EVENTBUILDING 
-  // ========================== 
+			}
+
+			if( NumberOfBytesCommitted == -1 ) {
+
+				cerr << __PRETTY_FUNCTION__ << ": error on commiting branches to tree ";
+				cerr << OffBeamTree->GetName() << ", " << OffBeamTree->GetTitle();
+				cerr << ", exiting now!" << endl;
+				exit(1);
+
+			}
+
+			TotalNumberOfBytesCommittedToOffBeamTree += NumberOfBytesCommitted;
+
+		}
+
+	} // else of EbisOn
+
+	// ========================== 
+	// START of the EVENTBUILDING 
+	// ========================== 
   
-  if(unpackedEvent->ScalerData())
-    {
-      fScaler = unpackedEvent->GetScaler();
-      fDgfScaler = unpackedEvent->GetDgfScaler();
-      fBraggChamber = unpackedEvent->GetBraggChamber();
+	if( unpackedEvent->ScalerData() ) {
 
-      if(!Settings->IncludeScaler())
-	{
-	  NumberOfBytesCommitted = ScalerTree->Fill();
+		fScaler = unpackedEvent->GetScaler();
+		fDgfScaler = unpackedEvent->GetDgfScaler();
+		fBraggChamber = unpackedEvent->GetBraggChamber();
+
+		if( !Settings->IncludeScaler() ) {
+
+			NumberOfBytesCommitted = ScalerTree->Fill();
 	  
-	  if(Settings->VerboseLevel() > 1)
-	    {
-	      cout<<"filled "<<NumberOfBytesCommitted<<" bytes into off-beam tree "<<ScalerTree->GetName()<<", "<<ScalerTree->GetTitle()<<endl;
-	    }
+			if( Settings->VerboseLevel() > 1 ) {
+
+				cout << "filled " << NumberOfBytesCommitted << " bytes into off-beam tree ";
+				cout << ScalerTree->GetName() << ", " << ScalerTree->GetTitle() << endl;
+
+			}
 	  
-	  if(NumberOfBytesCommitted == 0)
-	    {
-	      cerr<<__PRETTY_FUNCTION__<<": warning, all branches of tree "<<ScalerTree->GetName()<<", "<<ScalerTree->GetTitle()<<" are disabled!!!"<<endl;
-	    }
-	  if(NumberOfBytesCommitted == -1)
-	    {
-	      cerr<<__PRETTY_FUNCTION__<<": error on commiting branches to tree "<<ScalerTree->GetName()<<", "<<ScalerTree->GetTitle()<<", exiting now!"<<endl;
-	      exit(1);
-	    }
+			if( NumberOfBytesCommitted == 0 ) {
+
+				cerr << __PRETTY_FUNCTION__ << ": warning, all branches of tree ";
+				cerr << ScalerTree->GetName() << ", " << ScalerTree->GetTitle() << " are disabled!!!" << endl;
+
+			}
+
+			if( NumberOfBytesCommitted == -1 ) {
+
+				cerr << __PRETTY_FUNCTION__ << ": error on commiting branches to tree ";
+				cerr << ScalerTree->GetName() << ", " << ScalerTree->GetTitle() << ", exiting now!" << endl;
+				exit(1);
+
+			}
 	  
-	  TotalNumberOfBytesCommittedToScalerTree += NumberOfBytesCommitted;
-	}//if(!Settings->IncludeScaler())
-    }
+			TotalNumberOfBytesCommittedToScalerTree += NumberOfBytesCommitted;
+
+		} // if(!Settings->IncludeScaler())
+
+	}
   
-}//BuildEvent
+} // BuildEvent
 
 void EventBuilder::Finish() {
 
