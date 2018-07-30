@@ -521,54 +521,76 @@ void EventBuilder::BuildEvent() {
     
 	if( !Settings->MesytecAdc() ) {
 
-      // loop over Settings->NumberOfTimestampModules() to check for timestamp mismatches 
-      for(ts=0; ts < Settings->NumberOfTimestampModules(); ts++) 
-	{
-	  // if at least ONE timestamp (i.e. VME gate hitpattern) found in one of Settings->NumberOfTimestampModules():      
-	  // check eventnumbers and numofevents in CAEN V785 modules
+		// loop over Settings->NumberOfTimestampModules() to check for timestamp mismatches 
+		for( ts=0; ts < Settings->NumberOfTimestampModules(); ts++ ) {
+
+			// if at least ONE timestamp (i.e. VME gate hitpattern) found in one of Settings->NumberOfTimestampModules():      
+			// check eventnumbers and numofevents in CAEN V785 modules
 	  
-	  // check if at least one timestamp in actual timestamp module 
-	  if(NumberOfTimestamps[ts]>0) 
-	    {
-	      // set flag that indicates that there was at least one timestamp 
-	      for(module = ts*Settings->NumberOfAdcsPerTimestampModule(); module < (ts+1)*Settings->NumberOfAdcsPerTimestampModule(); module++)
-		{
-		  if(unpackedEvent->GetAdcModule(module)->GetNumberOfSubEvents() != (unsigned int) NumberOfTimestamps[ts])
-		    {
-		      //BadTimestamp[ts][module] = true;
-		      AllBadTimestamp[ts] = true;
-		      NumberOfBadTimestamp[ts]++;
-		      if(Settings->VerboseLevel() > 3)
-			{
-			  cout<<__PRETTY_FUNCTION__<<": read event nr. "<<unpackedEvent->GetEventNumber()-1<<": ts mod. "<<ts<<" (ana-mod-nr: "<<Settings->TimestampModule(ts)<<"): mismatch of NumberOfTimestamps["<<ts<<"] (= "<<NumberOfTimestamps[ts]<<") and subevents in CAEN module "<<module<<" ("<<unpackedEvent->GetAdcModule(module)->GetNumberOfSubEvents()<<"), # of bad ts = "<<NumberOfBadTimestamp[ts]<<endl;
+			// check if at least one timestamp in actual timestamp module 
+			if( NumberOfTimestamps[ts] > 0 ) {
+
+				// set flag that indicates that there was at least one timestamp 
+				for( module = ts*Settings->NumberOfAdcsPerTimestampModule(); module < (ts+1)*Settings->NumberOfAdcsPerTimestampModule(); module++ ) {
+
+					if( unpackedEvent->GetAdcModule(module)->GetNumberOfSubEvents() != (unsigned int) NumberOfTimestamps[ts] ) {
+
+						//BadTimestamp[ts][module] = true;
+						AllBadTimestamp[ts] = true;
+						NumberOfBadTimestamp[ts]++;
+
+						if( Settings->VerboseLevel() > 3 ) {
+
+							cout << __PRETTY_FUNCTION__ << ": read event nr. " << unpackedEvent->GetEventNumber()-1;
+							cout << ": ts mod. " << ts << " (ana-mod-nr: " << Settings->TimestampModule(ts);
+							cout << "): mismatch of NumberOfTimestamps[" << ts << "] (= " << NumberOfTimestamps[ts];
+							cout << ") and subevents in CAEN module " << module << " (";
+							cout << unpackedEvent->GetAdcModule(module)->GetNumberOfSubEvents();
+							cout << "), # of bad ts = " << NumberOfBadTimestamp[ts] << endl;
+
+						}
+
+					}
+
+					else {
+
+						if( Settings->VerboseLevel() > 3 ) {
+
+				  			cout<<__PRETTY_FUNCTION__<<": read event nr. "<<unpackedEvent->GetEventNumber()-1<<": ts mod. "<<ts<<" (ana-mod-nr: "<<Settings->TimestampModule(ts)<<"): match of NumberOfTimestamps["<<ts<<"] (= "<<NumberOfTimestamps[ts]<<") and subevents in CAEN module "<<module<<" ("<<unpackedEvent->GetAdcModule(module)->GetNumberOfSubEvents()<<"), # of bad ts = "<<NumberOfBadTimestamp[ts]<<endl;
+
+						}
+
+					}
+
+				}
+
 			}
-		    }
-		  else
-		    {
-		      if(Settings->VerboseLevel() > 3)
-			{
-			  cout<<__PRETTY_FUNCTION__<<": read event nr. "<<unpackedEvent->GetEventNumber()-1<<": ts mod. "<<ts<<" (ana-mod-nr: "<<Settings->TimestampModule(ts)<<"): match of NumberOfTimestamps["<<ts<<"] (= "<<NumberOfTimestamps[ts]<<") and subevents in CAEN module "<<module<<" ("<<unpackedEvent->GetAdcModule(module)->GetNumberOfSubEvents()<<"), # of bad ts = "<<NumberOfBadTimestamp[ts]<<endl;
+
+			else if( Settings->VerboseLevel() > 3 ) {
+
+				cout << "no timestamps in " << ts << ". module " << Settings->TimestampModule(ts);
+				cout << ", AllBadTimestamp[ts] = " << AllBadTimestamp[ts] << endl;
+
 			}
-		    }
-		}
-	    }
-	  else if(Settings->VerboseLevel() > 3)
-	    {
-	      cout<<"no timestamps in "<<ts<<". module "<<Settings->TimestampModule(ts)<<", AllBadTimestamp[ts] = "<<AllBadTimestamp[ts]<<endl;
-	    }
-	  
-	  // report error if mismatch of NumberOfTimestamps and number of subevents found in VME channel 
-	  if(AllBadTimestamp[ts]) 
-	    {
-	      cout<<endl<<__PRETTY_FUNCTION__<<": read event nr. "<<unpackedEvent->GetEventNumber()-1<<": ts mod. "<<ts<<" (ana-mod-nr: "<<Settings->TimestampModule(ts)<<"): mismatch of NumberOfTimestamps["<<ts<<"] (= "<<NumberOfTimestamps[ts]<<") and subevents in "<<NumberOfBadTimestamp[ts]<<" CAEN modules (of VME modules "<<ts*Settings->NumberOfAdcsPerTimestampModule()<<" - "<<(ts+1)*Settings->NumberOfAdcsPerTimestampModule()<<")"<<endl;
-	    }
-	}  // for(ts=0; ts < Settings->NumberOfTimestampModules(); ts++) 
-    }//  if(!Settings->MesytecAdc())
+		  
+			// report error if mismatch of NumberOfTimestamps and number of subevents found in VME channel 
+			if( AllBadTimestamp[ts] ) {
+
+				cout << endl << __PRETTY_FUNCTION__ << ": read event nr. " << unpackedEvent->GetEventNumber()-1;
+				cout << ": ts mod. " << ts << " (ana-mod-nr: " << Settings->TimestampModule(ts);
+				cout << "): mismatch of NumberOfTimestamps[" << ts << "] (= " << NumberOfTimestamps[ts];
+				cout << ") and subevents in " << NumberOfBadTimestamp[ts] << " CAEN modules (of VME modules ";
+				cout << ts*Settings->NumberOfAdcsPerTimestampModule() << " - ";
+				cout << (ts+1)*Settings->NumberOfAdcsPerTimestampModule() << ")" << endl;
+
+			}
+
+		} // for(ts=0; ts < Settings->NumberOfTimestampModules(); ts++) 
+
+	} //  if(!Settings->MesytecAdc())
   
-  if(unpackedEvent->GetPatternUnit(0)->LaserOn())
-    LaserOn = true;
-  else
-    LaserOn = false;
+	if( unpackedEvent->GetPatternUnit(0)->LaserOn() ) LaserOn = true;
+	else LaserOn = false;
   
   
 	// ========================== 
@@ -582,32 +604,32 @@ void EventBuilder::BuildEvent() {
 		// loop over Settings->NumberOfTimestampModules() 
 		for( ts=0; ts < Settings->NumberOfTimestampModules(); ts++ ) { 
 
-		// check if timestamping of VME ADC channels is OK
-		if( AllBadTimestamp[ts] ) {
+			// check if timestamping of VME ADC channels is OK
+			if( AllBadTimestamp[ts] ) {
 
-			cout << __PRETTY_FUNCTION__ << ": read event nr. " << unpackedEvent->GetEventNumber()-1;
-			cout << ": timestamping error in " << NumberOfBadTimestamp[ts];
-			cout << " CAEN V7X5 modules -> NO ADC channels are processed!" << endl;
+				cout << __PRETTY_FUNCTION__ << ": read event nr. " << unpackedEvent->GetEventNumber()-1;
+				cout << ": timestamping error in " << NumberOfBadTimestamp[ts];
+				cout << " CAEN V7X5 modules -> NO ADC channels are processed!" << endl;
+
+			}
+
+			else {   
+	   
+				// loop over adcs
+				for( int adc = ts*Settings->NumberOfAdcsPerTimestampModule(); adc < (ts+1)*Settings->NumberOfAdcsPerTimestampModule(); adc++ ) {
+
+					// loop over subevents in ADC buffers which are then the first builtevents 
+					for( VmeSubEvent=0; VmeSubEvent < NumberOfTimestamps[ts]; VmeSubEvent++ ) {
+
+						eventBuffer->AddParticle(unpackedEvent->GetAdcModule(adc)->GetModuleNumber(),unpackedEvent->GetAdcModule(adc)->GetSubEvent(VmeSubEvent),unpackedEvent->GetTimestampModule(ts)->GetSubEvent(VmeSubEvent)->GetLongFastTriggerTime(Settings->TimestampChannel()), LaserOn, unpackedEvent->GetPatternUnit(0)->FieldUp(), unpackedEvent->GetPatternUnit(0)->FieldDown());
+
+			  	  }
+
+				}
+
+			}
 
 		}
-
-		else {   
-   
-			// loop over adcs
-			for( int adc = ts*Settings->NumberOfAdcsPerTimestampModule(); adc < (ts+1)*Settings->NumberOfAdcsPerTimestampModule(); adc++ ) {
-
-			// loop over subevents in ADC buffers which are then the first builtevents 
-			for( VmeSubEvent=0; VmeSubEvent < NumberOfTimestamps[ts]; VmeSubEvent++ ) {
-
-				eventBuffer->AddParticle(unpackedEvent->GetAdcModule(adc)->GetModuleNumber(),unpackedEvent->GetAdcModule(adc)->GetSubEvent(VmeSubEvent),unpackedEvent->GetTimestampModule(ts)->GetSubEvent(VmeSubEvent)->GetLongFastTriggerTime(Settings->TimestampChannel()), LaserOn, unpackedEvent->GetPatternUnit(0)->FieldUp(), unpackedEvent->GetPatternUnit(0)->FieldDown());
-
-		    }
-
-		}
-
-	    }
-
-	}
 
     }
 
@@ -635,8 +657,8 @@ void EventBuilder::BuildEvent() {
 	for( int dgf = 0; dgf < unpackedEvent->GetNumberOfDgfModules(); dgf++ ) {
 
 		for( size_t SubEvent = 0; SubEvent < unpackedEvent->GetDgfModule(dgf)->GetNumberOfSubEvents(); SubEvent++ ) {
-
-			eventBuffer->AddGamma(unpackedEvent->GetDgfModule(dgf)->GetModuleNumber(), unpackedEvent->GetDgfModule(dgf)->GetSubEvent(SubEvent));
+			//if ( unpackedEvent->GetDgfModule(dgf)->GetModuleNumber() != 53 ) // Settings->BeamdumpDgf()  ) // TODO remove if
+				eventBuffer->AddGamma(unpackedEvent->GetDgfModule(dgf)->GetModuleNumber(), unpackedEvent->GetDgfModule(dgf)->GetSubEvent(SubEvent));
 
 		}
 

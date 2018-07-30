@@ -338,50 +338,48 @@ bool UnpackedEvent::ExtractSubevents(const MBSDataIO * mbs) {
 }
 
 // subevent id 1-9, type [10,23]: raw dgf data, format 0x101 
-bool UnpackedEvent::DecodeDgf(int SubEventID, int SubEventWordCount, char* SubEventData)
-{
-  if(Settings->VerboseLevel() > 2)
-    {
-      cout<<endl<<"start of "<<__PRETTY_FUNCTION__<<endl;
-    }
+bool UnpackedEvent::DecodeDgf(int SubEventID, int SubEventWordCount, char* SubEventData) {
 
-  // things needed that 'copy and paste' from hd_subs.c works 
-  unsigned short* q;
-  unsigned short* EndOfSubEvent;
-  int SubEventType;
+	if( Settings->VerboseLevel() > 2 )
+		cout << endl << "start of " << __PRETTY_FUNCTION__ << endl;
 
-  // set global end of sub event (see hd_subs_270503.c: L521) 
-  EndOfSubEvent = ((unsigned short*) SubEventData) + (SubEventWordCount * sizeof(unsigned short));
+	// things needed that 'copy and paste' from hd_subs.c works 
+	unsigned short* q;
+	unsigned short* EndOfSubEvent;
+	int SubEventType;
 
-  // set sub event type (see hd_subs_270503.c: L529) 
-  SubEventType = SubEventID;
+	// set global end of sub event (see hd_subs_270503.c: L521) 
+	EndOfSubEvent = ((unsigned short*) SubEventData) + (SubEventWordCount * sizeof(unsigned short));
+
+	// set sub event type (see hd_subs_270503.c: L529) 
+	SubEventType = SubEventID;
   
-  // set HD data pointer q to SubEventData 
-  q = (unsigned short*) SubEventData;
+	// set HD data pointer q to SubEventData 
+	q = (unsigned short*) SubEventData;
 
-  if(Settings->VerboseLevel() > 1)
-    {
-      cout<<"Read out event "<<EventNumber<<", Subevent "<<SubEventID<<": Dgf data, word count = "<<SubEventWordCount<<endl;
-    }
+	if( Settings->VerboseLevel() > 1 ) {
 
-  int TraceLength;
-  int ChannelCounter=0;
-  unsigned short BufferFormat, ModuleNumber;
-  unsigned short RunTimeA, RunTimeB, RunTimeC, EventTimeHigh, EventTimeLow;
-  unsigned short ChannelLength = 0;
-  int Length;
-  unsigned int EventTime, BufferTime;
-  unsigned short HitPattern;
-  int ChannelNumber, ChannelMask;
-  unsigned short* NextModule;
-  unsigned short* Start;
+		cout << "Read out event " << EventNumber << ", Subevent " << SubEventID;
+		cout << ": Dgf data, word count = " << SubEventWordCount << endl;
 
-  DgfSubEvent CurrentSubEvent;
+	}
+
+	int TraceLength;
+	int ChannelCounter=0;
+	unsigned short BufferFormat, ModuleNumber;
+	unsigned short RunTimeA, RunTimeB, RunTimeC, EventTimeHigh, EventTimeLow;
+	unsigned short ChannelLength = 0;
+	int Length;
+ 	unsigned int EventTime, BufferTime;
+	unsigned short HitPattern;
+	int ChannelNumber, ChannelMask;
+	unsigned short* NextModule;
+	unsigned short* Start;
+
+	DgfSubEvent CurrentSubEvent;
   
-  if(Settings->VerboseLevel() > 2)
-    {
-      cout<<__PRETTY_FUNCTION__<<": Subevent XIA = "<<SubEventType<<endl;
-    }
+	if( Settings->VerboseLevel() > 2 )
+		cout << __PRETTY_FUNCTION__ << ": Subevent XIA = " << SubEventType << endl;
 	      
   // loop over remaining words of buffer as long as there is data 
   while(SubEventWordCount>0)          

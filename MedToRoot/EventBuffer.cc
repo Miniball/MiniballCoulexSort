@@ -108,7 +108,7 @@ size_t EventBuffer::AddGamma(unsigned short moduleNumber, DgfSubEvent* dgfSubEve
 			// this means the loop ended without finding a coincident particle => add a new event
 			if( multiplicity == 1 ) {
 
-				BuiltEvents.push_back(BuiltEvent(moduleNumber, channel, dgfSubEvent));
+				BuiltEvents.push_back( BuiltEvent(moduleNumber, channel, dgfSubEvent) );
 
 	    	}
 
@@ -160,7 +160,7 @@ void EventBuffer::Sort() {
 
     }
 
-	SubEventNumber = new unsigned short[BuiltEvents.size()];
+	SubEventNumber = new unsigned long long[BuiltEvents.size()];
 
 	if( Settings->VerboseLevel() > 3 ) {
 
