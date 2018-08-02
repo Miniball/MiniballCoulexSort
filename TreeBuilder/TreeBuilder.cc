@@ -642,7 +642,7 @@ int main(int argc, char* argv[]) {
 						if( dgf_num2 < 0 || dgf_num2 > 47 ) continue;
 
 						// Get global segment number (0-167)
-						gSeg = ( dgf_num / 2 ) * 7;
+						gSeg = ( dgf_num2 / 2 ) * 7;
 						if( dgf_num2 % 2 == 0 ) gSeg += dgf_ch2;
 						else gSeg += dgf_ch2+3;
 						
@@ -737,19 +737,19 @@ int main(int argc, char* argv[]) {
 				for( k = 0; k < event->NumberOfDgfs(); k++ ) {
 
 					if( k == j ) continue;
-					if( dgf_num2 != 53 ) continue;
-					if( dgf_ch2 < 0 || dgf_ch2 > 1 ) continue;
-
 					dgf_num2 = event->Dgf(k)->ModuleNumber();
 					dgf_ch2  = event->Dgf(k)->Channel();
 					dgf_en2  = event->Dgf(k)->Energy();
 					dgf_t2   = event->Dgf(k)->Time();
 
+					if( dgf_num2 != 53 ) continue;
+					if( dgf_ch != 0 || dgf_ch2 != 1 ) continue;
+
 					GammaEnergy2 = Cal->DgfEnergy( dgf_num2, dgf_ch2, dgf_en2 );
 
 					tdiff_BD->Fill( dgf_t-dgf_t2 );
 
-					if( TMath::Abs( dgf_t-dgf_t2 ) < 80. )
+					if( TMath::Abs( dgf_t-dgf_t2 ) < 999999999. )
 
 						bd_bd->Fill( GammaEnergy, GammaEnergy2 );
 
@@ -1035,7 +1035,7 @@ int main(int argc, char* argv[]) {
 			else if( cd_ringenergy[adc_num].size() > 1 && cd_stripenergy[adc_num].size() > 1 ) {
 
 				// throw these events away!!!
-				//continue;
+				continue;
 
 				// Loop for multiplicity where separated by >1 rings
 				while( RingMult ) {
@@ -1201,7 +1201,7 @@ int main(int argc, char* argv[]) {
 				mb_evts[GammaCtr]->SetCorGamSid( sid_array[l] );
 				mb_evts[GammaCtr]->SetCorGamGtd( gtd_array[l] - gtd_array[j] );
 				mb_evts[GammaCtr]->SetCorGamTheta( gamma_theta[clu_array[l]][cid_array[l]%3][sid_array[l]] );
-				mb_evts[GammaCtr]->SetCorGamPhi( gamma_theta[clu_array[l]][cid_array[l]%3][sid_array[l]] );
+				mb_evts[GammaCtr]->SetCorGamPhi( gamma_phi[clu_array[l]][cid_array[l]%3][sid_array[l]] );
 				
 			} // End search for correlated gammas
 			
