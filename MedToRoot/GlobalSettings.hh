@@ -232,6 +232,10 @@ public:
 		return fIncludeScaler;
 	};
 
+	bool BeamDumpOn() {
+		return fBeamDumpOn;
+	};
+
 	bool MesytecAdc() {
 		return fMesytecAdc;
 	};
@@ -337,6 +341,7 @@ protected:
 
 	bool fSourceRun;
 	bool fIncludeScaler;
+	bool fBeamDumpOn;
 	bool fMesytecAdc;
 	bool fSPEDEChamb;
 	unsigned short fNofCaenAdc;

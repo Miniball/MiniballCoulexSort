@@ -15,6 +15,7 @@ GlobalSettings::GlobalSettings( unsigned int argc, char* argv[] ) {
 	fVerboseLevel = 0;
 	fSourceRun = false;
 	fIncludeScaler = false;
+	fBeamDumpOn = false;
 	fSettings = NULL;
 
 	CommandLineInterface* interface = new CommandLineInterface();
@@ -25,6 +26,7 @@ GlobalSettings::GlobalSettings( unsigned int argc, char* argv[] ) {
 	interface->Add("-sf","path/name of settings file",&fSettingsFile);
 	interface->Add("-so","source run, ignore ebis window",&fSourceRun);
 	interface->Add("-ic","include scaler data into on/offbeam trees",&fIncludeScaler);
+	interface->Add("-bd","include beamdump data",&fBeamDumpOn);
 	interface->Add("-vl","verbose level",&fVerboseLevel);
 
 	interface->CheckFlags(argc,argv);

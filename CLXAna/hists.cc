@@ -758,7 +758,7 @@ void hists::FillGamGam1h( float GEn, float GTh, float GPh, vector <float> GCor_G
 			
 			gg_td->Fill( GCor_Gtd.at(i)*25. );
 			
-			if( GCor_Gtd.at(i)*25. > -200. && GCor_Gtd.at(i)*25. < 210. ) {
+			if( GCor_Gtd.at(i) > -10. && GCor_Gtd.at(i) < 10. ) {
 				
 				gg->Fill(GEn, GCor_GEn.at(i), weight);
 				gg_dcT->Fill( GEn*dc.DC(TEn,TTh,TPh,GTh,GPh,dc.GetAt()),
@@ -815,7 +815,7 @@ void hists::FillGamGam2h( float GEn, float GTh, float GPh, vector <float> GCor_G
 			
 			gg_td->Fill( GCor_Gtd.at(i)*25. );
 			
-			if( GCor_Gtd.at(i)*25. > -200. && GCor_Gtd.at(i)*25. < 210. ) {
+			if( GCor_Gtd.at(i) > -10. && GCor_Gtd.at(i) < 10. ) {
 				
 				gg->Fill(GEn, GCor_GEn.at(i), weight); 
 				gg_dcT->Fill( GEn*dc.DC(TEn,TTh,TPh,GTh,GPh,dc.GetAt()),

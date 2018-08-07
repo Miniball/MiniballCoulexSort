@@ -93,7 +93,7 @@ UnpackedEvent::~UnpackedEvent() {
 
 }
 
-int UnpackedEvent::ProcessEvent(const MBSDataIO * mbs) {
+int UnpackedEvent::ProcessEvent( const MBSDataIO * mbs ) {
 
 	if( Settings->VerboseLevel() > 2 ) {
 
@@ -147,7 +147,7 @@ int UnpackedEvent::ProcessEvent(const MBSDataIO * mbs) {
 
 }
 
-bool UnpackedEvent::ExtractSubevents(const MBSDataIO * mbs) {
+bool UnpackedEvent::ExtractSubevents( const MBSDataIO * mbs ) {
 
 	if( Settings->VerboseLevel() > 2 ) {
 
@@ -181,7 +181,7 @@ bool UnpackedEvent::ExtractSubevents(const MBSDataIO * mbs) {
 		}
 
 		sevtType = mbs_next_sdata(mbs);				// next subevent 
-		if (sevtType == MBS_STYPE_ERROR) { 			// error 
+		if( sevtType == MBS_STYPE_ERROR ) {			// error 
 
 			cout << "sevtType == MBS_STYPE_ERROR after call of 'mbs_next_sdata()" << endl;
 			return false;
@@ -194,8 +194,14 @@ bool UnpackedEvent::ExtractSubevents(const MBSDataIO * mbs) {
 
 		}
 
-		// Dgf data 
-		if( (Settings->FirstMiniballDgf() <= mbs->sevt_id && mbs->sevt_id <= Settings->LastMiniballDgf()) || mbs->sevt_id == Settings->BeamdumpDgf() ) {
+		// Dgf data
+		if( ( Settings->FirstMiniballDgf() <= mbs->sevt_id && mbs->sevt_id <= Settings->LastMiniballDgf() ) || 
+              mbs->sevt_id == Settings->BeamdumpDgf() ) {
+
+			// Skipping beam dump events if not requested
+			if( !Settings->BeamDumpOn() && mbs->sevt_id == Settings->BeamdumpDgf() ) {				
+				continue;
+			}
 
 			if( Settings->VerboseLevel() > 2 ) {
 
@@ -381,22 +387,22 @@ bool UnpackedEvent::DecodeDgf(int SubEventID, int SubEventWordCount, char* SubEv
 	if( Settings->VerboseLevel() > 2 )
 		cout << __PRETTY_FUNCTION__ << ": Subevent XIA = " << SubEventType << endl;
 	      
-  // loop over remaining words of buffer as long as there is data 
-  while(SubEventWordCount>0)          
-    {
-//      for(i=-1;i<10;i++)
-//	cout<<setw(3)<<i<<" "<<hex<<setw(4)<<setfill('0')<<q[8*i]<<" "<<setw(4)<<setfill('0')<<q[8*i+1]<<" "<<setw(4)<<setfill('0')<<q[8*i+2]<<" "<<setw(4)<<setfill('0')<<q[8*i+3]<<" "<<setw(4)<<setfill('0')<<q[8*i+4]<<" "<<setw(4)<<setfill('0')<<q[8*i+5]<<" "<<setw(4)<<setfill('0')<<q[8*i+6]<<" "<<setw(4)<<setfill('0')<<q[8*i+7]<<dec<<setfill(' ')<<endl;
-      // read first 2 words of buffer header (1.: number of words in buffer, 2.: module number) 
-      Start = q;
-      Length = *q++;
-      NextModule = Start+Length;
-      ChannelCounter = 0;
-      ModuleNumber = *q++;
+	// loop over remaining words of buffer as long as there is data 
+	while( SubEventWordCount > 0 ) {
 
-      if(Settings->VerboseLevel() > 2)
-	{
-	  cout<<"remaining SubEventWordCount: "<<SubEventWordCount<<"; act.Dgf buffer with Length: "<<Length<<" words (raw data ModuleNumber: "<<ModuleNumber<<")"<<endl;
-	}
+		// read first 2 words of buffer header (1.: number of words in buffer, 2.: module number) 
+		Start = q;
+		Length = *q++;
+		NextModule = Start+Length;
+		ChannelCounter = 0;
+		ModuleNumber = *q++;
+
+		if( Settings->VerboseLevel() > 2 ) {
+
+			cout << "remaining SubEventWordCount: " << SubEventWordCount << "; act.Dgf buffer with Length: ";
+			cout << Length << " words (raw data ModuleNumber: " << ModuleNumber << ")" << endl;
+
+		}
 
       // check that data in actual buffer doesn't exceed buffer end 
       if(NextModule > EndOfSubEvent)
@@ -437,7 +443,7 @@ bool UnpackedEvent::DecodeDgf(int SubEventID, int SubEventWordCount, char* SubEv
 	  //cout << "RunTimeC :" << RunTimeC << endl;
 	  BufferTime = (((unsigned int) RunTimeB)<<16) | ((unsigned int) RunTimeC);
 	  //cout << "BufferTime is :" << BufferTime << endl;
-	  if(Settings->VerboseLevel() > 1)
+	  if( Settings->VerboseLevel() > 1 )
 	    {
 	      cout<<__PRETTY_FUNCTION__<<": XIA RunTime: A "<<RunTimeA<<" B "<<RunTimeB<<" C "<<RunTimeC<<endl;
 	    }
@@ -498,29 +504,32 @@ bool UnpackedEvent::DecodeDgf(int SubEventID, int SubEventWordCount, char* SubEv
 	    }
 	  else
 	    {
-	      //RunTimeA is the highest word 
-	      //=> if this has an overflow we're screwed anyway so there's no need to check for that
+	      // RunTimeA is the highest word 
+	      // => if this has an overflow we're screwed anyway so there's no need to check for that
 	      RunTimeA++;
 	      CurrentSubEvent.SetEventTime(RunTimeA,EventTimeHigh,EventTimeLow);
 	    }
 	    
-	  if(Settings->VerboseLevel() > 3)
+	  if( Settings->VerboseLevel() > 4 )
 	    {
 	      cout<<__PRETTY_FUNCTION__<<": CurrentSubEvent.GetEventTime() = "<<CurrentSubEvent.GetEventTime()<<endl;
 	    }
 
-	  // check hitpattern: at least one channel bit has to be set for all but TS_EBIS_T1_T2_MODULE and 4 CD TS-modules 
-	  // _all_ timestamp modules with RUNTASK!=259 -> 'ModuleNumber' can be directly compared with 'analysis module number'  
-	  if(!(HitPattern&0xf) && !Settings->IsTimestampModule(ModuleNumber))
-	    {
-	      cout<<__PRETTY_FUNCTION__<<": XIA hitpattern error: hitpattern = "<<HitPattern<<endl;
-	      cout<<__PRETTY_FUNCTION__<<": module: "<<ModuleNumber<<", q: "<<q<<", NextModule: "<<NextModule<<", EndOfSubEvent: "<<EndOfSubEvent<<endl;
-	      WrongHitPattern++;
-	      // skip module 
-	      q =  NextModule;
+		// check hitpattern: at least one channel bit has to be set for all but TS_EBIS_T1_T2_MODULE and 4 CD TS-modules 
+		// _all_ timestamp modules with RUNTASK!=259 -> 'ModuleNumber' can be directly compared with 'analysis module number'  
+		if( !(HitPattern&0xf) && !Settings->IsTimestampModule(ModuleNumber) ) {
+
+			cout<<__PRETTY_FUNCTION__<<": XIA hitpattern error: hitpattern = "<<HitPattern<<endl;
+			cout<<__PRETTY_FUNCTION__<<": module: "<<ModuleNumber<<", q: "<<q<<", NextModule: "<<NextModule<<", EndOfSubEvent: "<<EndOfSubEvent<<endl;
+			WrongHitPattern++;
+
+			// skip module 
+			q =  NextModule;
+
 	    }
-	  else
-	    {
+
+		else {
+
 	      // process hit channels 
 	      for(ChannelNumber=0; ChannelNumber<Settings->NumberOfDgfChannels(); ChannelNumber++)
 		{			
@@ -538,7 +547,7 @@ bool UnpackedEvent::DecodeDgf(int SubEventID, int SubEventWordCount, char* SubEv
 		      CurrentSubEvent.SetFastTriggerTime(ChannelNumber,*q++);
 		      CurrentSubEvent.SetEnergy(ChannelNumber,*q++);
 
-		      if(Settings->VerboseLevel() > 4)
+		      if( Settings->VerboseLevel() > 4 )
 			{
 			  cout<<__PRETTY_FUNCTION__<<": XIA module "<<ModuleNumber<<" channel "<<ChannelNumber<<" event "<<DgfModules[ModuleNumber].GetNumberOfSubEvents()<<": FTtime: "<<CurrentSubEvent.GetFastTriggerTime(ChannelNumber)<<", energy: "<<CurrentSubEvent.GetEnergy(ChannelNumber)<<endl;
 			}
@@ -546,7 +555,7 @@ bool UnpackedEvent::DecodeDgf(int SubEventID, int SubEventWordCount, char* SubEv
 		      // get 48bit fast trigger time 
 		      CurrentSubEvent.SetLongFastTriggerTime(ChannelNumber, RunTimeA, EventTimeHigh, EventTimeLow);
 		      
-		      if(Settings->VerboseLevel() > 4)
+		      if( Settings->VerboseLevel() > 4 )
 			{
 			  cout<<__PRETTY_FUNCTION__<<": XIA module "<<ModuleNumber<<" channel "<<ChannelNumber<<" event "<<DgfModules[ModuleNumber].GetNumberOfSubEvents()<<": lFTtime: "<<CurrentSubEvent.GetLongFastTriggerTime(ChannelNumber)<<endl;
 			}
@@ -575,16 +584,18 @@ bool UnpackedEvent::DecodeDgf(int SubEventID, int SubEventWordCount, char* SubEv
 	    }// else of 'if(!(HitPattern&0xf) && ModuleNumber!=TS_EBIS_T1_T2_MODULE...)'
 	  
 	  // increment number of processed events 
-	  if(Settings->VerboseLevel() > 4)
-	    {
-	      if(DgfModules[ModuleNumber].GetNumberOfSubEvents() > 0)
-		{
+	  if(Settings->VerboseLevel() > 4) {
+		if(DgfModules[ModuleNumber].GetNumberOfSubEvents() > 0)	{
 		  cout<<"OLD: "<<DgfModules[ModuleNumber].GetNumberOfSubEvents()-1<<". subevent , q = "<<q<<", NextModule = "<<NextModule<<", diff = "<<NextModule-q<<endl;
 		  cout<<*(DgfModules[ModuleNumber].GetSubEvent(DgfModules[ModuleNumber].GetNumberOfSubEvents()-1));
 		}
-	      for(int i = 0; i < 2; i++)
-		if(DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents() > 0)
-		  cout<<"DgfModules["<<Settings->TimestampModule(i)<<"].GetSubEvent("<<DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents()-1<<")->GetEnergy("<<Settings->TimestampChannel()<<") = "<<DgfModules[Settings->TimestampModule(i)].GetSubEvent(DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents()-1)->GetEnergy(Settings->TimestampChannel())<<endl;
+	      for(int i = 0; i < Settings->NumberOfTimestampModules(); i++)
+			if( DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents() > 0 )
+		  	cout  <<  "DgfModules["  <<  Settings->TimestampModule(i)  
+             	  <<  "].GetSubEvent("  <<  DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents()-1
+                << ")->GetEnergy(" << Settings->TimestampChannel() << ") = " 
+                << DgfModules[Settings->TimestampModule(i)].GetSubEvent(DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents()-1)->GetEnergy(Settings->TimestampChannel())
+                << " ModuleNumber " << ModuleNumber << endl;
 	    }
 
 	  DgfModules[ModuleNumber].AddSubEvent(CurrentSubEvent);
@@ -596,7 +607,7 @@ bool UnpackedEvent::DecodeDgf(int SubEventID, int SubEventWordCount, char* SubEv
 		  cout<<"added "<<DgfModules[ModuleNumber].GetNumberOfSubEvents()-1<<". subevent , q = "<<q<<", NextModule = "<<NextModule<<", diff = "<<NextModule-q<<endl;
 		  cout<<*(DgfModules[ModuleNumber].GetSubEvent(DgfModules[ModuleNumber].GetNumberOfSubEvents()-1));
 		}
-	      for(int i = 0; i < 2; i++)
+	      for(int i = 0; i < Settings->NumberOfTimestampModules(); i++)
 		if(DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents() > 0)
 		  cout<<"DgfModules["<<Settings->TimestampModule(i)<<"].GetSubEvent("<<DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents()-1<<")->GetEnergy("<<Settings->TimestampChannel()<<") = "<<DgfModules[Settings->TimestampModule(i)].GetSubEvent(DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents()-1)->GetEnergy(Settings->TimestampChannel())<<endl;
 	      cout<<endl;
@@ -855,235 +866,278 @@ bool UnpackedEvent::DecodeAdc(int SubEventID, int SubEventWordCount, char* SubEv
 
 
 // subevent id 10 + 11, type [10,43]: raw mesytec adc data 
-bool UnpackedEvent::DecodeMesytecAdc(int SubEventID, int SubEventWordCount, char* SubEventData)
-{
-  if(Settings->VerboseLevel() > 2)
-    {
-      cout<<endl<<"start of "<<__PRETTY_FUNCTION__<<endl;
-    }
+bool UnpackedEvent::DecodeMesytecAdc(int SubEventID, int SubEventWordCount, char* SubEventData) {
 
-  // needed variables 
-  unsigned short* q; //= 2 byte
-  unsigned short Header;
-  unsigned short data;
-  int WordCount, ProcessedWordCount;
-  int ch;
-  unsigned int trailer;
+	if( Settings->VerboseLevel() > 2 ) {
 
-  //outputs
-  int ModuleNumber;
-  int Channel;
-  unsigned short ADCvalue;
-  long long Timestamp = 0;
+		cout << endl << "start of " << __PRETTY_FUNCTION__ << endl;
+
+	}
+
+	// needed variables 
+	unsigned short* q; //= 2 byte
+	unsigned short Header;
+	unsigned short data;
+	int WordCount, ProcessedWordCount;
+	int ch;
+ 	 unsigned int trailer;
+
+	// outputs
+ 	int ModuleNumber;
+ 	int Channel;
+ 	unsigned short ADCvalue;
+	long long Timestamp = 0;
   
-  // set HD data pointer q to SubEventData 
-  q = (unsigned short*) SubEventData;
+	// set HD data pointer q to SubEventData 
+	q = (unsigned short*) SubEventData;
 
-  //sub event
-  AdcSubEvent CurrentSubEvent;
+	// sub event
+	AdcSubEvent CurrentSubEvent;
 
-  if(Settings->VerboseLevel() > 1)
-    {
-      cout<<__PRETTY_FUNCTION__<<": read out event nr. "<<EventNumber<<": Subevent "<<SubEventID<<": MADC data, word count = "<<SubEventWordCount<<endl;
-//      for(i = 0; i < 10; i++)
-//	cout<<hex<<q[i]<<dec<<endl;
-    }
+	if( Settings->VerboseLevel() > 1 ) {
+ 
+ 	    cout << __PRETTY_FUNCTION__ << ": read out event nr. " << EventNumber << ": Subevent ";
+		cout << SubEventID << ": MADC data, word count = " << SubEventWordCount << endl;
 
-  // loop as long as there is data 
-  while(SubEventWordCount > 0) 
-    {
-      if(Settings->VerboseLevel() > 2)
-	{
-	  cout<<endl<<"remaining SubEventWordCount at start of new loop: "<<SubEventWordCount<<endl;
-	}
-  	  CurrentSubEvent.ClearEvt();
-      // read high word of Header
-      Header = *q++;       // Header word (high word)  (data in output buffer: 32 bit, but q 16 bit pointer)
-  
-      if(Settings->VerboseLevel() > 2)
-	{
-	  cout<<"Header (high) = "<<Header<<endl;
 	}
 
-      // get module number: bits[7...0] of Header word (-caen_module_number_offset) 
-      ModuleNumber = Header & MESYTEC_MADC_MODULE_ID;
+	// loop as long as there is data 
+	while( SubEventWordCount > 0 ) {
 
-      if(Settings->VerboseLevel() > 2)
-	{
-	  cout<<"ModuleNumber = "<<ModuleNumber<<endl;
-	}
+		if( Settings->VerboseLevel() > 2 ) {
 
-      // get number of Channels for which data follows (= WordCount = 32 bit "word count"; bits[13...8] of Header word) 
-      //added 14.11.07 12:25, VB
-      if(ModuleNumber >= Settings->NumberOfAdcModules())
-	{
-	  ModuleNumber -= Settings->MarabouAdcModuleOffset();
-	}
-      else
-	{
-	  //Rudi start counting with 1 => subtract 1
-	  ModuleNumber--;
-	}
+			cout << endl << "remaining SubEventWordCount at start of new loop: " << SubEventWordCount << endl;
 
-      if(Settings->VerboseLevel() > 2)
-	{
-	  cout<<"new ModuleNumber = "<<ModuleNumber<<endl;
-	}
-
-      //read low word of Header
-      Header = *q++;
-
-      if(Header & MESYTEC_MADC_OUTPUT_FORMAT)
-	{
-	  cerr<<"Error, output format (highest bit) should be zero (Header = "<<hex<<Header<<dec<<")"<<endl;
-
-	  return false;
-	}
-
-      WordCount = Header & MESYTEC_MADC_WORD_COUNT;
-      
-      //check module number
-      if(0 > ModuleNumber || ModuleNumber >= Settings->NumberOfAdcModules())
-	{
-	  cerr<<__PRETTY_FUNCTION__<<": Error, Adc module number "<<ModuleNumber<<" out of bounds (0 - "<<Settings->NumberOfAdcModules()<<"), skipping module"<<endl;
-	  // wc channels (*2 because sevtWc is in 32bit words, q in 16 bit) 
-	  q += WordCount * 2;             // jump over remaining words of act. event
-	  SubEventWordCount -= (WordCount + 1) * 2; 
-	  continue;
-	}
-
-      if(Settings->VerboseLevel() > 2)
-	{
-	  cout<<"WordCount = "<<WordCount<<endl;
-	}
-
-      if(Settings->VerboseLevel() > 2)
-	{
-	  cout<<"Header: 0x"<<hex<<Header<<dec<<", #of Channels: "<<WordCount<<", module nr.: "<<ModuleNumber<<" (before offset correction: "<<ModuleNumber+Settings->MarabouAdcModuleOffset()<<")"<<endl;
-	}
-
-      // check number of Channels (MESYTEC_MADC_NBOFCHAN=32 + 1 word End of Event + 1 extended timestamp) -> skip TOTAL subevent if wrong number of Channels 
-      if(WordCount <= 0 || WordCount > MESYTEC_MADC_NBOFCHAN+2) 
-	{
-	  cout<<__PRETTY_FUNCTION__<<": read event nr. "<<EventNumber<<": wrong WordCount: "<<WordCount<<" -> skip TOTAL subevent"<<endl;
-	  return true;
-	}
-    
-      // all Header word and eventnumber checks passed successfully -> process event 
-
-      // loop over number of Channels for which data follows (but WordCount includes the end of event => -1)
-      for(ch = 0; ch < WordCount - 1; ch++) 
-	{
-	  // get 32 bit data word 
-	  if(Settings->VerboseLevel() > 3)
-	    {
-	      cout<<"unsigned short* q before it gets 'data' word nr. "<<ch<<" of module "<<ModuleNumber<<": "<<q<<endl;
-	    }
-
-	  //get high word 
-	  data = *q++;
-
-	  // check if type of word (highest two bits) is end of event
-	  // 00 => data, 11 => end of event
-	  if((data & MESYTEC_MADC_END_OF_EVENT) == MESYTEC_MADC_END_OF_EVENT) 
-	    {
-	      cerr<<"Error, found end of event data ("<<data<<") after "<<ch+1<<" words but should have a word count of "<<WordCount<<endl;
-	      return false;
-	    }
-	  else if(data & MESYTEC_MADC_END_OF_EVENT)//means only one of the higest two bits is non-zero
-	    {
-	      cerr<<"Error, found weird data ("<<data<<") after "<<ch+1<<" words with word count of "<<WordCount<<endl;
-	      return false;
-	    }
-
-	  //check whether this is the extended timestamp
-	  if(data & MESYTEC_MADC_EXTENDED_TIMESTAMP)
-	    {
-	      Timestamp = ((long long) *q++) << MESYTEC_MADC_EXTENDED_TIMESTAMP_SHIFT;
-	      continue;
-	    }
-
-	  // get actual Channel number (bits[21...16] of data word) 
-	  Channel = data & MESYTEC_MADC_CHANNEL_NUMBER;
-
-	  //get low word
-	  data = *q++;
-
-	  // get ADC value for actual Channel (bits[11...0] of data word) 
-	  ADCvalue = data & MESYTEC_MADC_VALUE;
-
-	  // check out of range bit
-	  if(data & MESYTEC_MADC_OUT_OF_RANGE) 
-	    {
-	      if(Settings->VerboseLevel()>0)
-		{
-		  cout<<__PRETTY_FUNCTION__<<": read event nr. "<<EventNumber<<": CAEN module nr.: "<<ModuleNumber<<" , Channel: "<<Channel<<": in 'data' word nr. "<<ch<<": overflow bit set (ADC value: "<<ADCvalue<<")"<<endl;
 		}
-	      AdcOverflow++;
-	    }
 
-	  CurrentSubEvent.Add(Channel, ADCvalue);
+		CurrentSubEvent.ClearEvt();
 
-	  if(Settings->VerboseLevel() > 3)
-	    {
-	      cout<<"Number of sub events: "<<CurrentSubEvent.Size()<<", last subevent: channel = "<<CurrentSubEvent.GetLastAdcChannel()<<", value = "<<CurrentSubEvent.GetLastAdcValue()<<endl;
-	    }
-	}   // for(ch=0; ch<WordCount; ch++)
+		// read high word of Header
+		Header = *q++;       // Header word (high word)  (data in output buffer: 32 bit, but q 16 bit pointer)
+  
+		if( Settings->VerboseLevel() > 2 ) {
 
-      // get "EndOfBlock" (EOB) word ("trailer" word after all channel data) 
-      if(Settings->VerboseLevel() > 2)
-	{
-	  cout<<"unsigned short* q before it gets 'trailer' word: "<<q<<endl;
-	}
+			cout << "Header (high) = " << Header << endl;
 
-      trailer = ((unsigned int) *q++) << 16;                        // trailer word (high)
-      trailer |= (unsigned int) *q++;                               // trailer word (low)
+		}
+
+		// get module number: bits[7...0] of Header word (-caen_module_number_offset) 
+		ModuleNumber = Header & MESYTEC_MADC_MODULE_ID;
+
+		if( Settings->VerboseLevel() > 2 ) {
+
+			cout << "ModuleNumber = " << ModuleNumber << endl;
+
+		}
+
+		// get number of Channels for which data follows (= WordCount = 32 bit "word count"; bits[13...8] of Header word) 
+		//added 14.11.07 12:25, VB
+		if( ModuleNumber >= Settings->NumberOfAdcModules() ) {
+
+			ModuleNumber -= Settings->MarabouAdcModuleOffset();
+
+		}
+
+		else {
+
+			// Rudi start counting with 1 => subtract 1
+			ModuleNumber--;
+
+		}
+
+		if( Settings->VerboseLevel() > 2 ) {
+
+			cout << "new ModuleNumber = " << ModuleNumber << endl;
+
+		}
+
+		// read low word of Header
+		Header = *q++;
+
+		if( Header & MESYTEC_MADC_OUTPUT_FORMAT ) {
+
+			cerr << "Error, output format (highest bit) should be zero (Header = ";
+			cerr << hex << Header << dec << ")" << endl;
+
+			return false;
+
+		}
+
+		WordCount = Header & MESYTEC_MADC_WORD_COUNT;
+      
+		// check module number
+		if( 0 > ModuleNumber || ModuleNumber >= Settings->NumberOfAdcModules() ) {
+
+			cerr << __PRETTY_FUNCTION__ << ": Error, Adc module number " << ModuleNumber;
+			cerr << " out of bounds (0 - " << Settings->NumberOfAdcModules() << "), skipping module" << endl;
+
+			// wc channels (*2 because sevtWc is in 32bit words, q in 16 bit) 
+			q += WordCount * 2;             // jump over remaining words of act. event
+			SubEventWordCount -= (WordCount + 1) * 2; 
+			continue;
+
+		}
+
+		if( Settings->VerboseLevel() > 2 ) {
+
+			cout << "WordCount = " << WordCount << endl;
+
+			cout << "Header: 0x" << hex << Header << dec << ", #of Channels: " << WordCount;
+			cout << ", module nr.: " << ModuleNumber << " (before offset correction: ";
+			cout << ModuleNumber+Settings->MarabouAdcModuleOffset() << ")" << endl;
+
+		}
+
+		// check number of Channels (MESYTEC_MADC_NBOFCHAN=32 + 1 word End of Event + 1 extended timestamp) -> skip TOTAL subevent if wrong number of Channels 
+		if( WordCount <= 0 || WordCount > MESYTEC_MADC_NBOFCHAN+2 ) {
+
+			cout << __PRETTY_FUNCTION__ << ": read event nr. " << EventNumber << ": wrong WordCount: ";
+			cout << WordCount << " -> skip TOTAL subevent" << endl;
+
+			return true;
+
+		}
     
-      // check type of word (highest two bits should be set)
-      if ( (trailer & MESYTEC_MADC_END_OF_EVENT) != MESYTEC_MADC_END_OF_EVENT ) 
-	{
-	  cout<<__PRETTY_FUNCTION__<<": read event nr. "<<EventNumber<<": wrong EOE word of type: "<<(trailer & MESYTEC_MADC_END_OF_EVENT)<<" -> skip TOTAL subevent"<<endl;
-	  return true;
-	}
+		// all Header word and eventnumber checks passed successfully -> process event 
 
-      // get time stamp
-      Timestamp |= (trailer & MESYTEC_MADC_TIMESTAMP);
+		// loop over number of Channels for which data follows (but WordCount includes the end of event => -1)
+		for( ch = 0; ch < WordCount - 1; ch++ ) { 
 
-      if(Settings->VerboseLevel() > 2)
-	{
-	  cout<<"Timestamp: "<<Timestamp<<endl;
-	}
-      Timestamp += Settings->DgfInitDelay();
-      if(Settings->VerboseLevel() > 2)
-	{
-	  cout<<"corrected Timestamp: "<<Timestamp<<endl;
-	}
-      CurrentSubEvent.Timestamp(Timestamp);
+			// get 32 bit data word 
+			if( Settings->VerboseLevel() > 3 ) {
+
+				cout << "unsigned short* q before it gets 'data' word nr. ";
+				cout << ch << " of module " << ModuleNumber << ": " << q << endl;
+
+			}
+
+			// get high word 
+			data = *q++;
+
+			// check if type of word (highest two bits) is end of event
+			// 00 => data, 11 => end of event
+			if( (data & MESYTEC_MADC_END_OF_EVENT) == MESYTEC_MADC_END_OF_EVENT ) {
+
+				cerr << "Error, found end of event data (" << data << ") after " << ch+1;
+				cerr << " words but should have a word count of " << WordCount << endl;
+				return false;
+
+			}
+
+			else if( data & MESYTEC_MADC_END_OF_EVENT )	{ //means only one of the higest two bits is non-zero
+
+				cerr << "Error, found weird data (" << data << ") after ";
+				cerr << ch+1 << " words with word count of " << WordCount << endl;
+				return false;
+
+			}
+
+			// check whether this is the extended timestamp
+			if( data & MESYTEC_MADC_EXTENDED_TIMESTAMP ) {
+
+				Timestamp = ((long long) *q++) << MESYTEC_MADC_EXTENDED_TIMESTAMP_SHIFT;
+				continue;
+
+			}
+
+			// get actual Channel number (bits[21...16] of data word) 
+			Channel = data & MESYTEC_MADC_CHANNEL_NUMBER;
+
+			// get low word
+			data = *q++;
+
+			// get ADC value for actual Channel (bits[11...0] of data word) 
+			ADCvalue = data & MESYTEC_MADC_VALUE;
+
+			// check out of range bit
+			if( data & MESYTEC_MADC_OUT_OF_RANGE ) {
+
+				if( Settings->VerboseLevel() > 0 ) {
+
+					cout << __PRETTY_FUNCTION__ << ": read event nr. " << EventNumber;
+					cout << ": CAEN module nr.: " << ModuleNumber << " , Channel: " << Channel;
+					cout << ": in 'data' word nr. " << ch << ": overflow bit set (ADC value: ";
+					cout << ADCvalue << ")" << endl;
+
+				}
+
+				AdcOverflow++;
+
+			}
+
+			CurrentSubEvent.Add(Channel, ADCvalue);
+
+			if( Settings->VerboseLevel() > 3 ) {
+
+				cout << "Number of sub events: " << CurrentSubEvent.Size();
+				cout << ", last subevent: channel = " << CurrentSubEvent.GetLastAdcChannel();
+				cout << ", value = " << CurrentSubEvent.GetLastAdcValue() << endl;
+
+			}
+
+		} // for(ch=0; ch<WordCount; ch++)
+
+		// get "EndOfBlock" (EOB) word ("trailer" word after all channel data) 
+		if( Settings->VerboseLevel() > 2 ) {
+
+			cout << "unsigned short* q before it gets 'trailer' word: " << q << endl;
+
+		}
+
+		trailer = ((unsigned int) *q++) << 16;  // trailer word (high)
+		trailer |= (unsigned int) *q++;         // trailer word (low)
     
-      // determine number of words that were processed in this while-loop  
-      ProcessedWordCount = (WordCount + 1) * 2;        // WordCount channels plus 1 (Header), *2 because SubEventWordCount is in 16bit words
-      SubEventWordCount -= ProcessedWordCount;             // remaining subevent data = #of words at start of while-loop minus #of processed words  
+		// check type of word (highest two bits should be set)
+		if ( (trailer & MESYTEC_MADC_END_OF_EVENT) != MESYTEC_MADC_END_OF_EVENT ) {
+
+			cout << __PRETTY_FUNCTION__ << ": read event nr. " << EventNumber;
+			cout << ": wrong EOE word of type: " << (trailer & MESYTEC_MADC_END_OF_EVENT);
+			cout << " -> skip TOTAL subevent" << endl;
+
+			return true;
+
+		}
+
+		// get time stamp
+		Timestamp |= (trailer & MESYTEC_MADC_TIMESTAMP);
+
+		if( Settings->VerboseLevel() > 4 ) cout << "Timestamp: " << Timestamp << endl;
+
+		Timestamp += Settings->DgfInitDelay();
+
+		if( Settings->VerboseLevel() > 4 ) cout << "corrected Timestamp: " << Timestamp << endl;
+
+		CurrentSubEvent.Timestamp(Timestamp);
     
-      if(Settings->VerboseLevel() > 1)
-	{
-	  cout<<"words processed in actual while-loop: "<<ProcessedWordCount<<" = ("<<WordCount<<" + 1)*2"<<endl;
-	}
+		// determine number of words that were processed in this while-loop  
+		ProcessedWordCount = (WordCount + 1) * 2;	// WordCount channels plus 1 (Header), *2 because SubEventWordCount is in 16bit words
+		SubEventWordCount -= ProcessedWordCount;	// remaining subevent data = #of words at start of while-loop minus #of processed words  
+    
+		if( Settings->VerboseLevel() > 1 ) {
 
-      //add sub event to event
-      AdcModules[ModuleNumber].AddSubEvent(CurrentSubEvent);
-    }  // while(SubEventWordCount>0)
+			cout << "words processed in actual while-loop: " << ProcessedWordCount;
+			cout << " = (" << WordCount << " + 1)*2" << endl;
 
-  return true;
+		}
+
+		// add sub event to event
+		AdcModules[ModuleNumber].AddSubEvent(CurrentSubEvent);
+
+	} // while(SubEventWordCount>0)
+
+	return true;
+
 }
 
 
 // SIS3600 Pattern Unit, type [10,53]
-bool UnpackedEvent::DecodeSIS3600PatternUnit(int SubEventID, int SubEventWordCount, char* SubEventData) 
-{
-  if(Settings->VerboseLevel() > 2)
-    {
-      cout<<endl<<"start of "<<__PRETTY_FUNCTION__<<endl;
-    }
+bool UnpackedEvent::DecodeSIS3600PatternUnit(int SubEventID, int SubEventWordCount, char* SubEventData) {
+
+	if( Settings->VerboseLevel() > 2 ) {
+
+		cout << endl << "start of " << __PRETTY_FUNCTION__ << endl;
+
+	}
 
   // needed variables 
   unsigned short* q;
@@ -1632,8 +1686,8 @@ unsigned short UnpackedEvent::GetTimestamps(vector<unsigned short>& Timestamps)
 }
 
 //find the timestamp of given timestamping module and return their number
-unsigned short UnpackedEvent::GetTimestamps(unsigned short ts)
-{
+unsigned short UnpackedEvent::GetTimestamps(unsigned short ts) {
+
   unsigned short Counter = 0;
   
   // loop over all subevents in TIMESTAMP_MODULE 
@@ -1645,56 +1699,57 @@ unsigned short UnpackedEvent::GetTimestamps(unsigned short ts)
     }
       
   return Counter;
+
 }
 
 //checks the timestamps and the number of adcs (also checks that number of adcs comes in multiples of adcsPerTimestampModule)
-bool UnpackedEvent::Verify()
-{
-  if(Settings->VerboseLevel() > 2)
-    {
-      cout<<endl<<"start of "<<__PRETTY_FUNCTION__<<endl;
-    }
+bool UnpackedEvent::Verify() {
 
-  int adc;
-  unsigned int ts;
+	if( Settings->VerboseLevel() > 2 )
+		cout << endl << "start of " << __PRETTY_FUNCTION__ << endl;
 
-  int NumberOfAdcs = 0;
+	int adc;
+	unsigned int ts;
 
-  bool failed = false;
+	int NumberOfAdcs = 0;
+
+	bool failed = false;
   
-  //loop over the adcs but only those with timestamper (not the diamond/collimator adc afterwards)
-  for(adc = 0; adc < Settings->NumberOfTimestampModules()*Settings->NumberOfAdcsPerTimestampModule(); adc++)
-    {
-      //check number of timestamps and count the number of adc modules with sub events
-      ts = GetTimestamps(adc/Settings->NumberOfAdcsPerTimestampModule());
-      if(AdcModules[adc].GetNumberOfSubEvents() != ts)
-	{
-	  cerr<<__PRETTY_FUNCTION__<<", event # "<<EventNumber-1<<": mismatch between number of subevents in adc "<<adc<<" (= "<<AdcModules[adc].GetNumberOfSubEvents()<<") and the number of timestamps in timestamp module "<<adc/Settings->NumberOfAdcsPerTimestampModule()<<" (= "<<ts<<")"<<endl;
-	  failed = true;
-	}
-      if(AdcModules[adc].GetNumberOfSubEvents() != ts)
-	{
-	  cout << "no esta solucionado" << endl;
-	}
+	// loop over the adcs but only those with timestamper (not the diamond/collimator adc afterwards)
+	for( adc = 0; adc < Settings->NumberOfTimestampModules()*Settings->NumberOfAdcsPerTimestampModule(); adc++ ) {
+
+		// check number of timestamps and count the number of adc modules with sub events
+		ts = GetTimestamps(adc/Settings->NumberOfAdcsPerTimestampModule());
+		if( AdcModules[adc].GetNumberOfSubEvents() != ts ) {
+
+			cerr << __PRETTY_FUNCTION__ << ", event # " << EventNumber-1;
+			cerr << ": mismatch between number of subevents in adc " << adc << " (= ";
+			cerr << AdcModules[adc].GetNumberOfSubEvents();
+			cerr << ") and the number of timestamps in timestamp module ";
+			cerr << adc/Settings->NumberOfAdcsPerTimestampModule() << " (= " << ts << ")" << endl;
+			failed = true;
+
+		}
       
-      //check adc modules
-      if(AdcModules[adc].GetNumberOfSubEvents() > 0)
-	{
-	  NumberOfAdcs++;
+		// check adc modules
+		if( AdcModules[adc].GetNumberOfSubEvents() > 0 ) NumberOfAdcs++;
+
 	}
-    }
   
-  //there should always be n*NumberOfAdcsPerTimestampModule(+1) modules in one event!
-  if(NumberOfAdcs != 0 && NumberOfAdcs%Settings->NumberOfAdcsPerTimestampModule() != 0 && NumberOfAdcs%Settings->NumberOfAdcsPerTimestampModule() != 1)
-    {
-      cerr<<__PRETTY_FUNCTION__<<": in event "<<EventNumber-1<<" were the wrong number of ADC modules ("<<NumberOfAdcs<<")!"<<endl;
-      failed = true;
-    }
+	// there should always be n*NumberOfAdcsPerTimestampModule(+1) modules in one event!
+	if( NumberOfAdcs != 0 && NumberOfAdcs%Settings->NumberOfAdcsPerTimestampModule() != 0 &&
+		NumberOfAdcs%Settings->NumberOfAdcsPerTimestampModule() != 1 ) {
 
-  if(failed)
-    return false;
+		cerr << __PRETTY_FUNCTION__ << ": in event " << EventNumber-1;
+		cerr << " were the wrong number of ADC modules (" << NumberOfAdcs << ")!" << endl;
+		failed = true;
 
-  return true;
+	}
+
+	if(failed) return false;
+
+	return true;
+
 }
 
 void UnpackedEvent::CorrectMesytecAdcTimestamps()

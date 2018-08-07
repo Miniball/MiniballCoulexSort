@@ -318,7 +318,7 @@ void g_clx::Loop( string outputfilename ) {
 
 		else if( rndm_hits==1 && pr_hits==0 ) 
 			h.Fill1h(gen, tha, pha, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron,
-					 pen[rndm_ptr[0]], ann[rndm_ptr[0]], sec[rndm_ptr[0]], det[rndm_ptr[0]], time[pr_ptr[0]]-t1t[pr_ptr[0]], bg_frac);
+					 pen[rndm_ptr[0]], ann[rndm_ptr[0]], sec[rndm_ptr[0]], det[rndm_ptr[0]], time[rndm_ptr[0]]-t1t[rndm_ptr[0]], bg_frac);
 
 		else if( rndm_hits==2 && pr_hits==0 ) {
 		

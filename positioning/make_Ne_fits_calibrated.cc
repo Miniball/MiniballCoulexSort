@@ -97,7 +97,7 @@ void make_Ne_fits_calibrated() {
 	resFile_E1017.open( "analyse_22Ne_E1017.dat" );
 	
 	// Get hists
-	TFile *histFile = new TFile( "/data/is597/rootfiles/22Ne_CD2_4.485MeVu_NeSort.root" );
+	TFile *histFile = new TFile( "/run/media/miniball/MiniballAnalysis/is644/rootfiles/22Ne_CD2_sort.root" );
 	TH1F *hist;
 	TCanvas *c = new TCanvas();
 	string name;

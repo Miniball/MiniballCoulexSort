@@ -326,7 +326,7 @@ int EventBuilder::TrashEvent() {
 
 }
 
-int EventBuilder::ProcessEvent(const MBSDataIO * mbs) {
+int EventBuilder::ProcessEvent( const MBSDataIO *mbs ) {
 
 	if( Settings->VerboseLevel() > 1 )
 		cout << endl << "start of " << __PRETTY_FUNCTION__ << endl;
@@ -657,7 +657,7 @@ void EventBuilder::BuildEvent() {
 	for( int dgf = 0; dgf < unpackedEvent->GetNumberOfDgfModules(); dgf++ ) {
 
 		for( size_t SubEvent = 0; SubEvent < unpackedEvent->GetDgfModule(dgf)->GetNumberOfSubEvents(); SubEvent++ ) {
-			//if ( unpackedEvent->GetDgfModule(dgf)->GetModuleNumber() != 53 ) // Settings->BeamdumpDgf()  ) // TODO remove if
+
 				eventBuffer->AddGamma(unpackedEvent->GetDgfModule(dgf)->GetModuleNumber(), unpackedEvent->GetDgfModule(dgf)->GetSubEvent(SubEvent));
 
 		}

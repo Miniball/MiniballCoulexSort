@@ -164,7 +164,7 @@ void EventBuffer::Sort() {
 
 	if( Settings->VerboseLevel() > 3 ) {
 
-      cout << "created new SubEventNumber " << SubEventNumber << endl;
+		cout << "created new SubEventNumber " << SubEventNumber << endl;
 
     }
 

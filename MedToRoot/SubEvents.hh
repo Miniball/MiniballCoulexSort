@@ -60,7 +60,7 @@ public:
 	{
 		if(channelNumber < NumberOfChannels)
 		{
-			//check for overflow
+			// check for overflow
 			if(FastTriggerTime[channelNumber] > EventTimeLow)
 				LongFastTriggerTime[channelNumber] = FastTriggerTime[channelNumber] + 65536ll*EventTimeHigh + 65536ll*65536ll*RunTime;
 			else

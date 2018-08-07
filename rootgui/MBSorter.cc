@@ -890,36 +890,36 @@ MBSorter::MBSorter() {
 	// Defaults //
 	//////////////
 	
-	text_daq_dir->SetText( "/mbdata/miniball/is552-180723" );
-	text_local_dir->SetText( "/run/media/miniball/MiniballAnalysis/is552/medfiles" );
-	text_med_pre->SetText( "22?Ra" );
+	text_daq_dir->SetText( "/mbdata/miniball/is562-180806" );
+	text_local_dir->SetText( "/run/media/miniball/MiniballAnalysis/is562/medfiles" );
+	text_med_pre->SetText( "106Sn" );
 
-	text_add_file->SetText( "222Ra_120Sn_pos5_002" );
+	text_add_file->SetText( "106Sn_206Pb_pos6_005" );
 
-	text_settings->SetText( "/run/media/miniball/MiniballAnalysis/is552/config/MBSettings2018_CLX.dat" );
-	check_source->SetOn();
+	text_settings->SetText( "/run/media/miniball/MiniballAnalysis/is562/config/MBSettings2018_CLX_DgfOffset.dat" );
+	//check_source->SetOn();
 
-	text_outfile->SetText( "/run/media/miniball/MiniballAnalysis/is552/rootfiles/222Ra_120Sn_xxx-yyy" );
-	text_calfile->SetText( "/run/media/miniball/MiniballAnalysis/is552/config/is644-offline.cal" );
-	text_config->SetText( "/run/media/miniball/MiniballAnalysis/is552/config/config-is552-pos6.dat" );
-	text_cutfile->SetText( "/run/media/miniball/MiniballAnalysis/is552/config/cutfile-is552-pos6.root:Bcut:Tcut" );
+	text_outfile->SetText( "/run/media/miniball/MiniballAnalysis/is562/rootfiles/106Sn_206Pb_xxx-yyy" );
+	text_calfile->SetText( "/run/media/miniball/MiniballAnalysis/is562/config/is562-offline.cal" );
+	text_config->SetText( "/run/media/miniball/MiniballAnalysis/is562/config/config-106Sn_206Pb_pos6.dat" );
+	text_cutfile->SetText( "/run/media/miniball/MiniballAnalysis/is562/config/cutfile-106Sn_206Pb_pos6.root:Bcut:Tcut" );
 	text_srimdir->SetText( "/run/media/miniball/MiniballAnalysis/srim" );
 
 	check_cdpad->SetOn();
 	//check_singles->SetOn();
 	//check_gamgam->SetOn();
 	check_addback->SetOn();
-	//check_config->SetOn();
+	check_config->SetOn();
 	check_cutfile->SetOn();
 
-	num_dop_zb->SetNumber( 88 );
-	num_dop_zt->SetNumber( 50 );
-	num_dop_ab->SetNumber( 222 );
-	num_dop_at->SetNumber( 120 );
-	num_dop_eb->SetNumber( 4200 );
-	num_dop_ex->SetNumber( 400 );
-	num_dop_th->SetNumber( 2.1 );
-	num_dop_id->SetNumber( 1.05 );
+	num_dop_zb->SetNumber( 50 );
+	num_dop_zt->SetNumber( 82 );
+	num_dop_ab->SetNumber( 106 );
+	num_dop_at->SetNumber( 206 );
+	num_dop_eb->SetNumber( 4400 );
+	num_dop_ex->SetNumber( 1208 );
+	num_dop_th->SetNumber( 4.2 );
+	num_dop_id->SetNumber( 2.1 );
 	num_dop_cd->SetNumber( 28.6 );
 	num_dop_ro->SetNumber( 243.8 );
 	num_dop_dl->SetNumber( 0.0007 );
@@ -927,6 +927,7 @@ MBSorter::MBSorter() {
 	num_dop_bg->SetNumber( -0.461538 );
 	num_dop_pd->SetNumber( 50. );
 	num_dop_zo->SetNumber( 4.8 );
+
 
 	////////////////////
 	// Button presses //
@@ -1025,7 +1026,8 @@ void MBSorter::on_medroot_clicked() {
 		rootfile = text_local_dir->GetText();
 		rootfile += "/";
 		rootfile += filebase;
-		rootfile += "_Source.root";
+		if( check_source->IsOn() ) rootfile += "_Source.root";
+		else rootfile += "_OnBeam.root";
 
 		if( !gSystem->AccessPathName( rootfile ) ) {
 
@@ -1089,7 +1091,8 @@ void MBSorter::on_build_clicked() {
 		files += text_local_dir->GetText();
 		files += "/";
 		files += filebase;
-		files += "_Source.root ";
+		if( check_source->IsOn() ) files += "_Source.root ";
+		else files += "_OnBeam.root ";
 
 	}
 
