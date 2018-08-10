@@ -2,6 +2,9 @@
 //
 // Liam Gaffney (liam.gaffney@cern.ch) - 02/05/2017
 
+#include "TSystem.h"
+#include "TEnv.h"
+#include <TGFileDialog.h>
 #include <TGTextEntry.h>
 #include <TGNumberEntry.h>
 #include <TGButton.h>
@@ -14,6 +17,7 @@
 #include <TG3DLine.h>
 #include <RQ_OBJECT.h>
 #include <sstream>
+#include <fstream>
 #include <vector>
 using namespace std;
 
@@ -160,6 +164,10 @@ protected:
 	TGTextButton        *but_tdriv;			// button to do TDRIVAna
 	TGTextButton        *but_add;			// button to add files
 	TGTextButton        *but_del;			// button to remove files
+	TGTextButton        *but_open;			// button to open configuration
+
+	// File dialog
+	TGFileDialog		*file_open;			// open the setup file with a dialog
 	
 	
 public:
@@ -168,6 +176,7 @@ public:
 	virtual ~MBSorter();		// destructor
 	
 	// Slots
+	void on_open_clicked();		// open file dialog
 	void on_add_clicked();		// add file function
 	void on_del_clicked();		// remove file function
 	void on_rsync_clicked();	// rsync function
@@ -176,6 +185,10 @@ public:
 	void on_ana_clicked();		// CLXAna function
 	void on_mnt_clicked();		// MntAna function
 	void on_tdriv_clicked();	// TDRIVAna function
+
+	// Save setup
+	void SaveSetup( string setupfile );
+	void LoadSetup( string setupfile );
 
 	// File list
 	vector <string> filelist;

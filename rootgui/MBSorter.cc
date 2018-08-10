@@ -18,6 +18,10 @@ MBSorter::MBSorter() {
 	///////////////////////
 	main_frame = new TGMainFrame( gClient->GetRoot(), 1300, 360, kMainFrame | kHorizontalFrame );
 	main_frame->SetEditable();
+
+	// use hierarchical cleaning
+	fMain->SetCleanup(kDeepCleanup);
+
 	
 	//////////////////////////////////////
 	// Create sub frames and separators //
@@ -179,6 +183,20 @@ MBSorter::MBSorter() {
 	right_frame->AddFrame( dop_frame_2, new TGLayoutHints( kLHintsRight ) );
 	
 	
+	////////////////////////
+	// Open config button //
+	////////////////////////
+	
+	// Setup file
+	but_open = new TGTextButton( left_frame, "Open setup", -1, TGTextButton::GetDefaultGC()(),
+								 TGTextButton::GetDefaultFontStruct(), kRaisedFrame );
+	but_open->SetTextJustify( 36 );
+	but_open->SetMargins( 0, 0, 0, 0 );
+	but_open->SetWrapLength( -1 );
+	but_open->Resize( 50, 30 );
+	left_frame->AddFrame( but_open, new TGLayoutHints( kLHintsLeft | kLHintsTop | kLHintsExpandX, 2, 2, 2, 2 ) );
+	
+
 	///////////////////
 	// Create labels //
 	///////////////////
@@ -548,7 +566,7 @@ MBSorter::MBSorter() {
 	// Run files
 	run_list_box = new TGListBox( left_frame, -1, kSunkenFrame );
 	run_list_box->SetName( "run_list_box" );
-	run_list_box->Resize( 250, 286 );
+	run_list_box->Resize( 250, 256 );
 	left_frame->AddFrame( run_list_box, new TGLayoutHints( kLHintsLeft | kLHintsTop | kLHintsExpandY, 2, 2, 2, 2 ) );
 	
 	
@@ -706,12 +724,12 @@ MBSorter::MBSorter() {
 	dop_frame_1->AddFrame( num_dop_zt, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
 	num_dop_ab = new TGNumberEntry( dop_frame_1, 132, 4, -1,
-		TGNumberFormat::kNESInteger, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMinMax,
+		TGNumberFormat::kNESReal, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMinMax,
 		1, 300 );
 	dop_frame_1->AddFrame( num_dop_ab, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
 	num_dop_at = new TGNumberEntry( dop_frame_1, 206, 4, -1,
-		TGNumberFormat::kNESInteger, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMinMax,
+		TGNumberFormat::kNESReal, TGNumberFormat::kNEAPositive, TGNumberFormat::kNELLimitMinMax,
 		1, 300 );
 	dop_frame_1->AddFrame( num_dop_at, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
@@ -874,6 +892,7 @@ MBSorter::MBSorter() {
 	
 	// Map windows
 	main_frame->MapWindow();
+	main_frame->MapSubwindows();
 	
 	// terminate ROOT session when window is closed
 	main_frame->Connect( "CloseWindow()", "TApplication", gApplication, "Terminate()" );
@@ -927,6 +946,7 @@ MBSorter::MBSorter() {
 	// Button presses //
 	////////////////////
 	
+	but_open->Connect( "Clicked()", "MBSorter", this, "on_open_clicked()" );	
 	but_add->Connect( "Clicked()", "MBSorter", this, "on_add_clicked()" );
 	text_add_file->Connect( "ReturnPressed()", "MBSorter", this, "on_add_clicked()" );
 	but_del->Connect( "Clicked()", "MBSorter", this, "on_del_clicked()" );
@@ -936,8 +956,7 @@ MBSorter::MBSorter() {
 	but_ana->Connect( "Clicked()", "MBSorter", this, "on_ana_clicked()" );
 	but_mnt->Connect( "Clicked()", "MBSorter", this, "on_mnt_clicked()" );
 	but_tdriv->Connect( "Clicked()", "MBSorter", this, "on_tdriv_clicked()" );
-	
-	
+
 }
 
 MBSorter::~MBSorter() {
@@ -946,6 +965,20 @@ MBSorter::~MBSorter() {
 	main_frame->Cleanup();
 	delete main_frame;
 	
+}
+
+void MBSorter::on_open_clicked() {
+
+	// Configure file dialog
+	TGFileInfo fi;
+	TString dir(".");
+	//fi.fFileTypes = filetypes;
+	fi.fIniDir = StrDup(dir);
+
+	// Open a file dialog
+	file_open = new TGFileDialog( gClient->GetRoot(), main_frame, kFDOpen, &fi );
+
+
 }
 
 void MBSorter::on_add_clicked() {
@@ -1130,11 +1163,11 @@ void MBSorter::on_ana_clicked() {
 		cmd += " -Zb ";
 		cmd += convertInt( num_dop_zb->GetIntNumber() );
 		cmd += " -Ab ";
-		cmd += convertInt( num_dop_ab->GetIntNumber() );
+		cmd += convertFloat( num_dop_ab->GetNumber() );
 		cmd += " -Zt ";
 		cmd += convertInt( num_dop_zt->GetIntNumber() );
 		cmd += " -At ";
-		cmd += convertInt( num_dop_at->GetIntNumber() );
+		cmd += convertFloat( num_dop_at->GetNumber() );
 		cmd += " -Eb ";
 		cmd += convertFloat( num_dop_eb->GetNumber() );
 		cmd += " -Ex ";
@@ -1218,11 +1251,11 @@ void MBSorter::on_tdriv_clicked() {
 		cmd += " -Zb ";
 		cmd += convertInt( num_dop_zb->GetIntNumber() );
 		cmd += " -Ab ";
-		cmd += convertInt( num_dop_ab->GetIntNumber() );
+		cmd += convertFloat( num_dop_ab->GetNumber() );
 		cmd += " -Zt ";
 		cmd += convertInt( num_dop_zt->GetIntNumber() );
 		cmd += " -At ";
-		cmd += convertInt( num_dop_at->GetIntNumber() );
+		cmd += convertFloat( num_dop_at->GetNumber() );
 		cmd += " -Eb ";
 		cmd += convertFloat( num_dop_eb->GetNumber() );
 		cmd += " -Ex ";
@@ -1258,5 +1291,36 @@ void MBSorter::on_tdriv_clicked() {
 	cout << endl << cmd << endl << endl;
 	gSystem->Exec( cmd );
 	
+}
+
+void MBSorter::SaveSetup( string setupfile ) {
+
+	TEnv *fSetup = new TEnv( setupfile.c_str() );
+
+	fSetup->SetValue( "Zb", (double)num_dop_zb->GetIntNumber() );
+	fSetup->SetValue( "Zt", (double)num_dop_zt->GetIntNumber() );
+	fSetup->SetValue( "Ab", (double)num_dop_ab->GetNumber() );
+	fSetup->SetValue( "At", (double)num_dop_at->GetNumber() );
+	fSetup->SetValue( "Eb", (double)num_dop_eb->GetIntNumber() );
+	fSetup->SetValue( "thick", (double)num_dop_th->GetIntNumber() );
+	fSetup->SetValue( "depth", (double)num_dop_id->GetIntNumber() );
+	fSetup->SetValue( "cddist", (double)num_dop_cd->GetIntNumber() );
+	fSetup->SetValue( "cdoffset", (double)num_dop_ro->GetIntNumber() );
+	fSetup->SetValue( "deadlayer", (double)num_dop_dl->GetIntNumber() );
+	fSetup->SetValue( "plunger", (double)num_dop_pd->GetIntNumber() );
+
+	fSetup->WriteFile( setupfile.c_str() );
+
+	return;
+
+}
+
+void MBSorter::LoadSetup( string setupfile ) {
+
+	TEnv *fSetup = new TEnv( setupfile.c_str() );
+	fSetup->ReadFile( setupfile.c_str(), kEnvLocal );
+
+	return;
+
 }
 
