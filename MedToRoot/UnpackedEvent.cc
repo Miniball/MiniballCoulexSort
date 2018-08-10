@@ -115,8 +115,9 @@ int UnpackedEvent::ProcessEvent( const MBSDataIO * mbs ) {
 
 			if( ExtractSubevents(mbs) ) { // extract subevents 
 
-				if( Settings->MesytecAdc() )
-	    			CorrectMesytecAdcTimestamps();
+				// We should not correct the Mesytec timestamps, but the DGF ones instead
+				//if( Settings->MesytecAdc() )
+	    		//	CorrectMesytecAdcTimestamps();
 
 				return 0; 
 
@@ -1752,33 +1753,39 @@ bool UnpackedEvent::Verify() {
 
 }
 
-void UnpackedEvent::CorrectMesytecAdcTimestamps()
-{
-  //loop over all subevents in all modules add the buffer time of the first dgf buffer to the time stamp
-  long long timestamp;
+void UnpackedEvent::CorrectMesytecAdcTimestamps() {
 
-  for(unsigned int module = 0; module < AdcModules.size(); module++)
-    {
-      //cout << "Adc Module size: " << AdcModules.size() << endl;
-      for(unsigned int subevent = 0; subevent < AdcModules[module].GetNumberOfSubEvents(); subevent++)
-	{
-	  timestamp = AdcModules[module].GetSubEvent(subevent)->Timestamp();
-	  //cout << "Timestamp before was " << timestamp << endl;
-	  timestamp += fBufferTime; //No tenemos claro que esto sea cierto.
-	  //cout << "Timestamp now is " << timestamp << endl;
-	  AdcModules[module].GetSubEvent(subevent)->Timestamp(timestamp);
-	}
+	// loop over all subevents in all modules add the buffer time of the first dgf buffer to the time stamp
+	long long timestamp;
+
+	for( unsigned int module = 0; module < AdcModules.size(); module++ ) {
+
+
+		for( unsigned int subevent = 0; subevent < AdcModules[module].GetNumberOfSubEvents(); subevent++ ) {
+
+			timestamp = AdcModules[module].GetSubEvent(subevent)->Timestamp();
+			timestamp += fBufferTime; // No tenemos claro que esto sea cierto.
+			AdcModules[module].GetSubEvent(subevent)->Timestamp(timestamp);
+
+		}
+
     }
+
 }
 
 
-void UnpackedEvent::Statistics()
-{
-  cout<<"Unpacked "<<EventNumber<<" events:"<<endl
-      <<"wrong dgf hit pattern:           "<<setw(12)<<WrongHitPattern<<" ("<<setw(4)<<setiosflags(ios::fixed)<<setprecision(1)<<100.*WrongHitPattern/EventNumber<<" %)"<<endl
-      <<"wrong adc headers:               "<<setw(12)<<WrongAdcHeader<<" ("<<setw(4)<<setiosflags(ios::fixed)<<setprecision(1)<<100.*WrongAdcHeader/EventNumber<<" %)"<<endl
-      <<"# of overflows in adc channels:  "<<setw(12)<<AdcOverflow<<" ("<<setw(4)<<setiosflags(ios::fixed)<<setprecision(1)<<100.*AdcOverflow/EventNumber<<" %)"<<endl
-      <<"# of underflows in adc channels: "<<setw(12)<<AdcUnderflow<<" ("<<setw(4)<<setiosflags(ios::fixed)<<setprecision(1)<<100.*AdcUnderflow/EventNumber<<" %)"<<endl;
+void UnpackedEvent::Statistics() {
 
-  return;
+	cout << "Unpacked " << EventNumber << " events:" << endl;
+	cout << "wrong dgf hit pattern:           " << setw(12) << WrongHitPattern << " (" << setw(4);
+	cout << setiosflags(ios::fixed) << setprecision(1) << 100.*WrongHitPattern/EventNumber << " %)" << endl;
+	cout << "wrong adc headers:               " << setw(12) << WrongAdcHeader << " (" << setw(4);
+	cout << setiosflags(ios::fixed) << setprecision(1) << 100.*WrongAdcHeader/EventNumber << " %)" << endl;
+	cout << "# of overflows in adc channels:  " << setw(12) << AdcOverflow << " (" << setw(4);
+	cout << setiosflags(ios::fixed) << setprecision(1) << 100.*AdcOverflow/EventNumber << " %)" << endl;
+	cout << "# of underflows in adc channels: " << setw(12) << AdcUnderflow << " (" << setw(4);
+	cout << setiosflags(ios::fixed) << setprecision(1) << 100.*AdcUnderflow/EventNumber << " %)" << endl;
+
+	return;
+
 }
