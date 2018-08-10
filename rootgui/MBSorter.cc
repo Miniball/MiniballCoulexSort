@@ -20,7 +20,7 @@ MBSorter::MBSorter() {
 	main_frame->SetEditable();
 
 	// use hierarchical cleaning
-	fMain->SetCleanup(kDeepCleanup);
+	main_frame->SetCleanup(kDeepCleanup);
 
 	
 	//////////////////////////////////////
