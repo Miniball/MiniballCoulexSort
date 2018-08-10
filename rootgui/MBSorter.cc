@@ -219,14 +219,19 @@ MBSorter::MBSorter() {
 	sub_frame_5->AddFrame( lab_settings,
 						  new TGLayoutHints( kLHintsLeft | kFixedWidth, 2, 2, 2, 2 ) );
 	
+	// First entry to convert from med to root
+	lab_first_entry = new TGLabel( sub_frame_6, "First entry" );
+	lab_first_entry->SetTextJustify( 36 );
+	lab_first_entry->SetMargins( 0, 0, 0, 0 );
+	lab_first_entry->SetWrapLength( -1 );
+	lab_first_entry->Resize( 80, lab_first_entry->GetDefaultHeight() );
+	
 	// Last entry to convert from med to root
 	lab_last_entry = new TGLabel( sub_frame_6, "Last entry" );
 	lab_last_entry->SetTextJustify( 36 );
 	lab_last_entry->SetMargins( 0, 0, 0, 0 );
 	lab_last_entry->SetWrapLength( -1 );
 	lab_last_entry->Resize( 80, lab_last_entry->GetDefaultHeight() );
-	sub_frame_6->AddFrame( lab_last_entry,
-						  new TGLayoutHints( kLHintsLeft | kFixedWidth, 2, 2, 2, 2 ) );
 	
 	// Output filename: just the base, used for <base>_tree.root and <base>_hists.root
 	lab_outfile = new TGLabel( sub_frame_8, "Output filename" );
@@ -535,24 +540,6 @@ MBSorter::MBSorter() {
 	dop_frame_2->AddFrame( lab_unit_bg,
 						  new TGLayoutHints( kLHintsTop, 2, 2, 5, 5 ) );
 	
-	// Doppler - Z offset
-	lab_dop_zo = new TGLabel( dop_frame_0, "z offset" );
-	lab_dop_zo->SetTextJustify( kTextRight );
-	lab_dop_zo->SetMargins( 0, 0, 0, 0 );
-	lab_dop_zo->SetWrapLength( -1 );
-	lab_dop_zo->Resize( 40, lab_dop_zo->GetDefaultHeight() );
-	dop_frame_0->AddFrame( lab_dop_zo,
-						  new TGLayoutHints( kLHintsTop | kLHintsRight, 2, 2, 5, 5 ) );
-	
-	// Units - Z offset
-	lab_unit_zo = new TGLabel( dop_frame_2, "mm" );
-	lab_unit_zo->SetTextJustify( 36 );
-	lab_unit_zo->SetMargins( 0, 0, 0, 0 );
-	lab_unit_zo->SetWrapLength( -1 );
-	lab_unit_zo->Resize( 40, lab_unit_zo->GetDefaultHeight() );
-	dop_frame_2->AddFrame( lab_unit_zo,
-						  new TGLayoutHints( kLHintsTop, 2, 2, 5, 5 ) );
-	
 	
 	/////////////////////
 	// Create list box //
@@ -653,6 +640,9 @@ MBSorter::MBSorter() {
 	// Create check buttons //
 	//////////////////////////
 	
+	check_beamdump = new TGCheckButton( sub_frame_6, "Beamdump" );
+	sub_frame_6->AddFrame( check_beamdump, new TGLayoutHints( kLHintsRight, 2, 2, 2, 2 ) );
+	
 	check_source = new TGCheckButton( sub_frame_6, "Source run" );
 	sub_frame_6->AddFrame( check_source, new TGLayoutHints( kLHintsRight, 2, 2, 2, 2 ) );
 	
@@ -691,6 +681,15 @@ MBSorter::MBSorter() {
 	// Create number entries //
 	///////////////////////////
 	
+	sub_frame_6->AddFrame( lab_first_entry,
+						  new TGLayoutHints( kLHintsLeft | kFixedWidth, 2, 2, 2, 2 ) );
+	num_first_entry = new TGNumberEntry( sub_frame_6, -1, 9, -1, 
+		TGNumberFormat::kNESInteger, TGNumberFormat::kNEAAnyNumber, TGNumberFormat::kNELLimitMin,
+		-1, 99999999 );
+	sub_frame_6->AddFrame( num_first_entry, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
+	
+	sub_frame_6->AddFrame( lab_last_entry,
+						  new TGLayoutHints( kLHintsLeft | kFixedWidth, 2, 2, 2, 2 ) );
 	num_last_entry = new TGNumberEntry( sub_frame_6, -1, 9, -1, 
 		TGNumberFormat::kNESInteger, TGNumberFormat::kNEAAnyNumber, TGNumberFormat::kNELLimitMin,
 		-1, 99999999 );
@@ -765,11 +764,6 @@ MBSorter::MBSorter() {
 		TGNumberFormat::kNESReal, TGNumberFormat::kNEAAnyNumber, TGNumberFormat::kNELLimitMinMax,
 		-999, 999 );
 	dop_frame_1->AddFrame( num_dop_bg, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
-	
-	num_dop_zo = new TGNumberEntry( dop_frame_1, 4.8, 5, -1,
-		TGNumberFormat::kNESReal, TGNumberFormat::kNEAAnyNumber, TGNumberFormat::kNELLimitMinMax,
-		-999, 999 );
-	dop_frame_1->AddFrame( num_dop_zo, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
 	
 	///////////////////////////
@@ -898,6 +892,7 @@ MBSorter::MBSorter() {
 
 	text_settings->SetText( "/run/media/miniball/MiniballAnalysis/is562/config/MBSettings2018_CLX_DgfOffset.dat" );
 	//check_source->SetOn();
+	check_beamdump->SetOn();
 
 	text_outfile->SetText( "/run/media/miniball/MiniballAnalysis/is562/rootfiles/106Sn_206Pb_xxx-yyy" );
 	text_calfile->SetText( "/run/media/miniball/MiniballAnalysis/is562/config/is562-offline.cal" );
@@ -926,7 +921,6 @@ MBSorter::MBSorter() {
 	num_dop_sp->SetNumber( 26.2 );
 	num_dop_bg->SetNumber( -0.461538 );
 	num_dop_pd->SetNumber( 50. );
-	num_dop_zo->SetNumber( 4.8 );
 
 
 	////////////////////
@@ -1013,7 +1007,10 @@ void MBSorter::on_medroot_clicked() {
 	TString cmd_base = "MedToRoot ";
 
 	if( check_source->IsOn() ) cmd_base += "-so ";
+	if( check_beamdump->IsOn() ) cmd_base += "-bd ";
 
+	cmd_base += " -fe ";
+	cmd_base += convertInt( num_first_entry->GetIntNumber() );
 	cmd_base += " -le ";
 	cmd_base += convertInt( num_last_entry->GetIntNumber() );
 	cmd_base += " -sf ";
@@ -1158,8 +1155,6 @@ void MBSorter::on_ana_clicked() {
 		cmd += convertFloat( num_dop_bg->GetNumber() );
 		cmd += " -srim ";
 		cmd += text_srimdir->GetText();
-		cmd += " -zoffset ";
-		cmd += convertFloat( num_dop_zo->GetNumber() );
 
 	}
 

@@ -66,7 +66,9 @@ protected:
 	TGLabel				*lab_med_pre;		// label for med file prefix
 	TGLabel				*lab_local_dir;		// label for local directory
 	TGLabel				*lab_settings;		// label for settings file
+	TGLabel				*lab_first_entry;	// label for first entry number
 	TGLabel				*lab_last_entry;	// label for last entry number
+	TGLabel				*lab_beamdump;		// label for beamdump on/off
 	TGLabel				*lab_outfile;		// label for output filename
 	TGLabel				*lab_outsuffix;		// display suffix of output filename
 	TGLabel				*lab_calfile;		// label for calibration file
@@ -87,7 +89,6 @@ protected:
 	TGLabel				*lab_dop_sp;		// label for the Spede distance
 	TGLabel				*lab_dop_pd;		// label for the plunger distance
 	TGLabel				*lab_dop_bg;		// label for the background fraction
-	TGLabel				*lab_dop_zo;		// label for the zoffset
 	TGLabel				*lab_unit_zb;		// label for Z of beam
 	TGLabel				*lab_unit_zt;		// label for Z of target
 	TGLabel				*lab_unit_ab;		// label for A of beam
@@ -102,7 +103,6 @@ protected:
 	TGLabel				*lab_unit_sp;		// label for the Spede distance
 	TGLabel				*lab_unit_pd;		// label for the plunger distance
 	TGLabel				*lab_unit_bg;		// label for the background fraction
-	TGLabel				*lab_unit_zo;		// label for the zoffset
 	
 	// Run list box
 	TGListBox           *run_list_box;
@@ -120,6 +120,7 @@ protected:
 	TGTextEntry         *text_srimdir;		// text entry for SRIM directory
 
 	// Number entries
+	TGNumberEntry		*num_first_entry;	// number for the first entry flag
 	TGNumberEntry		*num_last_entry;	// number for the last entry flag
 	TGNumberEntry		*num_dop_zb;		// number for the Z of beam
 	TGNumberEntry		*num_dop_zt;		// number for the Z of target
@@ -135,10 +136,10 @@ protected:
 	TGNumberEntry		*num_dop_sp;		// number for the Spede distance
 	TGNumberEntry		*num_dop_pd;		// number for the plunger distance
 	TGNumberEntry		*num_dop_bg;		// number for the background fraction
-	TGNumberEntry		*num_dop_zo;		// number for the zoffset
 	
 	// Check buttons
 	TGCheckButton       *check_source;		// check button for source selection
+	TGCheckButton       *check_beamdump;	// check button for beamdump on/off
 	TGCheckButton       *check_spede;		// check button for spede selection
 	TGCheckButton       *check_crex;		// check button for crex selection
 	TGCheckButton       *check_cdpad;		// check button for CD+Pad for electrons
