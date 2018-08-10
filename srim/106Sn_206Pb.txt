@@ -1,6 +1,7 @@
  ==================================================================
-              SRIM version ---> SRIM-2013.00
-              Calc. date   ---> June 13, 2017 
+              Calculation using SRIM-2006 
+              SRIM version ---> SRIM-2008.04
+              Calc. date   ---> August 07, 2018 
  ==================================================================
 
  Disk File Name = SRIM Outputs\106Sn_206Pb.txt
@@ -18,9 +19,9 @@
  Stopping Units =  MeV / (mg/cm2) 
  See bottom of Table for other Stopping units 
 
-        Ion        dE/dx      dE/dx     Projected  Longitudinal   Lateral
-       Energy      Elec.      Nuclear     Range     Straggling   Straggling
-  --------------  ---------- ---------- ----------  ----------  ----------
+   Ion        dE/dx      dE/dx     Projected  Longitudinal   Lateral
+  Energy      Elec.      Nuclear     Range     Straggling   Straggling
+-----------  ---------- ---------- ----------  ----------  ----------
   10.00 keV   5.154E-02  1.086E+00      53 A        47 A        37 A   
   11.00 keV   5.406E-02  1.127E+00      56 A        50 A        39 A   
   12.00 keV   5.646E-02  1.165E+00      58 A        52 A        40 A   

@@ -138,7 +138,7 @@ int main(int argc, char* argv[]) {
 
 	// IS553
 	Double_t tMinPrompt = -12., tMaxPrompt = 6.;		// 18 ticks
-	Double_t tMinRandom = 8., tMaxRandom = 47.;			// 39 ticks
+	Double_t tMinRandom = 8., tMaxRandom = 35.;			// 27 ticks
 	Double_t tMinDelayed = -31., tMaxDelayed = -13.;	// 18 ticks
  
 	Double_t tMinPromptElectron = -6., tMaxPromptElectron = 6.;		// 12 ticks
@@ -1034,6 +1034,8 @@ int main(int argc, char* argv[]) {
 			// multiple on the front and multiple on the back
 			else if( cd_ringenergy[adc_num].size() > 1 && cd_stripenergy[adc_num].size() > 1 ) {
 
+				cd_debug->Fill(3);
+
 				// throw these events away!!!
 				continue;
 
@@ -1088,7 +1090,6 @@ int main(int argc, char* argv[]) {
 					Chan_front.push_back( RingNum );
 					Ener_front.push_back( RingEnergy );
 
-					cd_debug->Fill(3);
 					CounterAdcCDFired[adc_num]++;
 
 				} // while RingMult

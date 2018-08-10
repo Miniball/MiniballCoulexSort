@@ -1,9 +1,10 @@
  ==================================================================
-              SRIM version ---> SRIM-2013.00
-              Calc. date   ---> June 13, 2017 
+              Calculation using SRIM-2006 
+              SRIM version ---> SRIM-2008.04
+              Calc. date   ---> August 07, 2018 
  ==================================================================
 
- Disk File Name = SRIM Outputs\206Pb_206Pb.txt
+ Disk File Name = SRIM Outputs\Lead in Lead
 
  Ion = Lead [82] , Mass = 206 amu
 
@@ -18,9 +19,9 @@
  Stopping Units =  MeV / (mg/cm2) 
  See bottom of Table for other Stopping units 
 
-        Ion        dE/dx      dE/dx     Projected  Longitudinal   Lateral
-       Energy      Elec.      Nuclear     Range     Straggling   Straggling
-  --------------  ---------- ---------- ----------  ----------  ----------
+   Ion        dE/dx      dE/dx     Projected  Longitudinal   Lateral
+  Energy      Elec.      Nuclear     Range     Straggling   Straggling
+-----------  ---------- ---------- ----------  ----------  ----------
   10.00 keV   1.257E-01  1.749E+00      49 A        35 A        25 A   
   11.00 keV   1.319E-01  1.826E+00      51 A        37 A        26 A   
   12.00 keV   1.378E-01  1.897E+00      53 A        38 A        27 A   
