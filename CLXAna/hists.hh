@@ -48,7 +48,8 @@ class hists {
 	TH1F *pB, *rB, *pBmrB;
 	TH1F *pT, *rT, *pTmrT;
 	TH1F *p_1B, *r_1B, *p_1T, *r_1T, *p_2h, *r_2h;
-
+  TH2F *p_thetaB;
+  TH2F *p_thetaT;
 	// Undoppler-corrected electron spectra
 	TH1F *pe, *re, *pemre;
 	TH1F *peB, *reB, *peBmreB;

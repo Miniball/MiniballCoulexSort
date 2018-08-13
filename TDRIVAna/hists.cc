@@ -129,6 +129,7 @@ void hists::Initialise( doppler dc_, double core_theta[24], double core_phi[24] 
 	gam_dcT = new TH1F("gam_dcT","Total statistics for gamma rays, background subtracted, Doppler corrected for target recoil;Energy [keV];Counts per 1keV",GBINS, GMIN, GMAX );
 	T_2hdcT = new TH1F("T_2hdcT","T_2hit;Energy [keV];Counts per 1keV",GBINS, GMIN, GMAX );
 	T_2hdcB = new TH1F("T_2hdcB","T_2hit DC for beam;Energy [keV];Counts per 1keV",GBINS, GMIN, GMAX );
+	// plot uncorrected gamma energies versus beam particle-gamma angle 
 
 	// Prompt/Random Particle 1 hit
 	part = new TH2F("part","Detected particle events;Lab angle [deg];Energy [MeV]",16,cd_angles, PBINS, PMIN, PMAX );
@@ -418,7 +419,6 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, int cid, float PEn, Int_
 //        coreid->Fill(cid);
 		B_1hdcB->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb() ), weight);
 		B_1hdcT->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt() ), weight);
-		
 	}
 
 	return;

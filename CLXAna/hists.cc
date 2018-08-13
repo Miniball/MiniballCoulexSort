@@ -143,6 +143,8 @@ void hists::Initialise( doppler dc_ ) {
 	gam_dcT = new TH1F("gam_dcT","Total statistics for gamma rays, background subtracted, Doppler corrected for target recoil;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	T_2hdcT = new TH1F("T_2hdcT","T_2hit;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	T_2hdcB = new TH1F("T_2hdcB","T_2hit DC for beam;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	p_thetaB = new TH2F("p_thetaB","Uncorrected gamma-ray energies versus beam particle-gamma angle; Energy [keV]; Theta [deg]", 1500, 0, 1500, 181, -0.5, 180.5);
+	p_thetaT = new TH2F("p_thetaT","Uncorrected gamma-ray energies versus target particle-gamma angle; Energy [keV]; Theta [deg]", 1500, 0, 1500, 181, -0.5, 180.5);
 
 	Te_dcT = new TH1F("Te_dcT","Target gated electrons, background subtracted, Doppler corrected #gamma-rays;Energy [keV];Counts per 1keV",EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
 	Te_dcB = new TH1F("Te_dcB","Target gated electrons, background subtracted, Doppler corrected for scattered projectile;Energy [keV];Counts per 1keV",EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
@@ -444,7 +446,8 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, float PEn, Int_t Pann,
 
 			T_1hdcB->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
 			T_1hdcT->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
-			
+			p_thetaB->Fill(GEn, dc.GammaAng(BTh, BPh, GTh, GPh)*TMath::RadToDeg());
+			p_thetaT->Fill(GEn, dc.GammaAng(TTh, TPh, GTh, GPh)*TMath::RadToDeg());
 		}
 
 		// Proton time gated spectra
@@ -501,7 +504,9 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, float PEn, Int_t Pann,
 
 		B_1hdcB->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
 		B_1hdcT->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
-		
+		p_thetaB->Fill(GEn, dc.GammaAng(BTh, BPh, GTh, GPh)*TMath::RadToDeg());
+		p_thetaT->Fill(GEn, dc.GammaAng(TTh, TPh, GTh, GPh)*TMath::RadToDeg());
+
 		velo->Fill( dc.Beta( BEn, dc.GetAb() * dc.u_mass() ) );
 		velo2->Fill( TMath::Sqrt( 2.0 * BEn / ( dc.GetAb() * dc.u_mass() ) ) );
 		
