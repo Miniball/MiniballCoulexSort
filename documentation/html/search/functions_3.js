@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['expdefs',['ExpDefs',['../classdoppler.html#ac628277148db1641251745f86ba3dc52',1,'doppler']]]
+  ['expdefs',['ExpDefs',['../classdoppler.html#aec4f49113b347c342672485368b2ad8c',1,'doppler']]]
 ];

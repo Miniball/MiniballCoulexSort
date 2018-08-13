@@ -1,49 +1,47 @@
-\hypertarget{class_particle_range}{\section{Particle\-Range Class Reference}
-\label{class_particle_range}\index{Particle\-Range@{Particle\-Range}}
-}
+\hypertarget{class_particle_range}{}\section{Particle\+Range Class Reference}
+\label{class_particle_range}\index{Particle\+Range@{Particle\+Range}}
 
 
-Class for reading and interpolating range data from 'zrange'.  
+Class for reading and interpolating range data from \textquotesingle{}zrange\textquotesingle{}.  
 
 
 
 
-{\ttfamily \#include $<$Particle\-Range.\-hh$>$}
+{\ttfamily \#include $<$Particle\+Range.\+hh$>$}
 
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hypertarget{class_particle_range_a4273029166d7a6220bfd1728b6c18f69}{\hyperlink{class_particle_range_a4273029166d7a6220bfd1728b6c18f69}{Particle\-Range} ()}\label{class_particle_range_a4273029166d7a6220bfd1728b6c18f69}
-
+\mbox{\Hypertarget{class_particle_range_a4273029166d7a6220bfd1728b6c18f69}\label{class_particle_range_a4273029166d7a6220bfd1728b6c18f69}} 
+\hyperlink{class_particle_range_a4273029166d7a6220bfd1728b6c18f69}{Particle\+Range} ()
 \begin{DoxyCompactList}\small\item\em Initialize values of Emin, Emax, Estep. \end{DoxyCompactList}\item 
-void \hyperlink{class_particle_range_ac1e0da5aca629369e93caf8e883da624}{Read} (const std\-::string \&filename)
+void \hyperlink{class_particle_range_ac1e0da5aca629369e93caf8e883da624}{Read} (const std\+::string \&filename)
 \begin{DoxyCompactList}\small\item\em Read an output file of zrange. \end{DoxyCompactList}\item 
-float \hyperlink{class_particle_range_abaa738d09d5ab69162f2443ffba26640}{Get\-Range} (int energy) const 
+float \hyperlink{class_particle_range_a433dead3f85fe19ee1675934b65acf3f}{Get\+Range} (int energy) const
 \begin{DoxyCompactList}\small\item\em Get the range for a given particle energy. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
-\hypertarget{class_particle_range_a372def02fdf702b34d72f202fabaeddf}{int \hyperlink{class_particle_range_a372def02fdf702b34d72f202fabaeddf}{Emin}}\label{class_particle_range_a372def02fdf702b34d72f202fabaeddf}
-
+\mbox{\Hypertarget{class_particle_range_a372def02fdf702b34d72f202fabaeddf}\label{class_particle_range_a372def02fdf702b34d72f202fabaeddf}} 
+int \hyperlink{class_particle_range_a372def02fdf702b34d72f202fabaeddf}{Emin}
 \begin{DoxyCompactList}\small\item\em Minimum energy for the interpolated values. \end{DoxyCompactList}\item 
-\hypertarget{class_particle_range_a19d2250d887faabb709687b9702f07cf}{int \hyperlink{class_particle_range_a19d2250d887faabb709687b9702f07cf}{Estep}}\label{class_particle_range_a19d2250d887faabb709687b9702f07cf}
-
+\mbox{\Hypertarget{class_particle_range_a19d2250d887faabb709687b9702f07cf}\label{class_particle_range_a19d2250d887faabb709687b9702f07cf}} 
+int \hyperlink{class_particle_range_a19d2250d887faabb709687b9702f07cf}{Estep}
 \begin{DoxyCompactList}\small\item\em Energy step for the interpolation. \end{DoxyCompactList}\item 
-std\-::vector$<$ float $>$ \hyperlink{class_particle_range_ad9189754855416cfab8079c6baf97217}{values}
+std\+::vector$<$ float $>$ \hyperlink{class_particle_range_ad9189754855416cfab8079c6baf97217}{values}
 \begin{DoxyCompactList}\small\item\em Interpolated values, in steps of Estep starting from Emin. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
-Class for reading and interpolating range data from 'zrange'. 
+Class for reading and interpolating range data from \textquotesingle{}zrange\textquotesingle{}. 
 
 \subsection{Member Function Documentation}
-\hypertarget{class_particle_range_abaa738d09d5ab69162f2443ffba26640}{\index{Particle\-Range@{Particle\-Range}!Get\-Range@{Get\-Range}}
-\index{Get\-Range@{Get\-Range}!ParticleRange@{Particle\-Range}}
-\subsubsection[{Get\-Range}]{\setlength{\rightskip}{0pt plus 5cm}float Particle\-Range\-::\-Get\-Range (
-\begin{DoxyParamCaption}
-\item[{int}]{energy}
-\end{DoxyParamCaption}
-) const}}\label{class_particle_range_abaa738d09d5ab69162f2443ffba26640}
+\mbox{\Hypertarget{class_particle_range_a433dead3f85fe19ee1675934b65acf3f}\label{class_particle_range_a433dead3f85fe19ee1675934b65acf3f}} 
+\index{Particle\+Range@{Particle\+Range}!Get\+Range@{Get\+Range}}
+\index{Get\+Range@{Get\+Range}!Particle\+Range@{Particle\+Range}}
+\subsubsection{\texorpdfstring{Get\+Range()}{GetRange()}}
+{\footnotesize\ttfamily float Particle\+Range\+::\+Get\+Range (\begin{DoxyParamCaption}\item[{int}]{energy }\end{DoxyParamCaption}) const}
+
 
 
 Get the range for a given particle energy. 
@@ -55,21 +53,20 @@ The range for this particle energy.
 \end{DoxyReturn}
 
 \begin{DoxyParams}{Parameters}
-{\em energy} & Particle energy in ke\-V. \\
+{\em energy} & Particle energy in keV. \\
 \hline
 \end{DoxyParams}
-\hypertarget{class_particle_range_ac1e0da5aca629369e93caf8e883da624}{\index{Particle\-Range@{Particle\-Range}!Read@{Read}}
-\index{Read@{Read}!ParticleRange@{Particle\-Range}}
-\subsubsection[{Read}]{\setlength{\rightskip}{0pt plus 5cm}void Particle\-Range\-::\-Read (
-\begin{DoxyParamCaption}
-\item[{const std\-::string \&}]{filename}
-\end{DoxyParamCaption}
-)}}\label{class_particle_range_ac1e0da5aca629369e93caf8e883da624}
+\mbox{\Hypertarget{class_particle_range_ac1e0da5aca629369e93caf8e883da624}\label{class_particle_range_ac1e0da5aca629369e93caf8e883da624}} 
+\index{Particle\+Range@{Particle\+Range}!Read@{Read}}
+\index{Read@{Read}!Particle\+Range@{Particle\+Range}}
+\subsubsection{\texorpdfstring{Read()}{Read()}}
+{\footnotesize\ttfamily void Particle\+Range\+::\+Read (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filename }\end{DoxyParamCaption})}
+
 
 
 Read an output file of zrange. 
 
-These files have three columns\-: particle energy \mbox{[}Me\-V\mbox{]}, range \mbox{[}um\mbox{]}, and range uncertainty \mbox{[}um\mbox{]}. The zrange data are interpolated in Estep steps between Emin and Emax. 
+These files have three columns\+: particle energy \mbox{[}MeV\mbox{]}, range \mbox{[}um\mbox{]}, and range uncertainty \mbox{[}um\mbox{]}. The zrange data are interpolated in Estep steps between Emin and Emax. 
 \begin{DoxyParams}{Parameters}
 {\em filename} & The name of the file to read. \\
 \hline
@@ -77,16 +74,19 @@ These files have three columns\-: particle energy \mbox{[}Me\-V\mbox{]}, range \
 
 
 \subsection{Member Data Documentation}
-\hypertarget{class_particle_range_ad9189754855416cfab8079c6baf97217}{\index{Particle\-Range@{Particle\-Range}!values@{values}}
-\index{values@{values}!ParticleRange@{Particle\-Range}}
-\subsubsection[{values}]{\setlength{\rightskip}{0pt plus 5cm}std\-::vector$<$float$>$ Particle\-Range\-::values\hspace{0.3cm}{\ttfamily [private]}}}\label{class_particle_range_ad9189754855416cfab8079c6baf97217}
+\mbox{\Hypertarget{class_particle_range_ad9189754855416cfab8079c6baf97217}\label{class_particle_range_ad9189754855416cfab8079c6baf97217}} 
+\index{Particle\+Range@{Particle\+Range}!values@{values}}
+\index{values@{values}!Particle\+Range@{Particle\+Range}}
+\subsubsection{\texorpdfstring{values}{values}}
+{\footnotesize\ttfamily std\+::vector$<$float$>$ Particle\+Range\+::values\hspace{0.3cm}{\ttfamily [private]}}
+
 
 
 Interpolated values, in steps of Estep starting from Emin. 
 
 This list may not go up to Emax if the zrange output file does not contain enough values. 
 
-The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-Med\-To\-Root/Particle\-Range.\-hh\item 
-Med\-To\-Root/Particle\-Range.\-cc\end{DoxyCompactItemize}
+Med\+To\+Root/Particle\+Range.\+hh\item 
+Med\+To\+Root/Particle\+Range.\+cc\end{DoxyCompactItemize}

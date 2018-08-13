@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['bcut',['Bcut',['../classg__clx.html#aac4c4ec97958e7de623f4da6ce18e201',1,'g_clx']]],
+  ['bcut',['Bcut',['../classg__clx.html#a626bb40b10360e2572d0c489a0cde2ad',1,'g_clx']]],
   ['beta',['Beta',['../classdoppler.html#a28eb084d224fdb58fda1d6f6c61dd232',1,'doppler']]],
   ['bg_5ffrac',['bg_frac',['../classg__clx.html#ad9d34b2f15cdb59de8b46f1f68280c5c',1,'g_clx']]],
   ['braggchamber',['BraggChamber',['../class_bragg_chamber.html',1,'']]],
