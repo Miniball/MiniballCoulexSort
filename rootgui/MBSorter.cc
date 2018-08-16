@@ -17,16 +17,16 @@ MBSorter::MBSorter() {
 	// Create main frame //
 	///////////////////////
 	main_frame = new TGMainFrame( gClient->GetRoot(), 1300, 360, kMainFrame | kHorizontalFrame );
-	main_frame->SetEditable();
 
-	// use hierarchical cleaning
-	main_frame->SetCleanup(kDeepCleanup);
-
+	// terminate ROOT session when window is closed
+	main_frame->Connect( "CloseWindow()", "TApplication", gApplication, "Terminate()" );
+	main_frame->DontCallClose();
 	
+
 	//////////////////////////////////////
 	// Create sub frames and separators //
 	//////////////////////////////////////
-	
+
 	// Left frame - Run list box
 	left_frame = new TGVerticalFrame( main_frame, 250, 360 );
 	left_frame->SetName( "left_frame" );
@@ -167,6 +167,11 @@ MBSorter::MBSorter() {
 	sub_frame_15->SetName( "sub_frame_15" );
 	sub_frame_11->AddFrame( sub_frame_15, new TGLayoutHints( kLHintsTop | kLHintsExpandX ) );
 	
+	// Sub frame 16 - Open/save configuration buttons
+	sub_frame_16 = new TGHorizontalFrame( left_frame, 700, 45 );
+	sub_frame_16->SetName( "sub_frame_16" );
+	left_frame->AddFrame( sub_frame_16, new TGLayoutHints( kLHintsTop | kLHintsExpandX ) );
+	
 	// Doppler frame 0 - Labels
 	dop_frame_0 = new TGVerticalFrame( right_frame, 30, 360 );
 	dop_frame_0->SetName( "dop_frame_0" );
@@ -183,19 +188,27 @@ MBSorter::MBSorter() {
 	right_frame->AddFrame( dop_frame_2, new TGLayoutHints( kLHintsRight ) );
 	
 	
-	////////////////////////
-	// Open config button //
-	////////////////////////
+	/////////////////////////////
+	// Open/Save config button //
+	/////////////////////////////
 	
-	// Setup file
-	but_open = new TGTextButton( left_frame, "Open setup", -1, TGTextButton::GetDefaultGC()(),
+	// Setup file open
+	but_open = new TGTextButton( sub_frame_16, "Open setup", -1, TGTextButton::GetDefaultGC()(),
 								 TGTextButton::GetDefaultFontStruct(), kRaisedFrame );
 	but_open->SetTextJustify( 36 );
 	but_open->SetMargins( 0, 0, 0, 0 );
 	but_open->SetWrapLength( -1 );
-	but_open->Resize( 50, 30 );
-	left_frame->AddFrame( but_open, new TGLayoutHints( kLHintsLeft | kLHintsTop | kLHintsExpandX, 2, 2, 2, 2 ) );
+	but_open->Resize( 25, 30 );
+	sub_frame_16->AddFrame( but_open, new TGLayoutHints( kLHintsLeft | kLHintsExpandX, 2, 2, 2, 2 ) );
 	
+	// Setup file save
+	but_save = new TGTextButton( sub_frame_16, "Save setup", -1, TGTextButton::GetDefaultGC()(),
+								TGTextButton::GetDefaultFontStruct(), kRaisedFrame );
+	but_save->SetTextJustify( 36 );
+	but_save->SetMargins( 0, 0, 0, 0 );
+	but_save->SetWrapLength( -1 );
+	but_save->Resize( 25, 30 );
+	sub_frame_16->AddFrame( but_save, new TGLayoutHints( kLHintsRight | kLHintsExpandX, 2, 2, 2, 2 ) );
 
 	///////////////////
 	// Create labels //
@@ -569,6 +582,8 @@ MBSorter::MBSorter() {
 	run_list_box->Resize( 250, 256 );
 	left_frame->AddFrame( run_list_box, new TGLayoutHints( kLHintsLeft | kLHintsTop | kLHintsExpandY, 2, 2, 2, 2 ) );
 	
+	run_selected = new TList;
+	run_list_box->SetMultipleSelections( true );
 	
 	/////////////////////////
 	// Create text entries //
@@ -872,7 +887,7 @@ MBSorter::MBSorter() {
 	/////////////////////
 	
 	// Set a name to the main frame
-	main_frame->SetWindowName( "MBSorter" );
+	main_frame->SetWindowName( "mb_sorter" );
 	
 	// Map all sub windows
 	main_frame->MapSubwindows();
@@ -892,12 +907,8 @@ MBSorter::MBSorter() {
 	
 	// Map windows
 	main_frame->MapWindow();
-	main_frame->MapSubwindows();
+	//main_frame->Print();
 	
-	// terminate ROOT session when window is closed
-	main_frame->Connect( "CloseWindow()", "TApplication", gApplication, "Terminate()" );
-	main_frame->DontCallClose();
-
 	
 	//////////////
 	// Defaults //
@@ -946,7 +957,8 @@ MBSorter::MBSorter() {
 	// Button presses //
 	////////////////////
 	
-	but_open->Connect( "Clicked()", "MBSorter", this, "on_open_clicked()" );	
+	but_open->Connect( "Clicked()", "MBSorter", this, "on_open_clicked()" );
+	but_save->Connect( "Clicked()", "MBSorter", this, "on_save_clicked()" );
 	but_add->Connect( "Clicked()", "MBSorter", this, "on_add_clicked()" );
 	text_add_file->Connect( "ReturnPressed()", "MBSorter", this, "on_add_clicked()" );
 	but_del->Connect( "Clicked()", "MBSorter", this, "on_del_clicked()" );
@@ -964,21 +976,43 @@ MBSorter::~MBSorter() {
 	// Clean up main frame...
 	main_frame->Cleanup();
 	delete main_frame;
-	
+
 }
 
 void MBSorter::on_open_clicked() {
-
+	
 	// Configure file dialog
 	TGFileInfo fi;
 	TString dir(".");
-	//fi.fFileTypes = filetypes;
 	fi.fIniDir = StrDup(dir);
-
+	
 	// Open a file dialog
-	file_open = new TGFileDialog( gClient->GetRoot(), main_frame, kFDOpen, &fi );
+	new TGFileDialog( gClient->GetRoot(), main_frame, kFDOpen, &fi );
+	
+	cout << "Opening setup from " << fi.fFilename << endl;
+	
+	LoadSetup( fi.fFilename );
+	
+	return;
+	
+}
 
-
+void MBSorter::on_save_clicked() {
+	
+	// Configure file dialog
+	TGFileInfo fi;
+	TString dir(".");
+	fi.fIniDir = StrDup(dir);
+	
+	// Open a file dialog
+	new TGFileDialog( gClient->GetRoot(), main_frame, kFDSave, &fi );
+	
+	cout << "Saving setup to " << fi.fFilename << endl;
+	
+	SaveSetup( fi.fFilename );
+	
+	return;
+	
 }
 
 void MBSorter::on_add_clicked() {
@@ -996,6 +1030,9 @@ void MBSorter::on_add_clicked() {
 
 void MBSorter::on_del_clicked() {
 	
+	// Cleanup the selected entries
+	run_selected->Clear();
+	
 	// Slot to react to remove file button
 	if( run_list_box->GetSelected() < 0 ) {
 
@@ -1003,13 +1040,27 @@ void MBSorter::on_del_clicked() {
 
 	}
 
-	else {
+	else if( run_list_box->GetMultipleSelections() ) {
+		
+		run_list_box->GetSelectedEntries( run_selected );
+		TIter next( run_selected );
+		
+		while( TGLBEntry *ent = (TGLBEntry*)next() ) {
+		
+			filestatus.at( ent->EntryId() - 1 ) = false;
+			run_list_box->RemoveEntry( ent->EntryId() );
 
-		filestatus.at( run_list_box->GetSelected() - 1 ) = false;
-		run_list_box->RemoveEntry( -1 );
+		}
 
 	}
-
+	
+	else {
+		
+		filestatus.at( run_list_box->GetSelected() - 1 ) = false;
+		run_list_box->RemoveEntry( -1 );
+		
+	}
+	
 	run_list_box->Layout();
 	
 }
@@ -1301,14 +1352,39 @@ void MBSorter::SaveSetup( string setupfile ) {
 	fSetup->SetValue( "Zt", (double)num_dop_zt->GetIntNumber() );
 	fSetup->SetValue( "Ab", (double)num_dop_ab->GetNumber() );
 	fSetup->SetValue( "At", (double)num_dop_at->GetNumber() );
-	fSetup->SetValue( "Eb", (double)num_dop_eb->GetIntNumber() );
-	fSetup->SetValue( "thick", (double)num_dop_th->GetIntNumber() );
-	fSetup->SetValue( "depth", (double)num_dop_id->GetIntNumber() );
-	fSetup->SetValue( "cddist", (double)num_dop_cd->GetIntNumber() );
-	fSetup->SetValue( "cdoffset", (double)num_dop_ro->GetIntNumber() );
-	fSetup->SetValue( "deadlayer", (double)num_dop_dl->GetIntNumber() );
-	fSetup->SetValue( "plunger", (double)num_dop_pd->GetIntNumber() );
+	fSetup->SetValue( "Eb", (double)num_dop_eb->GetNumber() );
+	fSetup->SetValue( "Ex", (double)num_dop_ex->GetNumber() );
+	fSetup->SetValue( "thick", (double)num_dop_th->GetNumber() );
+	fSetup->SetValue( "depth", (double)num_dop_id->GetNumber() );
+	fSetup->SetValue( "cddist", (double)num_dop_cd->GetNumber() );
+	fSetup->SetValue( "cdoffset", (double)num_dop_ro->GetNumber() );
+	fSetup->SetValue( "deadlayer", (double)num_dop_dl->GetNumber() );
+	fSetup->SetValue( "plunger", (double)num_dop_pd->GetNumber() );
 
+	fSetup->SetValue( "daq_dir", text_daq_dir->GetText() );
+	fSetup->SetValue( "local_dir", text_local_dir->GetText() );
+	fSetup->SetValue( "med_pre", text_med_pre->GetText() );
+	fSetup->SetValue( "add_file", text_add_file->GetText() );
+	fSetup->SetValue( "settings", text_settings->GetText() );
+	fSetup->SetValue( "outfile", text_outfile->GetText() );
+	fSetup->SetValue( "calfile", text_calfile->GetText() );
+	fSetup->SetValue( "config", text_config->GetText() );
+	fSetup->SetValue( "cutfile", text_cutfile->GetText() );
+	fSetup->SetValue( "srimdir", text_srimdir->GetText() );
+	
+	string list_of_files = "";
+
+	for( unsigned int i = 0; i < filelist.size(); i++ ) {
+
+		if( !filestatus.at( i ) ) continue;
+
+		list_of_files += filelist.at(i);
+		list_of_files += " ";
+
+	}
+
+	fSetup->SetValue( "filelist", list_of_files.c_str() );
+	
 	fSetup->WriteFile( setupfile.c_str() );
 
 	return;
@@ -1320,6 +1396,53 @@ void MBSorter::LoadSetup( string setupfile ) {
 	TEnv *fSetup = new TEnv( setupfile.c_str() );
 	fSetup->ReadFile( setupfile.c_str(), kEnvLocal );
 
+	num_dop_zb->SetNumber( fSetup->GetValue( "Zb", 0 ) );
+	num_dop_zt->SetNumber( fSetup->GetValue( "Zt", 0 ) );
+	num_dop_ab->SetNumber( fSetup->GetValue( "Ab", 0.0 ) );
+	num_dop_at->SetNumber( fSetup->GetValue( "At", 0.0 ) );
+	num_dop_eb->SetNumber( fSetup->GetValue( "Eb", 0.0 ) );
+	num_dop_ex->SetNumber( fSetup->GetValue( "Ex", 0.0 ) );
+	num_dop_th->SetNumber( fSetup->GetValue( "thick", 0.0 ) );
+	num_dop_id->SetNumber( fSetup->GetValue( "depth", 0.0 ) );
+	num_dop_cd->SetNumber( fSetup->GetValue( "cddist", 0.0 ) );
+	num_dop_ro->SetNumber( fSetup->GetValue( "cdoffset", 0.0 ) );
+	num_dop_dl->SetNumber( fSetup->GetValue( "deadlayer", 0.0 ) );
+	num_dop_pd->SetNumber( fSetup->GetValue( "plunger", 0.0 ) );
+	
+	text_daq_dir->SetText( fSetup->GetValue( "daq_dir", "/mbdata/miniball/isxxx" ) );
+	text_local_dir->SetText( fSetup->GetValue( "local_dir", "./medfiles" ) );
+	text_med_pre->SetText( fSetup->GetValue( "med_pre", "" ) );
+	text_add_file->SetText( fSetup->GetValue( "add_file", "" ) );
+	text_settings->SetText( fSetup->GetValue( "settings", "./config/MBSettings2018_CLX_DgfOffset.dat" ) );
+	text_outfile->SetText( fSetup->GetValue( "outfile", "" ) );
+	text_calfile->SetText( fSetup->GetValue( "calfile", "./config/is562-offline.cal" ) );
+	text_config->SetText( fSetup->GetValue( "config", "" ) );
+	text_cutfile->SetText( fSetup->GetValue( "cutfile", "./config/cutfile.root:Bcut:Tcut" ) );
+	text_srimdir->SetText( fSetup->GetValue( "srimdir", "./srim" ) );
+	
+	string list_of_files = fSetup->GetValue( "filelist", "" );
+	filelist.clear();
+	filestatus.clear();
+	run_list_box->RemoveAll();
+	
+	stringstream ss;
+	string current_file;
+	ss << list_of_files;
+	ss >> current_file;
+	
+	while( !ss.eof() ) {
+		
+		filelist.push_back( current_file );
+		filestatus.push_back( true );
+		
+		run_list_box->AddEntrySort( current_file.c_str(), filelist.size() + 1 );
+
+		ss >> current_file;
+		
+	}
+	
+	run_list_box->Layout();
+	
 	return;
 
 }

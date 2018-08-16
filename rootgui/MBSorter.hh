@@ -5,6 +5,7 @@
 #include "TSystem.h"
 #include "TEnv.h"
 #include <TGFileDialog.h>
+#include <TGFontDialog.h>
 #include <TGTextEntry.h>
 #include <TGNumberEntry.h>
 #include <TGButton.h>
@@ -55,6 +56,7 @@ protected:
 	TGHorizontalFrame   *sub_frame_13;		// sub-sub frame for kinematic cut file
 	TGHorizontalFrame   *sub_frame_14;		// sub-sub frame for SRIM directory
 	TGHorizontalFrame   *sub_frame_15;		// sub-sub frame for Analysis check buttons
+	TGHorizontalFrame   *sub_frame_16;		// sub-sub frame for open/save configuration buttons
 	
 	// Separators
 	TGHorizontal3DLine  *fHorizontal_0;
@@ -110,6 +112,7 @@ protected:
 	
 	// Run list box
 	TGListBox           *run_list_box;
+	TList				*run_selected;
 	
 	// Text entries
 	TGTextEntry         *text_add_file;		// text entry for adding a file
@@ -165,10 +168,7 @@ protected:
 	TGTextButton        *but_add;			// button to add files
 	TGTextButton        *but_del;			// button to remove files
 	TGTextButton        *but_open;			// button to open configuration
-
-	// File dialog
-	TGFileDialog		*file_open;			// open the setup file with a dialog
-	
+	TGTextButton        *but_save;			// button to save configuration
 	
 public:
 
@@ -177,6 +177,7 @@ public:
 	
 	// Slots
 	void on_open_clicked();		// open file dialog
+	void on_save_clicked();		// save file dialog
 	void on_add_clicked();		// add file function
 	void on_del_clicked();		// remove file function
 	void on_rsync_clicked();	// rsync function
