@@ -1048,6 +1048,7 @@ void MBSorter::on_del_clicked() {
 		while( TGLBEntry *ent = (TGLBEntry*)next() ) {
 		
 			filestatus.at( ent->EntryId() - 1 ) = false;
+			cout << ent->EntryId() << endl;
 			run_list_box->RemoveEntry( ent->EntryId() );
 
 		}
@@ -1435,7 +1436,7 @@ void MBSorter::LoadSetup( string setupfile ) {
 		filelist.push_back( current_file );
 		filestatus.push_back( true );
 		
-		run_list_box->AddEntrySort( current_file.c_str(), filelist.size() + 1 );
+		run_list_box->AddEntrySort( current_file.c_str(), filelist.size() );
 
 		ss >> current_file;
 		
