@@ -1,4 +1,4 @@
-# Settings file for Miniball Coulex campaign of 2017: 5 Mesytec ADC, 4 Caen
+# Settings file for Miniball Coulex campaign of 2018: 5 Mesytec ADC, 4 Caen
 
 Coincidence.Window:		80			# width of coincindence window in 25 ns. Before 40, CLX use 80
 Coincidence.Reference:		0.			# reference point of coincidence window in us (i.e. where 0 is the middle of the window)

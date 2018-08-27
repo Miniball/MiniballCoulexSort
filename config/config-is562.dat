@@ -1,15 +1,22 @@
-# Config file for IS562 (October 2017)
-
-Zb: 50				# Z of the beam
-Ab: 108				# A of the beam
-Zt: 82				# Z of the target
-At: 206				# A of the target
-Eb: 4500			# Energy of the beam in keV/u
-Ex: 1206			# Excitation energy of state of interest
-thick: 4.70			# Target thickness in mg/cm2
-depth: 2.35			# Depth of interaction (usually half way through)
-cddist: 21.0		# Distance between CD and target in mm
-cdoffset: 242.6		# Rotation of the CD from the vertical in degrees
-deadlayer: 0.7		# Dead layer on Si of the CD in um
-spededist: 23.6		# Distance between Spede and target in mm
-
+Zb:                                      50
+Zt:                                      82
+Ab:                                      106
+At:                                      206
+Eb:                                      4400
+thick:                                   4.2
+depth:                                   2.1
+cddist:                                  28.6
+cdoffset:                                243.8
+deadlayer:                               0.0007
+plunger:                                 50
+Ex:                                      1208
+daq_dir:                                 /mbdata/miniball/is562-180806
+local_dir:                               /run/media/miniball/MiniballAnalysis/is562/medfiles
+med_pre:                                 106Sn
+add_file:                                106Sn_206Pb_pos6_005
+settings:                                /run/media/miniball/MiniballAnalysis/is562/config/MBSettings2018_CLX_DgfOffset.dat
+outfile:                                 /run/media/miniball/MiniballAnalysis/is562/rootfiles/106Sn_206Pb_xxx-yyy
+calfile:                                 /run/media/miniball/MiniballAnalysis/is562/config/is562-offline.cal
+config:                                  /run/media/miniball/MiniballAnalysis/is562/config/config-106Sn_206Pb_pos6.dat
+cutfile:                                 /run/media/miniball/MiniballAnalysis/is562/config/cutfile-106Sn_206Pb_pos6.root:Bcut:Tcut
+srimdir:                                 /run/media/miniball/MiniballAnalysis/srim
