@@ -36,6 +36,7 @@ public:
 	}
 	double DgfEnergy(int dgf, int chan, unsigned short raw);
 	double AdcEnergy(int adc, int chan, unsigned short raw);
+	double AdcThreshold(int adc, int chan);
 	double AdcTime(int adc);
 	double ClusterTheta( int clu );
 	double ClusterPhi( int clu );
@@ -60,6 +61,7 @@ private:
 	vector< vector<double> > fDgfGain;
 	vector< vector<double> > fAdcOffset;
 	vector< vector<double> > fAdcGain;
+	vector< vector<double> > fAdcThreshold;
 	vector< vector<double> > fFCDPosStrip;
 	vector< vector<double> > fFCDPosRing;
 	vector< vector<double> > fBCDPosStrip;

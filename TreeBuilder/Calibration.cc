@@ -72,12 +72,14 @@ void Calibration::ReadCalibration() {
 	if( fVerbose ) cout << "reading adcs" << endl;
 	fAdcOffset.resize(fNofAdcs);
 	fAdcGain.resize(fNofAdcs);
+	fAdcThreshold.resize(fNofAdcs);
 	fAdcTime.resize(fNofAdcs);
 
 	for(int adc=0; adc<fNofAdcs; adc++){
 
 		fAdcOffset[adc].resize(fNofAdcChans);
 		fAdcGain[adc].resize(fNofAdcChans);
+		fAdcThreshold[adc].resize(fNofAdcChans);
 
 		fAdcTime[adc] = config->GetValue( Form("adc_%d.TimeOffset", adc ) , 0.0 );
 
@@ -85,6 +87,7 @@ void Calibration::ReadCalibration() {
 
 			fAdcOffset[adc][chan] = config->GetValue(Form("adc_%d_%d.Offset", adc, chan),0.);
 			fAdcGain[adc][chan] = config->GetValue(Form("adc_%d_%d.Gain", adc, chan),1.);
+			fAdcThreshold[adc][chan] = config->GetValue(Form("adc_%d_%d.Threshold", adc, chan),50.);
 
 		}
 
@@ -271,6 +274,20 @@ double Calibration::AdcEnergy( int adc, int chan, unsigned short raw ) {
 	if( adc >= 0 && adc < fNofAdcs && chan >= 0 && chan < fNofAdcChans ) {
 		
 		return ((fAdcGain[adc][chan]*( raw +0.5 - fRand->Uniform())) + fAdcOffset[adc][chan]);
+		
+	}
+	
+	else cerr << "adc " << adc << " channel " << chan << " not found!" << endl;
+	
+	return -1;
+	
+}
+
+double Calibration::AdcThreshold( int adc, int chan ) {
+	
+	if( adc >= 0 && adc < fNofAdcs && chan >= 0 && chan < fNofAdcChans ) {
+		
+		return fAdcThreshold[adc][chan];
 		
 	}
 	

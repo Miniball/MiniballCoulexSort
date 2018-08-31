@@ -32,6 +32,7 @@ int main(int argc, char* argv[]) {
 	bool gamgam = false;
 	bool addback = false;
 	bool crex = false;
+	bool trex = false;
 	bool cdpad = false;
 	bool ionch = false;
 	bool spede = false;
@@ -45,6 +46,7 @@ int main(int argc, char* argv[]) {
 	interface->Add("-gg", "gamma-gamma", &gamgam );
 	interface->Add("-addback", "addback", &addback );
 	interface->Add("-crex", "CREX", &crex );
+	interface->Add("-trex", "TREX", &trex );
 	interface->Add("-spede", "SPEDE", &spede );
 	interface->Add("-cdpad", "CD-PAD", &cdpad );
 	interface->Add("-ionch", "IonChamber", &ionch );
@@ -148,10 +150,6 @@ int main(int argc, char* argv[]) {
 	WeightPR /= TMath::Abs( tMinRandom - tMaxRandom );
 	
 	cout << "WeightPR: " << WeightPR << endl;
-
-	Double_t Threshold_CDRing_E[4] = {120.,120.,120.,120.};
-	Double_t Threshold_CDStrip_E[4] = {120.,120.,160.,130.};
-	Double_t Threshold_CDPad_E[4] = {50.,50.,50.,50.};
 	
 	// Crap segments list (i.e. those that need to be vetoed)
 	// Counting from 0 to 167, i.e. including cores - clu*21 + core*7 + seg
@@ -789,7 +787,7 @@ int main(int argc, char* argv[]) {
 						CD_front_energy[adc_num]->Fill( adc_ch, adc_en );
 						CD_front_energy_cal[adc_num]->Fill( adc_ch, PartEnergy/1000. );
 
-						if( adc_en > Threshold_CDRing_E[adc_num] ) { // threshold
+						if( adc_en > Cal->AdcThreshold( adc_num, adc_ch ) ) { // threshold
 
 							cd_ringenergy[adc_num].push_back( PartEnergy );
 							cd_ringid[adc_num].push_back( adc_ch );
@@ -809,7 +807,7 @@ int main(int argc, char* argv[]) {
 						CD_back_energy[adc_num]->Fill( adc_ch-16, adc_en );
 						CD_back_energy_cal[adc_num]->Fill( adc_ch-16, PartEnergy/1000. );
 
-						if( adc_en > Threshold_CDStrip_E[adc_num] ) { // threshold
+						if( adc_en > Cal->AdcThreshold( adc_num, adc_ch ) ) { // threshold
 
 							cd_stripenergy[adc_num].push_back( PartEnergy );
 							cd_stripid[adc_num].push_back( adc_ch-16 );
@@ -821,7 +819,7 @@ int main(int argc, char* argv[]) {
 
 					else if( adc_ch == 31 && cdpad ) { // something in the pad!
 
-						if( adc_en < Threshold_CDPad_E[adc_num] ) continue; // thrreshold
+						if( adc_en < Cal->AdcThreshold( adc_num, adc_ch ) ) continue; // threshold
 
 						PadEnergy[adc_num] = Cal->AdcEnergy( adc_num, adc_ch, adc_en );
 					
