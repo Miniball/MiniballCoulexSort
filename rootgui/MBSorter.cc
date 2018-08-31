@@ -685,6 +685,9 @@ MBSorter::MBSorter() {
 	check_crex = new TGCheckButton( sub_frame_10, "C-REX" );
 	sub_frame_10->AddFrame( check_crex, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
+	check_trex = new TGCheckButton( sub_frame_10, "T-REX" );
+	sub_frame_10->AddFrame( check_trex, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
+	
 	check_cdpad = new TGCheckButton( sub_frame_10, "CD+PAD" );
 	sub_frame_10->AddFrame( check_cdpad, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
@@ -1141,6 +1144,7 @@ void MBSorter::on_build_clicked() {
 	TString cmd = "TreeBuilder ";
 
 	if( check_crex->IsOn() ) cmd += "-crex ";
+	if( check_trex->IsOn() ) cmd += "-trex ";
 	if( check_spede->IsOn() ) cmd += "-spede ";
 	if( check_cdpad->IsOn() ) cmd += "-cdpad ";
 	if( check_ionch->IsOn() ) cmd += "-ionch ";

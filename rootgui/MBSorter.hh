@@ -148,6 +148,7 @@ protected:
 	TGCheckButton       *check_source;		// check button for source selection
 	TGCheckButton       *check_beamdump;	// check button for beamdump on/off
 	TGCheckButton       *check_spede;		// check button for spede selection
+	TGCheckButton       *check_trex;		// check button for trex selection
 	TGCheckButton       *check_crex;		// check button for crex selection
 	TGCheckButton       *check_cdpad;		// check button for CD+Pad for electrons
 	TGCheckButton       *check_ionch;		// check button for ionisation chamber
