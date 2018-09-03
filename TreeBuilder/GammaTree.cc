@@ -325,6 +325,23 @@ void GammaTree::Loop( string outputfilename ) {
 
 
 	// ------------------------------------------------------------------------ //
+	// Write to mb_evts/g_clx tree
+	// ------------------------------------------------------------------------ //
+	mbevts* write_mb_evts = new mbevts();
+	mbevts* mb_evts[GAMMA_ARRAY];
+	for( unsigned int i = 0; i < GAMMA_ARRAY; i++ ) {
+		
+		mb_evts[i] = new mbevts();
+		mb_evts[i]->Initialize();
+		
+	}
+	
+	TTree* g_clx = new TTree( "g_clx", "g_clx" );
+	g_clx->Branch( "mbevts", "mbevts", &write_mb_evts );
+
+	// ------------------------------------------------------------------------ //
+	
+	// ------------------------------------------------------------------------ //
 	// Start loop over number of entries
 	// ------------------------------------------------------------------------ //
 	Double_t nentries = fTree->GetEntries();
