@@ -7,6 +7,7 @@ LIB_DIR    = ../lib
 COMMON_DIR = ../common
 MED_DIR    = ./med
 MBEVTS_DIR = ../mbevts
+TREVTS_DIR = ../trevts
 MED2R_DIR = ../MedToRoot
 MBGEOM_DIR = ../CLXAna
 
@@ -36,7 +37,8 @@ LFLAGS    = -O2 -g
 
 O_FILES = Calibration.o \
 		$(MBGEOM_DIR)/MBGeometry.o \
-		$(MBEVTS_DIR)/mbevts.o
+		$(MBEVTS_DIR)/mbevts.o \
+		$(TREVTS_DIR)/trevts.o
 
 all: MKDIR_P TreeBuilder NeSort AQ4Sort
 

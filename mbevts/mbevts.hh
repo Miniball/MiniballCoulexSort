@@ -47,7 +47,7 @@ class mbevts : public TObject {
 	vector <int> pr_ptr;	///< pointer to prompt hits in particle vector
 	vector <int> rndm_ptr;	///< pointer to random hits in particle vector
 	vector <int> del_ptr;	///< pointer to delayed hits in particle vector
-	int file; 
+	int file;
 
 	// setup functions
 	void Initialize();

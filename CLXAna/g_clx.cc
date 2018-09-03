@@ -8,7 +8,6 @@
 //#define TWOPART 		// define to plot every 2p combination
 //#define PHICAL  		// define to plot different CD rotation offsets
 //#define GEANG			// define for plotting Ge angles per cluster
-//#define MBGEOMETRY  		// define to overwrite MB angles with MBGeometry routine
 #define SPEDEGEOMETRY	// define to overwrite Spede angles with SpedeGeometry routine
 
 #ifdef PHICAL
@@ -41,7 +40,7 @@ void g_clx::Loop( string outputfilename ) {
 	dc.ExpDefs( Zb, Ab, Zt, At, Eb, Ex, thick, depth, cddist, cdoffset,
 					deadlayer, contaminant, spededist, Bcut, Tcut, srim );
 
-	// Fit stopping power curves from the srim output files
+	// Create stopping power curves from the srim output files
 	// Comment out to use the default parameters in doppler.hh
 	// stoppingpowers( BT, TT, BA, TA, BC, TC )
 	if( !dc.stoppingpowers( true, true, true, true, true, true ) ) return;
@@ -67,73 +66,6 @@ void g_clx::Loop( string outputfilename ) {
 	// For normal kinematics, this is likely to be the limit of the safe condition
 	// i.e. strips that are >= minrecoil are unsafe. Only low CoM solution is safe
 	h.Set_minrecoil(0);
-
-	// New angles defined by Miniball geometry
-#ifdef MBGEOMETRY
-
-	//ifstream angfile;
-
-	// Original values from frame - 2017
-	//double clu_r[8] = { 135, 135, 135, 135, 135, 135, 135, 135 };
-	//double clu_theta[8] = { 136.7, 48.8, 48.8, 136.7, 135., 42.8, 135., 42.8 };
-	//double clu_phi[8] = { 129.5, 56.4, 132.4, 52.9, 236.6, 235., 310.5, 319. };
-	//double clu_alpha[8] = { 320., 300., 310., 310., 290., 240., 60., 120. }; 
-
-	// Nigel's values from 22Ne data - 2017
-	//double clu_r[8] = { 95.17, 92.77, 95.38, 91.35, 96.24, 92.57, 97.25, 102.80 };
-	//double clu_theta[8] = { 136.33, 45.79, 42.95, 136.98, 131.17, 40.31, 136.72, 32.23 };
-	//double clu_phi[8] = { 130.82, 54.99, 133.56, 51.45, 235.24, 233.11, 311.46, 319.63 };
-	//double clu_alpha[8] = { 322.00, 61.90, 296.75, 243.75, 294.64, 240.78, 68.85, 110.33 }; 
-
-	// Rosa's values from frame - 2018
-	//double clu_r[8] = { 96.4, 96.4, 96.4, 96.4, 96.4, 96.4, 96.4, 96.4 };
-	//double clu_theta[8] = { 134.5, 55.5, 55.5, 134.5, 126.0, 47.9, 126.0, 47.9 };
-	//double clu_phi[8] = { 133.0, 62.6, 134.7, 54.1, 230.3, 235.5, 300.6, 313.8 };
-	//double clu_alpha[8] = { 50., 330., 315., 315., 110., 70., 290., 265. }; 
-
-	// Nigel's values from the optimisation - 2018
-	//double clu_r[8] = { 98.88, 99.23, 98.76, 96.51, 94.55, 94.17, 98.33, 95.64 };
-	//double clu_theta[8] = { 144.49, 51.30, 47.60, 144.97, 136.24, 43.80, 132.43, 38.79 };
-	//double clu_phi[8] = { 132.50, 63.18, 134.34, 54.76, 230.79, 235.98, 299.83, 313.43 };
-	//double clu_alpha[8] = { 324.02, 46.39, 54.58, 46.05, 70.15, 108.97, 268.62, 266.35 }; 
-
-	// Joonas's values from the optimisation with +4.8 mm target offset - 2018
-	//double clu_r[8] = { 91.67, 98.12, 97.52, 90.59, 88.63, 94.92, 98.33, 93.15 };
-	//double clu_theta[8] = { 142.61, 48.32, 43.18, 143.80, 134.34, 40.20, 132.43, 33.94 };
-	//double clu_phi[8] = { 133.38, 62.05, 134.97, 53.58, 229.82, 235.14, 299.83, 314.09 };
-	//double clu_alpha[8] = { 322.19, 48.56, 50.35, 46.01, 70.85, 112.07, 268.62, 260.64 }; 
-
-	// Nigel's values from the optimisation with +4.8 mm target offset - 2018
-	//double clu_r[8] = { 91.67, 98.12, 97.52, 90.59, 88.63, 94.92, 98.33, 93.15 };
-	//double clu_theta[8] = { 142.61, 48.32, 43.18, 143.80, 134.34, 40.20, 132.43, 33.94 };
-	//double clu_phi[8] = { 133.38, 62.05, 134.97, 53.58, 229.82, 235.14, 299.83, 314.09 };
-	//double clu_alpha[8] = { 322.19, 48.56, 50.35, 46.01, 70.85, 112.07, 268.62, 260.64 }; 
-
-	double new_theta[8][3][7]; // cluster, crystal segment
-	double new_phi[8][3][7];
-
-	MBGeometry mbg;	
-	for( int i = 0; i < 8; i++ ) { // loop over clusters
-
-		mbg.SetupCluster( clu_theta[i], clu_phi[i], clu_alpha[i], clu_r[i], zoffset );
-
-		for( unsigned int j = 0; j < 3; j++ ) { // loop over cores
-
-			new_theta[i][j][0] = mbg.GetCoreTheta(j) * TMath::DegToRad();
-			new_phi[i][j][0] = mbg.GetCorePhi(j) * TMath::DegToRad();
-			//cout << new_phi[i][j][0]*TMath::RadToDeg() << " ";	
-			for( int k = 0; k < 6; k++ ) { // loop over segments
-
-				new_theta[i][j][k+1] = mbg.GetSegTheta(j,k) * TMath::DegToRad();
-				new_phi[i][j][k+1] = mbg.GetSegPhi(j,k) * TMath::DegToRad();
-
-			}
-
-		}
-
-	}
-
-#endif
 
 	// New angles defined by Spede geometry
 #ifdef SPEDEGEOMETRY
@@ -177,23 +109,6 @@ void g_clx::Loop( string outputfilename ) {
 		else if( cluid == 8 ) electron = true;
 		else break; // shouldn't be anything else
 
-		// Overwrite angles from tree with new angles
-#ifdef MBGEOMETRY
-		if( !electron ) { // check if it's Miniball
-
-			tha = new_theta[cluid][cid%3][sid];
-			pha = new_phi[cluid][cid%3][sid];
-
-			for( unsigned int i = 0; i < gcor_gen.size(); i++ ){
-		
-				if( gcor_cluid[i] == 8 || gcor_sid[i] < 0 ) continue; // not Ge
-				gcor_tha[i] = new_theta[gcor_cluid[i]][gcor_cid[i]%3][gcor_sid[i]];	// gcor_sid broken!
-				gcor_pha[i] = new_phi[gcor_cluid[i]][gcor_cid[i]%3][gcor_sid[i]];		// gcor_sid broken!
-			
-			}
-		
-		}
-#endif
 #ifdef SPEDEGEOMETRY
 		if( electron ) { // check if it's SPEDE/PAD
 
