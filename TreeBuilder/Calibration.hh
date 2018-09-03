@@ -25,7 +25,7 @@ class Calibration {
 public:
 
 	Calibration( string filename );
-	~Calibration();
+	virtual ~Calibration();
 	void ReadCalibration();
 	void PrintCalibration();
 	void SetFile( string filename ){
