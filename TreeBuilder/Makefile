@@ -5,11 +5,8 @@
 BIN_DIR    = ../bin
 LIB_DIR    = ../lib
 COMMON_DIR = ../common
-MED_DIR    = ./med
-MBEVTS_DIR = ../mbevts
-TREVTS_DIR = ../trevts
+MBEVTS_DIR = ../EventTree
 MED2R_DIR = ../MedToRoot
-MBGEOM_DIR = ../CLXAna
 
 ROOTCFLAGS   := $(shell root-config --cflags)
 ROOTLIBS     := $(shell root-config --libs)
@@ -24,7 +21,7 @@ else
 	DICTEXT   := _rdict.pcm
 endif
 
-LIBS      = -lm $(ROOTLIBS) -L$(LIB_DIR) -lCommandLineInterface -lMedToRoot
+LIBS      = -lm $(ROOTLIBS) -L$(LIB_DIR) -lCommandLineInterface -lMedToRoot -lmbevts -ltrevts
 
 AR        = ar
 CC        = $(shell root-config --cc)
@@ -32,13 +29,12 @@ CPP       = $(shell root-config --cxx)
 
 CFLAGS    = -O2 -pipe -Wall -W -Woverloaded-virtual $(ROOTCFLAGS) -fPIC
 
-INCLUDES  = -I$(MED_DIR)/inc -I$(COMMON_DIR) -I$(MBEVTS_DIR) -I$(MED2R_DIR) -I$(MBGEOM_DIR) -I./
+INCLUDES  = -I$(COMMON_DIR) -I$(MBEVTS_DIR) -I$(MED2R_DIR) -I./
 LFLAGS    = -O2 -g
 
 O_FILES = Calibration.o \
-		$(MBGEOM_DIR)/MBGeometry.o \
-		$(MBEVTS_DIR)/mbevts.o \
-		$(TREVTS_DIR)/trevts.o
+		MBGeometry.o \
+		ParticleGammaTree.o
 
 all: MKDIR_P TreeBuilder NeSort AQ4Sort
 
@@ -50,18 +46,15 @@ TreeBuilder: TreeBuilder.cc $(O_FILES) TreeBuilderDictionary.o
 	$(AR) cru $(LIB_DIR)/libTreeBuilder.a $(O_FILES) TreeBuilderDictionary.o
 	cp TreeBuilder $(BIN_DIR)/
 
-NeSort: NeSort.cc $(O_FILES) NeSortDictionary.o
+NeSort: NeSort.cc Calibration.o NeSortDictionary.o
 	$(CPP) $(CFLAGS) $(INCLUDES) NeSort.cc $(O_FILES) NeSortDictionary.o $(LIBS) -o $@
 	$(AR) cru $(LIB_DIR)/libNeSort.a $(O_FILES) NeSortDictionary.o
 	cp NeSort $(BIN_DIR)/
 
-AQ4Sort: AQ4Sort.cc $(O_FILES) AQ4SortDictionary.o
+AQ4Sort: AQ4Sort.cc Calibration.o AQ4SortDictionary.o
 	$(CPP) $(CFLAGS) $(INCLUDES) AQ4Sort.cc $(O_FILES) AQ4SortDictionary.o $(LIBS) -o $@
 	$(AR) cru $(LIB_DIR)/libNeSort.a $(O_FILES) AQ4SortDictionary.o
 	cp AQ4Sort $(BIN_DIR)/
-
-$(MBGEOM_DIR)/MBGeometry.o: $(MBGEOM_DIR)/MBGeometry.cc $(MBGEOM_DIR)/MBGeometry.hh
-	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 %.o: %.cc %.hh
 	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@
@@ -69,16 +62,14 @@ $(MBGEOM_DIR)/MBGeometry.o: $(MBGEOM_DIR)/MBGeometry.cc $(MBGEOM_DIR)/MBGeometry
 
 #---- Root stuff
 
-DEPENDENCIES = Calibration.hh \
-			$(MBGEOM_DIR)/MBGeometry.hh \
-			$(MED2R_DIR)/BuiltEvent.hh \
-			$(MED2R_DIR)/Datas.hh \
-			$(MED2R_DIR)/Modules.hh \
-			$(MED2R_DIR)/SubEvents.hh \
-			$(MBEVTS_DIR)/mbevts.hh \
-			RootLinkDef.h
+DEPENDENCIES_BASIC = Calibration.hh
 
-TreeBuilderDictionary.cc: $(DEPENDENCIES)
+DEPENDENCIES = $(DEPENDENCIES_BASIC) \
+			MBGeometry.hh \
+			ParticleGammaTree.hh
+
+
+TreeBuilderDictionary.cc: $(DEPENDENCIES) RootLinkDef.h
 	rm -f TreeBuilderDictionary.cc TreeBuilderDictionary$(DICTEXT)
 	$(ROOTDICT) -f TreeBuilderDictionary.cc -c $(INCLUDES) $(DEPENDENCIES)
 	cp TreeBuilderDictionary$(DICTEXT) $(LIB_DIR)/
@@ -86,7 +77,7 @@ TreeBuilderDictionary.cc: $(DEPENDENCIES)
 TreeBuilderDictionary.o: TreeBuilderDictionary.cc TreeBuilderDictionary$(DICTEXT)
 	$(CPP) -fPIC $(CFLAGS) $(INCLUDES) -c $<
 
-NeSortDictionary.cc: $(DEPENDENCIES)
+NeSortDictionary.cc: $(DEPENDENCIES_BASIC) RootLinkDef.h
 	rm -f NeSortDictionary.cc NeSortDictionary$(DICTEXT)
 	$(ROOTDICT) -f NeSortDictionary.cc -c $(INCLUDES) $(DEPENDENCIES)
 	cp NeSortDictionary$(DICTEXT) $(LIB_DIR)/
@@ -94,7 +85,7 @@ NeSortDictionary.cc: $(DEPENDENCIES)
 NeSortDictionary.o: NeSortDictionary.cc NeSortDictionary$(DICTEXT)
 	$(CPP) -fPIC $(CFLAGS) $(INCLUDES) -c $<
 
-AQ4SortDictionary.cc: $(DEPENDENCIES)
+AQ4SortDictionary.cc: $(DEPENDENCIES_BASIC) RootLinkDef.h
 	rm -f AQ4SortDictionary.cc AQ4SortDictionary$(DICTEXT)
 	$(ROOTDICT) -f AQ4SortDictionary.cc -c $(INCLUDES) $(DEPENDENCIES)
 	cp AQ4SortDictionary$(DICTEXT) $(LIB_DIR)/
@@ -104,9 +95,8 @@ AQ4SortDictionary.o: AQ4SortDictionary.cc AQ4SortDictionary$(DICTEXT)
 
 #--------------------------------------------------
 clean:
-	rm -f TreeBuilder NeSort AQ4Sort *.o $(MED_DIR)/*.o $(MBEVTS_DIR)/*.o
+	rm -f TreeBuilder NeSort AQ4Sort *.o
 	rm -f TreeBuilderDictionary.cc TreeBuilderDictionary$(DICTEXT) 
 	rm -f NeSortDictionary.cc NeSortDictionary$(DICTEXT) 
 	rm -f AQ4SortDictionary.cc AQ4SortDictionary$(DICTEXT) 
-	@cd $(COMMON_DIR); make clean
 

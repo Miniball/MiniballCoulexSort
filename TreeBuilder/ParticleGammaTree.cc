@@ -1,37 +1,37 @@
-#ifndef GammaTree_cxx
-#define GammaTree_cxx
+#ifndef ParticleGammaTree_cxx
+#define ParticleGammaTree_cxx
 
-#ifndef GammaTree_hh
-# include "GammaTree.hh"
+#ifndef ParticleGammaTree_hh
+# include "ParticleGammaTree.hh"
 #endif
 
-ClassImp(BuiltEvent)
-ClassImp(AdcData)
-ClassImp(DgfData)
+#define PBINS 800
+#define PRANGE 800
+#define PMIN -1.0*PRANGE/PBINS
+#define PMAX PRANGE+PMIN
 
-void GammaTree::Loop( string outputfilename ) {
+#define GBINS 4000
+#define GRANGE 4000
+#define GMIN -1.0*GRANGE/GBINS
+#define GMAX GRANGE+GMIN
+#define GAMMA_ARRAY 250
+
+#define ELBINS 2000
+#define ELRANGE 2000
+#define ELMIN -1.0*ELRANGE/ELBINS
+#define ELMAX ELRANGE+ELMIN
+#define ELECTRON_ARRAY 250
+
+void ParticleGammaTree::Loop( string outputfilename ) {
 	
 	// Open output file
 	TFile* outfile = new TFile( outputfilename.c_str(), "recreate" );
-	if( outfile->IsZombie() ) return 4;
+	if( outfile->IsZombie() ) {
+		
+		cerr << "Problem with output file: " << outputfilename << endl;
+		return;
 
-	
-	// ------------------------------------------------------------------------ //
-	// Hard-coded parameters... TODO read in from file?
-	// ------------------------------------------------------------------------ //
-
-	// IS553
-	Double_t tMinPrompt = -12., tMaxPrompt = 6.;		// 18 ticks
-	Double_t tMinRandom = 8., tMaxRandom = 35.;			// 27 ticks
-	Double_t tMinDelayed = -31., tMaxDelayed = -13.;	// 18 ticks
- 
-	Double_t tMinPromptElectron = -6., tMaxPromptElectron = 6.;		// 12 ticks
-	Double_t tMinRandomElectron = 7., tMaxRandomElectron = 33.;	// = (39/18)*12 = 26
- 
-	Double_t WeightPR = TMath::Abs( tMinPrompt - tMaxPrompt );
-	WeightPR /= TMath::Abs( tMinRandom - tMaxRandom );
-	
-	cout << "WeightPR: " << WeightPR << endl;
+	}
 	
 	// Crap segments list (i.e. those that need to be vetoed)
 	// Counting from 0 to 167, i.e. including cores - clu*21 + core*7 + seg
@@ -45,13 +45,6 @@ void GammaTree::Loop( string outputfilename ) {
 	// ------------------------------------------------------------------------ //
  
 	
-	// ------------------------------------------------------------------------ //
-	// Hard-coded parameters... Now read from file
-	// ------------------------------------------------------------------------ //
-	// How many ticks need to align the prompt peak for each adc?
-	double dtAdc[4];
-	for( unsigned int i = 0; i < 4; i++ ) dtAdc[i] = Cal->AdcTime(i);
-
 	// ------------------------------------------------------------------------ //
 	// Variables
 	// ------------------------------------------------------------------------ //
@@ -332,8 +325,7 @@ void GammaTree::Loop( string outputfilename ) {
 	for( unsigned int i = 0; i < GAMMA_ARRAY; i++ ) {
 		
 		mb_evts[i] = new mbevts();
-		mb_evts[i]->Initialize();
-		
+
 	}
 	
 	TTree* g_clx = new TTree( "g_clx", "g_clx" );
@@ -361,7 +353,7 @@ void GammaTree::Loop( string outputfilename ) {
 
 			cerr << "Error occured, couldn't read entry " << i << " from tree ";
 			cerr << fTree->GetName() << " in file " << fTree->GetFile()->GetName() << endl;
-			return 5;
+			return;
 			
 		}
 		
@@ -369,7 +361,7 @@ void GammaTree::Loop( string outputfilename ) {
 
 			cerr << "Error occured, entry " << i << " in tree " << fTree->GetName();
 			cerr << " in file " << fTree->GetFile()->GetName() << " doesn't exist" << endl;
-			return 6;
+			return;
 
 		}
 		
@@ -381,7 +373,7 @@ void GammaTree::Loop( string outputfilename ) {
 		for( j = 0; j < GammaCtr; j++ ) {
 		
 			mb_evts[j]->SearchCoin();  
-			write_mb_evts->Initialize();
+			write_mb_evts = new mbevts();
 			write_mb_evts->CopyData( mb_evts[j] );
 			if( write_mb_evts->pr_hits > 0 || write_mb_evts->rndm_hits > 0 || write_mb_evts->del_hits > 0  ) g_clx->Fill();
 			else if( gamgam && write_mb_evts->gcor_gen.size() > 1 ) g_clx->Fill();
@@ -396,7 +388,7 @@ void GammaTree::Loop( string outputfilename ) {
 		// ------------------------------------------------------------------------ //
 		for( j = 0; j < GAMMA_ARRAY; j++ ) {
 		
-			mb_evts[j]->Initialize();
+			mb_evts[j] = new mbevts();
 		
 		}
 		GammaCtr = 0;
@@ -430,7 +422,6 @@ void GammaTree::Loop( string outputfilename ) {
 		}
 	
 		Quad.clear();
-		Elem_fired.clear();
 		Chan_front.clear();
 		Ener_front.clear();
 		Chan_back.clear();

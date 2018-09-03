@@ -3,7 +3,7 @@
 
 #include "mbevts.hh"
 
-void mbevts::Initialize() {
+mbevts::mbevts() {
 	
 	gen=-100.;
 	cid=-1;
@@ -38,6 +38,12 @@ void mbevts::Initialize() {
 	rndm_hits=0;
 	del_hits=0;
 	file=-1;
+	
+}
+
+mbevts::~mbevts() {
+	
+	cout << "destructor" << endl;
 	
 }
 

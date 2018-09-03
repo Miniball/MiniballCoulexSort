@@ -3,27 +3,11 @@
 // Liam Gaffney (liam.gaffney@cern.ch) - 31/08/2018
 
 #include "TreeBuilder.hh"
-#define PBINS 800
-#define PRANGE 800
-#define PMIN -1.0*PRANGE/PBINS
-#define PMAX PRANGE+PMIN
-
-#define GBINS 4000
-#define GRANGE 4000
-#define GMIN -1.0*GRANGE/GBINS
-#define GMAX GRANGE+GMIN
-#define GAMMA_ARRAY 250
-
-#define ELBINS 2000
-#define ELRANGE 2000
-#define ELMIN -1.0*ELRANGE/ELBINS
-#define ELMAX ELRANGE+ELMIN
-#define ELECTRON_ARRAY 250
 
 #ifndef __CINT__
 
 int main(int argc, char* argv[]) {
-
+	
 	// ------------------------------------------------------------------------ //
 	// Read command line
 	// ------------------------------------------------------------------------ //
@@ -104,24 +88,13 @@ int main(int argc, char* argv[]) {
 	// Initialise the output tree
 	// ------------------------------------------------------------------------ //
 
-	// If T-REX data, build a tree for transfer analysis
-	if( trex ) {
+	ParticleGammaTree pg_ana( tr, event );
 		
-		TransferTree *pg_ana = new TransferTree( tr );
-		
-	}
-	
-	// else we have Coulex or other gamma-ray data...
-	else {
-		
-		GammaTree *pg_ana = new GammaTree( tr );
-		
-	}
-	
 	// Make calibration
 	Calibration *Cal = new Calibration( CalibrationFile );
 	//if( verbose ) Cal->PrintCalibration();
 	pg_ana.Cal = Cal;
+	pg_ana.SetupFlags( singles, gamgam, addback, crex, trex, cdpad, ionch, spede, verbose );
 
 	// ------------------------------------------------------------------------ //
 	
@@ -138,13 +111,13 @@ int main(int argc, char* argv[]) {
 		
 		for( unsigned int j = 0; j < 3; j++ ) { // loop over cores
 			
-			pgana.gamma_theta[i][j][0] = mbg.GetCoreTheta(j) * TMath::DegToRad();
-			pgana.gamma_phi[i][j][0] = mbg.GetCorePhi(j) * TMath::DegToRad();
+			pg_ana.gamma_theta[i][j][0] = mbg.GetCoreTheta(j) * TMath::DegToRad();
+			pg_ana.gamma_phi[i][j][0] = mbg.GetCorePhi(j) * TMath::DegToRad();
 			
 			for( int k = 0; k < 6; k++ ) { // loop over segments
 				
-				pgana.gamma_theta[i][j][k+1] = mbg.GetSegTheta(j,k) * TMath::DegToRad();
-				pgana.gamma_phi[i][j][k+1] = mbg.GetSegPhi(j,k) * TMath::DegToRad();
+				pg_ana.gamma_theta[i][j][k+1] = mbg.GetSegTheta(j,k) * TMath::DegToRad();
+				pg_ana.gamma_phi[i][j][k+1] = mbg.GetSegPhi(j,k) * TMath::DegToRad();
 				
 			}
 			
@@ -160,7 +133,7 @@ int main(int argc, char* argv[]) {
 	// Call the particle-gamma analysis routine, clean up and finish
 	// ------------------------------------------------------------------------ //
 
-	pg_ana.Loop( Outpufile );
+	pg_ana.Loop( OutputFile );
 	
 	delete tr;
 

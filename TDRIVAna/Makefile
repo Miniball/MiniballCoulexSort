@@ -18,9 +18,9 @@ endif
 BIN_DIR     = ../bin
 LIB_DIR     = ../lib
 COMMON_DIR  = ../common
-MBEVTS_DIR  = ../mbevts
+MBEVTS_DIR  = ../EventTree
 
-LIBS        := $(ROOTLIBS) -L$(LIB_DIR) -lCommandLineInterface
+LIBS        := $(ROOTLIBS) -L$(LIB_DIR) -lCommandLineInterface -lmbevts
 
 AR          := ar
 CC          := $(shell root-config --cc)
@@ -35,7 +35,6 @@ MKDIR_P:
 	mkdir -p $(BIN_DIR) $(LIB_DIR)
 
 OBJECTS = g_clx.o \
-          $(MBEVTS_DIR)/mbevts.o \
           doppler.o \
           hists.o \
           MBGeometry.o \
@@ -48,9 +47,6 @@ TDRIVAna: TDRIVAna.cc $(OBJECTS)
 	cp TDRIVAna $(BIN_DIR)/
 
 g_clx.o: g_clx.cc g_clx.hh
-	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@
-
-$(MBEVTS_DIR)/mbevts.o: $(MBEVTS_DIR)/mbevts.cc $(MBEVTS_DIR)/mbevts.hh
 	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 doppler.o: doppler.cc doppler.hh
@@ -66,12 +62,11 @@ SpedeGeometry.o: SpedeGeometry.cc SpedeGeometry.hh
 	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	rm -f $(MBEVTS_DIR)/*.o *.o
+	rm -f *.o
 	rm -f TDRIVAnaDict.cc TDRIVAnaDict$(DICTEXT)
 
 # Root stuff
 DEPENDENCIES = g_clx.hh \
-               $(MBEVTS_DIR)/mbevts.hh \
                doppler.hh \
                hists.hh \
                MBGeometry.hh \

@@ -1,5 +1,6 @@
 SUBDIRS = common \
 		  MedToRoot \
+		  EventTree \
 		  TreeBuilder \
 		  CLXAna \
 		  MntAna \

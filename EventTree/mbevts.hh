@@ -50,7 +50,8 @@ class mbevts : public TObject {
 	int file;
 
 	// setup functions
-	void Initialize();
+	mbevts();
+	~mbevts();
 	void SetGen(float en);
 	void SetTheta(float theta);
 	void SetPhi(float phi);

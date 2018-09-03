@@ -5,12 +5,8 @@
 #include <iomanip>
 #include <string>
 
-#ifndef GammaTree_hh
-# include "GammaTree.hh"
-#endif
-
-#ifndef TransferTree_hh
-# include "TransferTree.hh"
+#ifndef ParticleGammaTree_hh
+# include "ParticleGammaTree.hh"
 #endif
 
 #include "TFile.h"

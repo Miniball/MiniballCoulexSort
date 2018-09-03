@@ -35,7 +35,7 @@ using namespace std;
 
 // Headers for tree
 #ifndef __MBEVTS_HH__
-# include "../mbevts/mbevts.hh"
+# include "mbevts.hh"
 #endif
 
 // Fixed size dimensions of array or collections stored in the TTree if any.

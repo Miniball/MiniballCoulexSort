@@ -1,9 +1,7 @@
-//////////////////////////////////////////////////////////
-// This class has been automatically generated on
-// Mon Feb 18 15:39:48 2013 by ROOT version 5.34/05
-// from TTree g_clx/g_clx
-// found on file: 62Mn_109Ag.root
-//////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+// Header for the g_clx class to do the CLXAna for Miniball
+// Liam Gaffney (liam.gaffney@cern.ch) - 03/09/2018
+////////////////////////////////////////////////////////////
 
 #ifndef g_clx_hh
 #define g_clx_hh
@@ -35,7 +33,7 @@ using namespace std;
 
 // Headers for tree
 #ifndef __MBEVTS_HH__
-# include "../mbevts/mbevts.hh"
+# include "mbevts.hh"
 #endif
 
 /// Main class for gamma-particle coinidence analysis

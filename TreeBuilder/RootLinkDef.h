@@ -4,5 +4,5 @@
 #pragma link off all functions;
 #pragma link C++ class Calibration+;
 #pragma link C++ class MBGeometry+;
-#pragma link C++ class mbevts+;
+#pragma link C++ class ParticleGammaTree+;
 #endif
