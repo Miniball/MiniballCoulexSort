@@ -1,7 +1,0 @@
-# Ignore gedit temporary files
-*~
-*.o
-*.pcm
-*.so
-*.d
-
