@@ -71,7 +71,7 @@ DEPENDENCIES = $(DEPENDENCIES_BASIC) \
 
 TreeBuilderDictionary.cc: $(DEPENDENCIES) RootLinkDef.h
 	rm -f TreeBuilderDictionary.cc TreeBuilderDictionary$(DICTEXT)
-	$(ROOTDICT) -f TreeBuilderDictionary.cc -c $(INCLUDES) $(DEPENDENCIES)
+	$(ROOTDICT) -f TreeBuilderDictionary.cc -c $(INCLUDES) $(DEPENDENCIES) RootLinkDef.h
 	cp TreeBuilderDictionary$(DICTEXT) $(LIB_DIR)/
 
 TreeBuilderDictionary.o: TreeBuilderDictionary.cc TreeBuilderDictionary$(DICTEXT)
@@ -79,7 +79,7 @@ TreeBuilderDictionary.o: TreeBuilderDictionary.cc TreeBuilderDictionary$(DICTEXT
 
 NeSortDictionary.cc: $(DEPENDENCIES_BASIC) RootLinkDef.h
 	rm -f NeSortDictionary.cc NeSortDictionary$(DICTEXT)
-	$(ROOTDICT) -f NeSortDictionary.cc -c $(INCLUDES) $(DEPENDENCIES)
+	$(ROOTDICT) -f NeSortDictionary.cc -c $(INCLUDES) $(DEPENDENCIES) RootLinkDef.h
 	cp NeSortDictionary$(DICTEXT) $(LIB_DIR)/
 
 NeSortDictionary.o: NeSortDictionary.cc NeSortDictionary$(DICTEXT)
@@ -87,7 +87,7 @@ NeSortDictionary.o: NeSortDictionary.cc NeSortDictionary$(DICTEXT)
 
 AQ4SortDictionary.cc: $(DEPENDENCIES_BASIC) RootLinkDef.h
 	rm -f AQ4SortDictionary.cc AQ4SortDictionary$(DICTEXT)
-	$(ROOTDICT) -f AQ4SortDictionary.cc -c $(INCLUDES) $(DEPENDENCIES)
+	$(ROOTDICT) -f AQ4SortDictionary.cc -c $(INCLUDES) $(DEPENDENCIES) RootLinkDef.h
 	cp AQ4SortDictionary$(DICTEXT) $(LIB_DIR)/
 
 AQ4SortDictionary.o: AQ4SortDictionary.cc AQ4SortDictionary$(DICTEXT)

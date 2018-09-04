@@ -34,7 +34,7 @@ using namespace std;
 # include "MBGeometry.hh"
 #endif
 
-// Headers for outut trees
+// Headers for output trees
 #ifndef __MBEVTS_HH__
 # include "mbevts.hh"
 #endif

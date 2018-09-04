@@ -53,6 +53,7 @@ class trevts : public TObject {
 	// setup functions
 	trevts();
 	~trevts();
+	void Initialize();
 	void SetPen( float en, float de, float erest );
 	void SetQuad( int q );
 	void SetAnn( int id );

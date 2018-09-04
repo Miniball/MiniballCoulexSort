@@ -5,6 +5,18 @@
 
 mbevts::mbevts() {
 	
+	Initialize();
+	
+}
+
+mbevts::~mbevts() {
+	
+	cout << "destructor" << endl;
+	
+}
+
+void mbevts::Initialize() {
+	
 	gen=-100.;
 	cid=-1;
 	sid=-1;
@@ -38,12 +50,6 @@ mbevts::mbevts() {
 	rndm_hits=0;
 	del_hits=0;
 	file=-1;
-	
-}
-
-mbevts::~mbevts() {
-	
-	cout << "destructor" << endl;
 	
 }
 
@@ -200,9 +206,32 @@ float mbevts::GetPhi() {
 }
 
 int mbevts::GetNrParts() {
-
+	
 	return pen.size();
+	
+}
 
+int mbevts::GetNrPrompt() {
+	
+	return pr_hits;
+	
+}
+
+int mbevts::GetNrRandom() {
+	
+	return rndm_hits;
+	
+}
+
+int mbevts::GetNrDelayed() {
+	
+	return del_hits;
+	
+}
+int mbevts::GetNrGammas() {
+	
+	return 1 + gcor_gen.size();
+	
 }
 
 float mbevts::GetPen( int nr ) {

@@ -5,6 +5,18 @@
 
 trevts::trevts() {
 	
+	//cout << "constructor" << endl;
+
+}
+
+trevts::~trevts() {
+	
+	cout << "destructor" << endl;
+		
+}
+	
+void trevts::Initialize() {
+
 	pen=-100.;
 	pen_de=-100.;
 	pen_e=-100.;
@@ -39,12 +51,6 @@ trevts::trevts() {
 	pr_hits=0;
 	rndm_hits=0;
 	del_hits=0;
-	
-}
-
-trevts::~trevts() {
-	
-	cout << "destructor" << endl;
 	
 }
 

@@ -33,6 +33,9 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 
 	}
 	
+	// Initialise variables
+	InitialiseVariables();
+	
 	// Crap segments list (i.e. those that need to be vetoed)
 	// Counting from 0 to 167, i.e. including cores - clu*21 + core*7 + seg
 	bool veto_gamma = false;
@@ -325,7 +328,7 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 	for( unsigned int i = 0; i < GAMMA_ARRAY; i++ ) {
 		
 		mb_evts[i] = new mbevts();
-
+		
 	}
 	
 	TTree* g_clx = new TTree( "g_clx", "g_clx" );
@@ -373,10 +376,22 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 		for( j = 0; j < GammaCtr; j++ ) {
 		
 			mb_evts[j]->SearchCoin();  
-			write_mb_evts = new mbevts();
+			write_mb_evts->Initialize();
 			write_mb_evts->CopyData( mb_evts[j] );
-			if( write_mb_evts->pr_hits > 0 || write_mb_evts->rndm_hits > 0 || write_mb_evts->del_hits > 0  ) g_clx->Fill();
-			else if( gamgam && write_mb_evts->gcor_gen.size() > 1 ) g_clx->Fill();
+			
+			// Standard particle-gamma coincidences
+			if( write_mb_evts->GetNrPrompt() > 0 ||
+			    write_mb_evts->GetNrRandom() > 0 ||
+				write_mb_evts->GetNrDelayed() > 0  ){
+				
+				g_clx->Fill();
+				
+			}
+			
+			// Gamma-gamma coincidences, with or without particles
+			else if( gamgam && write_mb_evts->GetNrGammas() > 1 ) g_clx->Fill();
+			
+			// Gamma singles, with or without particles
 			else if( singles ) g_clx->Fill();
 			
 		}
@@ -388,7 +403,7 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 		// ------------------------------------------------------------------------ //
 		for( j = 0; j < GAMMA_ARRAY; j++ ) {
 		
-			mb_evts[j] = new mbevts();
+			mb_evts[j]->Initialize();
 		
 		}
 		GammaCtr = 0;
@@ -1063,6 +1078,7 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 				
 			// Reset
 			PartCtr = 0;
+			
 			
 		} // j
 		// ------------------------------------------------------------------------ //

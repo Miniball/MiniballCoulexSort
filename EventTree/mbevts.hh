@@ -9,7 +9,46 @@ using namespace std;
 class mbevts : public TObject {
 //class mbevts {
 
-	public:
+public:
+	
+	// setup functions
+	mbevts();
+	~mbevts();
+	void Initialize();
+	void SetGen(float en);
+	void SetTheta(float theta);
+	void SetPhi(float phi);
+	void SetCluid(int id);
+	void SetCid(int id);
+	void SetSid(int id);
+	void SetCorGamGen(float en);
+	void SetCorGamTheta(float theta);
+	void SetCorGamPhi(float phi);
+	void SetCorGamCluid(int id);
+	void SetCorGamCid(int id);
+	void SetCorGamSid(int id);
+	void SetCorGamGtd(float td);
+	void SetPart(float en, int a, int s, double t, double ss, double t1, float ctd, int co, int quad, int laserflag);
+	void SearchCoin();
+	void CopyData(mbevts* src);
+
+	// get functions
+	int GetCluid();
+	int GetCid();
+	int GetSid();
+	float GetGen();
+	float GetTheta();
+	float GetPhi();
+	float GetPen(int nr);
+	int GetNrParts();
+	int GetNrPrompt();
+	int GetNrRandom();
+	int GetNrDelayed();
+	int GetNrGammas();
+	int GetSec(int nr);
+	int GetAnn(int nr);
+	
+private:
 	
 	// original gamma-ray
 	float gen;	///< gamma-ray energy in keV
@@ -42,44 +81,13 @@ class mbevts : public TObject {
 	int pr_hits;			///< number of prompt hits
 	int rndm_hits;			///< number of random hits
 	int del_hits;			///< number of delayed hits
-
+	
 	// pointers for particles
 	vector <int> pr_ptr;	///< pointer to prompt hits in particle vector
 	vector <int> rndm_ptr;	///< pointer to random hits in particle vector
 	vector <int> del_ptr;	///< pointer to delayed hits in particle vector
 	int file;
-
-	// setup functions
-	mbevts();
-	~mbevts();
-	void SetGen(float en);
-	void SetTheta(float theta);
-	void SetPhi(float phi);
-	void SetCluid(int id);
-	void SetCid(int id);
-	void SetSid(int id);
-	void SetCorGamGen(float en);
-	void SetCorGamTheta(float theta);
-	void SetCorGamPhi(float phi);
-	void SetCorGamCluid(int id);
-	void SetCorGamCid(int id);
-	void SetCorGamSid(int id);
-	void SetCorGamGtd(float td);
-	void SetPart(float en, int a, int s, double t, double ss, double t1, float ctd, int co, int quad, int laserflag);
-	void SearchCoin();
-	void CopyData(mbevts* src);
-
-	// get functions
-	int GetCluid();
-	int GetCid();
-	int GetSid();
-	float GetGen();
-	float GetTheta();
-	float GetPhi();
-	float GetPen(int nr);
-	int GetNrParts();
-	int GetSec(int nr);
-	int GetAnn(int nr);
+	
 	
 	ClassDef(mbevts,3);
 
