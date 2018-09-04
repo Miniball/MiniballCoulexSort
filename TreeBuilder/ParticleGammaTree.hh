@@ -70,6 +70,12 @@ public:
 	/// BuiltEvent pointer
 	BuiltEvent *event;
 	
+	/// Initalise variables
+	virtual void InitialiseVariables();
+	
+	/// Setup histograms
+	virtual void SetupHistograms();
+	
 	/// Setup sorting flags
 	virtual void SetupFlags( bool _singles, bool _gamgam, bool _addback, bool _crex, bool _trex,
 							 bool _cdpad, bool _ionch, bool _spede, bool _verbose );
@@ -94,8 +100,37 @@ public:
  
 	double WeightPR; ///< ratio of prompt and random windows
 	
-	/// Initalise variables
-	virtual void InitialiseVariables();
+	// Histograms
+	// diagnostics
+	TH1F *adc, *dgf, *free_dgf, *hABmult, *cd_debug;
+	
+	// time differences
+	TH1F *tdiff_gp, *tdiff_ep, *tdiff_gg;
+	TH1F *tdiff_gp_q[4], *tdiff_BD;
+	
+	// gamma
+	TH1F *E_gam;
+	TH2F *gg, *bd_bd;
+	TH1F *E_gam_seg[8][3][7], *E_gam_seg_cal[8][3][7];
+	TH1F *E_BeamDump[2], *T_BeamDump[2];
+
+	// particles
+	TH2F *part;
+	TH1F *E_part_ann[4][16], *E_part_ann_cal[4][16];
+	TH1F *E_part_sec[4][12], *E_part_sec_cal[4][12];
+	TH2F *CD_front_energy[4], *CD_front_energy_cal[4];
+	TH2F *CD_back_energy[4], *CD_back_energy_cal[4];
+	TH2F *CD_front_back[4][j];
+
+	// spede
+	TH1F *E_spede, *E_spede_seg[24], *E_spede_seg_cal[24];
+	
+	// Ionisation chamber
+	TH2F *dEE;
+	
+	// CD-pad detector, freely triggered
+	TH1F *padE_sum, *padE[4], *padE_cal[4];
+	TH2F *cd_dEE_sum, *cd_dEE_anti, *cd_dEE[4];
 	
 private:
 	
@@ -168,6 +203,190 @@ void ParticleGammaTree::SetupFlags( bool _singles, bool _gamgam, bool _addback, 
 	verbose = _verbose;
 	
 	return;
+	
+}
+
+void ParticleGammaTree::SetupHistograms(){
+	
+	// diagnostics
+	adc = new TH1F("adc","adc",80,-0.5,79.5);
+	adc->GetXaxis()->SetTitle("Number of ADC's");
+	dgf = new TH1F("dgf","dgf",56,-0.5,55.5);
+	dgf->GetXaxis()->SetTitle("Number of DGF's");
+	free_dgf = new TH1F("free_dgf","free_dgf",56,-0.5,55.5);
+	free_dgf->GetXaxis()->SetTitle("Number of free DGF's");
+	hABmult = new TH1F("hABmult","hABmult",4,-0.5,3.5);
+	hABmult->GetXaxis()->SetTitle("Addback multiplicity");
+	cd_debug = new TH1F("cd_debug","cd_debug",4,-0.5,3.5);
+	cd_debug->GetXaxis()->SetTitle("CD debugging");
+	
+	// time differences
+	tdiff_gp = new TH1F("tdiff_gp","tdiff_gp",201,-100.5,100.5);
+	tdiff_gp->GetXaxis()->SetTitle("time diff (particle - gamma) [us]");
+	tdiff_ep = new TH1F("tdiff_ep","tdiff_ep",201,-100.5,100.5);
+	tdiff_ep->GetXaxis()->SetTitle("time diff (particle - electron) [us]");
+	tdiff_gg = new TH1F("tdiff_gg","tdiff_gg",201,-100.5,100.5);
+	tdiff_gg->GetXaxis()->SetTitle("time diff between one Dgf and the others [us]");
+	for( i = 0; i < 4; i++ )
+		tdiff_gp_q[i] = new TH1F(Form("tdiff_gp_%d",i),Form("tdiff_gp_%d",i),201,-100.5,100.5);
+	
+	// Total gamma - no Doppler correction
+	E_gam = new TH1F("E_gam","E_gam",GBINS,GMIN,GMAX);
+	E_gam->GetXaxis()->SetTitle("Energy Gamma Rays [Channels]");
+	
+	// Gamma-gamma - no Doppler correction
+	gg = new TH2F("gg","#gamma-#gamma matrix;Energy [keV];Energy[keV]",GBINS,GMIN,GMAX,GBINS,GMIN,GMAX);
+	
+	// Gamma spectra for every segment - no Doppler correction
+	TDirectory *gam_dir = outfile->mkdir("E_gam_seg");
+	gam_dir->cd();
+	for( i = 0; i < 8; i++ ) {
+		
+		for( j = 0; j < 3; j++ ) {
+			
+			for( k = 0; k < 7; k++ ) {
+				
+				E_gam_seg[i][j][k] = new TH1F(Form("E_gam_%d_%d_%d",i,j,k),Form("E_gam_%d_%d_%d",i,j,k),16384,-0.5,65535.5);
+				E_gam_seg[i][j][k]->GetXaxis()->SetTitle("Energy Gamma Rays [Channels]");
+				E_gam_seg_cal[i][j][k] = new TH1F(Form("E_gam_%d_%d_%d_cal",i,j,k),Form("E_gam_%d_%d_%d_cal",i,j,k),GBINS,GMIN,GMAX);
+				E_gam_seg_cal[i][j][k]->GetXaxis()->SetTitle("Energy Gamma Rays [keV]");
+				
+			}
+			
+		}
+		
+	}
+	
+	gDirectory->cd("/");
+	
+	// Particle spectra for every segment
+	part = new TH2F("part","part",16,-0.5,15.5,1000,0,1000);
+	TDirectory *part_dir = outfile->mkdir("E_part");
+	part_dir->cd();
+	for( i = 0; i < 4; i++ ) {
+		
+		for( j = 0; j < 16; j++ ) {
+			
+			E_part_ann[i][j] = new TH1F(Form("E_part_ann_%d_%d",i,j),Form("E_part_ann_%d_%d",i,j),4096,-0.5,4095.5);
+			E_part_ann[i][j]->GetXaxis()->SetTitle("Energy Particles [Channels]");
+			E_part_ann_cal[i][j] = new TH1F(Form("E_part_ann_%d_%d_cal",i,j),Form("E_part_ann_%d_%d_cal",i,j),PBINS,PMIN,PMAX);
+			E_part_ann_cal[i][j]->GetXaxis()->SetTitle("Energy Particles [MeV]");
+			
+		}
+		
+		for( j = 0; j < 12; j++ ) {
+			
+			E_part_sec[i][j] = new TH1F(Form("E_part_sec_%d_%d",i,j),Form("E_part_sec_%d_%d",i,j),4096,-0.5,4095.);
+			E_part_sec[i][j]->GetXaxis()->SetTitle("Energy Particles [Channels]");
+			E_part_sec_cal[i][j] = new TH1F(Form("E_part_sec_%d_%d_cal",i,j),Form("E_part_sec_%d_%d_cal",i,j),PBINS,PMIN,PMAX);
+			E_part_sec_cal[i][j]->GetXaxis()->SetTitle("Energy Particles [MeV]");
+			
+		}
+		
+	}
+	
+	gDirectory->cd("/");
+	
+	E_spede = NULL;
+	if( spede ) {
+		
+		// Total electron - no Doppler correction
+		E_spede = new TH1F("E_spede","E_spede",ELBINS,ELMIN,ELMAX);
+		E_spede->GetXaxis()->SetTitle("Energy Electrons [Channels]");
+		
+		// Electron spectra for every segment - no Doppler correction
+		TDirectory *spede_dir = outfile->mkdir("E_spede_seg");
+		spede_dir->cd();
+		for( i = 0; i < 24; i++ ) {
+			
+			E_spede_seg[i] = new TH1F(Form("E_spede_%d",i),Form("E_spede_%d",i),16384,-0.5,65535.5);
+			E_spede_seg[i]->GetXaxis()->SetTitle("Energy Electrons [Channels]");
+			E_spede_seg_cal[i] = new TH1F(Form("E_spede_%d_cal",i),Form("E_spede_%d_cal",i),ELBINS,ELMIN,ELMAX);
+			E_spede_seg_cal[i]->GetXaxis()->SetTitle("Energy Electrons [keV]");
+			
+		}
+		
+		gDirectory->cd("/");
+		
+	}
+	
+	tdiff_BD = new TH1F( "tdiff_BD", "tdiff_BD", 400, -200, 200);
+	bd_bd = new TH2F( "bd_bd", "bd_bd", GBINS,GMIN,GMAX, GBINS,GMIN,GMAX );
+	for( i = 0; i < 2; i++ ) {
+		
+		E_BeamDump[i] = new TH1F( Form("E_BeamDump_%d",i), Form("E_BeamDump_%d",i),GBINS,GMIN,GMAX);
+		E_BeamDump[i]->GetXaxis()->SetTitle("Energy of the Beam Dump [keV]");
+		T_BeamDump[i] = new TH1F( Form("T_BeamDump_%d",i), Form("T_BeamDump_%d",i),7200,0,7200);
+		T_BeamDump[i]->GetXaxis()->SetTitle("Time of the Beam Dump [s]");
+		
+	}
+	
+	// particle-spectra
+	TDirectory *cd_dir = outfile->mkdir("CD_spec");
+	cd_dir->cd();
+	vector< string > cd_hname;
+	cd_hname.push_back( "CD_front_back_%d_1v1" );
+	cd_hname.push_back( "CD_front_back_%d_1vn" );
+	cd_hname.push_back( "CD_front_back_%d_nv1" );
+	cd_hname.push_back( "CD_front_back_%d_nvn" );
+	
+	for( i = 0; i < 4; i++ ) {
+		
+		CD_front_energy[i] = new TH2F(Form("CD_front_energy_%d",i),Form("CD_front_energy_%d",i),16,-0.5,15.5,4096,0,4096);
+		CD_front_energy[i]->GetXaxis()->SetTitle("Ring number");
+		CD_front_energy[i]->GetYaxis()->SetTitle("Energy particle [adc ch.]");
+		CD_back_energy[i] = new TH2F(Form("CD_back_energy_%d",i),Form("CD_back_energy_%d",i),12,-0.5,11.5,4096,0,4096);
+		CD_back_energy[i]->GetXaxis()->SetTitle("Strip number");
+		CD_back_energy[i]->GetYaxis()->SetTitle("Energy particle [adc ch.]");
+		
+		CD_front_energy_cal[i] = new TH2F(Form("CD_front_energy_cal_%d",i),Form("CD_front_energy_cal_%d",i),16,-0.5,15.5,PBINS,PMIN,PMAX);
+		CD_front_energy_cal[i]->GetXaxis()->SetTitle("Ring number");
+		CD_front_energy_cal[i]->GetYaxis()->SetTitle("Energy particle [MeV]");
+		CD_back_energy_cal[i] = new TH2F(Form("CD_back_energy_cal_%d",i),Form("CD_back_energy_cal_%d",i),12,-0.5,11.5,PBINS,PMIN,PMAX);
+		CD_back_energy_cal[i]->GetXaxis()->SetTitle("Strip number");
+		CD_back_energy_cal[i]->GetYaxis()->SetTitle("Energy particle [MeV]");
+		
+		for( j = 0; j < 4; j++ ) {
+			
+			CD_front_back[i][j] = new TH2F(Form(cd_hname[j].c_str(),i),Form(cd_hname[j].c_str(),i),PBINS,PMIN,PMAX,PBINS,PMIN,PMAX);
+			CD_front_back[i][j]->GetXaxis()->SetTitle("Front Energy particle [MeV]");
+			CD_front_back[i][j]->GetYaxis()->SetTitle("Back Energy particle [MeV]");
+			
+		}
+		
+	}
+	
+	gDirectory->cd("/");
+	
+	// Ionisation chamber
+	TDirectory *ic_dir = outfile->mkdir("IC_spec");
+	ic_dir->cd();
+	dEE = NULL;
+	if( ionch ) dEE = new TH2F( "dEE", "ionisation chamber;E_{rest};delta-E", 4096, -0.5, 4095.5, 4096, -0.5, 4095.5 );
+	gDirectory->cd("/");
+	
+	// CD-pad detector, freely triggered
+	padE_sum = NULL;
+	if( cdpad ) {
+		
+		TDirectory *pad_dir = outfile->mkdir("PAD_spec");
+		pad_dir->cd();
+		padE_sum = new TH1F( "padE_sum", "Energy on the PAD detector;Energy [keV];", 4096, -0.5, 4095.5 );
+		cd_dEE_sum = new TH2F( "cd_dEE_sum", "dE-E of the CD-PAD;Energy [keV];Energy [keV];", 4096, -2., 16382., 4096, -2., 16382. );
+		cd_dEE_anti = new TH2F( "cd_dEE_anti", "dE-E of the CD-PAD not in coincidence with same quadrant;Energy [keV];Energy [keV];", 4096, -2., 16382., 4096, -2., 16382. );
+		
+		for( i = 0; i < 4; i++ ) {
+			
+			padE[i] = new TH1F( Form("padE_%d",i), "Energy on the PAD detector;Energy [adc ch.];", 4096, -0.5, 4095.5 );
+			padE_cal[i] = new TH1F( Form("padE%d_cal",i), "Energy on the PAD detector;Energy [keV];", ELBINS, ELMIN, ELMAX );
+			cd_dEE[i] = new TH2F( Form("cd_dEE%d",i), "dE-E of the CD-PAD;Energy [keV];Energy [keV];", 4096, -2., 16382., 4096, -2., 16382. );
+			
+		}
+		
+		gDirectory->cd("/");
+		
+	}
+	// ------------------------------------------------------------------------ //
 	
 }
 
