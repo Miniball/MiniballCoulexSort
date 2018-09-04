@@ -123,7 +123,7 @@ public:
 	TH1F *E_part_sec[4][12], *E_part_sec_cal[4][12];
 	TH2F *CD_front_energy[4], *CD_front_energy_cal[4];
 	TH2F *CD_back_energy[4], *CD_back_energy_cal[4];
-	TH2F *CD_front_back[4];
+	TH2F *CD_front_back[4][4];
 
 	// spede
 	TH1F *E_spede, *E_spede_seg[24], *E_spede_seg_cal[24];
