@@ -74,7 +74,7 @@ public:
 	virtual void InitialiseVariables();
 	
 	/// Setup histograms
-	virtual void SetupHistograms();
+	virtual void SetupHistograms( TFile *outfile );
 	
 	/// Setup sorting flags
 	virtual void SetupFlags( bool _singles, bool _gamgam, bool _addback, bool _crex, bool _trex,
@@ -100,6 +100,9 @@ public:
  
 	double WeightPR; ///< ratio of prompt and random windows
 	
+	unsigned int i,j,k,l;
+
+	
 	// Histograms
 	// diagnostics
 	TH1F *adc, *dgf, *free_dgf, *hABmult, *cd_debug;
@@ -120,7 +123,7 @@ public:
 	TH1F *E_part_sec[4][12], *E_part_sec_cal[4][12];
 	TH2F *CD_front_energy[4], *CD_front_energy_cal[4];
 	TH2F *CD_back_energy[4], *CD_back_energy_cal[4];
-	TH2F *CD_front_back[4][j];
+	TH2F *CD_front_back[4];
 
 	// spede
 	TH1F *E_spede, *E_spede_seg[24], *E_spede_seg_cal[24];
@@ -206,7 +209,7 @@ void ParticleGammaTree::SetupFlags( bool _singles, bool _gamgam, bool _addback, 
 	
 }
 
-void ParticleGammaTree::SetupHistograms(){
+void ParticleGammaTree::SetupHistograms( TFile *outfile ){
 	
 	// diagnostics
 	adc = new TH1F("adc","adc",80,-0.5,79.5);

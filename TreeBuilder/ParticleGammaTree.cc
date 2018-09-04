@@ -1,10 +1,6 @@
 #ifndef ParticleGammaTree_cxx
 #define ParticleGammaTree_cxx
 
-#ifndef ParticleGammaTree_hh
-# include "ParticleGammaTree.hh"
-#endif
-
 #define PBINS 800
 #define PRANGE 800
 #define PMIN -1.0*PRANGE/PBINS
@@ -22,6 +18,10 @@
 #define ELMAX ELRANGE+ELMIN
 #define ELECTRON_ARRAY 250
 
+#ifndef ParticleGammaTree_hh
+# include "ParticleGammaTree.hh"
+#endif
+
 void ParticleGammaTree::Loop( string outputfilename ) {
 	
 	// Open output file
@@ -35,6 +35,9 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 	
 	// Initialise variables
 	InitialiseVariables();
+	
+	// Setup histograms
+	SetupHistograms( outfile );
 	
 	// Crap segments list (i.e. those that need to be vetoed)
 	// Counting from 0 to 167, i.e. including cores - clu*21 + core*7 + seg
@@ -51,7 +54,6 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 	// ------------------------------------------------------------------------ //
 	// Variables
 	// ------------------------------------------------------------------------ //
-	unsigned int i,j,k,l;
 	float GammaEnergy = 0.;
 	float GammaEnergy2 = 0.;
 	float ElectronEnergy = 0.;
