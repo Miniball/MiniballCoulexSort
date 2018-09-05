@@ -368,15 +368,6 @@ bool GlobalSettings::Verify() {
 
 	}
 
-	if( fNumberOfAdcModules != fNumberOfAdcsPerTimestampModule * fNumberOfTimestampModules &&
-		fNumberOfAdcModules != fNumberOfAdcsPerTimestampModule * fNumberOfTimestampModules + fNofCaenAdc + fTypeOfSetup &&
-		!fSPEDEChamb ) {
-
-		cerr<<"number of adcs doesn't match timestamps vamos casi lo tienes"<<endl;
-		return false;
-
-	}
-
 	if( fRealTimeIndex == 0xffff ) {
 
 		cerr << "real time wrong" << endl;
