@@ -34,6 +34,7 @@ LFLAGS    = -O2 -g
 
 O_FILES = Calibration.o \
 		MBGeometry.o \
+		AddBack.o \
 		ParticleGammaTree.o
 
 all: MKDIR_P TreeBuilder NeSort AQ4Sort
@@ -65,8 +66,9 @@ AQ4Sort: AQ4Sort.cc Calibration.o AQ4SortDictionary.o
 DEPENDENCIES_BASIC = Calibration.hh
 
 DEPENDENCIES = $(DEPENDENCIES_BASIC) \
-			MBGeometry.hh \
-			ParticleGammaTree.hh
+				MBGeometry.hh \
+				AddBack.hh \
+				ParticleGammaTree.hh
 
 
 TreeBuilderDictionary.cc: $(DEPENDENCIES) RootLinkDef.h

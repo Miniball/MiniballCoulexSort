@@ -12,12 +12,17 @@
 #include "TRandom.h"
 #include "TMath.h"
 
-#include "CommandLineInterface.hh"
+// Command line interface
+#ifndef __COMMAND_LINE_INTERFACE
+# include "CommandLineInterface.hh"
+#endif
 
 using namespace std;
 
 /// A class to read in the calibration file in ROOT's TConfig format.
 /// Each ADC and DGF channel can have offset, gain and quadratic terms.
+/// The ADCs also have a threshold for each channel, to cut out the "zeroes"
+/// and there is a time offset parameter for each ADC module, too.
 /// There is potential to include the demux of T/C-REX in here too.
 
 class Calibration {

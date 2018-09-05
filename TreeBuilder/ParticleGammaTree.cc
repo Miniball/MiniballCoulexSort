@@ -39,14 +39,11 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 	// Setup histograms
 	SetupHistograms( outfile );
 	
-	// Crap segments list (i.e. those that need to be vetoed)
-	// Counting from 0 to 167, i.e. including cores - clu*21 + core*7 + seg
-	bool veto_gamma = false;
-	unsigned int gSeg;
-	vector< unsigned int > dead_segments;
-	//dead_segments.push_back( 106 ); // clu 5, core 0, seg 1 = 18A1
-	//dead_segments.push_back( 107 ); // clu 5, core 0, seg 2 = 18A2
-	
+	// Setup the addback
+	AddBack ab( event );
+	ab.SetCalibration( Cal );
+	ab.SetOutputFile( outfile );
+	ab.InitialiseHistograms();
 	
 	// ------------------------------------------------------------------------ //
  
@@ -54,35 +51,13 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 	// ------------------------------------------------------------------------ //
 	// Variables
 	// ------------------------------------------------------------------------ //
-	float GammaEnergy = 0.;
-	float GammaEnergy2 = 0.;
 	float ElectronEnergy = 0.;
 	float PartEnergy = 0.;
 	float icE_Energy = 0.;
 	float icDE_Energy = 0.;
 	float PadEnergy[4] = {0.,0.,0.,0.};
-	unsigned int GammaCtr = 0;
-	unsigned int PartCtr = 0;
 	float tdiffPG = 0.;
-	float MaxSegEnergy = -99.;
-	int MaxSegClu = -1;
-	int MaxSegCore = -1;
-	int MaxSegId = -1;
 	int coinc_flag;
-	int dgf_num = 0;
-	int dgf_num2 = 0;
-	int dgf_ch = 0;
-	int dgf_ch2 = 0;
-	int dgf_en = 0;
-	int dgf_en2 = 0;
-	long long dgf_t = 0;
-	long long dgf_t2 = 0;
-	unsigned int adc_num = 0;
-	unsigned int adc_ch = 0;
-	unsigned int adc_en = 0;
-	unsigned int adc_ch2 = 0;
-	unsigned int adc_en2 = 0;
-	long long adc_t =0;
 
 	vector<float> cd_ringenergy[4];
 	vector<float> cd_stripenergy[4];
@@ -90,15 +65,6 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 	vector<unsigned short> cd_stripid[4];
 	vector<bool> cd_ringused[4];
 	vector<bool> cd_stripused[4];
-
-	vector<float> gen_array;
-	vector<long long> gtd_array;
-	vector<unsigned short> clu_array;
-	vector<unsigned short> cid_array;
-	vector<unsigned short> sid_array;
-	vector<float> sen_array; 
-	bool ab_evt = false;
-	unsigned short ab_mul = 0;
 
 	vector<unsigned int> Quad; // 0: Top, 1: Bottom, 2: Left and 3; Right
 	vector<unsigned int> Chan_front; // Rings for CDs, Total Energy for Pad or Strips for Barrel
@@ -229,6 +195,9 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 		// ------------------------------------------------------------------------ //
 		// Clean particles and gammas/electrons
 		// ------------------------------------------------------------------------ //
+		
+		ab.ClearEvt();
+		
 		for( j = 0; j < 4; j++ ) {
 
 			cd_ringenergy[j].clear();
@@ -247,13 +216,6 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 		Ener_back.clear();
 		time.clear();
 		laser.clear();
-
-		gen_array.clear();
-		gtd_array.clear();
-		clu_array.clear();
-		cid_array.clear();
-		sid_array.clear();
-		sen_array.clear();
 	  
 		adc->Fill( event->NumberOfAdcs() );
 		dgf->Fill( DgfModule.size() );
@@ -267,176 +229,12 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 
 
 		// ------------------------------------------------------------------------ //
-		// Only DGF events
+		// All DGF events
 		// ------------------------------------------------------------------------ //
-		for( j = 0; j < event->NumberOfDgfs(); j++ ) {
 
-			ab_evt = false;
-			ab_mul = 0;
-			veto_gamma = false;
-			dgf_num = event->Dgf(j)->ModuleNumber();
-			dgf_ch  = event->Dgf(j)->Channel();
-			dgf_en  = event->Dgf(j)->Energy();
-			dgf_t   = event->Dgf(j)->Time();
-				
-			if( 0 <= dgf_num && dgf_num < 48 && 0 <= dgf_ch && dgf_ch < 4 ) { // miniball
-
-				GammaEnergy = Cal->DgfEnergy( dgf_num, dgf_ch, dgf_en );
-
-				if( dgf_num % 2 == 0 && dgf_ch < 3 ) { // cores plus seg1 and seg2
-
-					E_gam_seg[dgf_num/6][dgf_num%6/2][dgf_ch]->Fill( dgf_en );
-					E_gam_seg_cal[dgf_num/6][dgf_num%6/2][dgf_ch]->Fill( GammaEnergy );
-					if( dgf_ch == 0 ) E_gam->Fill( GammaEnergy );
-
-				} // even DGF number
-
-				else {
-
-					E_gam_seg[dgf_num/6][dgf_num%6/2][dgf_ch+3]->Fill( dgf_en );
-					E_gam_seg_cal[dgf_num/6][dgf_num%6/2][dgf_ch+3]->Fill( GammaEnergy );
-
-				} // odd DGF number
-
-			  	// Look for a core event
-				if( dgf_ch == 0 && dgf_num % 2 == 0 ) {
-			
-					MaxSegClu = dgf_num / 6;
-					MaxSegCore = dgf_num % 6 / 2;
-					MaxSegId = 0; // initialise as core (if no segment hit (dead), use core!)
-
-					// Check for highest energy segment in same detector
-					for( k = 0; k < event->NumberOfDgfs(); k++ ) {
-			
-						dgf_num2 = event->Dgf(k)->ModuleNumber();
-						dgf_ch2  = event->Dgf(k)->Channel();
-						dgf_en2  = event->Dgf(k)->Energy();
-						dgf_t2   = event->Dgf(k)->Time();
-					
-						// We don't care if it's the same event
-						if( k == j ) continue;
-						
-						// Make sure it's a Miniball DGF
-						if( dgf_num2 < 0 || dgf_num2 > 47 ) continue;
-
-						// Get global segment number (0-167)
-						gSeg = ( dgf_num2 / 2 ) * 7;
-						if( dgf_num2 % 2 == 0 ) gSeg += dgf_ch2;
-						else gSeg += dgf_ch2+3;
-						
-						// Is it a crap segment?
-						for( unsigned int ds = 0; ds < dead_segments.size(); ds++ ) {
-							
-							if( gSeg == dead_segments[ds] ) {
-								
-								veto_gamma = true;
-								
-							}
-
-						}
-
-						// time difference between cores
-						if( dgf_ch2 == 0 && dgf_num2 % 2 == 0 )
-							tdiff_gg->Fill( dgf_t2 - dgf_t );
-
-						// Skip if a different detector
-						if( dgf_num2 != dgf_num && dgf_num2 != dgf_num + 1 ) continue;
-					
-						GammaEnergy2 = Cal->DgfEnergy( dgf_num2, dgf_ch2, dgf_en2 );
-
-						// Test maximum energy segment
-						if( GammaEnergy2 < MaxSegEnergy ) continue;
-					
-						// Reassign energy and id
-						MaxSegEnergy = GammaEnergy2;
-						if( dgf_num2 % 2 == 0 ) MaxSegId = dgf_ch2;
-						else MaxSegId = dgf_ch2+3;
-			
-					} // k
-
-					// Found highest energy segment
-					
-					// Do the veto of crap segments
-					if( veto_gamma ) continue;
-
-					// Check previous gammas
-					for( l = 0; l < gen_array.size(); l++ ) {
-
-						if( gen_array[l] < GammaEnergy+0.1 && gen_array[l] > GammaEnergy-0.1 )
-							continue; // same event
-
-						// Do the addback if same cluster
-						if( clu_array[l] == MaxSegClu && addback ) {
-
-							gen_array[l] += GammaEnergy;
-							ab_evt = true;
-							ab_mul++;
-
-							if( sen_array[l] < MaxSegEnergy ) {
-
-								gtd_array[l] = dgf_t;
-								clu_array[l] = MaxSegClu;
-								cid_array[l] = MaxSegClu*3 + MaxSegCore;
-								sid_array[l] = MaxSegId;
-								sen_array[l] = MaxSegEnergy;	
-
-							}
-
-						} // addback
-
-					} // previous gammas
-
-					if( ab_evt ) continue; // get next gamma
-					hABmult->Fill( ab_mul );
-
-					gen_array.push_back( GammaEnergy );
-					gtd_array.push_back( dgf_t );
-					clu_array.push_back( MaxSegClu );
-					cid_array.push_back( MaxSegClu*3 + MaxSegCore );
-					sid_array.push_back( MaxSegId );
-					sen_array.push_back( MaxSegEnergy );
-
-				} // core event
-
-				// Reset
-				MaxSegEnergy = -99.;
-				MaxSegClu = -1;
-				MaxSegCore = -1;
-				MaxSegId = -1;
-					
-			}
-
-			else if( dgf_num == 53 && dgf_ch >= 0 && dgf_ch < 2 ) {
-
-				GammaEnergy = Cal->DgfEnergy( dgf_num, dgf_ch, dgf_en );
-				E_BeamDump[dgf_ch]->Fill( GammaEnergy );
-				T_BeamDump[dgf_ch]->Fill( (dgf_t)/40000000 );
-
-				for( k = 0; k < event->NumberOfDgfs(); k++ ) {
-
-					if( k == j ) continue;
-					dgf_num2 = event->Dgf(k)->ModuleNumber();
-					dgf_ch2  = event->Dgf(k)->Channel();
-					dgf_en2  = event->Dgf(k)->Energy();
-					dgf_t2   = event->Dgf(k)->Time();
-
-					if( dgf_num2 != 53 ) continue;
-					if( dgf_ch != 0 || dgf_ch2 != 1 ) continue;
-
-					GammaEnergy2 = Cal->DgfEnergy( dgf_num2, dgf_ch2, dgf_en2 );
-
-					tdiff_BD->Fill( dgf_t-dgf_t2 );
-
-					if( TMath::Abs( dgf_t-dgf_t2 ) < 999999999. )
-
-						bd_bd->Fill( GammaEnergy, GammaEnergy2 );
-
-				}
-
-
-			}
-
-		}
+		// Build gamma-ray events in Miniball (and fill beam-dump spectra)
+		ab.MakeGammaRays( addback );
+		
 		// ------------------------------------------------------------------------ //
 
 
@@ -507,12 +305,12 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 						padE_cal[adc_num]->Fill( PadEnergy[adc_num] );
 						padE_sum->Fill( PadEnergy[adc_num] );
 
-						gen_array.push_back( PadEnergy[adc_num] );
-						gtd_array.push_back( adc_t + dtAdc[adc_num] );
-						clu_array.push_back( 8 );
-						cid_array.push_back( adc_num+1 );
-						sid_array.push_back( 0 );
-						sen_array.push_back( 0 );
+						ab.GetGenArray().push_back( PadEnergy[adc_num] );
+						ab.GetGtdArray().push_back( adc_t + dtAdc[adc_num] );
+						ab.GetCluArray().push_back( 8 );
+						ab.GetCidArray().push_back( adc_num+1 );
+						ab.GetSidArray().push_back( 0 );
+						ab.GetSenArray().push_back( 0 );
 
 					} // pad
 					
@@ -529,12 +327,12 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 						E_spede_seg_cal[adc_ch]->Fill( ElectronEnergy );
 						E_spede->Fill( ElectronEnergy );
 					
-						gen_array.push_back( ElectronEnergy );
-						gtd_array.push_back( adc_t );
-						clu_array.push_back( 8 );
-						cid_array.push_back( 0 );
-						sid_array.push_back( adc_ch );
-						sen_array.push_back( 0 );
+						ab.GetGenArray().push_back( ElectronEnergy );
+						ab.GetGtdArray().push_back( adc_t );
+						ab.GetCluArray().push_back( 8 );
+						ab.GetCidArray().push_back( 0 );
+						ab.GetSidArray().push_back( adc_ch );
+						ab.GetSenArray().push_back( 0 );
 
 					}
 					
@@ -545,12 +343,12 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 						E_spede_seg_cal[adc_ch-4]->Fill( ElectronEnergy );
 						E_spede->Fill( ElectronEnergy );
 						
-						gen_array.push_back( ElectronEnergy );
-						gtd_array.push_back( adc_t );
-						clu_array.push_back( 8 );
-						cid_array.push_back( 0 );
-						sid_array.push_back( adc_ch-4 );
-						sen_array.push_back( 0 );
+						ab.GetGenArray().push_back( ElectronEnergy );
+						ab.GetGtdArray().push_back( adc_t );
+						ab.GetCluArray().push_back( 8 );
+						ab.GetCidArray().push_back( 0 );
+						ab.GetSidArray().push_back( adc_ch-4 );
+						ab.GetSenArray().push_back( 0 );
 
 					}
 					
@@ -813,22 +611,22 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 		// ------------------------------------------------------------------------ //
 		// Gamma/electron-particle coincidences
 		// ------------------------------------------------------------------------ //
-		for( j = 0; j < gen_array.size(); j++ ) {
+		for( j = 0; j < ab.GetGenArray().size(); j++ ) {
 
-			mb_evts[GammaCtr]->SetGen( gen_array[j] );
-			mb_evts[GammaCtr]->SetCluid( clu_array[j] );
-			mb_evts[GammaCtr]->SetCid( cid_array[j] );
-			mb_evts[GammaCtr]->SetSid( sid_array[j] );
-			mb_evts[GammaCtr]->SetTheta( gamma_theta[clu_array[j]][cid_array[j]%3][sid_array[j]] );
-			mb_evts[GammaCtr]->SetPhi( gamma_phi[clu_array[j]][cid_array[j]%3][sid_array[j]] );
+			mb_evts[GammaCtr]->SetGen( ab.GetGenArray().at(j) );
+			mb_evts[GammaCtr]->SetCluid( ab.GetCluArray().at(j) );
+			mb_evts[GammaCtr]->SetCid( ab.GetCidArray().at(j) );
+			mb_evts[GammaCtr]->SetSid( ab.GetSidArray().at(j) );
+			mb_evts[GammaCtr]->SetTheta( gamma_theta[ab.GetCluArray().at(j)][ab.GetCidArray().at(j)%3][ab.GetSidArray().at(j)] );
+			mb_evts[GammaCtr]->SetPhi( gamma_phi[ab.GetCluArray().at(j)][ab.GetCidArray().at(j)%3][ab.GetSidArray().at(j)] );
 				
 			// Do particles
 			for( k = 0; k < Ener_front.size(); k++ ) {
 
-				tdiffPG = time[k] - gtd_array[j];
+				tdiffPG = time[k] - ab.GetGtdArray().at(j);
 
 				// electrons
-				if( clu_array[j] == 8 ) { 
+				if( ab.GetCluArray().at(j) == 8 ) { 
 
 					tdiff_ep->Fill( tdiffPG );
 
@@ -861,19 +659,19 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 			} // End loop All the particles
 
 			// Look for correlated gammas or electrons
-			for( l = 0; l < gen_array.size(); l++ ) {
+			for( l = 0; l < ab.GetGenArray().size(); l++ ) {
 				
 				// skip if it's the same event as before
 				if( l == j ) continue;
 					
 				// Found highest energy segment
-				mb_evts[GammaCtr]->SetCorGamGen( gen_array[l] );
-				mb_evts[GammaCtr]->SetCorGamCluid( clu_array[l] );
-				mb_evts[GammaCtr]->SetCorGamCid( cid_array[l] );
-				mb_evts[GammaCtr]->SetCorGamSid( sid_array[l] );
-				mb_evts[GammaCtr]->SetCorGamGtd( gtd_array[l] - gtd_array[j] );
-				mb_evts[GammaCtr]->SetCorGamTheta( gamma_theta[clu_array[l]][cid_array[l]%3][sid_array[l]] );
-				mb_evts[GammaCtr]->SetCorGamPhi( gamma_phi[clu_array[l]][cid_array[l]%3][sid_array[l]] );
+				mb_evts[GammaCtr]->SetCorGamGen( ab.GetGenArray().at(l) );
+				mb_evts[GammaCtr]->SetCorGamCluid( ab.GetCluArray().at(l) );
+				mb_evts[GammaCtr]->SetCorGamCid( ab.GetCidArray().at(l) );
+				mb_evts[GammaCtr]->SetCorGamSid( ab.GetSidArray().at(l) );
+				mb_evts[GammaCtr]->SetCorGamGtd( ab.GetGtdArray().at(l) - ab.GetGtdArray().at(j) );
+				mb_evts[GammaCtr]->SetCorGamTheta( gamma_theta[ab.GetCluArray().at(l)][ab.GetCidArray().at(l)%3][ab.GetSidArray().at(l)] );
+				mb_evts[GammaCtr]->SetCorGamPhi( gamma_phi[ab.GetCluArray().at(l)][ab.GetCidArray().at(l)%3][ab.GetSidArray().at(l)] );
 				
 			} // End search for correlated gammas
 			
@@ -890,12 +688,14 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 		// ------------------------------------------------------------------------ //
 		// Gamma-gamma coincidences
 		// ------------------------------------------------------------------------ //
-		for( j = 0; j < gen_array.size(); j++ ) {
+		for( j = 0; j < ab.GetGenArray().size(); j++ ) {
 
-		    for( k = 0; k < gen_array.size(); k++ ) {
+		    for( k = 0; k < ab.GetGenArray().size(); k++ ) {
 
 		      if( j == k ) continue;
-		      gg->Fill( gen_array[j], gen_array[k] );
+				
+				tdiff_gg->Fill( ab.GetGtdArray().at(j), ab.GetGtdArray().at(k) );
+				gg->Fill( ab.GetGenArray().at(j), ab.GetGenArray().at(k) );
 
 		    }
 

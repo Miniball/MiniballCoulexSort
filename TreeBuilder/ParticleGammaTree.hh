@@ -29,6 +29,11 @@ using namespace std;
 # include "Calibration.hh"
 #endif
 
+// Header for addback
+#ifndef __ADDBACK_HH
+# include "AddBack.hh"
+#endif
+
 // Header for calibration
 #ifndef __MBGEOMETRY_HH__
 # include "MBGeometry.hh"
@@ -41,10 +46,6 @@ using namespace std;
 #ifndef __TREVTS_HH__
 # include "trevts.hh"
 #endif
-
-//ClassImp(BuiltEvent)
-//ClassImp(AdcData)
-//ClassImp(DgfData)
 
 /// Main class for building the particle-gamma coincidence trees
 
@@ -105,7 +106,7 @@ public:
 	
 	// Histograms
 	// diagnostics
-	TH1F *adc, *dgf, *free_dgf, *hABmult, *cd_debug;
+	TH1F *adc, *dgf, *free_dgf, *cd_debug;
 	
 	// time differences
 	TH1F *tdiff_gp, *tdiff_ep, *tdiff_gg;
@@ -113,9 +114,7 @@ public:
 	
 	// gamma
 	TH1F *E_gam;
-	TH2F *gg, *bd_bd;
-	TH1F *E_gam_seg[8][3][7], *E_gam_seg_cal[8][3][7];
-	TH1F *E_BeamDump[2], *T_BeamDump[2];
+	TH2F *gg;
 
 	// particles
 	TH2F *part;
@@ -147,6 +146,26 @@ private:
 	bool ionch;
 	bool spede;
 	bool verbose;
+	
+	// Temporary variables
+	int dgf_num;
+	int dgf_num2;
+	int dgf_ch;
+	int dgf_ch2;
+	int dgf_en;
+	int dgf_en2;
+	long long dgf_t;
+	long long dgf_t2;
+	unsigned int adc_num;
+	unsigned int adc_ch;
+	unsigned int adc_en;
+	unsigned int adc_ch2;
+	unsigned int adc_en2;
+	long long adc_t;
+
+	// Counters
+	unsigned int GammaCtr;
+	unsigned int PartCtr;
 
 	ClassDef( ParticleGammaTree, 1 );
 	
@@ -170,6 +189,10 @@ ParticleGammaTree::~ParticleGammaTree() {
 
 void ParticleGammaTree::InitialiseVariables() {
 	
+	// Counters
+	GammaCtr = 0;
+	PartCtr = 0;
+
 	// Prompt and random time windows (to be read by calibration eventually!)
 	tMinPrompt = -12.;			tMaxPrompt = 6.;			// 18 ticks
 	tMinRandom = 8.;			tMaxRandom = 35.;			// 27 ticks
@@ -182,7 +205,6 @@ void ParticleGammaTree::InitialiseVariables() {
 	WeightPR /= TMath::Abs( tMinRandom - tMaxRandom );
 	
 	cout << "WeightPR: " << WeightPR << endl;
-	
 
 	// How many ticks need to align the prompt peak for each adc?
 	for( unsigned int i = 0; i < 4; i++ ) dtAdc[i] = Cal->AdcTime(i);
@@ -218,8 +240,6 @@ void ParticleGammaTree::SetupHistograms( TFile *outfile ){
 	dgf->GetXaxis()->SetTitle("Number of DGF's");
 	free_dgf = new TH1F("free_dgf","free_dgf",56,-0.5,55.5);
 	free_dgf->GetXaxis()->SetTitle("Number of free DGF's");
-	hABmult = new TH1F("hABmult","hABmult",4,-0.5,3.5);
-	hABmult->GetXaxis()->SetTitle("Addback multiplicity");
 	cd_debug = new TH1F("cd_debug","cd_debug",4,-0.5,3.5);
 	cd_debug->GetXaxis()->SetTitle("CD debugging");
 	
@@ -233,35 +253,9 @@ void ParticleGammaTree::SetupHistograms( TFile *outfile ){
 	for( i = 0; i < 4; i++ )
 		tdiff_gp_q[i] = new TH1F(Form("tdiff_gp_%d",i),Form("tdiff_gp_%d",i),201,-100.5,100.5);
 	
-	// Total gamma - no Doppler correction
-	E_gam = new TH1F("E_gam","E_gam",GBINS,GMIN,GMAX);
-	E_gam->GetXaxis()->SetTitle("Energy Gamma Rays [Channels]");
-	
 	// Gamma-gamma - no Doppler correction
 	gg = new TH2F("gg","#gamma-#gamma matrix;Energy [keV];Energy[keV]",GBINS,GMIN,GMAX,GBINS,GMIN,GMAX);
-	
-	// Gamma spectra for every segment - no Doppler correction
-	TDirectory *gam_dir = outfile->mkdir("E_gam_seg");
-	gam_dir->cd();
-	for( i = 0; i < 8; i++ ) {
-		
-		for( j = 0; j < 3; j++ ) {
-			
-			for( k = 0; k < 7; k++ ) {
-				
-				E_gam_seg[i][j][k] = new TH1F(Form("E_gam_%d_%d_%d",i,j,k),Form("E_gam_%d_%d_%d",i,j,k),16384,-0.5,65535.5);
-				E_gam_seg[i][j][k]->GetXaxis()->SetTitle("Energy Gamma Rays [Channels]");
-				E_gam_seg_cal[i][j][k] = new TH1F(Form("E_gam_%d_%d_%d_cal",i,j,k),Form("E_gam_%d_%d_%d_cal",i,j,k),GBINS,GMIN,GMAX);
-				E_gam_seg_cal[i][j][k]->GetXaxis()->SetTitle("Energy Gamma Rays [keV]");
-				
-			}
-			
-		}
-		
-	}
-	
-	gDirectory->cd("/");
-	
+
 	// Particle spectra for every segment
 	part = new TH2F("part","part",16,-0.5,15.5,1000,0,1000);
 	TDirectory *part_dir = outfile->mkdir("E_part");
@@ -310,17 +304,6 @@ void ParticleGammaTree::SetupHistograms( TFile *outfile ){
 		}
 		
 		gDirectory->cd("/");
-		
-	}
-	
-	tdiff_BD = new TH1F( "tdiff_BD", "tdiff_BD", 400, -200, 200);
-	bd_bd = new TH2F( "bd_bd", "bd_bd", GBINS,GMIN,GMAX, GBINS,GMIN,GMAX );
-	for( i = 0; i < 2; i++ ) {
-		
-		E_BeamDump[i] = new TH1F( Form("E_BeamDump_%d",i), Form("E_BeamDump_%d",i),GBINS,GMIN,GMAX);
-		E_BeamDump[i]->GetXaxis()->SetTitle("Energy of the Beam Dump [keV]");
-		T_BeamDump[i] = new TH1F( Form("T_BeamDump_%d",i), Form("T_BeamDump_%d",i),7200,0,7200);
-		T_BeamDump[i]->GetXaxis()->SetTitle("Time of the Beam Dump [s]");
 		
 	}
 	
