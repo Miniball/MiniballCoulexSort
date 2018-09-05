@@ -50,5 +50,4 @@ Bragg.Trace.Length:		512
 Mesytec.Adc:			1
 SPEDE.Chamb:			0
 NumberOf.CaenAdc:		0
-TypeOf.Setup:			0			# 1 for CLX/CREX/SPEDE and 0 for TREX
 Dgf.Init.Delay: 		65527     		# this is with CorrectMesytecTimestamps bug fixed!

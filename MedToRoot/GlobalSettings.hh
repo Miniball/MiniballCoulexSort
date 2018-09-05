@@ -247,11 +247,7 @@ public:
 	unsigned short NofCaenAdc() {
 		return fNofCaenAdc;
 	};
-
-	unsigned short TypeOfSetup() {
-		return fTypeOfSetup;
-	};
-  
+	
 	unsigned short EbisWindowLowerEdge() {
 		return fEbisWindowLowerEdge;
 	};
@@ -345,7 +341,6 @@ protected:
 	bool fMesytecAdc;
 	bool fSPEDEChamb;
 	unsigned short fNofCaenAdc;
-	unsigned short fTypeOfSetup;
 	unsigned short fEbisWindowLowerEdge;
 	unsigned short fEbisWindowUpperEdge;
 

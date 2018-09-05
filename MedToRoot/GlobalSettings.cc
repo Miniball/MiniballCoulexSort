@@ -210,7 +210,6 @@ void GlobalSettings::ReadUnpackerSettings() {
 	fSPEDEChamb = fSettings->GetValue("SPEDE.Chamb", false);
 	fNofCaenAdc = fSettings->GetValue("NumberOf.CaenAdc", 0);
 	if( fMesytecAdc == false ) fNofCaenAdc = 0;
-	fTypeOfSetup = fSettings->GetValue("TypeOf.Setup", 1);
 	fDgfInitDelay = fSettings->GetValue("Dgf.Init.Delay", 65556);
 
 }
