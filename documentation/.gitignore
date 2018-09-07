@@ -1,0 +1,3 @@
+# Ignore the compiled documentation, the user can do it themselves
+html/*
+latex/*
