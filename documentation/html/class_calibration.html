@@ -92,6 +92,9 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>DgfEnergy</b> (int 
 <tr class="memitem:a07ba44fdc31250e347939588759d2796"><td class="memItemLeft" align="right" valign="top"><a id="a07ba44fdc31250e347939588759d2796"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>AdcEnergy</b> (int adc, int chan, unsigned short raw)</td></tr>
 <tr class="separator:a07ba44fdc31250e347939588759d2796"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a382d2e55bbd67aca7bef065fb311b9bc"><td class="memItemLeft" align="right" valign="top"><a id="a382d2e55bbd67aca7bef065fb311b9bc"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>AdcThreshold</b> (int adc, int chan)</td></tr>
+<tr class="separator:a382d2e55bbd67aca7bef065fb311b9bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a860b3c2c4a2350009bbbf337aa56a212"><td class="memItemLeft" align="right" valign="top"><a id="a860b3c2c4a2350009bbbf337aa56a212"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>AdcTime</b> (int adc)</td></tr>
 <tr class="separator:a860b3c2c4a2350009bbbf337aa56a212"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -152,6 +155,9 @@ vector&lt; vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign
 <tr class="memitem:a0ee2c053390f1400db656aeed6d609ce"><td class="memItemLeft" align="right" valign="top"><a id="a0ee2c053390f1400db656aeed6d609ce"></a>
 vector&lt; vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>fAdcGain</b></td></tr>
 <tr class="separator:a0ee2c053390f1400db656aeed6d609ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f170a1f0a7e3db9199e2ffbf02d7daa"><td class="memItemLeft" align="right" valign="top"><a id="a4f170a1f0a7e3db9199e2ffbf02d7daa"></a>
+vector&lt; vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>fAdcThreshold</b></td></tr>
+<tr class="separator:a4f170a1f0a7e3db9199e2ffbf02d7daa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa180b606b811ac4bd8a2db517c5302a3"><td class="memItemLeft" align="right" valign="top"><a id="aa180b606b811ac4bd8a2db517c5302a3"></a>
 vector&lt; vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>fFCDPosStrip</b></td></tr>
 <tr class="separator:aa180b606b811ac4bd8a2db517c5302a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -226,7 +232,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>fBeamdumpDgf</b></td><
 <tr class="separator:a1fc1809a608c626d462fe7d0859d52da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A class to read in the calibration file in ROOT's TConfig format. Each ADC and DGF channel can have offset, gain and quadratic terms. There is potential to include the demux of T/C-REX in here too. </p>
+<div class="textblock"><p>A class to read in the calibration file in ROOT's TConfig format. Each ADC and DGF channel can have offset, gain and quadratic terms. The ADCs also have a threshold for each channel, to cut out the "zeroes" and there is a time offset parameter for each ADC module, too. There is potential to include the demux of T/C-REX in here too. </p>
 </div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>TreeBuilder/<a class="el" href="_calibration_8hh_source.html">Calibration.hh</a></li>
 <li>TreeBuilder/Calibration.cc</li>

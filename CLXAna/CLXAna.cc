@@ -23,6 +23,7 @@ void PrintInput() {
 	cout << "spededist = " << spededist << " mm" << endl;
 	cout << "bg_frac = " << bg_frac << endl;
 	cout << "srim = " << srim << endl;
+	cout << "cutfile = " << cutfilename << endl;
 	
 	return;
 	

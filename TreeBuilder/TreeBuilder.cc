@@ -54,6 +54,16 @@ int main(int argc, char* argv[]) {
 
 
 	// ------------------------------------------------------------------------ //
+	// Make calibration
+	// ------------------------------------------------------------------------ //
+
+	Calibration *Cal = new Calibration( CalibrationFile );
+	if( verbose ) Cal->PrintCalibration();
+
+	// ------------------------------------------------------------------------ //
+	
+	
+	// ------------------------------------------------------------------------ //
 	// Initialise events and setup the input tree
 	// ------------------------------------------------------------------------ //
 	TChain* tr;
@@ -89,11 +99,7 @@ int main(int argc, char* argv[]) {
 	// ------------------------------------------------------------------------ //
 
 	ParticleGammaTree pg_ana( tr, event );
-		
-	// Make calibration
-	Calibration *Cal = new Calibration( CalibrationFile );
-	//if( verbose ) Cal->PrintCalibration();
-	pg_ana.Cal = Cal;
+	pg_ana.SetCalibration( Cal );
 	pg_ana.SetupFlags( singles, gamgam, addback, crex, trex, cdpad, ionch, spede, verbose );
 
 	// ------------------------------------------------------------------------ //
@@ -124,7 +130,6 @@ int main(int argc, char* argv[]) {
 		}
 		
 	}
-	
 	
 	// ------------------------------------------------------------------------ //
 

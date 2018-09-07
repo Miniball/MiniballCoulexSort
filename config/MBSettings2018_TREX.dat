@@ -1,6 +1,6 @@
 # Settings file for Miniball TREX campaign of 2018: 10 Mesytec ADC
 
-Coincidence.Window:		120			# width of coincindence window in 25 ns. Before 40, CLX use 80
+Coincidence.Window:		80			# width of coincindence window in 25 ns. Before 40, CLX use 80
 Coincidence.Reference:		0.			# reference point of coincidence window in us (i.e. where 0 is the middle of the window)
 EbisWindow.LowerEdge:		0			# timing conditions (in us)
 EbisWindow.UpperEdge:		1000 			# timing conditions (in us)

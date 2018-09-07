@@ -28,6 +28,9 @@ double {\bfseries Dgf\+Energy} (int dgf, int chan, unsigned short raw)
 \mbox{\Hypertarget{class_calibration_a07ba44fdc31250e347939588759d2796}\label{class_calibration_a07ba44fdc31250e347939588759d2796}} 
 double {\bfseries Adc\+Energy} (int adc, int chan, unsigned short raw)
 \item 
+\mbox{\Hypertarget{class_calibration_a382d2e55bbd67aca7bef065fb311b9bc}\label{class_calibration_a382d2e55bbd67aca7bef065fb311b9bc}} 
+double {\bfseries Adc\+Threshold} (int adc, int chan)
+\item 
 \mbox{\Hypertarget{class_calibration_a860b3c2c4a2350009bbbf337aa56a212}\label{class_calibration_a860b3c2c4a2350009bbbf337aa56a212}} 
 double {\bfseries Adc\+Time} (int adc)
 \item 
@@ -87,6 +90,9 @@ vector$<$ vector$<$ double $>$ $>$ {\bfseries f\+Adc\+Offset}
 \item 
 \mbox{\Hypertarget{class_calibration_a0ee2c053390f1400db656aeed6d609ce}\label{class_calibration_a0ee2c053390f1400db656aeed6d609ce}} 
 vector$<$ vector$<$ double $>$ $>$ {\bfseries f\+Adc\+Gain}
+\item 
+\mbox{\Hypertarget{class_calibration_a4f170a1f0a7e3db9199e2ffbf02d7daa}\label{class_calibration_a4f170a1f0a7e3db9199e2ffbf02d7daa}} 
+vector$<$ vector$<$ double $>$ $>$ {\bfseries f\+Adc\+Threshold}
 \item 
 \mbox{\Hypertarget{class_calibration_aa180b606b811ac4bd8a2db517c5302a3}\label{class_calibration_aa180b606b811ac4bd8a2db517c5302a3}} 
 vector$<$ vector$<$ double $>$ $>$ {\bfseries f\+F\+C\+D\+Pos\+Strip}
@@ -163,7 +169,7 @@ int {\bfseries f\+Beamdump\+Dgf}
 
 
 \subsection{Detailed Description}
-A class to read in the calibration file in R\+O\+OT\textquotesingle{}s T\+Config format. Each A\+DC and D\+GF channel can have offset, gain and quadratic terms. There is potential to include the demux of T/\+C-\/\+R\+EX in here too. 
+A class to read in the calibration file in R\+O\+OT\textquotesingle{}s T\+Config format. Each A\+DC and D\+GF channel can have offset, gain and quadratic terms. The A\+D\+Cs also have a threshold for each channel, to cut out the \char`\"{}zeroes\char`\"{} and there is a time offset parameter for each A\+DC module, too. There is potential to include the demux of T/\+C-\/\+R\+EX in here too. 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 

@@ -25,7 +25,7 @@
 
 using namespace std;
 
-/// A class to peform the addback for Miniball
+/// A class to perform the addback for Miniball
 /// Actually, it constructs gamma-rays from DGF
 /// data and the addback is an option...
 
@@ -33,11 +33,30 @@ class AddBack {
 	
 public:
 	
-	// Functions to fill gamma-ray vectors
-	void MakeGammaRays( bool addback );
-	
 	AddBack( BuiltEvent *evt );
 	virtual ~AddBack();
+	
+	// Functions to fill gamma-ray vectors
+	void MakeGammaRays( bool addback );
+	void MakeElectrons();
+	
+	// Function to set SubEvent for SPEDE
+	inline void SetSubEvent( AdcSubEvent *subevt ){
+		subevent = subevt;
+		return;
+	};
+	
+	// Function to set timestamp for SPEDE
+	inline void SetTime( long long t ){
+		adc_t = t;
+		return;
+	};
+	
+	// Function to set module number for SPEDE
+	inline void SetModule( unsigned int n ){
+		adc_num = n;
+		return;
+	};
 	
 	// Function to set calibration
 	inline void SetCalibration( Calibration *_Cal ){
@@ -70,13 +89,16 @@ private:
 	// Event
 	BuiltEvent *event;
 	
+	// ADC Sub Event (for SPEDE or PAD)
+	AdcSubEvent *subevent;
+	
 	// Calibration
 	Calibration *Cal;
 	
 	// Output file
 	TFile *outfile;
 
-	// Temporary variables
+	// DGF values
 	int dgf_num;
 	int dgf_num2;
 	int dgf_ch;
@@ -85,11 +107,18 @@ private:
 	int dgf_en2;
 	long long dgf_t;
 	long long dgf_t2;
+
+	// Adc values
+	unsigned int adc_num;
+	unsigned int adc_ch;
+	unsigned int adc_en;
+	long long adc_t;
 	
-	// Gamma-ray energies
+	// Gamma-ray and electron energies
 	float GammaEnergy;
 	float GammaEnergy2;
-	
+	float ElectronEnergy;
+
 	// Maximum segment energy determination
 	float MaxSegEnergy;
 	int MaxSegClu;
@@ -117,6 +146,9 @@ private:
 	TH2F *bd_bd;
 	TH1F *hABmult;
 
+	// spede
+	TH1F *E_spede, *E_spede_seg[24], *E_spede_seg_cal[24];
+	
 
 	//ClassDef( AddBack, 1 )
 	
@@ -133,7 +165,7 @@ AddBack::AddBack( BuiltEvent *evt ) {
 
 AddBack::~AddBack() {
 	
-	cout << "Destrcutor\n";
+	//cout << "Destructor\n";
 	
 }
 
@@ -181,6 +213,22 @@ void AddBack::InitialiseHistograms() {
 		
 	}
 
+	// Spede
+	TDirectory *spede_dir = outfile->mkdir("E_spede_seg");
+	spede_dir->cd();
+	E_spede = new TH1F("E_spede","E_spede",ELBINS,ELMIN,ELMAX);
+	E_spede->GetXaxis()->SetTitle("Energy Electrons [Channels]");
+	for( unsigned int i = 0; i < 24; i++ ) {
+		
+		E_spede_seg[i] = new TH1F(Form("E_spede_%d",i),Form("E_spede_%d",i),16384,-0.5,65535.5);
+		E_spede_seg[i]->GetXaxis()->SetTitle("Energy Electrons [Channels]");
+		E_spede_seg_cal[i] = new TH1F(Form("E_spede_%d_cal",i),Form("E_spede_%d_cal",i),ELBINS,ELMIN,ELMAX);
+		E_spede_seg_cal[i]->GetXaxis()->SetTitle("Energy Electrons [keV]");
+		
+	}
+	
+	gDirectory->cd("/");
+	
 }
 #endif
 

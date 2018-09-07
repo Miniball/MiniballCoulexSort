@@ -220,4 +220,52 @@ void AddBack::MakeGammaRays( bool addback ) {
 	
 }
 
+void AddBack::MakeElectrons() {
+
+	// SPEDE is in the 5th ADC
+	for( unsigned int i = 0; i < subevent->Size(); i++ ) {
+		
+		adc_ch = subevent->AdcChannel(i);
+		adc_en = subevent->AdcValue(i);
+		
+		ElectronEnergy = Cal->AdcEnergy( 4, adc_ch, adc_en );
+		
+		// STM-16 one
+		if( adc_ch < 12 ) {
+			
+			E_spede_seg[adc_ch]->Fill( adc_en );
+			E_spede_seg_cal[adc_ch]->Fill( ElectronEnergy );
+			E_spede->Fill( ElectronEnergy );
+			
+			GetGenArray().push_back( ElectronEnergy );
+			GetGtdArray().push_back( adc_t );
+			GetCluArray().push_back( 8 );
+			GetCidArray().push_back( 0 );
+			GetSidArray().push_back( adc_ch );
+			GetSenArray().push_back( 0 );
+			
+		}
+		
+		// STM-16 two
+		else if( adc_ch > 15 && adc_ch < 28 ) {
+			
+			E_spede_seg[adc_ch-4]->Fill( adc_en );
+			E_spede_seg_cal[adc_ch-4]->Fill( ElectronEnergy );
+			E_spede->Fill( ElectronEnergy );
+			
+			GetGenArray().push_back( ElectronEnergy );
+			GetGtdArray().push_back( adc_t );
+			GetCluArray().push_back( 8 );
+			GetCidArray().push_back( 0 );
+			GetSidArray().push_back( adc_ch-4 );
+			GetSenArray().push_back( 0 );
+			
+		}
+		
+	} // k
+	
+	return;
+	
+}
+
 #endif

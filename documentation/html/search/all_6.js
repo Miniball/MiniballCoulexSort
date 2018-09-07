@@ -1,6 +1,8 @@
 var searchData=
 [
   ['g_5fclx',['g_clx',['../classg__clx.html',1,'g_clx'],['../classg__clx.html#aa619daf508fe1d6bddb000af26630f31',1,'g_clx::g_clx()']]],
+  ['gamma_5fphi',['gamma_phi',['../class_particle_gamma_tree.html#a99149c4e65665af23ad7906df0be3f66',1,'ParticleGammaTree']]],
+  ['gamma_5ftheta',['gamma_theta',['../class_particle_gamma_tree.html#a363313f4b71470f88d69177b880c5429',1,'ParticleGammaTree']]],
   ['gammaang',['GammaAng',['../classdoppler.html#a6dca381f91f2267abefadd62cf66f69f',1,'doppler']]],
   ['gcor_5fcid',['gcor_cid',['../classg__clx.html#a0aed9e2ec9d94795c86a00c51d940652',1,'g_clx']]],
   ['gcor_5fcluid',['gcor_cluid',['../classg__clx.html#a93666f6d2ee0818e554d9188df02b844',1,'g_clx']]],
@@ -9,7 +11,7 @@ var searchData=
   ['gcor_5fpha',['gcor_pha',['../classg__clx.html#a823ddd84f64de88789bfa434579778dc',1,'g_clx']]],
   ['gcor_5fsid',['gcor_sid',['../classg__clx.html#a10ddb8a6039959138b145dec9979a216',1,'g_clx']]],
   ['gcor_5ftha',['gcor_tha',['../classg__clx.html#a19c4bfa4d9f2d4ef26399075bba0c2d2',1,'g_clx']]],
-  ['gen',['gen',['../classmbevts.html#aaa4ca32ce18c059a2603bc496d9abf9c',1,'mbevts::gen()'],['../classg__clx.html#afa1d8a83322f5f91c433b1747ffdc71b',1,'g_clx::gen()']]],
+  ['gen',['gen',['../classg__clx.html#afa1d8a83322f5f91c433b1747ffdc71b',1,'g_clx']]],
   ['getab',['GetAb',['../classdoppler.html#a364b85a1e3be8f5386dab5f0b6fe2da3',1,'doppler']]],
   ['getat',['GetAt',['../classdoppler.html#aef253058a4cae5ab5c6b2662d6afb39d',1,'doppler']]],
   ['getben',['GetBEn',['../classdoppler.html#a182d987ddc6db4a8b8e7f7821bda3846',1,'doppler']]],
