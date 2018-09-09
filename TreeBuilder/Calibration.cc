@@ -10,15 +10,13 @@ Calibration::Calibration( string filename ) {
 	fVerbose = 0;
 	fNofDgfs = 48;
 	fNofDgfChans = 4;
-	fNofAdcs = 5; // 6 for TREX and CREX2012 // 5 for ion chamber, spede or pad
+	fNofAdcs = 10; // up to for TREX
 	fNofAdcChans = 32;
 	fNofAdcsCD = 4;
 	fNofCDSegm = 16; // 16: Only one CD
 	fNofClusters = 8;
 	fBeamdumpDgf = 53;
 	RawRandomized = 0.;
-	fFWHMPosMux = 6.;
-	fLimitFBCD.resize(fNofAdcs);
 	ReadCalibration();
 	fRand = new TRandom();
 	//if( fVerbose ) PrintCalibration();
