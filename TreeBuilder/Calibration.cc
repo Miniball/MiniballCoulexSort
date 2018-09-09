@@ -93,49 +93,6 @@ void Calibration::ReadCalibration() {
 
 	}
   
-	if( fVerbose ) cout << "reading FCD Pos" << endl;
-	fFCDPosStrip.resize(fNofAdcsCD);
-	fFCDPosRing.resize(fNofAdcsCD);
-		
-	for(int adc=0; adc<fNofAdcsCD; adc++){
-		
-		fFCDPosStrip[adc].resize(fNofCDSegm);
-		fFCDPosRing[adc].resize(fNofCDSegm);
-
-		for(int pos=0; pos<fNofCDSegm; pos++){
-
-			fFCDPosStrip[adc][pos] = config->GetValue(Form("FCD.Quadrant.%d.Strip.%d.Pos", adc, pos),0.);
-			fFCDPosRing[adc][pos] = config->GetValue(Form("FCD.Quadrant.%d.Ring.%d.Pos", adc, pos),0.);
-
-		}
-
-	}
-
-	if( fVerbose ) cout << "reading limit FCD-BCD Pos" << endl;
-	for(int adc=0; adc<fNofAdcsCD; adc++){
-
-	    fLimitFBCD[adc] = config->GetValue(Form("FBCD.LimitPos.Adc.%d", adc),650.);
-
-	}
-  
-	if( fVerbose ) cout << "reading BCD Pos" << endl;
-	fBCDPosStrip.resize(fNofAdcsCD);
-	fBCDPosRing.resize(fNofAdcsCD);
-
-	for(int adc=0; adc<fNofAdcsCD; adc++){
-
-		fBCDPosStrip[adc].resize(fNofCDSegm);
-		fBCDPosRing[adc].resize(fNofCDSegm);
-
-		for(int pos=0; pos<fNofCDSegm; pos++){
-			
-			fBCDPosStrip[adc][pos] = config->GetValue(Form("BCD.Quadrant.%d.Strip.%d.Pos", adc, pos),0.);
-			fBCDPosRing[adc][pos] = config->GetValue(Form("BCD.Quadrant.%d.Ring.%d.Pos", adc, pos),0.);
-
-		}
-
-	}
-  
 	if( fVerbose ) cout << "reading Miniball angles" << endl;
 	fClusterTheta.resize(fNofClusters);
 	fClusterPhi.resize(fNofClusters);
@@ -188,43 +145,12 @@ void Calibration::PrintCalibration(){
 
 			cout << Form("adc_%d_%d.Offset\t", adc, chan) << fAdcOffset[adc][chan] << endl;
 			cout << Form("adc_%d_%d.Gain\t", adc, chan) << fAdcGain[adc][chan] << endl;
+			cout << Form("adc_%d_%d.Threshold\t", adc, chan) << fAdcThreshold[adc][chan] << endl;
 	
 		}
 
 	}
-  
-	cout << "FCD-BCD Limits pos" << endl;
-	for(int adc=0; adc<fNofAdcsCD; adc++){
 
-		cout << Form("FBCD.LimitPos.Adc.%d\t", adc) << fLimitFBCD[adc] << endl;
-
-	}
-  
-	cout << "FCD Positions" << endl;
-
-	for(int adc=0; adc<fNofAdcsCD; adc++){
-	
-		for(int pos=0; pos<fNofCDSegm; pos++){
-		
-			cout << Form("FCD.Quadrant.%d.Strip.%d.Pos\t", adc, pos) << fFCDPosStrip[adc][pos] << endl;  
-			cout << Form("FCD.Quadrant.%d.Ring.%d.Pos\t", adc, pos) << fFCDPosRing[adc][pos] << endl;
-
-		}
-
-	}
-
-	cout << "BCD Positions" << endl;
-	for(int adc=0; adc<fNofAdcsCD; adc++){
-
-		for(int pos=0; pos<fNofCDSegm; pos++){
-	
-			cout << Form("BCD.Quadrant.%d.Strip.%d.Pos\t", adc, pos) << fBCDPosStrip[adc][pos] << endl;  
-			cout << Form("BCD.Quadrant.%d.Ring.%d.Pos\t", adc, pos) << fBCDPosRing[adc][pos] << endl;
-
-		}
-
-	}
-	
 	cout << "zoffset: " << zoffset << endl;
 
 }
@@ -372,139 +298,3 @@ double Calibration::ZOffset(){
 	return zoffset;
 	
 }
-
-int Calibration::PosFBCDRing(int Quad, unsigned short raw){ // PosStrip CD for CREX2016
-
-	if( (Quad > -1) && (Quad < fNofAdcsCD) ){
-	
-		if (fVerbose > 1) cout << "Quad: " << Quad << ". Value: " << raw << endl;
-		if (raw < fLimitFBCD[Quad]){
-	
-			for(int pos=0; pos < fNofCDSegm; pos++){
-
-				if (fVerbose > 1) cout << "fFCDPosRing[" << Quad << "][" << pos << "] = " << fFCDPosRing[Quad][pos] << endl;
-
-				if ( raw <= (fFCDPosRing[Quad][pos] + fFWHMPosMux) ) return pos;
-				else if (pos==15 && raw <= (fFCDPosRing[Quad][pos] + (10*fFWHMPosMux))) return pos;
-
-			}
-			
-		}
-		
-		else {
-		
-			for(int pos=0; pos < fNofCDSegm; pos++){
-
-				if (fVerbose > 1) cout << "fBCDPosRing[" << Quad << "][" << pos << "] = " << fBCDPosRing[Quad][pos] << endl;
-
-				if ( raw <= (fBCDPosRing[Quad][pos] + fFWHMPosMux) ) return pos;
-				else if (pos==15 && raw <= (fBCDPosRing[Quad][pos] + (10*fFWHMPosMux))) return pos;
-
-			}
-			
-		}
-
-	}
-
-	else cerr << "adc " << Quad << " RawPos " << raw << " not found!" << endl;
-	
-	return -1;
-
-}
-
-int Calibration::PosFBCDStrip(int Quad, unsigned short raw){ // PosStrip CD for CREX2016
-
-	if( (Quad > -1) && (Quad < fNofAdcsCD) ){
-
-		if (fVerbose > 1) cout << "Quad: " << Quad << ". Value: " << raw << endl;
-
-		if (raw < fLimitFBCD[Quad]){
-
-			for(int pos=0; pos<fNofCDSegm; pos++){
-
-				if (fVerbose > 1) cout << "fFCDPosStrip[" << Quad << "][" << pos << "] = " << fFCDPosStrip[Quad][pos] << endl;
-
-				if ( raw <= (fFCDPosStrip[Quad][pos] + fFWHMPosMux) ) return pos;
-				else if (pos==15 && raw <= (fFCDPosStrip[Quad][pos] + (10*fFWHMPosMux))) return pos;
-
-			}
-
-		}
-	
-		else {
-
-			for(int pos=0; pos<fNofCDSegm; pos++){
-
-				if (fVerbose > 1) cout << "fBCDPosStrip[" << Quad << "][" << pos << "] = " << fBCDPosStrip[Quad][pos] << endl;
-
-				if ( raw <= (fBCDPosStrip[Quad][pos] + fFWHMPosMux) ) return pos;
-				else if (pos==15 && raw <= (fBCDPosStrip[Quad][pos] + (10*fFWHMPosMux))) return pos;
-
-			}
-
-		}
-
-	}
-	
-	else cerr << "adc " << Quad << " RawPos " << raw << " not found!" << endl;
-
-	return -1;
-	
-}
-
-int Calibration::PosRing(int Quad, unsigned short raw) { // PosStrip CD for CREX2012
-
-	if( (Quad > -1) && (Quad < fNofAdcsCD) ){
-
-		if( fVerbose > 1 ) cout << "Quad: " << Quad << ". Value: " << raw << endl;
-	
-		for( int pos=0; pos < fNofCDSegm; pos++){
-
-			if( fVerbose > 1 ) cout << "fFCDPosRing[" << Quad << "][" << pos << "] = " << fFCDPosRing[Quad][pos] << endl;
-
-			if( raw < fFCDPosRing[Quad][pos] ) return (pos + 1);
-
-		}
-
-	}
-
-	else cerr << "adc " << Quad << " RawPos " << raw << " not found!" << endl;
-
-	return -1;
-	
-}
-
-int Calibration::PosStrip(int Quad, unsigned short raw){ // PosStrip CD for CREX2012
-
-	if( (Quad > -1) && (Quad < fNofAdcsCD) ){
-	
-		if (fVerbose > 1) cout << "Quad: " << Quad << ". Value: " << raw << endl;
-
-		for(int pos=0; pos<fNofCDSegm; pos++){
-
-			if (fVerbose > 1) cout << "fFCDPosStrip[" << Quad << "][" << pos << "] = " << fFCDPosStrip[Quad][pos] << endl;
-	
-				if( raw < fFCDPosStrip[Quad][pos] ) return (pos + 1);
-
-			}
-			
-	}
-
-	else cerr << "adc " << Quad << " RawPos " << raw << " not found!" << endl;
-
-	return -1;
-	
-}
-
-int Calibration::StripPosBarrel(unsigned short strraw, unsigned short rearraw){
-
-	if( (strraw>0) && (rearraw>0) ) {
-	
-		return 16*(strraw/rearraw);
-
-	}
-	
-	else return -1; 
-
-}
-

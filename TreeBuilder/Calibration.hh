@@ -48,11 +48,6 @@ public:
 	double ClusterAlpha( int clu );
 	double ClusterR( int clu );
 	double ZOffset();
-	int PosFBCDRing(int Quad, unsigned short raw);
-	int PosFBCDStrip(int Quad, unsigned short raw);
-	int PosRing(int Quad, unsigned short raw);
-	int PosStrip(int Quad, unsigned short raw);
-	int StripPosBarrel(unsigned short strraw, unsigned short rearraw);
 
 private:
 
@@ -67,10 +62,6 @@ private:
 	vector< vector<double> > fAdcOffset;
 	vector< vector<double> > fAdcGain;
 	vector< vector<double> > fAdcThreshold;
-	vector< vector<double> > fFCDPosStrip;
-	vector< vector<double> > fFCDPosRing;
-	vector< vector<double> > fBCDPosStrip;
-	vector< vector<double> > fBCDPosRing;
 
 	vector< double > fClusterTheta;
 	vector< double > fClusterPhi;
@@ -95,9 +86,6 @@ private:
 	int fNofCDSegm;
 	int fNofClusters;
  
-	double fFWHMPosMux;
-	vector<double> fLimitFBCD;
-
 	int fBeamdumpDgf;
 
 	ClassDef(Calibration, 1)
