@@ -27,10 +27,10 @@ AR        = ar
 CC        = $(shell root-config --cc)
 CPP       = $(shell root-config --cxx)
 
-CFLAGS    = -O2 -pipe -Wall -W -Woverloaded-virtual $(ROOTCFLAGS) -fPIC
+CFLAGS    = -pipe -Wall -W -Woverloaded-virtual $(ROOTCFLAGS) -fPIC
 
 INCLUDES  = -I$(COMMON_DIR) -I$(MBEVTS_DIR) -I$(MED2R_DIR) -I./
-LFLAGS    = -O2 -g
+LFLAGS    = -g
 
 O_FILES = Calibration.o \
 		MBGeometry.o \

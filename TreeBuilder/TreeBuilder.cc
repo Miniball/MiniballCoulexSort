@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	cout << "input file(s):" << endl;
-	for( unsigned int i=0; i<InputFiles.size(); i++ ) {
+	for( unsigned int i = 0; i < InputFiles.size(); i++ ) {
 
 		cout << InputFiles[i] << endl;
 	
@@ -49,6 +49,14 @@ int main(int argc, char* argv[]) {
 	
 	cout << "calibration file: " << CalibrationFile << endl;
 	cout << "output file: " << OutputFile << endl;
+	
+	if( ( trex && cdpad ) || ( trex && spede ) || ( cdpad && spede ) ||
+		( trex && crex ) || ( crex && spede ) || ( cdpad && crex ) ){
+		
+		cerr << "Choose only one of cdpad, spede, crex or trex" << endl;
+		exit(1);
+		
+	}
 	
 	// ------------------------------------------------------------------------ //
 

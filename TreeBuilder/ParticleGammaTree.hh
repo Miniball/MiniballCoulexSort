@@ -80,7 +80,7 @@ public:
 	virtual void InitialiseVariables();
 	
 	/// Setup histograms
-	virtual void SetupHistograms( TFile *outfile );
+	virtual void SetupHistograms();
 	
 	/// Setup sorting flags
 	virtual void SetupFlags( bool _singles, bool _gamgam, bool _addback, bool _crex, bool _trex,
@@ -115,14 +115,7 @@ public:
 	
 	// gamma
 	TH2F *gg;
-	
-	// Ionisation chamber
-	TH2F *dEE;
-	
-	// CD-pad detector, freely triggered
-	TH1F *padE_sum, *padE[4], *padE_cal[4];
-	TH2F *cd_dEE_sum, *cd_dEE_anti, *cd_dEE[4];
-	
+
 private:
 	
 	/// Calibration
@@ -226,7 +219,7 @@ void ParticleGammaTree::SetupFlags( bool _singles, bool _gamgam, bool _addback, 
 	
 }
 
-void ParticleGammaTree::SetupHistograms( TFile *outfile ){
+void ParticleGammaTree::SetupHistograms(){
 	
 	// time differences
 	tdiff_gp = new TH1F("tdiff_gp","tdiff_gp",201,-100.5,100.5);
@@ -241,34 +234,6 @@ void ParticleGammaTree::SetupHistograms( TFile *outfile ){
 	// Gamma-gamma - no Doppler correction
 	gg = new TH2F("gg","#gamma-#gamma matrix;Energy [keV];Energy[keV]",GBINS,GMIN,GMAX,GBINS,GMIN,GMAX);
 
-	// Ionisation chamber
-	TDirectory *ic_dir = outfile->mkdir("IC_spec");
-	ic_dir->cd();
-	dEE = NULL;
-	if( ionch ) dEE = new TH2F( "dEE", "ionisation chamber;E_{rest};delta-E", 4096, -0.5, 4095.5, 4096, -0.5, 4095.5 );
-	gDirectory->cd("/");
-	
-	// CD-pad detector, freely triggered
-	padE_sum = NULL;
-	if( cdpad ) {
-		
-		TDirectory *pad_dir = outfile->mkdir("PAD_spec");
-		pad_dir->cd();
-		padE_sum = new TH1F( "padE_sum", "Energy on the PAD detector;Energy [keV];", 4096, -0.5, 4095.5 );
-		cd_dEE_sum = new TH2F( "cd_dEE_sum", "dE-E of the CD-PAD;Energy [keV];Energy [keV];", 4096, -2., 16382., 4096, -2., 16382. );
-		cd_dEE_anti = new TH2F( "cd_dEE_anti", "dE-E of the CD-PAD not in coincidence with same quadrant;Energy [keV];Energy [keV];", 4096, -2., 16382., 4096, -2., 16382. );
-		
-		for( unsigned int i = 0; i < 4; i++ ) {
-			
-			padE[i] = new TH1F( Form("padE_%d",i), "Energy on the PAD detector;Energy [adc ch.];", 4096, -0.5, 4095.5 );
-			padE_cal[i] = new TH1F( Form("padE%d_cal",i), "Energy on the PAD detector;Energy [keV];", ELBINS, ELMIN, ELMAX );
-			cd_dEE[i] = new TH2F( Form("cd_dEE%d",i), "dE-E of the CD-PAD;Energy [keV];Energy [keV];", 4096, -2., 16382., 4096, -2., 16382. );
-			
-		}
-		
-		gDirectory->cd("/");
-		
-	}
 	// ------------------------------------------------------------------------ //
 	
 }

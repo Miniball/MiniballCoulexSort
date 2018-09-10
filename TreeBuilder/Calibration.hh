@@ -81,9 +81,7 @@ private:
 	int fNofDgfs;
 	int fNofDgfChans;
 	int fNofAdcs;
-	int fNofAdcsCD;
 	int fNofAdcChans;
-	int fNofCDSegm;
 	int fNofClusters;
  
 	int fBeamdumpDgf;

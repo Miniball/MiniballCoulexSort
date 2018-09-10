@@ -45,7 +45,7 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 	InitialiseVariables();
 	
 	// Setup histograms
-	SetupHistograms( outfile );
+	SetupHistograms();
 	
 	// Setup the addback or gamma finder
 	AddBack ab( event );
@@ -65,8 +65,6 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 	// ------------------------------------------------------------------------ //
 	// Variables
 	// ------------------------------------------------------------------------ //
-	float icE_Energy = 0.;
-	float icDE_Energy = 0.;
 	float tdiffPG = 0.;
 	int coinc_flag;
 
@@ -174,6 +172,7 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 		ClearEvt();
 		ab.ClearEvt();
 		pf.ClearEvt();
+		pf.NextAdc();
 		
 		// ------------------------------------------------------------------------ //
 
@@ -196,65 +195,53 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 			adc_num = event->Adc(j)->ModuleNumber();
 			adc_t = event->Adc(j)->Time();
 			
+			pf.SetModule( adc_num );
+			pf.SetTime( adc_t + Cal->AdcTime( adc_num ) );
+			pf.SetLaser( event->Adc(j)->LaserOn() );
+			pf.SetSubEvent( event->Adc(j)->SubEvent() );
+
 			// Standard CD/CLX setup or SPEDE
 			if( ( cdpad || spede ) && adc_num < 4 ) {
 				
+				pf.FindCDParticles();
+				ParticleCounterQ[adc_num] += pf.ReconstructHeavyIons();
 				pf.NextAdc();
-				pf.SetModule( adc_num );
-				pf.SetTime( adc_t + Cal->AdcTime( adc_num ) );
-				pf.SetLaser( event->Adc(j)->LaserOn() );
-				pf.SetSubEvent( event->Adc(j)->SubEvent() );
-				pf.FindParticles();
+				
+			}
+			
+			// T-REX
+			else if( trex && adc_num < 8 ) {
+				
+				pf.FindTREXParticles();
+				
+				if( adc_num%2 == 1 ) {
+					
+					ParticleCounterQ[adc_num/2] += pf.ReconstructTransfer();
+					pf.NextAdc();
+					
+					
+				}
 				
 			}
 			
 			// SPEDE
-			else if( adc_num == 4 && spede ) { // SPEDE
+			else if( spede && adc_num == 4 ) { // SPEDE
 				
 				ab.SetModule( adc_num );
 				ab.SetTime( adc_t + Cal->AdcTime( adc_num ) );
 				ab.SetSubEvent( event->Adc(j)->SubEvent() );
-				
+				ab.MakeElectrons();
 
-			} // SPEDE
+			}
 			
 			// Ionisation chamber
-			else if( adc_num == 4 && ionch ) { // ionisation chamber
-				
-				for( unsigned int k = 0; k < event->Adc(j)->SubEvent()->Size(); k++ ) {
-					
-					adc_ch = event->Adc(j)->SubEvent()->AdcChannel(k);
-					adc_en = event->Adc(j)->SubEvent()->AdcValue(k);
-					
-					icDE_Energy = Cal->AdcEnergy( 4, adc_ch, adc_en );
-					
-					if( adc_ch != 0 ) continue; // Gas
-					
-					for( unsigned int l = 0; l < event->Adc(j)->SubEvent()->Size(); l++ ){
-						
-						adc_ch2 = event->Adc(j)->SubEvent()->AdcChannel(l);
-						adc_en2 = event->Adc(j)->SubEvent()->AdcValue(l);
-						
-						if( adc_ch2 != 1 ) continue; // Si
-						
-						icE_Energy = Cal->AdcEnergy( 4, adc_ch2, adc_en2 );
-						
-						dEE->Fill( icE_Energy, icDE_Energy );
-						
-					} // l
-					
-				} // k
-				
+			else if( ionch && ( ( !trex && adc_num == 4 ) || ( trex && adc_num == 9 ) ) ) {
+
+				pf.IonisationChamber();
+
 			} // ionisation chamber
 			
-
-			// ------------------------------------------- //
-			// Particle reconstruction                     //
-			// ------------------------------------------- //
-			ParticleCounterQ[adc_num] += pf.ReconstructHeavyIons();
-			
-			
-		} // j - particle reconstruction
+		} // j - adcs
 		
 		// ------------------------------------------------------------------------ //
 

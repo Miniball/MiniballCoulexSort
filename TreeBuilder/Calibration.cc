@@ -12,8 +12,6 @@ Calibration::Calibration( string filename ) {
 	fNofDgfChans = 4;
 	fNofAdcs = 10; // up to for TREX
 	fNofAdcChans = 32;
-	fNofAdcsCD = 4;
-	fNofCDSegm = 16; // 16: Only one CD
 	fNofClusters = 8;
 	fBeamdumpDgf = 53;
 	RawRandomized = 0.;
@@ -85,7 +83,7 @@ void Calibration::ReadCalibration() {
 
 			fAdcOffset[adc][chan] = config->GetValue(Form("adc_%d_%d.Offset", adc, chan),0.);
 			fAdcGain[adc][chan] = config->GetValue(Form("adc_%d_%d.Gain", adc, chan),1.);
-			fAdcThreshold[adc][chan] = config->GetValue(Form("adc_%d_%d.Threshold", adc, chan),50.);
+			fAdcThreshold[adc][chan] = config->GetValue(Form("adc_%d_%d.Threshold", adc, chan),100.);
 
 		}
 

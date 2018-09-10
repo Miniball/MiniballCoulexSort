@@ -2,8 +2,8 @@
 Analysis code for MINIBALL experiments at ISOLDE. This code is designed to take the raw med data files and convert them to ROOT trees, then subsequently analyse them to produce particle-gated, Doppler corrected spectra. It is broken down in to 3 parts:
 
 ### MedToRoot
-Based on (read: essentially a copy of) code from Vinzenz Bilstein.
-Written originally for transfer expeirments with T-REX, adapted for Coulex with C-REX and now finally for Coulex with SPEDE or with the standard Coulex configuration.
+Based on (read: essentially a copy of) code from Vinzenz Bildstein.
+Written originally for transfer experiments with T-REX, adapted for Coulex with C-REX and now finally for Coulex with SPEDE or with the standard Coulex configuration.
 
 ### TreeBuilder
 Written by Liam Gaffney, inpsired by initial work by Andres Illana Sison. Daniel Cox implemented SPEDE into this code performed a lot of testing. This takes the converted ROOT file and build an 'mbevts' tree of particle-gamma(-gamma) events that can be used for analysing Coulex events.

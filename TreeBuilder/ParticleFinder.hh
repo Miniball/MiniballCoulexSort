@@ -36,10 +36,15 @@ public:
 	virtual ~ParticleFinder();
 	
 	// Functions to fill particle event vectors
-	void FindParticles();
+	void FindCDParticles();
+	void FindTREXParticles();
 	
 	// Particle reconstruction
 	unsigned int ReconstructHeavyIons();
+	unsigned int ReconstructTransfer();
+	
+	// Ionisation chamber event
+	void IonisationChamber();
 	
 	// Function to set SubEvent
 	inline void SetSubEvent( AdcSubEvent *subevt ){
@@ -92,6 +97,9 @@ public:
 	inline long long GetTime( unsigned int i){ return time.at(i); };
 	inline bool GetLaser( unsigned int i){ return laser.at(i); };
 	
+	// Functions to get the barrel positions
+	int StripPosBarrel( float frontEn, float backEn );
+	
 	// Clean up at the start of every event
 	void ClearEvt();
 	
@@ -116,16 +124,34 @@ private:
 	TFile *outfile;
 
 	// Particle event vectors
-	vector<float> frontenergy;
-	vector<float> backenergy;
-	vector<unsigned short> frontid;
-	vector<unsigned short> backid;
+	vector<float> frontenergy;				// dsssd front energy
+	vector<float> backenergy;				// dsssd back energy
+	vector<unsigned short> frontid;			// dsssd front strip #
+	vector<unsigned short> backid;			// dsssd back strip #
+	vector<unsigned short> frontsector;		// dsssd front sector
+	vector<unsigned short> backsector;		// dsssd back sector
+	vector<float> frontenergy2;				// dsssd front energy (second hit from MUX)
+	vector<float> backenergy2;				// dsssd back energy (second hit from MUX)
+	vector<unsigned short> frontid2;		// dsssd front strip # (second hit from MUX)
+	vector<unsigned short> backid2;			// dsssd back strip # (second hit from MUX)
+	vector<unsigned short> frontsector2;	// dsssd front sector (second hit from MUX)
+	vector<unsigned short> backsector2;		// dsssd back sector (second hit from MUX)
+	vector<float> fbarrelenergy;			// forward barrel ∆E energy
+	vector<unsigned short> fbarrelstrip;	// forward barrel strip #
+	float fbarrelpos;						// forward barrel position
+	vector<float> bbarrelenergy;			// backward barrel ∆E energy
+	vector<unsigned short> bbarrelstrip;	// backward barrel strip #
+	float bbarrelpos;						// backward barrel position
+	float padenergy[4];						// pad energy by sector
 	
 	// Reconstructed Particle arrays
-	vector<float> PEn;
-	vector<unsigned int> Quad;	// 0: Top, 1: Bottom, 2: Left and 3; Right
-	vector<unsigned int> Nf;	// Rings for CDs, Total Energy for Pad or Strips for Barrel
-	vector<unsigned int> Nb;	// Strips for CDs and Total Energy for Barrel
+	vector<float> PEn;				// heavy ion energy or sum energy from transfer
+	vector<float> dE_En;			// deltaE energy in transfer
+	vector<float> E_En;				// Erest energy in transfer
+	vector<unsigned int> Quad;		// 0: Top, 1: Bottom, 2: Left and 3: Right
+	vector<unsigned int> Sector;	// 0: FCD, 1: FBarrel, 2: BBarrel and 3: BCD
+	vector<unsigned int> Nf;		// Rings for CDs, strips for barrel
+	vector<unsigned int> Nb;		// Strips for CDs, pos for barrel
 	vector<long long> time;
 	vector<bool> laser;
 	
@@ -137,9 +163,13 @@ private:
 	
 	// Adc values
 	float PartEnergy;
+	float icE_Energy;
+	float icDE_Energy;
 	unsigned int adc_num;
 	unsigned int adc_ch;
 	unsigned int adc_en;
+	unsigned int adc_ch2;
+	unsigned int adc_en2;
 	long long adc_t;
 	bool laser_status;
 	
@@ -151,10 +181,17 @@ private:
 	TH1F *E_part_ch[4][32];
 	TH1F *E_part_ch_cal[4][32];
 	
+	// trex
+	TH1F *trex[10][32];
+	TH1F *trex_cal[10][32];
+	
 	// particle
 	TH2F *CD_front_energy[4], *CD_front_energy_cal[4];
 	TH2F *CD_back_energy[4], *CD_back_energy_cal[4];
 	TH2F *E_f_b[4];
+	
+	// Ionisation chamber
+	TH2F *dEE;
 	
 
 	//ClassDef( ParticleFinder, 1 )
@@ -193,8 +230,22 @@ void ParticleFinder::InitialiseHistograms() {
 		}
 		
 	}
-	
-	gDirectory->cd("/");
+
+	// TREX spectra for every adc channel
+	TDirectory *trex_dir = outfile->mkdir("trex");
+	trex_dir->cd();
+	for( unsigned int i = 0; i < 10; i++ ) {
+		
+		for( unsigned int j = 0; j < 32; j++ ) {
+			
+			trex[i][j] = new TH1F(Form("trex_%d_%d",i,j),Form("trex_%d_%d",i,j),4096,-0.5,4095.5);
+			trex[i][j]->GetXaxis()->SetTitle("Energy Particles [Channels]");
+			trex_cal[i][j] = new TH1F(Form("trex_%d_%d_cal",i,j),Form("trex_%d_%d_cal",i,j),PBINS,PMIN,PMAX);
+			trex_cal[i][j]->GetXaxis()->SetTitle("Energy Particles [MeV]");
+			
+		}
+		
+	}
 	
 	// particle-spectra
 	TDirectory *cd_dir = outfile->mkdir("CD_spec");
@@ -222,12 +273,16 @@ void ParticleFinder::InitialiseHistograms() {
 		
 	}
 	
-	gDirectory->cd("/");
+	// Ionisation chamber
+	TDirectory *ic_dir = outfile->mkdir("IC_spec");
+	ic_dir->cd();
+	dEE = new TH2F( "dEE", "ionisation chamber;E_{rest};delta-E", 4096, -0.5, 4095.5, 4096, -0.5, 4095.5 );
 	
 	// Debugging the particle reconstruction
-	cd_debug = new TH1F("cd_debug","cd_debug",8,-0.5,7.5);
+	gDirectory->cd("/");
+	cd_debug = new TH1F("cd_debug","cd_debug",100,-0.5,99.5);
 	cd_debug->GetXaxis()->SetTitle("CD debugging");
-
+	
 	return;
 	
 }
