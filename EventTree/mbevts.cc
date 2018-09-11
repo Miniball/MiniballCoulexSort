@@ -5,7 +5,7 @@
 
 mbevts::mbevts() {
 	
-	Initialize();
+	Initialise();
 	
 }
 
@@ -15,7 +15,7 @@ mbevts::~mbevts() {
 	
 }
 
-void mbevts::Initialize() {
+void mbevts::Initialise() {
 	
 	gen=-100.;
 	cid=-1;

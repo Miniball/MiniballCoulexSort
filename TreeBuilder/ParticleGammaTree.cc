@@ -5,6 +5,7 @@
 #define PRANGE 800
 #define PMIN -1.0*PRANGE/PBINS
 #define PMAX PRANGE+PMIN
+#define PART_ARRAY 250
 
 #define GBINS 4000
 #define GRANGE 4000
@@ -24,12 +25,224 @@
 
 
 void ParticleGammaTree::ClearEvt() {
-
-
+	
+	// Reset trees
+	mb_evts.clear();
+	tr_evts.clear();
+	vector<mbevts*>().swap( mb_evts );
+	vector<trevts*>().swap( tr_evts );
+	
+	fill_mb_evts = new mbevts();
+	fill_tr_evts = new trevts();
+	
 	return;
-
+	
 }
 
+void ParticleGammaTree::FillCLXTree() {
+	
+	for( unsigned int j = 0; j < mb_evts.size(); j++ ) {
+		
+		mb_evts[j]->SearchCoin();
+		write_mb_evts->Initialise();
+		write_mb_evts->CopyData( mb_evts[j] );
+		
+		// Standard particle-gamma coincidences
+		if( write_mb_evts->GetNrPrompt() > 0 ||
+		   write_mb_evts->GetNrRandom() > 0 ||
+		   write_mb_evts->GetNrDelayed() > 0  ){
+			
+			g_clx->Fill();
+			
+		}
+		
+		// Gamma-gamma coincidences, with or without particles
+		else if( gamgam && write_mb_evts->GetNrGammas() > 1 ) g_clx->Fill();
+		
+		// Gamma singles, with or without particles
+		else if( singles ) g_clx->Fill();
+		
+	}
+	
+	return;
+	
+}
+
+void ParticleGammaTree::FillTREXTree() {
+	
+	for( unsigned int j = 0; j < tr_evts.size(); j++ ) {
+		
+		tr_evts[j]->SearchCoin();
+		write_tr_evts->Initialise();
+		write_tr_evts->CopyData( tr_evts[j] );
+		
+		p_tr->Fill();
+		
+	}
+	
+	return;
+	
+}
+
+// ------------------------------------------------------------------------ //
+// Gamma/electron-particle coincidences for Coulex etc.
+// ------------------------------------------------------------------------ //
+void ParticleGammaTree::CLXCoincidences() {
+	
+	// Start with gammas
+	for( unsigned int i = 0; i < ab.GetGenSize(); i++ ) {
+		
+		// Initialise temporary event
+		fill_mb_evts->Initialise();
+		
+		// Fill temporary event
+		fill_mb_evts->SetGen( ab.GetGen(i) );
+		fill_mb_evts->SetCluid( ab.GetClu(i) );
+		fill_mb_evts->SetCid( ab.GetCid(i) );
+		fill_mb_evts->SetSid( ab.GetSid(i) );
+		fill_mb_evts->SetTheta( gamma_theta[ab.GetClu(i)][ab.GetCid(i)%3][ab.GetSid(i)] );
+		fill_mb_evts->SetPhi( gamma_phi[ab.GetClu(i)][ab.GetCid(i)%3][ab.GetSid(i)] );
+		
+		// Do particles
+		for( unsigned int j = 0; j < pf.ReconstructedSize(); j++ ) {
+			
+			tdiffPG = pf.GetTime(j) - ab.GetGtd(i);
+			
+			// electrons
+			if( ab.GetClu(i) == 8 ) {
+				
+				tdiff_ep->Fill( tdiffPG );
+				
+				if( tMinRandomElectron <= tdiffPG && tdiffPG < tMaxRandomElectron ) coinc_flag = 1;
+				else if( tMinPromptElectron <= tdiffPG && tdiffPG < tMaxPromptElectron ) coinc_flag = 0;
+				else coinc_flag = -1;
+				
+			}
+			
+			// gamma-rays
+			else {
+				
+				tdiff_gp->Fill( tdiffPG );
+				tdiff_gp_q[pf.GetQuad(j)]->Fill( tdiffPG - Cal->AdcTime(pf.GetQuad(j)) );
+				
+				if( tMinDelayed <= tdiffPG && tdiffPG < tMaxDelayed ) coinc_flag = 2;
+				else if( tMinRandom <= tdiffPG && tdiffPG < tMaxRandom ) coinc_flag = 1;
+				else if( tMinPrompt <= tdiffPG && tdiffPG < tMaxPrompt ) coinc_flag = 0;
+				else coinc_flag = -1;
+				
+			}
+			
+			// Add particle
+			fill_mb_evts->SetPart( pf.GetPEn(j), pf.GetNf(j), pf.GetNb(j),
+								  pf.GetTime(j), (double)event->SuperCycleTime(), (double)event->T1Time(),
+								  (float)tdiffPG, (int)coinc_flag, pf.GetQuad(j), pf.GetLaser(j) );
+			
+		} // End loop All the particles
+		
+		
+		// Look for correlated gammas or electrons
+		for( unsigned int k = 0; k < ab.GetGenSize(); k++ ) {
+			
+			// skip if it's the same event as before
+			if( k == i ) continue;
+			
+			// Found highest energy segment
+			fill_mb_evts->SetCorGamGen( ab.GetGen(k) );
+			fill_mb_evts->SetCorGamCluid( ab.GetClu(k) );
+			fill_mb_evts->SetCorGamCid( ab.GetCid(k) );
+			fill_mb_evts->SetCorGamSid( ab.GetSid(k) );
+			fill_mb_evts->SetCorGamGtd( ab.GetGtd(k) - ab.GetGtd(i) );
+			fill_mb_evts->SetCorGamTheta( gamma_theta[ab.GetClu(k)][ab.GetCid(k)%3][ab.GetSid(k)] );
+			fill_mb_evts->SetCorGamPhi( gamma_phi[ab.GetClu(k)][ab.GetCid(k)%3][ab.GetSid(k)] );
+			
+		} // End search for correlated gammas
+		
+		// Push back the temporary event to the mb_evts vector
+		mb_evts.push_back( fill_mb_evts );
+		
+	} // i
+	
+	return;
+	
+}
+
+// ------------------------------------------------------------------------ //
+// Particle-gamma coincidences for transfer
+// ------------------------------------------------------------------------ //
+void ParticleGammaTree::TREXCoincidences() {
+	
+	// Start with particles
+	for( unsigned int i = 0; i < pf.ReconstructedSize(); i++ ) {
+		
+		// Initialise temporary event
+		fill_tr_evts->Initialise();
+		
+		// Fill temporary event
+		fill_tr_evts->SetPen( pf.GetPEn(i), pf.GetPdE(i), pf.GetPErest(i) );
+		fill_tr_evts->SetQuad( pf.GetQuad(i) );
+		fill_tr_evts->SetSector( pf.GetSector(i) );
+		fill_tr_evts->SetNf( pf.GetNf(i) );
+		fill_tr_evts->SetNb( pf.GetNb(i) );
+		fill_tr_evts->SetTime( pf.GetTime(i) );
+		fill_tr_evts->SetLaser( pf.GetLaser(i) );
+		fill_tr_evts->SetT1( (double)event->T1Time() );
+		fill_tr_evts->SetSS( (double)event->SuperCycleTime() );
+		
+		// Do gammas
+		for( unsigned int j = 0; j < ab.GetGenSize(); j++ ) {
+			
+			tdiffPG = pf.GetTime(i) - ab.GetGtd(j);
+
+			tdiff_gp->Fill( tdiffPG );
+			tdiff_gp_q[pf.GetQuad(i)]->Fill( tdiffPG - Cal->AdcTime(pf.GetQuad(i)) );
+				
+			if( tMinDelayed <= tdiffPG && tdiffPG < tMaxDelayed ) coinc_flag = 2;
+			else if( tMinRandom <= tdiffPG && tdiffPG < tMaxRandom ) coinc_flag = 1;
+			else if( tMinPrompt <= tdiffPG && tdiffPG < tMaxPrompt ) coinc_flag = 0;
+			else coinc_flag = -1;
+			
+			// Add particle
+			fill_tr_evts->SetGamma( ab.GetGen(j), ab.GetCid(j), ab.GetSid(j), ab.GetClu(j),
+								   gamma_theta[ab.GetClu(j)][ab.GetCid(j)%3][ab.GetSid(j)],
+								   gamma_phi[ab.GetClu(j)][ab.GetCid(j)%3][ab.GetSid(j)],
+								   tdiffPG, coinc_flag );
+			
+		} // gammas
+		
+		// Push back the temporary event to the mb_evts vector
+		tr_evts.push_back( fill_tr_evts );
+		
+	} // i
+
+	return;
+	
+}
+
+// ------------------------------------------------------------------------ //
+// Gamma-gamma coincidences
+// ------------------------------------------------------------------------ //
+void ParticleGammaTree::GammaGammaCoincidences() {
+
+	for( unsigned int i = 0; i < ab.GetGenSize(); i++ ) {
+		
+		for( unsigned int j = 0; j < ab.GetGenSize(); j++ ) {
+			
+			if( j == i ) continue;
+			
+			tdiff_gg->Fill( ab.GetGtd(i), ab.GetGtd(j) );
+			gg->Fill( ab.GetGen(i), ab.GetGen(j) );
+			
+		}
+		
+	}
+	
+	return;
+	
+}
+
+// ------------------------------------------------------------------------ //
+// Main Loop and logic of the particle-gamma builder
+// ------------------------------------------------------------------------ //
 void ParticleGammaTree::Loop( string outputfilename ) {
 	
 	// Open output file
@@ -48,48 +261,17 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 	SetupHistograms();
 	
 	// Setup the addback or gamma finder
-	AddBack ab( event );
+	ab.SetEvent( event );
 	ab.SetCalibration( Cal );
 	ab.SetOutputFile( outfile );
 	ab.InitialiseHistograms();
 	
 	// Setup the particle finder
-	ParticleFinder pf( event );
+	pf.SetEvent( event );
 	pf.SetCalibration( Cal );
 	pf.SetOutputFile( outfile );
 	pf.InitialiseHistograms();
-	
-	// ------------------------------------------------------------------------ //
- 
-	
-	// ------------------------------------------------------------------------ //
-	// Variables
-	// ------------------------------------------------------------------------ //
-	float tdiffPG = 0.;
-	int coinc_flag;
 
-	// Check Code
-	int ParticleCounterQ[5] = {0,0,0,0,0};
- 	// ------------------------------------------------------------------------ //
-
-  
-
-
-	// ------------------------------------------------------------------------ //
-	// Write to mb_evts/g_clx tree
-	// ------------------------------------------------------------------------ //
-	mbevts* write_mb_evts = new mbevts();
-	mbevts* mb_evts[GAMMA_ARRAY];
-	for( unsigned int i = 0; i < GAMMA_ARRAY; i++ ) {
-		
-		mb_evts[i] = new mbevts();
-		
-	}
-	
-	TTree* g_clx = new TTree( "g_clx", "g_clx" );
-	g_clx->Branch( "mbevts", "mbevts", &write_mb_evts );
-
-	// ------------------------------------------------------------------------ //
 	
 	// ------------------------------------------------------------------------ //
 	// Start loop over number of entries
@@ -105,7 +287,7 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 	for( unsigned int i = 0; i < nentries; i++ ) {
 
 		status = fTree->GetEvent(i);
-
+		
 		if( status == -1 ) {
 
 			cerr << "Error occured, couldn't read entry " << i << " from tree ";
@@ -123,70 +305,22 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 		}
 		
 		nbytes += status;
-
-		// ------------------------------------------------------------------------ //
-		// Sort out mb_evts
-		// ------------------------------------------------------------------------ //
-		for( unsigned int j = 0; j < GammaCtr; j++ ) {
 		
-			mb_evts[j]->SearchCoin();  
-			write_mb_evts->Initialize();
-			write_mb_evts->CopyData( mb_evts[j] );
-			
-			// Standard particle-gamma coincidences
-			if( write_mb_evts->GetNrPrompt() > 0 ||
-			    write_mb_evts->GetNrRandom() > 0 ||
-				write_mb_evts->GetNrDelayed() > 0  ){
-				
-				g_clx->Fill();
-				
-			}
-			
-			// Gamma-gamma coincidences, with or without particles
-			else if( gamgam && write_mb_evts->GetNrGammas() > 1 ) g_clx->Fill();
-			
-			// Gamma singles, with or without particles
-			else if( singles ) g_clx->Fill();
-			
-		}
 		// ------------------------------------------------------------------------ //
-
-
+		// Clean trees, particles and gammas/electrons
 		// ------------------------------------------------------------------------ //
-		// Reset
-		// ------------------------------------------------------------------------ //
-		for( unsigned int j = 0; j < GAMMA_ARRAY; j++ ) {
-		
-			mb_evts[j]->Initialize();
-		
-		}
-		GammaCtr = 0;
-
-		// ------------------------------------------------------------------------ //
-
-
-		// ------------------------------------------------------------------------ //
-		// Clean particles and gammas/electrons
-		// ------------------------------------------------------------------------ //
-		
 		ClearEvt();
 		ab.ClearEvt();
 		pf.ClearEvt();
 		pf.NextAdc();
 		
-		// ------------------------------------------------------------------------ //
-
 
 		// ------------------------------------------------------------------------ //
-		// All DGF events
+		// All DGF events - Build gamma-ray events in Miniball (and beam-dump)
 		// ------------------------------------------------------------------------ //
-
-		// Build gamma-ray events in Miniball (and fill beam-dump spectra)
 		ab.MakeGammaRays( addback );
+
 		
-		// ------------------------------------------------------------------------ //
-
-
 		// ------------------------------------------------------------------------ //
 		// All ADC events
 		// ------------------------------------------------------------------------ //
@@ -243,101 +377,21 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 			
 		} // j - adcs
 		
-		// ------------------------------------------------------------------------ //
-
 
 		// ------------------------------------------------------------------------ //
-		// Gamma/electron-particle coincidences
+		// Particle-gamma and gamma-gamma coincidences
 		// ------------------------------------------------------------------------ //
-		for( unsigned int j = 0; j < ab.GetGenArray().size(); j++ ) {
-
-			mb_evts[GammaCtr]->SetGen( ab.GetGenArray().at(j) );
-			mb_evts[GammaCtr]->SetCluid( ab.GetCluArray().at(j) );
-			mb_evts[GammaCtr]->SetCid( ab.GetCidArray().at(j) );
-			mb_evts[GammaCtr]->SetSid( ab.GetSidArray().at(j) );
-			mb_evts[GammaCtr]->SetTheta( gamma_theta[ab.GetCluArray().at(j)][ab.GetCidArray().at(j)%3][ab.GetSidArray().at(j)] );
-			mb_evts[GammaCtr]->SetPhi( gamma_phi[ab.GetCluArray().at(j)][ab.GetCidArray().at(j)%3][ab.GetSidArray().at(j)] );
-				
-			// Do particles
-			for( unsigned int k = 0; k < pf.ReconstructedSize(); k++ ) {
-				
-				tdiffPG = pf.GetTime(k) - ab.GetGtdArray().at(j);
-
-				// electrons
-				if( ab.GetCluArray().at(j) == 8 ) { 
-
-					tdiff_ep->Fill( tdiffPG );
-
-					if( tMinRandomElectron <= tdiffPG && tdiffPG < tMaxRandomElectron ) coinc_flag = 1;
-					else if( tMinPromptElectron <= tdiffPG && tdiffPG < tMaxPromptElectron ) coinc_flag = 0;
-					else coinc_flag = -1;
-						
-				}
-
-				// gamma-rays
-				else {
-
-					tdiff_gp->Fill( tdiffPG );
-					tdiff_gp_q[pf.GetQuad(k)]->Fill( tdiffPG - Cal->AdcTime(pf.GetQuad(k)) );
-
-					if( tMinDelayed <= tdiffPG && tdiffPG < tMaxDelayed ) coinc_flag = 2;
-					else if( tMinRandom <= tdiffPG && tdiffPG < tMaxRandom ) coinc_flag = 1;
-					else if( tMinPrompt <= tdiffPG && tdiffPG < tMaxPrompt ) coinc_flag = 0;
-					else coinc_flag = -1;			
-
-				}
-				
-				// Add particle
-				mb_evts[GammaCtr]->SetPart( pf.GetPEn(k), pf.GetNf(k), pf.GetNb(k),
-					pf.GetTime(k), (double)event->SuperCycleTime(), (double)event->T1Time(),
-					(float)tdiffPG,	(int)coinc_flag, pf.GetQuad(k), pf.GetLaser(k) );
-					
-				PartCtr++;
-
-			} // End loop All the particles
-
-			// Look for correlated gammas or electrons
-			for( unsigned int l = 0; l < ab.GetGenArray().size(); l++ ) {
-				
-				// skip if it's the same event as before
-				if( l == j ) continue;
-					
-				// Found highest energy segment
-				mb_evts[GammaCtr]->SetCorGamGen( ab.GetGenArray().at(l) );
-				mb_evts[GammaCtr]->SetCorGamCluid( ab.GetCluArray().at(l) );
-				mb_evts[GammaCtr]->SetCorGamCid( ab.GetCidArray().at(l) );
-				mb_evts[GammaCtr]->SetCorGamSid( ab.GetSidArray().at(l) );
-				mb_evts[GammaCtr]->SetCorGamGtd( ab.GetGtdArray().at(l) - ab.GetGtdArray().at(j) );
-				mb_evts[GammaCtr]->SetCorGamTheta( gamma_theta[ab.GetCluArray().at(l)][ab.GetCidArray().at(l)%3][ab.GetSidArray().at(l)] );
-				mb_evts[GammaCtr]->SetCorGamPhi( gamma_phi[ab.GetCluArray().at(l)][ab.GetCidArray().at(l)%3][ab.GetSidArray().at(l)] );
-				
-			} // End search for correlated gammas
-			
-			// Count the gamma!
-			GammaCtr++;
-				
-			// Reset
-			PartCtr = 0;
-			
-			
-		} // j
-		// ------------------------------------------------------------------------ //
+		if( trex ) TREXCoincidences();
+		else CLXCoincidences();
+		GammaGammaCoincidences();
 		
+
 		// ------------------------------------------------------------------------ //
-		// Gamma-gamma coincidences
+		// Fill the CLX or the TREX tree
 		// ------------------------------------------------------------------------ //
-		for( unsigned int j = 0; j < ab.GetGenArray().size(); j++ ) {
-
-		    for( unsigned int k = 0; k < ab.GetGenArray().size(); k++ ) {
-
-		      if( j == k ) continue;
-				
-				tdiff_gg->Fill( ab.GetGtdArray().at(j), ab.GetGtdArray().at(k) );
-				gg->Fill( ab.GetGenArray().at(j), ab.GetGenArray().at(k) );
-
-		    }
-
-		}
+		if( trex ) FillTREXTree();
+		else FillCLXTree();
+		
 
 		// Progress bar
 		if( i % 50000 == 0 ) {

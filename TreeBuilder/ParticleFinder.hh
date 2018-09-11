@@ -32,7 +32,7 @@ class ParticleFinder {
 	
 public:
 	
-	ParticleFinder( BuiltEvent *evt );
+	ParticleFinder();
 	virtual ~ParticleFinder();
 	
 	// Functions to fill particle event vectors
@@ -45,6 +45,12 @@ public:
 	
 	// Ionisation chamber event
 	void IonisationChamber();
+	
+	// Function to set Event
+	inline void SetEvent( BuiltEvent *evt ){
+		event = evt;
+		return;
+	};
 	
 	// Function to set SubEvent
 	inline void SetSubEvent( AdcSubEvent *subevt ){
@@ -91,11 +97,14 @@ public:
 	// Functions to return reconstructed particle data
 	inline unsigned int ReconstructedSize(){ return PEn.size(); };
 	inline float GetPEn( unsigned int i ){ return PEn.at(i); };
-	inline unsigned int GetQuad( unsigned int i){ return Quad.at(i); };
-	inline unsigned int GetNf( unsigned int i){ return Nf.at(i); };
-	inline unsigned int GetNb( unsigned int i){ return Nb.at(i); };
-	inline long long GetTime( unsigned int i){ return time.at(i); };
-	inline bool GetLaser( unsigned int i){ return laser.at(i); };
+	inline float GetPdE( unsigned int i ){ return dE_En.at(i); };
+	inline float GetPErest( unsigned int i ){ return E_En.at(i); };
+	inline unsigned int GetQuad( unsigned int i ){ return Quad.at(i); };
+	inline unsigned int GetSector( unsigned int i ){ return Sector.at(i); };
+	inline unsigned int GetNf( unsigned int i ){ return Nf.at(i); };
+	inline unsigned int GetNb( unsigned int i ){ return Nb.at(i); };
+	inline long long GetTime( unsigned int i ){ return time.at(i); };
+	inline bool GetLaser( unsigned int i ){ return laser.at(i); };
 	
 	// Functions to get the barrel positions
 	int StripPosBarrel( float frontEn, float backEn );
@@ -201,9 +210,8 @@ private:
 #endif
 
 #ifdef __PARTICLEFINDER_CXX
-ParticleFinder::ParticleFinder( BuiltEvent *evt ) {
+ParticleFinder::ParticleFinder() {
 	
-	if( evt != 0 ) event = evt;
 	
 }
 

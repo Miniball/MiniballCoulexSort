@@ -237,12 +237,12 @@ void AddBack::MakeElectrons() {
 			E_spede_seg_cal[adc_ch]->Fill( ElectronEnergy );
 			E_spede->Fill( ElectronEnergy );
 			
-			GetGenArray().push_back( ElectronEnergy );
-			GetGtdArray().push_back( adc_t );
-			GetCluArray().push_back( 8 );
-			GetCidArray().push_back( 0 );
-			GetSidArray().push_back( adc_ch );
-			GetSenArray().push_back( 0 );
+			gen_array.push_back( ElectronEnergy );
+			gtd_array.push_back( adc_t );
+			clu_array.push_back( 8 );
+			cid_array.push_back( 0 );
+			sid_array.push_back( adc_ch );
+			sen_array.push_back( 0 );
 			
 		}
 		
@@ -253,12 +253,12 @@ void AddBack::MakeElectrons() {
 			E_spede_seg_cal[adc_ch-4]->Fill( ElectronEnergy );
 			E_spede->Fill( ElectronEnergy );
 			
-			GetGenArray().push_back( ElectronEnergy );
-			GetGtdArray().push_back( adc_t );
-			GetCluArray().push_back( 8 );
-			GetCidArray().push_back( 0 );
-			GetSidArray().push_back( adc_ch-4 );
-			GetSenArray().push_back( 0 );
+			gen_array.push_back( ElectronEnergy );
+			gtd_array.push_back( adc_t );
+			clu_array.push_back( 8 );
+			cid_array.push_back( 0 );
+			sid_array.push_back( adc_ch-4 );
+			sen_array.push_back( 0 );
 			
 		}
 		

@@ -69,7 +69,22 @@ public:
 	
 	/// Main function, called after constructing the GammaTree class
 	virtual void Loop( string outputfilename );
-
+	
+	// Fill the output tree for TREX events
+	virtual void FillTREXTree();
+	
+	// Fill the output tree for CLX events
+	virtual void FillCLXTree();
+	
+	// Build particle-gamma coincidences for transfer
+	virtual void CLXCoincidences();
+	
+	// Build gamma-particle coincidences for Coulex
+	virtual void TREXCoincidences();
+	
+	// Build gamma-gamma coincidences matrix (always useful)
+	virtual void GammaGammaCoincidences();
+	
 	// Function to set calibration
 	inline void SetCalibration( Calibration *_Cal ){
 		Cal = _Cal;
@@ -153,11 +168,27 @@ private:
 	unsigned int adc_ch2;
 	unsigned int adc_en2;
 	long long adc_t;
+	float tdiffPG;
+	int coinc_flag;
 
 	// Counters
-	unsigned int GammaCtr;
-	unsigned int PartCtr;
+	unsigned int ParticleCounterQ[4];
+	
+	// Gamma and particle finders
+	AddBack ab;
+	ParticleFinder pf;
 
+	// Trees - CLX
+	mbevts *write_mb_evts, *fill_mb_evts;
+	vector<mbevts*> mb_evts;
+	TTree *g_clx;
+	
+	// Trees - TREX
+	trevts *write_tr_evts, *fill_tr_evts;
+	vector<trevts*> tr_evts;
+	TTree *p_tr;
+	
+	
 	ClassDef( ParticleGammaTree, 1 );
 	
 };
@@ -181,8 +212,7 @@ ParticleGammaTree::~ParticleGammaTree() {
 void ParticleGammaTree::InitialiseVariables() {
 	
 	// Counters
-	GammaCtr = 0;
-	PartCtr = 0;
+	for( unsigned int i = 0; i < 4; i++ ) ParticleCounterQ[i] = 0.;
 
 	// Prompt and random time windows (to be read by calibration eventually!)
 	tMinPrompt = -12.;			tMaxPrompt = 6.;			// 18 ticks
@@ -196,6 +226,18 @@ void ParticleGammaTree::InitialiseVariables() {
 	WeightPR /= TMath::Abs( tMinRandom - tMaxRandom );
 	
 	cout << "WeightPR: " << WeightPR << endl;
+	
+	// ------------------------------------------------------------------------ //
+	// Write to mb_evts/tr_evts and the g_clx/p_tr trees
+	// ------------------------------------------------------------------------ //
+	write_mb_evts = new mbevts();
+	write_tr_evts = new trevts();
+
+	g_clx = new TTree( "g_clx", "g_clx" );
+	g_clx->Branch( "mbevts", "mbevts", &write_mb_evts );
+	
+	p_tr = new TTree( "p_tr", "p_tr" );
+	p_tr->Branch( "trevts", "trevts", &write_tr_evts );
 	
 	return;
 	

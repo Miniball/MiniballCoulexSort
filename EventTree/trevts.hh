@@ -15,9 +15,10 @@ class trevts : public TObject {
 	float pen;		///< reconstructed particle energy in keV
 	float pen_de;	///< reconstructed particle dE in keV
 	float pen_e;	///< reconstructed particle E_rest in keV
-	int det;		///< quadrant of the T-REX (0-3 = FCD; 4-7 = FBarrel; 8-11 = BBarrel; 12-15 = BCD)
-	int ann;		///< annular strip number of CD quadrant
-	int sec;		///< sector strip number of CD quadrant
+	int quad;		///< quadrant of the T-REX (0 = Top; 1 = Left; 2 = Bottom; 3 = Right)
+	int nf;			///< front strip number of CD quadrant
+	int nb;			///< back strip number of CD quadrant
+	int sector;		///< sector of T-REX (0 = FCD; 1 = FBarrel; 2 = BBarrel; 3 = BCD)
 	double time;	///< particle timestamp
 	double t1t;		///< T1 timestamp (1 ms before proton impact)
 	double sst;		///< supercycle timestamp
@@ -27,9 +28,10 @@ class trevts : public TObject {
 	vector <float> pcor_pen;
 	vector <float> pcor_pen_de;
 	vector <float> pcor_pen_e;
-	vector <int> pcor_det;
-	vector <int> pcor_ann;
-	vector <int> pcor_sec;
+	vector <int> pcor_quad;
+	vector <int> pcor_nf;
+	vector <int> pcor_nb;
+	vector <int> pcor_sector;
 	vector <double> pcor_ptd;
 	
 	// gamma-rays
@@ -53,19 +55,21 @@ class trevts : public TObject {
 	// setup functions
 	trevts();
 	~trevts();
-	void Initialize();
+	void Initialise();
 	void SetPen( float en, float de, float erest );
 	void SetQuad( int q );
-	void SetAnn( int id );
-	void SetSec( int id );
+	void SetNf( int id );
+	void SetNb( int id );
+	void SetSector( int id );
 	void SetTime( double t );
 	void SetT1( double t );
 	void SetSS( double t );
 	void SetLaser( int l );
 	void SetCorPen( float en, float de, float erest );
 	void SetCorQuad( int q );
-	void SetCorAnn( int id );
-	void SetCorSec( int id );
+	void SetCorNf( int id );
+	void SetCorNb( int id );
+	void SetCorSector( int id );
 	void SetCorTd( double t );
 	void SetGamma( float en, int c, int s, int clu, float th, float ph, double ptd, int co );
 	void SearchCoin();
@@ -82,8 +86,9 @@ class trevts : public TObject {
 	float GetPen();
 	float GetPde();
 	float GetPerest();
-	int GetSec();
-	int GetAnn();
+	int GetSector();
+	int GetNf();
+	int GetNb();
 	int GetQuad();
 	
 	ClassDef( trevts, 1 );

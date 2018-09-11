@@ -33,12 +33,18 @@ class AddBack {
 	
 public:
 	
-	AddBack( BuiltEvent *evt );
+	AddBack();
 	virtual ~AddBack();
 	
 	// Functions to fill gamma-ray vectors
 	void MakeGammaRays( bool addback );
 	void MakeElectrons();
+	
+	// Function to set Event
+	inline void SetEvent( BuiltEvent *evt ){
+		event = evt;
+		return;
+	};
 	
 	// Function to set SubEvent for SPEDE
 	inline void SetSubEvent( AdcSubEvent *subevt ){
@@ -71,12 +77,13 @@ public:
 	};
 	
 	// Functions to return gamma-ray vectors
-	inline vector<float> GetGenArray(){ return gen_array; };
-	inline vector<long long> GetGtdArray(){ return gtd_array; };
-	inline vector<unsigned short> GetCluArray(){ return clu_array; };
-	inline vector<unsigned short> GetCidArray(){ return cid_array; };
-	inline vector<unsigned short> GetSidArray(){ return sid_array; };
-	inline vector<float> GetSenArray(){ return sen_array; };
+	inline unsigned int GetGenSize(){ return gen_array.size(); };
+	inline float GetGen( unsigned int i ){ return gen_array.at(i); };
+	inline long long GetGtd( unsigned int i ){ return gtd_array.at(i); };
+	inline unsigned short GetClu( unsigned int i ){ return clu_array.at(i); };
+	inline unsigned short GetCid( unsigned int i ){ return cid_array.at(i); };
+	inline unsigned short GetSid( unsigned int i ){ return sid_array.at(i); };
+	inline float GetSen( unsigned int i ){ return sen_array.at(i); };
 	
 	// Clean up at the start of every event
 	void ClearEvt();
@@ -157,9 +164,7 @@ private:
 #endif
 
 #ifdef __ADDBACK_CXX
-AddBack::AddBack( BuiltEvent *evt ) {
-	
-	if( evt != 0 ) event = evt;
+AddBack::AddBack() {
 	
 }
 

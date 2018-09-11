@@ -5,8 +5,8 @@
 
 trevts::trevts() {
 	
-	//cout << "constructor" << endl;
-
+	Initialise();
+	
 }
 
 trevts::~trevts() {
@@ -15,14 +15,15 @@ trevts::~trevts() {
 		
 }
 	
-void trevts::Initialize() {
+void trevts::Initialise() {
 
 	pen=-100.;
 	pen_de=-100.;
 	pen_e=-100.;
-	det=-1;
-	ann=-1;
-	sec=-1;
+	quad=-1;
+	nf=-1;
+	nb=-1;
+	sector=-1;
 	time=-999.;
 	t1t=-999.;
 	sst=-999.;
@@ -31,9 +32,10 @@ void trevts::Initialize() {
 	pcor_pen.resize(0);
 	pcor_pen_de.resize(0);
 	pcor_pen_e.resize(0);
-	pcor_det.resize(0);
-	pcor_ann.resize(0);
-	pcor_sec.resize(0);
+	pcor_quad.resize(0);
+	pcor_nf.resize(0);
+	pcor_nb.resize(0);
+	pcor_sector.resize(0);
 	
 	gen.resize(0);
 	cid.resize(0);
@@ -59,9 +61,10 @@ void trevts::CopyData(trevts* src) {
 	pen = src->pen;
 	pen_de = src->pen_de;
 	pen_e = src->pen_e;
-	det = src->det;
-	ann = src->ann;
-	sec = src->sec;
+	quad = src->quad;
+	nf = src->nf;
+	nb = src->nb;
+	sector = src->sector;
 	t1t = src->t1t;
 	sst = src->sst;
 	laser = src->laser;
@@ -69,9 +72,10 @@ void trevts::CopyData(trevts* src) {
 	pcor_pen = src->pcor_pen;
 	pcor_pen_de = src->pcor_pen_de;
 	pcor_pen_e = src->pcor_pen_e;
-	pcor_det = src->pcor_det;
-	pcor_ann = src->pcor_ann;
-	pcor_sec = src->pcor_sec;
+	pcor_quad = src->pcor_quad;
+	pcor_nf = src->pcor_nf;
+	pcor_nb = src->pcor_nb;
+	pcor_sector = src->pcor_sector;
 
 	gen = src->gen;
 	cid = src->cid;
@@ -102,19 +106,25 @@ void trevts::SetPen( float en, float de, float erest ) {
 
 void trevts::SetQuad( int q ) {
 	
-	det = q;
+	quad = q;
 	
 }
 
-void trevts::SetAnn( int id ) {
+void trevts::SetNf( int id ) {
 	
-	ann = id;
+	nf = id;
 	
 }
 
-void trevts::SetSec( int id ) {
+void trevts::SetNb( int id ) {
 	
-	sec = id;
+	nb = id;
+	
+}
+
+void trevts::SetSector( int id ) {
+	
+	sector = id;
 	
 }
 
@@ -152,19 +162,25 @@ void trevts::SetCorPen( float en, float de, float erest ) {
 
 void trevts::SetCorQuad( int q ) {
 	
-	pcor_det.push_back( q );
+	pcor_quad.push_back( q );
 	
 }
 
-void trevts::SetCorAnn( int id ) {
+void trevts::SetCorNf( int id ) {
 	
-	pcor_ann.push_back( id );
+	pcor_nf.push_back( id );
 	
 }
 
-void trevts::SetCorSec( int id ) {
+void trevts::SetCorNb( int id ) {
 	
-	pcor_sec.push_back( id );
+	pcor_nb.push_back( id );
+	
+}
+
+void trevts::SetCorSector( int id ) {
+	
+	pcor_sector.push_back( id );
 	
 }
 
@@ -234,21 +250,27 @@ float trevts::GetPerest() {
 	
 }
 
-int trevts::GetAnn() {
+int trevts::GetNf() {
 
-	return ann;
+	return nf;
 
 }
 
-int trevts::GetSec() {
+int trevts::GetNb() {
 	
-	return sec;
+	return nb;
+	
+}
+
+int trevts::GetSector() {
+	
+	return sector;
 	
 }
 
 int trevts::GetQuad() {
 	
-	return det;
+	return quad;
 	
 }
 

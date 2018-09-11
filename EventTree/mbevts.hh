@@ -14,7 +14,7 @@ public:
 	// setup functions
 	mbevts();
 	~mbevts();
-	void Initialize();
+	void Initialise();
 	void SetGen(float en);
 	void SetTheta(float theta);
 	void SetPhi(float phi);
