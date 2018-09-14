@@ -142,8 +142,8 @@ void AddBack::MakeGammaRays( bool addback, bool reject ) {
 				// Check previous gammas
 				for( unsigned int l = 0; l < gen_array.size(); l++ ) {
 					
-					if( gen_array[l] < GammaEnergy+0.1 && gen_array[l] > GammaEnergy-0.1 )
-						continue; // same event
+					if( gen_array[l] < GammaEnergy+0.2 && gen_array[l] > GammaEnergy-0.2 &&
+					   sid_array[l] == MaxSegId ) continue; // same event
 					
 					// Do the addback if same cluster
 					if( clu_array[l] == MaxSegClu && addback ) {
@@ -167,8 +167,16 @@ void AddBack::MakeGammaRays( bool addback, bool reject ) {
 					// Reject/suppress if same cluster
 					if( clu_array[l] == MaxSegClu && reject ) {
 							
+						gen_array.erase( gen_array.begin() + l );
+						gtd_array.erase( gtd_array.begin() + l );
+						clu_array.erase( clu_array.begin() + l );
+						cid_array.erase( cid_array.begin() + l );
+						sid_array.erase( sid_array.begin() + l );
+						sen_array.erase( sen_array.begin() + l );
+						
 						reject_evt = true;
-							
+						l--;
+						
 					} // reject
 					
 				} // previous gammas
