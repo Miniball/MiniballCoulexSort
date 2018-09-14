@@ -25,6 +25,7 @@ string CalibrationFile;
 bool singles = false;
 bool gamgam = false;
 bool addback = false;
+bool reject = false;
 bool crex = false;
 bool trex = false;
 bool cdpad = false;

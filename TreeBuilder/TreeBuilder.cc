@@ -17,6 +17,7 @@ int main(int argc, char* argv[]) {
 	interface->Add("-s", "singles", &singles );
 	interface->Add("-gg", "gamma-gamma", &gamgam );
 	interface->Add("-addback", "addback", &addback );
+	interface->Add("-reject", "Reject", &reject );
 	interface->Add("-crex", "CREX", &crex );
 	interface->Add("-trex", "TREX", &trex );
 	interface->Add("-spede", "SPEDE", &spede );
@@ -51,9 +52,16 @@ int main(int argc, char* argv[]) {
 	cout << "output file: " << OutputFile << endl;
 	
 	if( ( trex && cdpad ) || ( trex && spede ) || ( cdpad && spede ) ||
-		( trex && crex ) || ( crex && spede ) || ( cdpad && crex ) ){
+	    ( trex && crex ) || ( crex && spede ) || ( cdpad && crex ) ){
 		
 		cerr << "Choose only one of cdpad, spede, crex or trex" << endl;
+		exit(1);
+		
+	}
+	
+	if( addback && reject ){
+		
+		cerr << "Choose either addback, reject or neither of them; not both." << endl;
 		exit(1);
 		
 	}
@@ -108,7 +116,7 @@ int main(int argc, char* argv[]) {
 
 	ParticleGammaTree pg_ana( tr, event );
 	pg_ana.SetCalibration( Cal );
-	pg_ana.SetupFlags( singles, gamgam, addback, crex, trex, cdpad, ionch, spede, verbose );
+	pg_ana.SetupFlags( singles, gamgam, addback, reject, crex, trex, cdpad, ionch, spede, verbose );
 
 	// ------------------------------------------------------------------------ //
 	

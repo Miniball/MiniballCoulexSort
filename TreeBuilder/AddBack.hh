@@ -37,7 +37,7 @@ public:
 	virtual ~AddBack();
 	
 	// Functions to fill gamma-ray vectors
-	void MakeGammaRays( bool addback );
+	void MakeGammaRays( bool addback, bool reject );
 	void MakeElectrons();
 	
 	// Function to set Event
@@ -141,7 +141,7 @@ private:
 	vector<float> sen_array;
 	
 	// Addback and veto flags
-	bool ab_evt;
+	bool ab_evt, reject_evt;
 	unsigned short ab_mul;
 	bool veto_gamma;
 	unsigned int gSeg;

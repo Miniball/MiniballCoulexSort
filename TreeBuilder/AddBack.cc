@@ -40,7 +40,7 @@ void AddBack::ClearEvt() {
 	
 }
 
-void AddBack::MakeGammaRays( bool addback ) {
+void AddBack::MakeGammaRays( bool addback, bool reject ) {
 	
 	// Crap segments list (i.e. those that need to be vetoed)
 	// Counting from 0 to 167, i.e. including cores - clu*21 + core*7 + seg
@@ -53,6 +53,7 @@ void AddBack::MakeGammaRays( bool addback ) {
 	// ------------------------------------------------------------------------ //
 	for( unsigned int j = 0; j < event->NumberOfDgfs(); j++ ) {
 		
+		reject_evt = false;
 		ab_evt = false;
 		ab_mul = 0;
 		veto_gamma = false;
@@ -160,12 +161,19 @@ void AddBack::MakeGammaRays( bool addback ) {
 							sen_array[l] = MaxSegEnergy;
 							
 						}
-						
+
 					} // addback
+					
+					// Reject/suppress if same cluster
+					if( clu_array[l] == MaxSegClu && reject ) {
+							
+						reject_evt = true;
+							
+					} // reject
 					
 				} // previous gammas
 				
-				if( ab_evt ) continue; // get next gamma
+				if( ab_evt || reject_evt ) continue; // get next gamma
 				hABmult->Fill( ab_mul );
 				
 				gen_array.push_back( GammaEnergy );

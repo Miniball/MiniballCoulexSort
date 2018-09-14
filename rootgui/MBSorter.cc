@@ -691,8 +691,8 @@ MBSorter::MBSorter() {
 	check_cdpad = new TGCheckButton( sub_frame_10, "CD+PAD" );
 	sub_frame_10->AddFrame( check_cdpad, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
-	check_ionch = new TGCheckButton( sub_frame_10, "Ion. Ch." );
-	sub_frame_10->AddFrame( check_ionch, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
+//	check_ionch = new TGCheckButton( sub_frame_10, "Ion. Ch." );
+//	sub_frame_10->AddFrame( check_ionch, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
 	check_singles = new TGCheckButton( sub_frame_10, "Singles" );
 	sub_frame_10->AddFrame( check_singles, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
@@ -702,6 +702,9 @@ MBSorter::MBSorter() {
 	
 	check_addback = new TGCheckButton( sub_frame_10, "Addback" );
 	sub_frame_10->AddFrame( check_addback, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
+	
+	check_reject = new TGCheckButton( sub_frame_10, "Reject" );
+	sub_frame_10->AddFrame( check_reject, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
 	check_verbose = new TGCheckButton( sub_frame_10, "Verbose" );
 	sub_frame_10->AddFrame( check_verbose, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
@@ -1147,10 +1150,12 @@ void MBSorter::on_build_clicked() {
 	if( check_trex->IsOn() ) cmd += "-trex ";
 	if( check_spede->IsOn() ) cmd += "-spede ";
 	if( check_cdpad->IsOn() ) cmd += "-cdpad ";
-	if( check_ionch->IsOn() ) cmd += "-ionch ";
+	//if( check_ionch->IsOn() ) cmd += "-ionch ";
+	cmd += "-ionch ";
 	if( check_singles->IsOn() ) cmd += "-s ";
 	if( check_gamgam->IsOn() ) cmd += "-gg ";
 	if( check_addback->IsOn() ) cmd += "-addback ";
+	if( check_reject->IsOn() ) cmd += "-reject ";
 	if( check_verbose->IsOn() ) cmd += "-vl ";
 
 	rootfileout = text_outfile->GetText();

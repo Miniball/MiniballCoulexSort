@@ -151,10 +151,11 @@ protected:
 	TGCheckButton       *check_trex;		// check button for trex selection
 	TGCheckButton       *check_crex;		// check button for crex selection
 	TGCheckButton       *check_cdpad;		// check button for CD+Pad for electrons
-	TGCheckButton       *check_ionch;		// check button for ionisation chamber
+//	TGCheckButton       *check_ionch;		// check button for ionisation chamber
 	TGCheckButton       *check_singles;		// check button for singles tree
 	TGCheckButton       *check_gamgam;		// check button for gamma-gamma events in tree
 	TGCheckButton       *check_addback;		// check button for addback on/off
+	TGCheckButton       *check_reject;		// check button for rejecting neighbouring Ge detetcors
 	TGCheckButton       *check_verbose;		// check button for verbose output
 	TGCheckButton       *check_config;		// check button for config file
 	TGCheckButton       *check_cutfile;		// check button for kinematics cut file
