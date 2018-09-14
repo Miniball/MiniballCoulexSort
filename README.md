@@ -13,6 +13,19 @@ It is in this section that the calibration file is read in, including the Miniba
 ### CLXAna
 The g_clx part of this is based on codes by Oliver Niedemeier, with contributions by Nigel Warr and Michael Albers. However, it has been completely rewritten by Liam Gaffney to include separate classes for filling histograms and performing Doppler correction. There is still much work to do and the current iteration is being developed by Liam Gaffney (CERN) and Daniel Cox (University of Jyväskylä) for the SPEDE parts.
 
+### mb_sorter
+
+A GUI is also available called mb_sorter. Here you can perform all of the above steps in a simple way. You can save the configuration to a text file to be read in again later.
+
+### Other codes
+
+```
+NeSort
+AQ4Sort
+TDRIVAna
+MntAna
+```
+
 ### Basic process for analysis
 
 To generate initial root file
@@ -65,11 +78,30 @@ This step takes a number of possible inputs:
 [-bg_frac     <float         >: Ratio of prompt and random for background subtraction]
 ```
 
+## Download and Installation
 
-### mb_sorter
+The recommended way to install this suite of codes is to first clone it using 'git'.
+```
+git clone http://github.com/Miniball/MiniballCoulexSort.git
+```
+Go to the directory that has just been created and run make,
+assuming all dependencies (specifically ROOT) are installed.
+```
+cd MiniballCoulexSort
+make
+```
+You then need to add the bin and lib directories to your standard paths.
+This may be done in your ~/.profile or ~/.bashrc files if your shell is bash.
+```
+export PATH=$PATH:/path/to/MiniballCoulexSort/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/MiniballCoulexSort/lib
+```
+If you are using a Mac, then you need to replace LD_LIBRARY_PATH with DYLD_LIBRARY_PATH.
 
-A GUI is also available called mb_sorter. Here you can perform all of the above steps in a simple way. You can save the configuration to a text file to be read in again later.
+Open a new terminal and launch the GUI with the command 'mb_sorter'.
 
-### Requirements
 
-SRIM files. In order to perform the Doppler correction properly, one needs to have the appropriate SRIM files.
+## Requirements
+
+MiniballCoulexSort requires ROOT v5 or v6 and an up to date C++ compiler with the c++11 standard as minimum.
+SRIM files. In order to perform the Doppler correction properly, one needs to have the appropriate SRIM files. (to be completed)
