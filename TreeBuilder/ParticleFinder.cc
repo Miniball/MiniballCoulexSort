@@ -22,38 +22,30 @@
 
 void ParticleFinder::NextAdc() {
 	
-	frontenergy.clear();
-	backenergy.clear();
-	frontid.clear();
-	backid.clear();
-	frontsector.clear();
-	backsector.clear();
-
-	frontenergy2.clear();
-	backenergy2.clear();
-	frontid2.clear();
-	backid2.clear();
-	frontsector2.clear();
-	backsector2.clear();
+	fcdfrontenergy.clear();
+	fcdbackenergy.clear();
+	fcdfrontid.clear();
+	fcdbackid.clear();
+	
+	bcdfrontenergy.clear();
+	bcdbackenergy.clear();
+	bcdfrontid.clear();
+	bcdbackid.clear();
 	
 	fbarrelenergy.clear();
 	bbarrelenergy.clear();
 	fbarrelstrip.clear();
 	bbarrelstrip.clear();
 	
-	vector<float>().swap( frontenergy );
-	vector<float>().swap( backenergy );
-	vector<unsigned short>().swap( frontid );
-	vector<unsigned short>().swap( backid );
-	vector<unsigned short>().swap( frontsector );
-	vector<unsigned short>().swap( backsector );
+	vector<float>().swap( fcdfrontenergy );
+	vector<float>().swap( fcdbackenergy );
+	vector<unsigned short>().swap( fcdfrontid );
+	vector<unsigned short>().swap( fcdbackid );
 	
-	vector<float>().swap( frontenergy2 );
-	vector<float>().swap( backenergy2 );
-	vector<unsigned short>().swap( frontid2 );
-	vector<unsigned short>().swap( backid2 );
-	vector<unsigned short>().swap( frontsector2 );
-	vector<unsigned short>().swap( backsector2 );
+	vector<float>().swap( bcdfrontenergy );
+	vector<float>().swap( bcdbackenergy );
+	vector<unsigned short>().swap( bcdfrontid );
+	vector<unsigned short>().swap( bcdbackid );
 	
 	vector<float>().swap( fbarrelenergy );
 	vector<float>().swap( bbarrelenergy );
@@ -119,8 +111,8 @@ void ParticleFinder::FindCDParticles() {
 
 			if( adc_ch < 16 ) { // front rings
 				
-				frontenergy.push_back( PartEnergy );
-				frontid.push_back( adc_ch );
+				fcdfrontenergy.push_back( PartEnergy );
+				fcdfrontid.push_back( adc_ch );
 				
 				if( PartEnergy > maxfrontenergy ) {
 					
@@ -133,8 +125,8 @@ void ParticleFinder::FindCDParticles() {
 		
 			else if( adc_ch < 28 ) { // back strips
 			
-				backenergy.push_back( PartEnergy );
-				backid.push_back( adc_ch-16 );
+				fcdbackenergy.push_back( PartEnergy );
+				fcdbackid.push_back( adc_ch-16 );
 				
 				if( PartEnergy > maxfrontenergy ) {
 					
@@ -166,6 +158,8 @@ void ParticleFinder::FindTREXParticles() {
 		trex[adc_num][adc_ch]->Fill( adc_en );
 		trex_cal[adc_num][adc_ch]->Fill( PartEnergy/1000. );
 		
+		//cout << "ADC #" << adc_num << "; adc_ch = " << adc_ch << "; adc_en = " << adc_en << endl;
+		
 		// Check threshold for every channel individually
 		if( adc_en > Cal->AdcThreshold( adc_num, adc_ch ) && adc_en < 3835 ) {
 			
@@ -181,7 +175,7 @@ void ParticleFinder::FindTREXParticles() {
 				}
 				
 				// Barrel ∆E - backward
-				if( adc_ch < 32 ) {
+				else if( adc_ch < 32 ) {
 					
 					bbarrelenergy.push_back( PartEnergy );
 					bbarrelstrip.push_back( adc_ch-16 );
@@ -191,7 +185,7 @@ void ParticleFinder::FindTREXParticles() {
 			} // First ADC
 			
 			// Second ADC
-			else if( adc_num%2 == 1 ) {
+			if( adc_num%2 == 1 ) {
 				
 				// PADs
 				if( adc_ch ==  8 ) padenergy[0] = PartEnergy;
@@ -204,29 +198,41 @@ void ParticleFinder::FindTREXParticles() {
 				// BCD front strips
 				if( adc_ch >= 16 ) {
 					
-					frontenergy.push_back( PartEnergy );
-					frontid.push_back( adc_ch-16 );
-					frontsector.push_back( 3 );
+					bcdfrontenergy.push_back( PartEnergy );
+					bcdfrontid.push_back( adc_ch-16 );
 					
 				}
 				
 				// MUX - front hits
 				if( adc_ch == 2 || adc_ch == 3 ) {
 					
-					frontsector.push_back( 0 );
-					frontid.push_back( DeMux( adc_ch, adc_en ) );
-					frontenergy.push_back( MuxEnergy );
+					int mux_id = DeMux( adc_ch, adc_en );
 					
-				}
+					fcdfrontid.push_back( mux_id );
+					fcdfrontenergy.push_back( MuxEnergy );
+					
+				} // MUX front
 				
 				// MUX - back hits
 				if( adc_ch == 6 || adc_ch == 7 ) {
 					
-					backsector.push_back( 0 );
-					backid.push_back( DeMux( adc_ch, adc_en ) );
-					backenergy.push_back( MuxEnergy );
+					int mux_id = DeMux( adc_ch, adc_en );
+
+					if( mux_id < 16 ) { // FCD
+						
+						fcdbackid.push_back( mux_id );
+						fcdbackenergy.push_back( MuxEnergy );
+						
+					} // FCD
 					
-				}
+					else { // BCD
+						
+						bcdbackid.push_back( mux_id );
+						bcdbackenergy.push_back( MuxEnergy );
+						
+					} // BCD
+
+				} // MUX back
 				
 			} // Second ADC
 			
@@ -238,44 +244,19 @@ void ParticleFinder::FindTREXParticles() {
 	
 }
 
-unsigned int ParticleFinder::DeMux( unsigned int mux_ch, unsigned int mux_en ) {
-	
-	// Get the id from the mux calibration (must do better)
-	float mux_id = Cal->AdcEnergy( adc_num, mux_ch, mux_en ) + 0.5;
-	
-	// Look for the corresponding energy in the subevents
-	for( unsigned int i = 0; i < subevent->Size(); i++ ) {
-	
-		adc_ch2 = subevent->AdcChannel(i);
-		adc_en2 = subevent->AdcValue(i);
-		
-		// Set the MUX energy when the matching channel is found
-		if( adc_ch2 + 2 == mux_ch ) {
-			
-			MuxEnergy = Cal->AdcEnergy( adc_num, adc_ch2, adc_en2 );
-			break;
-			
-		}
-		
-	}
-	
-	return (int)mux_id;
-
-}
-
 unsigned int ParticleFinder::ReconstructHeavyIons() {
 	
 	// Easy case, 1 front and 1 back!
-	if( frontenergy.size() == 1 && backenergy.size() == 1 ) {
+	if( fcdfrontenergy.size() == 1 && fcdbackenergy.size() == 1 ) {
 		
-		PEn.push_back( frontenergy.at(0) );
-		Nf.push_back( frontid.at(0) );
-		Nb.push_back( backid.at(0) );
+		PEn.push_back( fcdfrontenergy.at(0) );
+		Nf.push_back( fcdfrontid.at(0) );
+		Nb.push_back( fcdbackid.at(0) );
 		Quad.push_back( adc_num );
 		time.push_back( adc_t );
 		laser.push_back( laser_status );
 		
-		E_f_b[adc_num]->Fill( frontenergy.at(0)/1000., backenergy.at(0)/1000. );
+		E_f_b[adc_num]->Fill( fcdfrontenergy.at(0)/1000., fcdbackenergy.at(0)/1000. );
 		
 		cd_debug->Fill(0);
 		return 1;
@@ -283,24 +264,24 @@ unsigned int ParticleFinder::ReconstructHeavyIons() {
 	} // 1 vs. 1
 	
 	// 1 on the front and 2 on the back
-	else if( frontenergy.size() == 1 && backenergy.size() == 2 ) {
+	else if( fcdfrontenergy.size() == 1 && fcdbackenergy.size() == 2 ) {
 		
 		// Select events in neighbouring strips with good energy
-		int ndiff = TMath::Abs( backid.at(0) - backid.at(1) );
-		float eback = backenergy.at(0) + backenergy.at(1);
-		float ediff = TMath::Abs( frontenergy.at(0) - eback );
+		int ndiff = TMath::Abs( fcdbackid.at(0) - fcdbackid.at(1) );
+		float eback = fcdbackenergy.at(0) + fcdbackenergy.at(1);
+		float ediff = TMath::Abs( fcdfrontenergy.at(0) - eback );
 		
 		if( ndiff != 1 && ediff > 50e3 ) return 0;
 		
-		PEn.push_back( frontenergy.at(0) );
-		Nf.push_back( frontid.at(0) );
+		PEn.push_back( fcdfrontenergy.at(0) );
+		Nf.push_back( fcdfrontid.at(0) );
 		Nb.push_back( maxbackid );
 		Quad.push_back( adc_num );
 		time.push_back( adc_t );
 		laser.push_back( laser_status );
 		
-		E_f_b[adc_num]->Fill( frontenergy.at(0)/1000., backenergy.at(0)/1000. );
-		E_f_b[adc_num]->Fill( frontenergy.at(0)/1000., backenergy.at(1)/1000. );
+		E_f_b[adc_num]->Fill( fcdfrontenergy.at(0)/1000., fcdbackenergy.at(0)/1000. );
+		E_f_b[adc_num]->Fill( fcdfrontenergy.at(0)/1000., fcdbackenergy.at(1)/1000. );
 		
 		cd_debug->Fill(1);
 		return 1;
@@ -308,24 +289,24 @@ unsigned int ParticleFinder::ReconstructHeavyIons() {
 	} // 1 vs. 2
 	
 	// 2 on the front and 1 on the back
-	else if( frontenergy.size() == 2 && backenergy.size() == 1 ) {
+	else if( fcdfrontenergy.size() == 2 && fcdbackenergy.size() == 1 ) {
 		
 		// Select events in neighbouring strips with good energy
-		int ndiff = TMath::Abs( frontid.at(0) - frontid.at(1) );
-		float efront = frontenergy.at(0) + frontenergy.at(1);
-		float ediff = TMath::Abs( backenergy.at(0) - efront );
+		int ndiff = TMath::Abs( fcdfrontid.at(0) - fcdfrontid.at(1) );
+		float efront = fcdfrontenergy.at(0) + fcdfrontenergy.at(1);
+		float ediff = TMath::Abs( fcdbackenergy.at(0) - efront );
 		
 		if( ndiff != 1 && ediff > 50e3 ) return 0;
 		
-		PEn.push_back( backenergy.at(0) );
-		Nb.push_back( backid.at(0) );
+		PEn.push_back( fcdbackenergy.at(0) );
+		Nb.push_back( fcdbackid.at(0) );
 		Nf.push_back( maxfrontid );
 		Quad.push_back( adc_num );
 		time.push_back( adc_t );
 		laser.push_back( laser_status );
 		
-		E_f_b[adc_num]->Fill( frontenergy.at(0)/1000., backenergy.at(0)/1000. );
-		E_f_b[adc_num]->Fill( frontenergy.at(1)/1000., backenergy.at(0)/1000. );
+		E_f_b[adc_num]->Fill( fcdfrontenergy.at(0)/1000., fcdbackenergy.at(0)/1000. );
+		E_f_b[adc_num]->Fill( fcdfrontenergy.at(1)/1000., fcdbackenergy.at(0)/1000. );
 		
 		cd_debug->Fill(2);
 		return 1;
@@ -333,7 +314,7 @@ unsigned int ParticleFinder::ReconstructHeavyIons() {
 	} // 2 vs. 1
 	
 	// multiple on the front and multiple on the back
-	else if( frontenergy.size() > 1 && backenergy.size() > 1 ) {
+	else if( fcdfrontenergy.size() > 1 && fcdbackenergy.size() > 1 ) {
 		
 		cd_debug->Fill(3);
 		
@@ -361,245 +342,181 @@ unsigned int ParticleFinder::ReconstructTransferCD() {
 	///////////////////////////////
 	
 	float E, dE;
+	int counter = 0;
 	
-	// One vs. X
-	if( frontenergy.size() == 1 && frontenergy2.size() == 0 ) {
+	// One vs. one - FCD
+	if( fcdfrontenergy.size() == 1 && fcdbackenergy.size() == 1 ) {
 		
-		// The id and sector sizes have to be the same
-		if( frontid.size() != 1 ) return 0;
-		if( frontsector.size() != 1 ) return 0;
+		cd_debug->Fill(0);
 		
-		// One vs. one
-		if( backenergy.size() == 1 && backenergy2.size() == 0 ) {
+		// Particle #1
+		dE = fcdfrontenergy[0];
+		E = padenergy[0];
+		
+		PEn.push_back( dE + E );
+		dE_En.push_back( dE );
+		E_En.push_back( E );
+		Nf.push_back( fcdfrontid[0] );
+		Nb.push_back( fcdbackid[0] );
+		Quad.push_back( adc_num/2 );
+		Sector.push_back( 0 );
+		time.push_back( adc_t );
+		laser.push_back( laser_status );
+		
+		counter++;
+		
+	}
+	
+	// One vs. two - FCD
+	else if( fcdfrontenergy.size() == 1 && fcdbackenergy.size() == 2 ) {
+		
+		if( TMath::Abs( fcdbackid[0] - fcdbackid[1] ) == 1 ) {
 			
-			cd_debug->Fill(0);
-
-			// The id and sector sizes have to be the same
-			if( backid.size() != 1 ) return 0;
-			if( backsector.size() != 1 ) return 0;
-			
-			// Good CD sector numbers
-			if( frontsector[0] > 3 ) return 0;
-			if( backsector[0] > 3 ) return 0;
 			cd_debug->Fill(1);
 			
-			// Same CD for front and back
-			if( frontsector[0] != backsector[0] ) return 0;
+			// Particle #1
+			dE = fcdfrontenergy[0];
+			E = padenergy[0];
+			
+			PEn.push_back( dE + E );
+			dE_En.push_back( dE );
+			E_En.push_back( E );
+			Nf.push_back( fcdfrontid[0] );
+			if( fcdbackenergy[0] > fcdbackenergy[1] ) Nb.push_back( fcdbackid[0] );
+			else Nb.push_back( fcdbackid[1] );
+			Quad.push_back( adc_num/2 );
+			Sector.push_back( 0 );
+			time.push_back( adc_t );
+			laser.push_back( laser_status );
+			
+			counter++;
+			
+		}
+		
+	}
+	
+	// Two vs. one - FCD
+	else if( fcdfrontenergy.size() == 2 && fcdbackenergy.size() == 1 ) {
+		
+		if( TMath::Abs( fcdfrontid[0] - fcdfrontid[1] ) == 1 ) {
+			
 			cd_debug->Fill(2);
 			
 			// Particle #1
-			dE = frontenergy[0];
-			E = padenergy[frontsector[0]];
+			dE = fcdbackenergy[0];
+			E = padenergy[0];
 			
 			PEn.push_back( dE + E );
 			dE_En.push_back( dE );
 			E_En.push_back( E );
-			Nf.push_back( frontid[0] );
-			Nb.push_back( backid[0] );
+			if( fcdfrontenergy[0] > fcdfrontenergy[1] ) Nf.push_back( fcdfrontid[0] );
+			else Nf.push_back( fcdfrontid[1] );
+			Nb.push_back( fcdbackid[0] );
 			Quad.push_back( adc_num/2 );
-			Sector.push_back( frontsector[0] );
+			Sector.push_back( 0 );
 			time.push_back( adc_t );
 			laser.push_back( laser_status );
 			
-			return 1;
-
-		}
-		
-		// One vs. two
-		if( backenergy.size() == 1 && backenergy2.size() == 1 ) {
-		
-			// The id and sector sizes have to be the same
-			if( backid.size() != 1 || backid2.size() != 1 ) return 0;
-			if( backsector.size() != 1 || backsector2.size() != 1 ) return 0;
-			
-			if( TMath::Abs( backid[0] - backid2[0] ) == 1 ) {
-			
-				cd_debug->Fill(10);
-				
-				// Good CD sector numbers
-				if( frontsector[0] > 3 ) return 0;
-				if( backsector[0] > 3 ) return 0;
-				if( backsector2[0] > 3 ) return 0;
-				cd_debug->Fill(11);
-				
-				// Same CD for both backstrips
-				if( backsector[0] != backsector2[0] ) return 0;
-				cd_debug->Fill(12);
-				
-				// Same CD for front and back
-				if( frontsector[0] != backsector2[0] ) return 0;
-				cd_debug->Fill(13);
-				
-				// Neighbouring strips
-				if( TMath::Abs( backid[0] - backid2[0] ) != 1 ) return 0;
-				cd_debug->Fill(14);
-				
-				// Particle #1
-				dE = frontenergy[0];
-				E = padenergy[frontsector[0]];
-				
-				PEn.push_back( dE + E );
-				dE_En.push_back( dE );
-				E_En.push_back( E );
-				Nf.push_back( frontid[0] );
-				if( backenergy[0] > backenergy2[0] ) Nb.push_back( backid[0] );
-				else Nb.push_back( backid2[0] );
-				Quad.push_back( adc_num/2 );
-				Sector.push_back( frontsector[0] );
-				time.push_back( adc_t );
-				laser.push_back( laser_status );
-				
-				return 1;
-				
-			}
+			counter++;
 			
 		}
 		
 	}
 	
-	// Two vs. X
-	else if( frontenergy.size() == 2 ) {
+	// One vs. one - BCD
+	if( bcdfrontenergy.size() == 1 && bcdbackenergy.size() == 1 ) {
 		
-		// The id and sector sizes have to be the same
-		if( frontid.size() != 2 ) return 0;
-		if( frontsector.size() != 2 ) return 0;
+		cd_debug->Fill(10);
 		
-		// Two vs. two
-		if( backenergy.size() == 1 && backenergy2.size() == 1 ) {
+		// Particle #1
+		dE = bcdfrontenergy[0];
+		E = padenergy[3];
+		
+		PEn.push_back( dE + E );
+		dE_En.push_back( dE );
+		E_En.push_back( E );
+		Nf.push_back( bcdfrontid[0] );
+		Nb.push_back( bcdbackid[0] );
+		Quad.push_back( adc_num/2 );
+		Sector.push_back( 3 );
+		time.push_back( adc_t );
+		laser.push_back( laser_status );
+		
+		counter++;
+		
+	}
+	
+	// One vs. two - BCD
+	else if( bcdfrontenergy.size() == 1 && bcdbackenergy.size() == 2 ) {
+		
+		if( TMath::Abs( bcdbackid[0] - bcdbackid[1] ) == 1 ) {
 			
-			cd_debug->Fill(20);
-			
-			// The id and sector sizes have to be the same
-			if( backid.size() != 1 || backid2.size() != 1 ) return 0;
-			if( backsector.size() != 1 || backsector2.size() != 1 ) return 0;
-			
-			int index = 0, index2; // front strip associated with 1st/2nd hit on back
-
-			// Good CD sector numbers
-			if( frontsector[0] > 3 ) return 0;
-			if( frontsector[1] > 3 ) return 0;
-			if( backsector[0] > 3 ) return 0;
-			if( backsector2[0] > 3 ) return 0;
-			cd_debug->Fill(21);
-			
-			// Front strips in same CD
-			if( frontsector[0] == frontsector[1] ) {
-				
-				cd_debug->Fill(22);
-				
-				// Then back strips must be in same sector
-				if( backsector[0] == backsector2[0] ) {
-					
-					float ediff = TMath::Abs( frontenergy[0] - backenergy[0] );
-					if( TMath::Abs( frontenergy[1] - backenergy[0] ) < ediff ) index = 1;
-					index2 = TMath::Abs( index - 1 );
-					cd_debug->Fill(23);
-					
-				}
-				
-				else return 0;
-				
-			}
-			
-			// Else, back strips must also be in different sectors
-			else if( backsector[0] != backsector2[0] ) {
-				
-				if( frontsector[0] == backsector[0]  ) index = 0;
-				else if( frontsector[1] == backsector[1]  ) index = 1;
-				
-				index2 = TMath::Abs( index - 1 );
-				
-				cd_debug->Fill(24);
-				
-			}
-			
-			// Else it's a nonsense event
-			else return 0;
-			cd_debug->Fill(25);
-
+			cd_debug->Fill(11);
 			
 			// Particle #1
-			dE = frontenergy[index];
-			E = padenergy[frontsector[index]];
+			dE = bcdfrontenergy[0];
+			E = padenergy[3];
 			
 			PEn.push_back( dE + E );
 			dE_En.push_back( dE );
 			E_En.push_back( E );
-			Nf.push_back( frontid[index] );
-			Nb.push_back( backid[0] );
+			Nf.push_back( bcdfrontid[0] );
+			if( bcdbackenergy[0] > bcdbackenergy[1] ) Nb.push_back( bcdbackid[0] );
+			else Nb.push_back( bcdbackid[1] );
 			Quad.push_back( adc_num/2 );
-			Sector.push_back( frontsector[index] );
+			Sector.push_back( 3 );
 			time.push_back( adc_t );
 			laser.push_back( laser_status );
 			
-			
-			// Particle #2
-			dE = frontenergy[index2];
-			E = padenergy[frontsector[index2]];
-			
-			PEn.push_back( dE + E );
-			dE_En.push_back( dE );
-			E_En.push_back( E );
-			Nf.push_back( frontid[index2] );
-			Nb.push_back( backid2[0] );
-			Quad.push_back( adc_num/2 );
-			Sector.push_back( frontsector[index2] );
-			time.push_back( adc_t );
-			laser.push_back( laser_status );
-			
-			return 2;
-			
-		}
-		
-		// Two vs. one
-		if( backenergy.size() == 1 && backenergy2.size() == 0 ) {
-			
-			cd_debug->Fill(30);
-			
-			// The id and sector sizes have to be the same
-			if( backid.size() != 1 ) return 0;
-			if( backsector.size() != 1 ) return 0;
-			
-			// Good CD sector numbers
-			if( frontsector[0] > 3 ) return 0;
-			if( frontsector[1] > 3 ) return 0;
-			if( backsector[0] > 3 ) return 0;
-			cd_debug->Fill(31);
-			
-			// Same CD for both front strips
-			if( frontsector[0] != frontsector[1] ) return 0;
-			cd_debug->Fill(32);
-			
-			// Same CD for front and back
-			if( frontsector[0] != backsector[0] ) return 0;
-			cd_debug->Fill(33);
-			
-			// Neighbouring strips
-			if( TMath::Abs( frontid[0] - frontid[1] ) != 1 ) return 0;
-			cd_debug->Fill(34);
-			
-			// Particle #1
-			dE = backenergy[0];
-			E = padenergy[frontsector[0]];
-			
-			PEn.push_back( dE + E );
-			dE_En.push_back( dE );
-			E_En.push_back( E );
-			if( frontenergy[0] > frontenergy[1] ) Nf.push_back( frontid[0] );
-			else Nf.push_back( frontid[1] );
-			Nb.push_back( backid[0] );
-			Quad.push_back( adc_num/2 );
-			Sector.push_back( frontsector[0] );
-			time.push_back( adc_t );
-			laser.push_back( laser_status );
-			
-			return 1;
+			counter++;
 			
 		}
 		
 	}
 	
-	return 0;
+	// Two vs. one - BCD
+	else if( bcdfrontenergy.size() == 2 && bcdbackenergy.size() == 1 ) {
+		
+		if( TMath::Abs( bcdfrontid[0] - bcdfrontid[1] ) == 1 ) {
+			
+			cd_debug->Fill(12);
+
+			// Particle #1
+			dE = bcdbackenergy[0];
+			E = padenergy[3];
+			
+			PEn.push_back( dE + E );
+			dE_En.push_back( dE );
+			E_En.push_back( E );
+			if( bcdfrontenergy[0] > bcdfrontenergy[1] ) Nf.push_back( bcdfrontid[0] );
+			else Nf.push_back( bcdfrontid[1] );
+			Nb.push_back( bcdbackid[0] );
+			Quad.push_back( adc_num/2 );
+			Sector.push_back( 3 );
+			time.push_back( adc_t );
+			laser.push_back( laser_status );
+			
+			counter++;
+			
+		}
+		
+	}
+	
+	// more than 1 vs 2 or 2 vs 1... throw them away
+	if( fcdfrontenergy.size() > 1 && fcdbackenergy.size() > 1  ) {
+		
+		cd_debug->Fill(3);
+		
+	}
+	
+	// more than 1 vs 2 or 2 vs 1... throw them away
+	if( bcdfrontenergy.size() > 1 && bcdbackenergy.size() > 1  ) {
+		
+		cd_debug->Fill(13);
+		
+	}
+	
+	return counter;
 	
 }
 
@@ -611,6 +528,8 @@ unsigned int ParticleFinder::ReconstructTransferBarrel() {
 	
 	float E, dE;
 	unsigned int counter = 0;
+	
+	barrel_debug->Fill(0);
 	
 	if( fbarrelenergy.size() == 1 ) {
 		
@@ -628,6 +547,7 @@ unsigned int ParticleFinder::ReconstructTransferBarrel() {
 		laser.push_back( laser_status );
 		
 		counter++;
+		barrel_debug->Fill(1);
 		
 	}
 	
@@ -647,6 +567,7 @@ unsigned int ParticleFinder::ReconstructTransferBarrel() {
 		laser.push_back( laser_status );
 		
 		counter++;
+		barrel_debug->Fill(2);
 		
 	}
 	
@@ -694,6 +615,31 @@ int ParticleFinder::StripPosBarrel( float frontEn, float backEn ) {
 	
 	if( frontEn/backEn >= 2 ) return 15;
 	else return -1;
+	
+}
+
+unsigned int ParticleFinder::DeMux( unsigned int mux_ch, unsigned int mux_en ) {
+	
+	// Get the id from the mux calibration (must do better)
+	float mux_id = Cal->AdcEnergy( adc_num, mux_ch, mux_en ) + 0.5;
+	
+	// Look for the corresponding energy in the subevents
+	for( unsigned int i = 0; i < subevent->Size(); i++ ) {
+		
+		adc_ch2 = subevent->AdcChannel(i);
+		adc_en2 = subevent->AdcValue(i);
+		
+		// Set the MUX energy when the matching channel is found
+		if( adc_ch2 + 2 == mux_ch ) {
+			
+			MuxEnergy = Cal->AdcEnergy( adc_num, adc_ch2, adc_en2 );
+			break;
+			
+		}
+		
+	}
+	
+	return (int)mux_id;
 	
 }
 

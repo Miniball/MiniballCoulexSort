@@ -380,18 +380,34 @@ adc_1_2.Gain: 0.054983
 adc_1_2.Offset: -421.0
 adc_1_3.Gain: 0.054983
 adc_1_3.Offset: -421.0
+adc_1_6.Gain: 0.054983
+adc_1_7.Offset: -421.0
+adc_1_6.Gain: 0.054983
+adc_1_7.Offset: -421.0
 adc_3_2.Gain: 0.054983
 adc_3_2.Offset: -387.0
 adc_3_3.Gain: 0.054983
 adc_3_3.Offset: -433.0
+adc_3_6.Gain: 0.054983
+adc_3_7.Offset: -421.0
+adc_3_6.Gain: 0.054983
+adc_3_7.Offset: -421.0
 adc_5_2.Gain: 0.054983
 adc_5_2.Offset: -421.0
 adc_5_3.Gain: 0.054983
 adc_5_3.Offset: -421.0
+adc_5_6.Gain: 0.054983
+adc_5_7.Offset: -421.0
+adc_5_6.Gain: 0.054983
+adc_5_7.Offset: -421.0
 adc_7_2.Gain: 0.054983
 adc_7_2.Offset: -387.0
 adc_7_3.Gain: 0.054983
 adc_7_3.Offset: -433.0
+adc_7_6.Gain: 0.054983
+adc_7_7.Offset: -421.0
+adc_7_6.Gain: 0.054983
+adc_7_7.Offset: -421.0
 
 
 # ADC thresholds - MUX ID
@@ -614,30 +630,30 @@ adc_6_30.Threshold: 150
 adc_6_31.Threshold: 150
 
 # ADC thresholds - PADs
-adc_1_8.Threshold:  180
-adc_1_9.Threshold:  180
-adc_1_10.Threshold: 180
-adc_1_11.Threshold: 180
-adc_1_12.Threshold: 180
-adc_1_13.Threshold: 180
-adc_3_8.Threshold:  180
-adc_3_9.Threshold:  180
-adc_3_10.Threshold: 180
-adc_3_11.Threshold: 180
-adc_3_12.Threshold: 180
-adc_3_13.Threshold: 180
-adc_5_8.Threshold:  180
-adc_5_9.Threshold:  180
-adc_5_10.Threshold: 180
-adc_5_11.Threshold: 180
-adc_5_12.Threshold: 180
-adc_5_13.Threshold: 180
-adc_7_8.Threshold:  180
-adc_7_9.Threshold:  180
-adc_7_10.Threshold: 180
-adc_7_11.Threshold: 180
-adc_7_12.Threshold: 180
-adc_7_13.Threshold: 180
+adc_1_8.Threshold:  0
+adc_1_9.Threshold:  0
+adc_1_10.Threshold: 0
+adc_1_11.Threshold: 0
+adc_1_12.Threshold: 0
+adc_1_13.Threshold: 0
+adc_3_8.Threshold:  0
+adc_3_9.Threshold:  0
+adc_3_10.Threshold: 0
+adc_3_11.Threshold: 0
+adc_3_12.Threshold: 0
+adc_3_13.Threshold: 0
+adc_5_8.Threshold:  0
+adc_5_9.Threshold:  0
+adc_5_10.Threshold: 0
+adc_5_11.Threshold: 0
+adc_5_12.Threshold: 0
+adc_5_13.Threshold: 0
+adc_7_8.Threshold:  0
+adc_7_9.Threshold:  0
+adc_7_10.Threshold: 0
+adc_7_11.Threshold: 0
+adc_7_12.Threshold: 0
+adc_7_13.Threshold: 0
 
 
 

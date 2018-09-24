@@ -136,18 +136,14 @@ private:
 	TFile *outfile;
 
 	// Particle event vectors
-	vector<float> frontenergy;				// dsssd front energy
-	vector<float> backenergy;				// dsssd back energy
-	vector<unsigned short> frontid;			// dsssd front strip #
-	vector<unsigned short> backid;			// dsssd back strip #
-	vector<unsigned short> frontsector;		// dsssd front sector
-	vector<unsigned short> backsector;		// dsssd back sector
-	vector<float> frontenergy2;				// dsssd front energy (second hit from MUX)
-	vector<float> backenergy2;				// dsssd back energy (second hit from MUX)
-	vector<unsigned short> frontid2;		// dsssd front strip # (second hit from MUX)
-	vector<unsigned short> backid2;			// dsssd back strip # (second hit from MUX)
-	vector<unsigned short> frontsector2;	// dsssd front sector (second hit from MUX)
-	vector<unsigned short> backsector2;		// dsssd back sector (second hit from MUX)
+	vector<float> fcdfrontenergy;			// fcd front energy
+	vector<float> fcdbackenergy;			// fcd back energy
+	vector<unsigned short> fcdfrontid;		// fcd front strip #
+	vector<unsigned short> fcdbackid;		// fcd back strip #
+	vector<float> bcdfrontenergy;			// bcd front energy
+	vector<float> bcdbackenergy;			// bcd back energy
+	vector<unsigned short> bcdfrontid;		// bcd front strip #
+	vector<unsigned short> bcdbackid;		// bcd back strip #
 	vector<float> fbarrelenergy;			// forward barrel ∆E energy
 	vector<unsigned short> fbarrelstrip;	// forward barrel strip #
 	float fbarrelpos;						// forward barrel position
@@ -292,10 +288,8 @@ void ParticleFinder::InitialiseHistograms() {
 	
 	// Debugging the particle reconstruction
 	gDirectory->cd("/");
-	cd_debug = new TH1F("cd_debug","cd_debug",100,-0.5,99.5);
-	cd_debug->GetXaxis()->SetTitle("CD debugging");
-	barrel_debug = new TH1F("barrel_debug","cd_debug",100,-0.5,99.5);
-	barrel_debug->GetXaxis()->SetTitle("Barrel debugging");
+	cd_debug = new TH1F("cd_debug","CD debugging",100,-0.5,99.5);
+	barrel_debug = new TH1F("barrel_debug","Barrel debugging",100,-0.5,99.5);
 	
 	return;
 	
