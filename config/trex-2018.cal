@@ -377,37 +377,37 @@ dgf_53_1.Offset:	0.0
 
 # ADC calibration - MUX
 adc_1_2.Gain: 0.054983
-adc_1_2.Offset: -421.0
+adc_1_2.Offset: -23.52
 adc_1_3.Gain: 0.054983
-adc_1_3.Offset: -421.0
+adc_1_3.Offset: -23.52
 adc_1_6.Gain: 0.054983
-adc_1_7.Offset: -421.0
+adc_1_7.Offset: -23.52
 adc_1_6.Gain: 0.054983
-adc_1_7.Offset: -421.0
+adc_1_7.Offset: -23.52
 adc_3_2.Gain: 0.054983
 adc_3_2.Offset: -387.0
 adc_3_3.Gain: 0.054983
-adc_3_3.Offset: -433.0
+adc_3_3.Offset: -23.52
 adc_3_6.Gain: 0.054983
-adc_3_7.Offset: -421.0
+adc_3_7.Offset: -23.52
 adc_3_6.Gain: 0.054983
-adc_3_7.Offset: -421.0
+adc_3_7.Offset: -23.52
 adc_5_2.Gain: 0.054983
-adc_5_2.Offset: -421.0
+adc_5_2.Offset: -23.52
 adc_5_3.Gain: 0.054983
-adc_5_3.Offset: -421.0
+adc_5_3.Offset: -23.52
 adc_5_6.Gain: 0.054983
-adc_5_7.Offset: -421.0
+adc_5_7.Offset: -23.52
 adc_5_6.Gain: 0.054983
-adc_5_7.Offset: -421.0
+adc_5_7.Offset: -23.52
 adc_7_2.Gain: 0.054983
-adc_7_2.Offset: -387.0
+adc_7_2.Offset: -23.52
 adc_7_3.Gain: 0.054983
-adc_7_3.Offset: -433.0
+adc_7_3.Offset: -23.52
 adc_7_6.Gain: 0.054983
-adc_7_7.Offset: -421.0
+adc_7_7.Offset: -23.52
 adc_7_6.Gain: 0.054983
-adc_7_7.Offset: -421.0
+adc_7_7.Offset: -23.52
 
 
 # ADC thresholds - MUX ID
