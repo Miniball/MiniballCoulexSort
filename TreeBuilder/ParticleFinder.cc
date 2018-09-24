@@ -169,9 +169,10 @@ void ParticleFinder::FindTREXParticles() {
 		// Check threshold for every channel individually
 		if( adc_en > Cal->AdcThreshold( adc_num, adc_ch ) && adc_en < 3835 ) {
 			
-			// Barrel ∆E
+			// First ADC
 			if( adc_num%2 == 0 ) {
 				
+				// Barrel ∆E - forward
 				if( adc_ch < 16 ) {
 					
 					fbarrelenergy.push_back( PartEnergy );
@@ -179,93 +180,18 @@ void ParticleFinder::FindTREXParticles() {
 
 				}
 				
-				else if( adc_ch < 32 ) {
+				// Barrel ∆E - backward
+				if( adc_ch < 32 ) {
 					
 					bbarrelenergy.push_back( PartEnergy );
 					bbarrelstrip.push_back( adc_ch-16 );
 					
 				}
 				
-			}
+			} // First ADC
 			
-			// MUX, CDs and PADs
+			// Second ADC
 			else if( adc_num%2 == 1 ) {
-			
-				// MUX
-				if( adc_ch == 0 ) frontenergy.push_back( PartEnergy );
-				if( adc_ch == 1 ) frontenergy2.push_back( PartEnergy );
-				if( adc_ch == 2 ) {
-					
-					if( PartEnergy < 15.5 ) {
-						
-						frontsector.push_back( 0 );
-						frontid.push_back( (int)(PartEnergy+0.5) );
-						
-					}
-					
-					else {
-						
-						frontsector.push_back( 3 );
-						frontid.push_back( (int)(PartEnergy+0.5) - 16 );
-						
-					}
-					
-				}
-				
-				if( adc_ch == 3 ) {
-					
-					if( PartEnergy < 15.5 ) {
-						
-						frontsector2.push_back( 0 );
-						frontid2.push_back( (int)(PartEnergy+0.5) );
-						
-					}
-					
-					else {
-						
-						frontsector2.push_back( 3 );
-						frontid2.push_back( (int)(PartEnergy+0.5) - 16 );
-						
-					}
-					
-				}
-					
-				if( adc_ch == 4 ) backenergy.push_back( PartEnergy );
-				if( adc_ch == 5 ) backenergy2.push_back( PartEnergy );
-				if( adc_ch == 6 ) {
-					
-					if( PartEnergy < 15.5 ) {
-						
-						backsector.push_back( 0 );
-						backid.push_back( (int)(PartEnergy+0.5) );
-						
-					}
-					
-					else {
-						
-						backsector.push_back( 3 );
-						backid.push_back( (int)(PartEnergy+0.5) - 16 );
-						
-					}
-					
-				}
-				if( adc_ch == 7 ) {
-
-					if( PartEnergy < 15.5 ) {
-						
-						backsector2.push_back( 0 );
-						backid2.push_back( (int)(PartEnergy+0.5) );
-						
-					}
-					
-					else {
-						
-						backsector2.push_back( 3 );
-						backid2.push_back( (int)(PartEnergy+0.5) - 16 );
-						
-					}
-					
-				}
 				
 				// PADs
 				if( adc_ch ==  8 ) padenergy[0] = PartEnergy;
@@ -277,14 +203,32 @@ void ParticleFinder::FindTREXParticles() {
 				
 				// BCD front strips
 				if( adc_ch >= 16 ) {
-				
+					
 					frontenergy.push_back( PartEnergy );
 					frontid.push_back( adc_ch-16 );
 					frontsector.push_back( 3 );
 					
 				}
 				
-			}
+				// MUX - front hits
+				if( adc_ch == 2 || adc_ch == 3 ) {
+					
+					frontsector.push_back( 0 );
+					frontid.push_back( DeMux( adc_ch, adc_en ) );
+					frontenergy.push_back( MuxEnergy );
+					
+				}
+				
+				// MUX - back hits
+				if( adc_ch == 6 || adc_ch == 7 ) {
+					
+					backsector.push_back( 0 );
+					backid.push_back( DeMux( adc_ch, adc_en ) );
+					backenergy.push_back( MuxEnergy );
+					
+				}
+				
+			} // Second ADC
 			
 		} // threshold
 		
@@ -292,6 +236,31 @@ void ParticleFinder::FindTREXParticles() {
 	
 	return;
 	
+}
+
+unsigned int ParticleFinder::DeMux( unsigned int mux_ch, unsigned int mux_en ) {
+	
+	// Get the id from the mux calibration (must do better)
+	float mux_id = Cal->AdcEnergy( adc_num, mux_ch, mux_en ) + 0.5;
+	
+	// Look for the corresponding energy in the subevents
+	for( unsigned int i = 0; i < subevent->Size(); i++ ) {
+	
+		adc_ch2 = subevent->AdcChannel(i);
+		adc_en2 = subevent->AdcValue(i);
+		
+		// Set the MUX energy when the matching channel is found
+		if( adc_ch2 + 2 == mux_ch ) {
+			
+			MuxEnergy = Cal->AdcEnergy( adc_num, adc_ch2, adc_en2 );
+			break;
+			
+		}
+		
+	}
+	
+	return (int)mux_id;
+
 }
 
 unsigned int ParticleFinder::ReconstructHeavyIons() {
@@ -410,8 +379,8 @@ unsigned int ParticleFinder::ReconstructTransferCD() {
 			if( backsector.size() != 1 ) return 0;
 			
 			// Good CD sector numbers
-			if( frontsector[0] < 0 || frontsector[0] > 3 ) return 0;
-			if( backsector[0] < 0 || backsector[0] > 3 ) return 0;
+			if( frontsector[0] > 3 ) return 0;
+			if( backsector[0] > 3 ) return 0;
 			cd_debug->Fill(1);
 			
 			// Same CD for front and back
@@ -448,9 +417,9 @@ unsigned int ParticleFinder::ReconstructTransferCD() {
 				cd_debug->Fill(10);
 				
 				// Good CD sector numbers
-				if( frontsector[0] < 0 || frontsector[0] > 3 ) return 0;
-				if( backsector[0] < 0 || backsector[0] > 3 ) return 0;
-				if( backsector2[0] < 0 || backsector2[0] > 3 ) return 0;
+				if( frontsector[0] > 3 ) return 0;
+				if( backsector[0] > 3 ) return 0;
+				if( backsector2[0] > 3 ) return 0;
 				cd_debug->Fill(11);
 				
 				// Same CD for both backstrips
@@ -507,10 +476,10 @@ unsigned int ParticleFinder::ReconstructTransferCD() {
 			int index = 0, index2; // front strip associated with 1st/2nd hit on back
 
 			// Good CD sector numbers
-			if( frontsector[0] < 0 || frontsector[0] > 3 ) return 0;
-			if( frontsector[1] < 0 || frontsector[1] > 3 ) return 0;
-			if( backsector[0] < 0 || backsector[0] > 3 ) return 0;
-			if( backsector2[0] < 0 || backsector2[0] > 3 ) return 0;
+			if( frontsector[0] > 3 ) return 0;
+			if( frontsector[1] > 3 ) return 0;
+			if( backsector[0] > 3 ) return 0;
+			if( backsector2[0] > 3 ) return 0;
 			cd_debug->Fill(21);
 			
 			// Front strips in same CD
@@ -592,9 +561,9 @@ unsigned int ParticleFinder::ReconstructTransferCD() {
 			if( backsector.size() != 1 ) return 0;
 			
 			// Good CD sector numbers
-			if( frontsector[0] < 0 || frontsector[0] > 3 ) return 0;
-			if( frontsector[1] < 0 || frontsector[1] > 3 ) return 0;
-			if( backsector[0] < 0 || backsector[0] > 3 ) return 0;
+			if( frontsector[0] > 3 ) return 0;
+			if( frontsector[1] > 3 ) return 0;
+			if( backsector[0] > 3 ) return 0;
 			cd_debug->Fill(31);
 			
 			// Same CD for both front strips

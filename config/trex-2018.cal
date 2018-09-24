@@ -394,25 +394,6 @@ adc_7_3.Gain: 0.054983
 adc_7_3.Offset: -433.0
 
 
-# ADC thresholds - MUX energy
-adc_1_0.Threshold: 200
-adc_1_1.Threshold: 200
-adc_1_4.Threshold: 215
-adc_1_5.Threshold: 195
-adc_3_0.Threshold: 225
-adc_3_1.Threshold: 225
-adc_3_4.Threshold: 182
-adc_3_5.Threshold: 210
-adc_5_0.Threshold: 210
-adc_5_1.Threshold: 205
-adc_5_4.Threshold: 215
-adc_5_5.Threshold: 210
-adc_7_0.Threshold: 195
-adc_7_1.Threshold: 180
-adc_7_4.Threshold: 185
-adc_7_5.Threshold: 195
-
-
 # ADC thresholds - MUX ID
 adc_1_2.Threshold: 400
 adc_1_3.Threshold: 415

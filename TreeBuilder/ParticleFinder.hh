@@ -44,6 +44,7 @@ public:
 	unsigned int ReconstructTransfer();
 	unsigned int ReconstructTransferCD();
 	unsigned int ReconstructTransferBarrel();
+	unsigned int DeMux( unsigned int mux_ch, unsigned int mux_en );
 	
 	// Ionisation chamber event
 	void IonisationChamber();
@@ -174,6 +175,7 @@ private:
 	
 	// Adc values
 	float PartEnergy;
+	float MuxEnergy;
 	float icE_Energy;
 	float icDE_Energy;
 	unsigned int adc_num;
