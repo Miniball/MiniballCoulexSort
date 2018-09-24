@@ -42,6 +42,8 @@ public:
 	// Particle reconstruction
 	unsigned int ReconstructHeavyIons();
 	unsigned int ReconstructTransfer();
+	unsigned int ReconstructTransferCD();
+	unsigned int ReconstructTransferBarrel();
 	
 	// Ionisation chamber event
 	void IonisationChamber();

@@ -279,7 +279,7 @@ void ParticleFinder::FindTREXParticles() {
 				if( adc_ch >= 16 ) {
 				
 					frontenergy.push_back( PartEnergy );
-					frontid.push_back( adc_ch );
+					frontid.push_back( adc_ch-16 );
 					frontsector.push_back( 3 );
 					
 				}
@@ -385,7 +385,7 @@ unsigned int ParticleFinder::ReconstructHeavyIons() {
 	
 }
 
-unsigned int ParticleFinder::ReconstructTransfer() {
+unsigned int ParticleFinder::ReconstructTransferCD() {
 	
 	///////////////////////////////
 	// Reconstruct the CD events //
@@ -631,6 +631,57 @@ unsigned int ParticleFinder::ReconstructTransfer() {
 	}
 	
 	return 0;
+	
+}
+
+unsigned int ParticleFinder::ReconstructTransferBarrel() {
+	
+	///////////////////////////////////
+	// Reconstruct the Barrel events //
+	///////////////////////////////////
+	
+	float E, dE;
+	unsigned int counter = 0;
+	
+	if( fbarrelenergy.size() == 1 ) {
+		
+		dE = fbarrelenergy[0];
+		E = padenergy[1];
+		
+		PEn.push_back( dE + E );
+		dE_En.push_back( dE );
+		E_En.push_back( E );
+		Nf.push_back( fbarrelstrip[0] );
+		Nb.push_back( StripPosBarrel( dE, fbarrelpos ) );
+		Quad.push_back( adc_num/2 );
+		Sector.push_back( 1 );
+		time.push_back( adc_t );
+		laser.push_back( laser_status );
+		
+		counter++;
+		
+	}
+	
+	if( bbarrelenergy.size() == 1 ) {
+		
+		dE = bbarrelenergy[0];
+		E = padenergy[2];
+		
+		PEn.push_back( dE + E );
+		dE_En.push_back( dE );
+		E_En.push_back( E );
+		Nf.push_back( bbarrelstrip[0] );
+		Nb.push_back( StripPosBarrel( dE, bbarrelpos ) );
+		Quad.push_back( adc_num/2 );
+		Sector.push_back( 2 );
+		time.push_back( adc_t );
+		laser.push_back( laser_status );
+		
+		counter++;
+		
+	}
+	
+	return counter;
 	
 }
 

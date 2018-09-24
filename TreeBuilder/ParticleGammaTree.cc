@@ -350,7 +350,8 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 				
 				if( adc_num%2 == 1 ) {
 					
-					ParticleCounterQ[adc_num/2] += pf.ReconstructTransfer();
+					ParticleCounterQ[adc_num/2] += pf.ReconstructTransferCD();
+					ParticleCounterQ[adc_num/2] += pf.ReconstructTransferBarrel();
 					pf.NextAdc();
 					
 					

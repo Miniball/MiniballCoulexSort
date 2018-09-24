@@ -374,6 +374,7 @@ dgf_53_0.Offset:	0.0
 dgf_53_1.Gain:	0.0616898
 dgf_53_1.Offset:	0.0
 
+
 # ADC calibration - MUX
 adc_1_2.Gain: 0.054983
 adc_1_2.Offset: -421.0
@@ -391,6 +392,45 @@ adc_7_2.Gain: 0.054983
 adc_7_2.Offset: -387.0
 adc_7_3.Gain: 0.054983
 adc_7_3.Offset: -433.0
+
+
+# ADC thresholds - MUX energy
+adc_1_0.Threshold: 200
+adc_1_1.Threshold: 200
+adc_1_4.Threshold: 215
+adc_1_5.Threshold: 195
+adc_3_0.Threshold: 225
+adc_3_1.Threshold: 225
+adc_3_4.Threshold: 182
+adc_3_5.Threshold: 210
+adc_5_0.Threshold: 210
+adc_5_1.Threshold: 205
+adc_5_4.Threshold: 215
+adc_5_5.Threshold: 210
+adc_7_0.Threshold: 195
+adc_7_1.Threshold: 180
+adc_7_4.Threshold: 185
+adc_7_5.Threshold: 195
+
+
+# ADC thresholds - MUX ID
+adc_1_2.Threshold: 400
+adc_1_3.Threshold: 415
+adc_1_6.Threshold: 410
+adc_1_7.Threshold: 420
+adc_3_2.Threshold: 376
+adc_3_3.Threshold: 380
+adc_3_6.Threshold: 386
+adc_3_7.Threshold: 380
+adc_5_2.Threshold: 380
+adc_5_3.Threshold: 395
+adc_5_6.Threshold: 389
+adc_5_7.Threshold: 402
+adc_7_2.Threshold: 405
+adc_7_3.Threshold: 415
+adc_7_6.Threshold: 400
+adc_7_7.Threshold: 400
+
 
 
 # ADC thresholds - BCD
@@ -460,45 +500,149 @@ adc_7_30.Threshold: 180
 adc_7_31.Threshold: 180
 
 
-# ADC thresholds - MUX
-adc_1_0.Threshold: 280
-adc_1_1.Threshold: 280
-adc_1_2.Threshold: 280
-adc_1_3.Threshold: 280
-adc_1_4.Threshold: 280
-adc_1_5.Threshold: 280
-adc_1_6.Threshold: 280
-adc_1_7.Threshold: 280
-adc_3_0.Threshold: 280
-adc_3_1.Threshold: 280
-adc_3_2.Threshold: 280
-adc_3_3.Threshold: 280
-adc_3_4.Threshold: 280
-adc_3_5.Threshold: 280
-adc_3_6.Threshold: 280
-adc_3_7.Threshold: 280
-adc_5_0.Threshold: 280
-adc_5_1.Threshold: 280
-adc_5_2.Threshold: 280
-adc_5_3.Threshold: 280
-adc_5_4.Threshold: 280
-adc_5_5.Threshold: 280
-adc_5_6.Threshold: 280
-adc_5_7.Threshold: 280
-adc_7_0.Threshold: 280
-adc_7_1.Threshold: 280
-adc_7_2.Threshold: 280
-adc_7_3.Threshold: 280
-adc_7_4.Threshold: 280
-adc_7_5.Threshold: 280
-adc_7_6.Threshold: 280
-adc_7_7.Threshold: 280
+# ADC thresholds - FBarrel strips
+adc_0_0.Threshold: 150
+adc_0_1.Threshold: 150
+adc_0_2.Threshold: 150
+adc_0_3.Threshold: 150
+adc_0_4.Threshold: 150
+adc_0_5.Threshold: 150
+adc_0_6.Threshold: 150
+adc_0_7.Threshold: 150
+adc_0_8.Threshold: 150
+adc_0_9.Threshold: 150
+adc_0_10.Threshold: 150
+adc_0_11.Threshold: 150
+adc_0_12.Threshold: 150
+adc_0_13.Threshold: 150
+adc_0_14.Threshold: 150
+adc_0_15.Threshold: 150
+adc_2_0.Threshold: 150
+adc_2_1.Threshold: 150
+adc_2_2.Threshold: 150
+adc_2_3.Threshold: 150
+adc_2_4.Threshold: 150
+adc_2_5.Threshold: 150
+adc_2_6.Threshold: 150
+adc_2_7.Threshold: 150
+adc_2_8.Threshold: 150
+adc_2_9.Threshold: 150
+adc_2_10.Threshold: 150
+adc_2_11.Threshold: 150
+adc_2_12.Threshold: 150
+adc_2_13.Threshold: 150
+adc_2_14.Threshold: 150
+adc_2_15.Threshold: 150
+adc_4_0.Threshold: 150
+adc_4_1.Threshold: 150
+adc_4_2.Threshold: 150
+adc_4_3.Threshold: 150
+adc_4_4.Threshold: 150
+adc_4_5.Threshold: 150
+adc_4_6.Threshold: 150
+adc_4_7.Threshold: 150
+adc_4_8.Threshold: 150
+adc_4_9.Threshold: 150
+adc_4_10.Threshold: 150
+adc_4_11.Threshold: 150
+adc_4_12.Threshold: 150
+adc_4_13.Threshold: 150
+adc_4_14.Threshold: 150
+adc_4_15.Threshold: 150
+adc_6_0.Threshold: 150
+adc_6_1.Threshold: 150
+adc_6_2.Threshold: 150
+adc_6_3.Threshold: 150
+adc_6_4.Threshold: 150
+adc_6_5.Threshold: 150
+adc_6_6.Threshold: 150
+adc_6_7.Threshold: 150
+adc_6_8.Threshold: 150
+adc_6_9.Threshold: 150
+adc_6_10.Threshold: 150
+adc_6_11.Threshold: 150
+adc_6_12.Threshold: 150
+adc_6_13.Threshold: 150
+adc_6_14.Threshold: 150
+adc_6_15.Threshold: 150
+
+# ADC thresholds - BBarrel strips
+adc_0_16.Threshold: 150
+adc_0_17.Threshold: 150
+adc_0_18.Threshold: 150
+adc_0_19.Threshold: 150
+adc_0_20.Threshold: 150
+adc_0_21.Threshold: 150
+adc_0_22.Threshold: 150
+adc_0_23.Threshold: 150
+adc_0_24.Threshold: 150
+adc_0_25.Threshold: 150
+adc_0_26.Threshold: 150
+adc_0_27.Threshold: 150
+adc_0_28.Threshold: 150
+adc_0_29.Threshold: 150
+adc_0_30.Threshold: 150
+adc_0_31.Threshold: 150
+adc_2_16.Threshold: 150
+adc_2_17.Threshold: 150
+adc_2_18.Threshold: 150
+adc_2_19.Threshold: 150
+adc_2_20.Threshold: 150
+adc_2_21.Threshold: 150
+adc_2_22.Threshold: 150
+adc_2_23.Threshold: 150
+adc_2_24.Threshold: 150
+adc_2_25.Threshold: 150
+adc_2_26.Threshold: 150
+adc_2_27.Threshold: 150
+adc_2_28.Threshold: 150
+adc_2_29.Threshold: 150
+adc_2_30.Threshold: 150
+adc_2_31.Threshold: 150
+adc_4_16.Threshold: 150
+adc_4_17.Threshold: 150
+adc_4_18.Threshold: 150
+adc_4_19.Threshold: 150
+adc_4_20.Threshold: 150
+adc_4_21.Threshold: 150
+adc_4_22.Threshold: 150
+adc_4_23.Threshold: 150
+adc_4_24.Threshold: 150
+adc_4_25.Threshold: 150
+adc_4_26.Threshold: 150
+adc_4_27.Threshold: 150
+adc_4_28.Threshold: 150
+adc_4_29.Threshold: 150
+adc_4_30.Threshold: 150
+adc_4_31.Threshold: 150
+adc_6_16.Threshold: 150
+adc_6_17.Threshold: 150
+adc_6_18.Threshold: 150
+adc_6_19.Threshold: 150
+adc_6_20.Threshold: 150
+adc_6_21.Threshold: 150
+adc_6_22.Threshold: 150
+adc_6_23.Threshold: 150
+adc_6_24.Threshold: 150
+adc_6_25.Threshold: 150
+adc_6_26.Threshold: 150
+adc_6_27.Threshold: 150
+adc_6_28.Threshold: 150
+adc_6_29.Threshold: 150
+adc_6_30.Threshold: 150
+adc_6_31.Threshold: 150
+
 
 # ADC time offsets
-adc_0.TimeOffset:	2
-adc_1.TimeOffset:	-4
-adc_2.TimeOffset:	3
-adc_3.TimeOffset:	1
+adc_0.TimeOffset:	28
+adc_1.TimeOffset:	28
+adc_2.TimeOffset:	28
+adc_3.TimeOffset:	28
+adc_4.TimeOffset:	28
+adc_5.TimeOffset:	28
+adc_6.TimeOffset:	28
+adc_7.TimeOffset:	28
+
 
 # Miniball geometry with zoffset = +4.8
 Cluster_0.Theta:	141.30
