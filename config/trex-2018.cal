@@ -632,6 +632,33 @@ adc_6_29.Threshold: 150
 adc_6_30.Threshold: 150
 adc_6_31.Threshold: 150
 
+# ADC thresholds - PADs
+adc_1_8.Threshold:  180
+adc_1_9.Threshold:  180
+adc_1_10.Threshold: 180
+adc_1_11.Threshold: 180
+adc_1_12.Threshold: 180
+adc_1_13.Threshold: 180
+adc_3_8.Threshold:  180
+adc_3_9.Threshold:  180
+adc_3_10.Threshold: 180
+adc_3_11.Threshold: 180
+adc_3_12.Threshold: 180
+adc_3_13.Threshold: 180
+adc_5_8.Threshold:  180
+adc_5_9.Threshold:  180
+adc_5_10.Threshold: 180
+adc_5_11.Threshold: 180
+adc_5_12.Threshold: 180
+adc_5_13.Threshold: 180
+adc_7_8.Threshold:  180
+adc_7_9.Threshold:  180
+adc_7_10.Threshold: 180
+adc_7_11.Threshold: 180
+adc_7_12.Threshold: 180
+adc_7_13.Threshold: 180
+
+
 
 # ADC time offsets
 adc_0.TimeOffset:	28

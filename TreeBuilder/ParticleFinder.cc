@@ -167,21 +167,21 @@ void ParticleFinder::FindTREXParticles() {
 		trex_cal[adc_num][adc_ch]->Fill( PartEnergy/1000. );
 		
 		// Check threshold for every channel individually
-		if( adc_en > Cal->AdcThreshold( adc_num, adc_ch ) ) {
+		if( adc_en > Cal->AdcThreshold( adc_num, adc_ch ) && adc_en < 3835 ) {
 			
 			// Barrel ∆E
 			if( adc_num%2 == 0 ) {
 				
 				if( adc_ch < 16 ) {
 					
-					fbarrelenergy.push_back( adc_en );
+					fbarrelenergy.push_back( PartEnergy );
 					fbarrelstrip.push_back( adc_ch );
 
 				}
 				
 				else if( adc_ch < 32 ) {
 					
-					bbarrelenergy.push_back( adc_en );
+					bbarrelenergy.push_back( PartEnergy );
 					bbarrelstrip.push_back( adc_ch-16 );
 					
 				}
