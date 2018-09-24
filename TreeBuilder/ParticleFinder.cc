@@ -182,7 +182,7 @@ void ParticleFinder::FindTREXParticles() {
 				else if( adc_ch < 32 ) {
 					
 					bbarrelenergy.push_back( adc_en );
-					bbarrelstrip.push_back( adc_ch );
+					bbarrelstrip.push_back( adc_ch-16 );
 					
 				}
 				

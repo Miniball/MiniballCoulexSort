@@ -186,7 +186,7 @@ private:
 	
 	// Histograms
 	// diagnostics
-	TH1F *cd_debug;
+	TH1F *cd_debug, *barrel_debug;
 
 	// particles
 	TH1F *E_part_ch[4][32];
@@ -292,6 +292,8 @@ void ParticleFinder::InitialiseHistograms() {
 	gDirectory->cd("/");
 	cd_debug = new TH1F("cd_debug","cd_debug",100,-0.5,99.5);
 	cd_debug->GetXaxis()->SetTitle("CD debugging");
+	barrel_debug = new TH1F("barrel_debug","cd_debug",100,-0.5,99.5);
+	barrel_debug->GetXaxis()->SetTitle("Barrel debugging");
 	
 	return;
 	
