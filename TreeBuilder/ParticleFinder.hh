@@ -138,17 +138,17 @@ private:
 	// Particle event vectors
 	vector<float> fcdfrontenergy;			// fcd front energy
 	vector<float> fcdbackenergy;			// fcd back energy
-	vector<unsigned short> fcdfrontid;		// fcd front strip #
-	vector<unsigned short> fcdbackid;		// fcd back strip #
+	vector<int> fcdfrontid;					// fcd front strip #
+	vector<int> fcdbackid;					// fcd back strip #
 	vector<float> bcdfrontenergy;			// bcd front energy
 	vector<float> bcdbackenergy;			// bcd back energy
-	vector<unsigned short> bcdfrontid;		// bcd front strip #
-	vector<unsigned short> bcdbackid;		// bcd back strip #
+	vector<int> bcdfrontid;					// bcd front strip #
+	vector<int> bcdbackid;					// bcd back strip #
 	vector<float> fbarrelenergy;			// forward barrel ∆E energy
-	vector<unsigned short> fbarrelstrip;	// forward barrel strip #
+	vector<int> fbarrelstrip;				// forward barrel strip #
 	float fbarrelpos;						// forward barrel position
 	vector<float> bbarrelenergy;			// backward barrel ∆E energy
-	vector<unsigned short> bbarrelstrip;	// backward barrel strip #
+	vector<int> bbarrelstrip;				// backward barrel strip #
 	float bbarrelpos;						// backward barrel position
 	float padenergy[4];						// pad energy by sector
 	

@@ -39,18 +39,18 @@ void ParticleFinder::NextAdc() {
 	
 	vector<float>().swap( fcdfrontenergy );
 	vector<float>().swap( fcdbackenergy );
-	vector<unsigned short>().swap( fcdfrontid );
-	vector<unsigned short>().swap( fcdbackid );
+	vector<int>().swap( fcdfrontid );
+	vector<int>().swap( fcdbackid );
 	
 	vector<float>().swap( bcdfrontenergy );
 	vector<float>().swap( bcdbackenergy );
-	vector<unsigned short>().swap( bcdfrontid );
-	vector<unsigned short>().swap( bcdbackid );
+	vector<int>().swap( bcdfrontid );
+	vector<int>().swap( bcdbackid );
 	
 	vector<float>().swap( fbarrelenergy );
 	vector<float>().swap( bbarrelenergy );
-	vector<unsigned short>().swap( fbarrelstrip );
-	vector<unsigned short>().swap( bbarrelstrip );
+	vector<int>().swap( fbarrelstrip );
+	vector<int>().swap( bbarrelstrip );
 	fbarrelpos = -99.;
 	bbarrelpos = -99.;
 	
@@ -208,24 +208,28 @@ void ParticleFinder::FindTREXParticles() {
 					
 					int mux_id = DeMux( adc_ch, adc_en );
 					
-					fcdfrontid.push_back( mux_id );
-					fcdfrontenergy.push_back( MuxEnergy );
+					if( MuxEnergy > 0 ) {
+					
+						fcdfrontid.push_back( mux_id );
+						fcdfrontenergy.push_back( MuxEnergy );
+						
+					}
 					
 				} // MUX front
 				
 				// MUX - back hits
 				if( adc_ch == 6 || adc_ch == 7 ) {
-					
-					int mux_id = DeMux( adc_ch, adc_en );
 
-					if( mux_id < 16 ) { // FCD
+					int mux_id = DeMux( adc_ch, adc_en );
+					
+					if( mux_id < 16 && MuxEnergy > 0 ) { // FCD
 						
 						fcdbackid.push_back( mux_id );
 						fcdbackenergy.push_back( MuxEnergy );
 						
 					} // FCD
 					
-					else { // BCD
+					else if( MuxEnergy > 0 ) { // BCD
 						
 						bcdbackid.push_back( mux_id );
 						bcdbackenergy.push_back( MuxEnergy );
@@ -529,7 +533,8 @@ unsigned int ParticleFinder::ReconstructTransferBarrel() {
 	float E, dE;
 	unsigned int counter = 0;
 	
-	barrel_debug->Fill(0);
+	if( fbarrelenergy.size() > 0 ) barrel_debug->Fill(0);
+	if( bbarrelenergy.size() > 0 ) barrel_debug->Fill(10);
 	
 	if( fbarrelenergy.size() == 1 ) {
 		
@@ -567,7 +572,7 @@ unsigned int ParticleFinder::ReconstructTransferBarrel() {
 		laser.push_back( laser_status );
 		
 		counter++;
-		barrel_debug->Fill(2);
+		barrel_debug->Fill(11);
 		
 	}
 	
@@ -632,12 +637,16 @@ unsigned int ParticleFinder::DeMux( unsigned int mux_ch, unsigned int mux_en ) {
 		// Set the MUX energy when the matching channel is found
 		if( adc_ch2 + 2 == mux_ch ) {
 			
-			MuxEnergy = Cal->AdcEnergy( adc_num, adc_ch2, adc_en2 );
+			if( adc_en2 < 3835 ) MuxEnergy = Cal->AdcEnergy( adc_num, adc_ch2, adc_en2 );
+			else MuxEnergy = -99.;
 			break;
 			
 		}
 		
 	}
+	
+	//if( mux_ch == 2 || mux_ch == 3 ) cout << mux_id << endl;
+	//if( mux_ch == 6 || mux_ch == 7 ) cout << mux_id << endl;
 	
 	return (int)mux_id;
 	
