@@ -190,10 +190,10 @@ void ParticleFinder::FindTREXParticles() {
 				// PADs
 				if( adc_ch ==  8 ) padenergy[0] = PartEnergy;
 				if( adc_ch ==  9 ) padenergy[3] = PartEnergy;
-				if( adc_ch == 10 ) fbarrelpos = PartEnergy;
-				if( adc_ch == 11 ) bbarrelpos = PartEnergy;
-				if( adc_ch == 12 ) padenergy[1] = PartEnergy;
-				if( adc_ch == 13 ) padenergy[2] = PartEnergy;
+				if( adc_ch == 10 ) padenergy[1] = PartEnergy;
+				if( adc_ch == 11 ) fbarrelpos = PartEnergy;
+				if( adc_ch == 12 ) padenergy[2] = PartEnergy;
+				if( adc_ch == 13 ) bbarrelpos = PartEnergy;
 				
 				// BCD front strips
 				if( adc_ch >= 16 ) {
