@@ -32,9 +32,6 @@ void ParticleGammaTree::ClearEvt() {
 	vector<mbevts*>().swap( mb_evts );
 	vector<trevts*>().swap( tr_evts );
 	
-	fill_mb_evts = new mbevts();
-	fill_tr_evts = new trevts();
-	
 	return;
 	
 }
@@ -353,7 +350,6 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 					ParticleCounterQ[adc_num/2] += pf.ReconstructTransferCD();
 					ParticleCounterQ[adc_num/2] += pf.ReconstructTransferBarrel();
 					pf.NextAdc();
-					
 					
 				}
 				

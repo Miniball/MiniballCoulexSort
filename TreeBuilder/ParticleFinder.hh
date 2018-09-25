@@ -158,8 +158,8 @@ private:
 	vector<float> E_En;				// Erest energy in transfer
 	vector<unsigned int> Quad;		// 0: Top, 1: Bottom, 2: Left and 3: Right
 	vector<unsigned int> Sector;	// 0: FCD, 1: FBarrel, 2: BBarrel and 3: BCD
-	vector<unsigned int> Nf;		// Rings for CDs, strips for barrel
-	vector<unsigned int> Nb;		// Strips for CDs, pos for barrel
+	vector<int> Nf;		// Rings for CDs, strips for barrel
+	vector<int> Nb;		// Strips for CDs, pos for barrel
 	vector<long long> time;
 	vector<bool> laser;
 	
@@ -172,6 +172,7 @@ private:
 	// Adc values
 	float PartEnergy;
 	float MuxEnergy;
+	int mux_id;
 	float icE_Energy;
 	float icDE_Energy;
 	unsigned int adc_num;

@@ -82,8 +82,8 @@ void ParticleFinder::ClearEvt() {
 	vector<float>().swap( PEn );
 	vector<float>().swap( dE_En );
 	vector<float>().swap( E_En );
-	vector<unsigned int>().swap( Nf );
-	vector<unsigned int>().swap( Nb );
+	vector<int>().swap( Nf );
+	vector<int>().swap( Nb );
 	vector<unsigned int>().swap( Quad );
 	vector<unsigned int>().swap( Sector );
 	vector<long long>().swap( time );
@@ -161,7 +161,7 @@ void ParticleFinder::FindTREXParticles() {
 		//cout << "ADC #" << adc_num << "; adc_ch = " << adc_ch << "; adc_en = " << adc_en << endl;
 		
 		// Check threshold for every channel individually
-		if( adc_en > Cal->AdcThreshold( adc_num, adc_ch ) && adc_en < 3835 ) {
+		if( adc_en > Cal->AdcThreshold( adc_num, adc_ch ) && adc_en < 3839 ) {
 			
 			// First ADC
 			if( adc_num%2 == 0 ) {
@@ -206,7 +206,7 @@ void ParticleFinder::FindTREXParticles() {
 				// MUX - front hits
 				if( adc_ch == 2 || adc_ch == 3 ) {
 					
-					int mux_id = DeMux( adc_ch, adc_en );
+					mux_id = DeMux( adc_ch, adc_en );
 					
 					if( MuxEnergy > 0 ) {
 					
@@ -220,9 +220,9 @@ void ParticleFinder::FindTREXParticles() {
 				// MUX - back hits
 				if( adc_ch == 6 || adc_ch == 7 ) {
 
-					int mux_id = DeMux( adc_ch, adc_en );
+					mux_id = DeMux( adc_ch, adc_en );
 					
-					if( mux_id < 16 && MuxEnergy > 0 ) { // FCD
+					if( mux_id < 18 && MuxEnergy > 0 ) { // FCD
 						
 						fcdbackid.push_back( mux_id );
 						fcdbackenergy.push_back( MuxEnergy );
@@ -637,7 +637,7 @@ unsigned int ParticleFinder::DeMux( unsigned int mux_ch, unsigned int mux_en ) {
 		// Set the MUX energy when the matching channel is found
 		if( adc_ch2 + 2 == mux_ch ) {
 			
-			if( adc_en2 < 3835 ) MuxEnergy = Cal->AdcEnergy( adc_num, adc_ch2, adc_en2 );
+			if( adc_en2 < 3839 ) MuxEnergy = Cal->AdcEnergy( adc_num, adc_ch2, adc_en2 );
 			else MuxEnergy = -99.;
 			break;
 			

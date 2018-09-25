@@ -234,7 +234,10 @@ void ParticleGammaTree::InitialiseVariables() {
 	// ------------------------------------------------------------------------ //
 	write_mb_evts = new mbevts();
 	write_tr_evts = new trevts();
-
+	
+	fill_mb_evts = new mbevts();
+	fill_tr_evts = new trevts();
+	
 	g_clx = new TTree( "g_clx", "g_clx" );
 	g_clx->Branch( "mbevts", "mbevts", &write_mb_evts );
 	
