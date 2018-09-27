@@ -144,12 +144,12 @@ private:
 	vector<float> bcdbackenergy;			// bcd back energy
 	vector<int> bcdfrontid;					// bcd front strip #
 	vector<int> bcdbackid;					// bcd back strip #
-	vector<float> fbarrelenergy;			// forward barrel ∆E energy
+	vector<float> fbarrelpos;				// forward barrel ∆E energy
 	vector<int> fbarrelstrip;				// forward barrel strip #
-	float fbarrelpos;						// forward barrel position
-	vector<float> bbarrelenergy;			// backward barrel ∆E energy
+	float fbarrelE;							// forward barrel position
+	vector<float> bbarrelpos;				// backward barrel ∆E energy
 	vector<int> bbarrelstrip;				// backward barrel strip #
-	float bbarrelpos;						// backward barrel position
+	float bbarrelE;							// backward barrel position
 	float padenergy[4];						// pad energy by sector
 	
 	// Reconstructed Particle arrays

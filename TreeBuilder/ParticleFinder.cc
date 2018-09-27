@@ -32,8 +32,8 @@ void ParticleFinder::NextAdc() {
 	bcdfrontid.clear();
 	bcdbackid.clear();
 	
-	fbarrelenergy.clear();
-	bbarrelenergy.clear();
+	fbarrelpos.clear();
+	bbarrelpos.clear();
 	fbarrelstrip.clear();
 	bbarrelstrip.clear();
 	
@@ -47,12 +47,12 @@ void ParticleFinder::NextAdc() {
 	vector<int>().swap( bcdfrontid );
 	vector<int>().swap( bcdbackid );
 	
-	vector<float>().swap( fbarrelenergy );
-	vector<float>().swap( bbarrelenergy );
+	vector<float>().swap( fbarrelpos );
+	vector<float>().swap( bbarrelpos );
 	vector<int>().swap( fbarrelstrip );
 	vector<int>().swap( bbarrelstrip );
-	fbarrelpos = -99.;
-	bbarrelpos = -99.;
+	fbarrelE = -99.;
+	bbarrelE = -99.;
 	
 	for( unsigned int i = 0; i < 4; i++ ) {
 		
@@ -169,15 +169,15 @@ void ParticleFinder::FindTREXParticles() {
 				// Barrel ∆E - forward
 				if( adc_ch < 16 ) {
 					
-					fbarrelenergy.push_back( PartEnergy );
+					fbarrelpos.push_back( PartEnergy );
 					fbarrelstrip.push_back( adc_ch );
 
 				}
 				
 				// Barrel ∆E - backward
-				else if( adc_ch < 32 ) {
+				else if( adc_ch >= 16 && adc_ch < 32 ) {
 					
-					bbarrelenergy.push_back( PartEnergy );
+					bbarrelpos.push_back( PartEnergy );
 					bbarrelstrip.push_back( adc_ch-16 );
 					
 				}
@@ -190,10 +190,10 @@ void ParticleFinder::FindTREXParticles() {
 				// PADs
 				if( adc_ch ==  8 ) padenergy[0] = PartEnergy;
 				if( adc_ch ==  9 ) padenergy[3] = PartEnergy;
-				if( adc_ch == 10 ) fbarrelpos = PartEnergy;
-				if( adc_ch == 11 ) bbarrelpos = PartEnergy;
-				if( adc_ch == 12 ) padenergy[1] = PartEnergy;
-				if( adc_ch == 13 ) padenergy[2] = PartEnergy;
+				if( adc_ch == 10 ) padenergy[1] = PartEnergy;
+				if( adc_ch == 11 ) fbarrelE = PartEnergy;
+				if( adc_ch == 12 ) padenergy[2] = PartEnergy;
+				if( adc_ch == 13 ) bbarrelE = PartEnergy;
 				
 				// BCD front strips
 				if( adc_ch >= 16 ) {
@@ -533,19 +533,19 @@ unsigned int ParticleFinder::ReconstructTransferBarrel() {
 	float E, dE;
 	unsigned int counter = 0;
 	
-	if( fbarrelenergy.size() > 0 ) barrel_debug->Fill(0);
-	if( bbarrelenergy.size() > 0 ) barrel_debug->Fill(10);
+	if( fbarrelpos.size() > 0 ) barrel_debug->Fill(0);
+	if( bbarrelpos.size() > 0 ) barrel_debug->Fill(10);
 	
-	if( fbarrelenergy.size() == 1 ) {
+	if( fbarrelpos.size() == 1 ) {
 		
-		dE = fbarrelenergy[0];
+		dE = fbarrelE;
 		E = padenergy[1];
 		
 		PEn.push_back( dE + E );
 		dE_En.push_back( dE );
 		E_En.push_back( E );
 		Nf.push_back( fbarrelstrip[0] );
-		Nb.push_back( StripPosBarrel( dE, fbarrelpos ) );
+		Nb.push_back( StripPosBarrel( dE, fbarrelpos[0] ) );
 		Quad.push_back( adc_num/2 );
 		Sector.push_back( 1 );
 		time.push_back( adc_t );
@@ -556,16 +556,16 @@ unsigned int ParticleFinder::ReconstructTransferBarrel() {
 		
 	}
 	
-	if( bbarrelenergy.size() == 1 ) {
+	if( bbarrelpos.size() == 1 ) {
 		
-		dE = bbarrelenergy[0];
+		dE = bbarrelE;
 		E = padenergy[2];
 		
 		PEn.push_back( dE + E );
 		dE_En.push_back( dE );
 		E_En.push_back( E );
 		Nf.push_back( bbarrelstrip[0] );
-		Nb.push_back( StripPosBarrel( dE, bbarrelpos ) );
+		Nb.push_back( StripPosBarrel( dE, bbarrelpos[0] ) );
 		Quad.push_back( adc_num/2 );
 		Sector.push_back( 2 );
 		time.push_back( adc_t );
