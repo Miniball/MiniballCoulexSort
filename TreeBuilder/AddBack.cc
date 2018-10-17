@@ -47,6 +47,8 @@ void AddBack::MakeGammaRays( bool addback, bool reject ) {
 	//dead_segments.push_back( 106 ); // clu 5, core 0, seg 1 = 18A1
 	//dead_segments.push_back( 107 ); // clu 5, core 0, seg 2 = 18A2
 
+	// Reset some variables
+	ab_mul = 0;
 	
 	// ------------------------------------------------------------------------ //
 	// Only DGF events
@@ -55,7 +57,6 @@ void AddBack::MakeGammaRays( bool addback, bool reject ) {
 		
 		reject_evt = false;
 		ab_evt = false;
-		ab_mul = 0;
 		veto_gamma = false;
 		dgf_num = event->Dgf(j)->ModuleNumber();
 		dgf_ch  = event->Dgf(j)->Channel();
