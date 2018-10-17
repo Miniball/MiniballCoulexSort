@@ -130,8 +130,8 @@ void ParticleGammaTree::CLXCoincidences() {
 			}
 			
 			// Add particle
-			fill_mb_evts->SetPart( pf.GetPEn(j), pf.GetNf(j), pf.GetNb(j),
-								  pf.GetTime(j), (double)event->SuperCycleTime(), (double)event->T1Time(),
+			fill_mb_evts->SetPart( pf.GetPEn(j), pf.GetNf(j), pf.GetNb(j), pf.GetTime(j),
+								  (double)event->SuperCycleTime(), (double)event->T1Time(),
 								  (float)tdiffPG, (int)coinc_flag, pf.GetQuad(j), pf.GetLaser(j) );
 			
 		} // End loop All the particles
