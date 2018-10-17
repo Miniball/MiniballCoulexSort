@@ -114,14 +114,14 @@ void AddBack::MakeGammaRays( bool addback, bool reject ) {
 					// Is it a crap segment?
 					for( unsigned int ds = 0; ds < dead_segments.size(); ds++ ) {
 						
-						if( gSeg == dead_segments[ds] ) {
-							
-							veto_gamma = true;
-							
-						}
+						if( gSeg == dead_segments[ds] ) veto_gamma = true;
 						
 					}
 					
+					// time difference between cores
+					if( dgf_ch2 == 0 && dgf_num2 % 2 == 0 && dgf_ch2 == 0 )
+						tdiff_gg->Fill( dgf_t2 - dgf_t );
+
 					// Skip if a different detector
 					if( dgf_num2 != dgf_num && dgf_num2 != dgf_num + 1 ) continue;
 					
@@ -177,7 +177,6 @@ void AddBack::MakeGammaRays( bool addback, bool reject ) {
 						cid_array.erase( cid_array.begin() + l );
 						sid_array.erase( sid_array.begin() + l );
 						sen_array.erase( sen_array.begin() + l );
-						ab_array.erase( ab_array.begin() + l );
 						
 						reject_evt = true;
 						l--;
