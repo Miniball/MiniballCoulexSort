@@ -72,8 +72,8 @@ void hists::Initialise( doppler dc_ ) {
 	ge = new TH2F("ge","Gamma-electron matrix;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
 	gg_dcB = new TH2F("gg_dcB","Gamma-gamma matrix, DC for beam;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	gg_dcT = new TH2F("gg_dcT","Gamma-gamma matrix, DC for target;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
-	gg_td = new TH1F("gg_td","#gamma-#gamma time difference;#tau (t_{#gamma} - t_{#gamma}) [ns];Counts per 12.5ns",TBINS,TMAX-25*TBINS,TMAX); // Total
-	ge_td = new TH1F("ge_td","electron-#gamma time difference;#tau (t_{e^{-}} - t_{#gamma}) [ns];Counts per 12.5ns",TBINS,TMAX-25*TBINS,TMAX); // Total
+	gg_td = new TH1F("gg_td","#gamma-#gamma time difference;#tau (t_{#gamma} - t_{#gamma}) [ns];Counts per 25 ns",TBINS,TMAX-25*TBINS,TMAX); // Total
+	ge_td = new TH1F("ge_td","electron-#gamma time difference;#tau (t_{e^{-}} - t_{#gamma}) [ns];Counts per 25 ns",TBINS,TMAX-25*TBINS,TMAX); // Total
 	gcor_size = new TH1F("gcor_size","gcor_size;Number of correlated gammas/electrons;frequency",100,-0.5,99.5);
 	
 	// Doppler corrected spectra per detector
@@ -268,8 +268,8 @@ void hists::Initialise( doppler dc_ ) {
 #endif
 
 	// gamma - particle time difference
-	tdiff = new TH1F("tdiff","Particle-#gamma time difference;#tau (t_{p} - t_{#gamma}) [ns];Counts per 12.5ns",TBINS,TMAX-25*TBINS,TMAX); // Total
-	tdiff_e = new TH1F("tdiff_e","Particle-electron time difference;#tau (t_{p} - t_{e^{-}}) [ns];Counts per 12.5ns",TBINS,TMAX-25*TBINS,TMAX); // Total
+	tdiff = new TH1F("tdiff","Particle-#gamma time difference;#tau (t_{p} - t_{#gamma}) [ns];Counts per 25 ns",TBINS,TMAX-25*TBINS,TMAX); // Total
+	tdiff_e = new TH1F("tdiff_e","Particle-electron time difference;#tau (t_{p} - t_{e^{-}}) [ns];Counts per 25 ns",TBINS,TMAX-25*TBINS,TMAX); // Total
 	tegate[0] = 85.;
 	tegate[1] = 166.;
 	tegate[2] = 228.;
@@ -763,7 +763,7 @@ void hists::FillGamGam1h( float GEn, float GTh, float GPh, vector <float> GCor_G
 			
 			gg_td->Fill( GCor_Gtd.at(i)*25. );
 			
-			if( GCor_Gtd.at(i) > -10. && GCor_Gtd.at(i) < 10. ) {
+			if( GCor_Gtd.at(i) > -15. && GCor_Gtd.at(i) < 15. ) {
 				
 				gg->Fill(GEn, GCor_GEn.at(i), weight);
 				gg_dcT->Fill( GEn*dc.DC(TEn,TTh,TPh,GTh,GPh,dc.GetAt()),
@@ -820,7 +820,7 @@ void hists::FillGamGam2h( float GEn, float GTh, float GPh, vector <float> GCor_G
 			
 			gg_td->Fill( GCor_Gtd.at(i)*25. );
 			
-			if( GCor_Gtd.at(i) > -10. && GCor_Gtd.at(i) < 10. ) {
+			if( GCor_Gtd.at(i) > -15. && GCor_Gtd.at(i) < 15. ) {
 				
 				gg->Fill(GEn, GCor_GEn.at(i), weight); 
 				gg_dcT->Fill( GEn*dc.DC(TEn,TTh,TPh,GTh,GPh,dc.GetAt()),

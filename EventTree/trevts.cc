@@ -11,7 +11,7 @@ trevts::trevts() {
 
 trevts::~trevts() {
 	
-	cout << "destructor" << endl;
+	//cout << "destructor" << endl;
 		
 }
 	
@@ -56,43 +56,43 @@ void trevts::Initialise() {
 	
 }
 
-void trevts::CopyData(trevts* src) {
+void trevts::CopyData( trevts src ) {
 	
-	pen = src->pen;
-	pen_de = src->pen_de;
-	pen_e = src->pen_e;
-	quad = src->quad;
-	nf = src->nf;
-	nb = src->nb;
-	sector = src->sector;
-	t1t = src->t1t;
-	sst = src->sst;
-	laser = src->laser;
+	pen = src.pen;
+	pen_de = src.pen_de;
+	pen_e = src.pen_e;
+	quad = src.quad;
+	nf = src.nf;
+	nb = src.nb;
+	sector = src.sector;
+	t1t = src.t1t;
+	sst = src.sst;
+	laser = src.laser;
 	
-	pcor_pen = src->pcor_pen;
-	pcor_pen_de = src->pcor_pen_de;
-	pcor_pen_e = src->pcor_pen_e;
-	pcor_quad = src->pcor_quad;
-	pcor_nf = src->pcor_nf;
-	pcor_nb = src->pcor_nb;
-	pcor_sector = src->pcor_sector;
+	pcor_pen = src.pcor_pen;
+	pcor_pen_de = src.pcor_pen_de;
+	pcor_pen_e = src.pcor_pen_e;
+	pcor_quad = src.pcor_quad;
+	pcor_nf = src.pcor_nf;
+	pcor_nb = src.pcor_nb;
+	pcor_sector = src.pcor_sector;
 
-	gen = src->gen;
-	cid = src->cid;
-	sid = src->sid;
-	cluid = src->cluid;
-	tha = src->tha;
-	pha = src->pha;
-	td = src->td;
+	gen = src.gen;
+	cid = src.cid;
+	sid = src.sid;
+	cluid = src.cluid;
+	tha = src.tha;
+	pha = src.pha;
+	td = src.td;
 	
-	coin = src->coin;
-	pr_ptr = src->pr_ptr;
-	rndm_ptr = src->rndm_ptr;
-	del_ptr = src->del_ptr;
+	coin = src.coin;
+	pr_ptr = src.pr_ptr;
+	rndm_ptr = src.rndm_ptr;
+	del_ptr = src.del_ptr;
 	
-	pr_hits = src->pr_hits;
-	rndm_hits = src->rndm_hits;
-	del_hits = src->del_hits;
+	pr_hits = src.pr_hits;
+	rndm_hits = src.rndm_hits;
+	del_hits = src.del_hits;
 	
 }
 

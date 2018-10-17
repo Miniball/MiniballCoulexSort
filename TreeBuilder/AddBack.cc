@@ -165,7 +165,7 @@ void AddBack::MakeGammaRays( bool addback, bool reject ) {
 					} // addback
 					
 					// Reject/suppress if same cluster
-					if( clu_array[l] == MaxSegClu && reject ) {
+					/*if( clu_array[l] == MaxSegClu && reject ) {
 							
 						gen_array.erase( gen_array.begin() + l );
 						gtd_array.erase( gtd_array.begin() + l );
@@ -177,11 +177,12 @@ void AddBack::MakeGammaRays( bool addback, bool reject ) {
 						reject_evt = true;
 						l--;
 						
-					} // reject
+					} // reject */
 					
 				} // previous gammas
 				
-				if( ab_evt || reject_evt ) continue; // get next gamma
+				if( ab_evt ) continue; // get next gamma (this one has been added back)
+				//if( reject_evt ) continue; // get next gamma (this one is rejected)
 				hABmult->Fill( ab_mul );
 				
 				gen_array.push_back( GammaEnergy );

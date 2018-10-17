@@ -11,7 +11,7 @@ mbevts::mbevts() {
 
 mbevts::~mbevts() {
 	
-	cout << "destructor" << endl;
+	//cout << "destructor" << endl;
 	
 }
 
@@ -53,41 +53,41 @@ void mbevts::Initialise() {
 	
 }
 
-void mbevts::CopyData(mbevts* src) {
+void mbevts::CopyData( mbevts src ) {
 	
-	gen = src->gen;
-	cid = src->cid;
-	sid = src->sid;
-	cluid = src->cluid;
-	tha = src->tha;
-	pha = src->pha;
+	gen = src.gen;
+	cid = src.cid;
+	sid = src.sid;
+	cluid = src.cluid;
+	tha = src.tha;
+	pha = src.pha;
 	
-	gcor_gen = src->gcor_gen;
-	gcor_cid = src->gcor_cid;
-	gcor_sid = src->gcor_sid;
-	gcor_cluid = src->gcor_cluid;
-	gcor_tha = src->gcor_tha;
-	gcor_pha = src->gcor_pha;
-	gcor_gtd = src->gcor_gtd;
+	gcor_gen = src.gcor_gen;
+	gcor_cid = src.gcor_cid;
+	gcor_sid = src.gcor_sid;
+	gcor_cluid = src.gcor_cluid;
+	gcor_tha = src.gcor_tha;
+	gcor_pha = src.gcor_pha;
+	gcor_gtd = src.gcor_gtd;
 	
-	pen = src->pen;
-	time = src->time;
-	t1t = src->t1t;
-	sst = src->sst;
-	td = src->td;
-	ann = src->ann;
-	sec = src->sec;
-	det = src->det;
-	coin = src->coin;
-	pr_ptr = src->pr_ptr;
-	rndm_ptr = src->rndm_ptr;
-	del_ptr = src->del_ptr;
+	pen = src.pen;
+	time = src.time;
+	t1t = src.t1t;
+	sst = src.sst;
+	td = src.td;
+	ann = src.ann;
+	sec = src.sec;
+	det = src.det;
+	coin = src.coin;
+	pr_ptr = src.pr_ptr;
+	rndm_ptr = src.rndm_ptr;
+	del_ptr = src.del_ptr;
 	
-	laser = src->laser;
-	pr_hits = src->pr_hits;
-	rndm_hits = src->rndm_hits;
-	del_hits = src->del_hits;
-	file = src->file;
+	laser = src.laser;
+	pr_hits = src.pr_hits;
+	rndm_hits = src.rndm_hits;
+	del_hits = src.del_hits;
+	file = src.file;
 	
 }
 

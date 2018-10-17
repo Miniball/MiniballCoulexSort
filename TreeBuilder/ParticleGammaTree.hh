@@ -126,7 +126,7 @@ public:
 	TH1F *adc, *dgf, *free_dgf, *cd_debug;
 	
 	// time differences
-	TH1F *tdiff_gp, *tdiff_ep, *tdiff_gg;
+	TH1F *tdiff_gp, *tdiff_ep, *tdiff_gg, *tdiff_pgg;
 	TH1F *tdiff_gp_q[4], *tdiff_BD;
 	
 	// gamma
@@ -181,13 +181,13 @@ private:
 	ParticleFinder pf;
 
 	// Trees - CLX
-	mbevts *write_mb_evts, *fill_mb_evts;
-	vector<mbevts*> mb_evts;
+	mbevts write_mb_evts, fill_mb_evts;
+	vector<mbevts> mb_evts;
 	TTree *g_clx;
 	
 	// Trees - TREX
-	trevts *write_tr_evts, *fill_tr_evts;
-	vector<trevts*> tr_evts;
+	trevts write_tr_evts, fill_tr_evts;
+	vector<trevts> tr_evts;
 	TTree *p_tr;
 	
 	
@@ -218,7 +218,7 @@ void ParticleGammaTree::InitialiseVariables() {
 
 	// Prompt and random time windows (to be read by calibration eventually!)
 	tMinPrompt = -12.;			tMaxPrompt = 6.;			// 18 ticks
-	tMinRandom = 8.;			tMaxRandom = 35.;			// 27 ticks
+	tMinRandom = 7.;			tMaxRandom = 34.;			// 27 ticks
 	tMinDelayed = -31.;			tMaxDelayed = -13.;			// 18 ticks
  
 	tMinPromptElectron = -6.;	tMaxPromptElectron = 6.;	// 12 ticks
@@ -230,14 +230,8 @@ void ParticleGammaTree::InitialiseVariables() {
 	cout << "WeightPR: " << WeightPR << endl;
 	
 	// ------------------------------------------------------------------------ //
-	// Write to mb_evts/tr_evts and the g_clx/p_tr trees
+	// Write to the g_clx/p_tr trees
 	// ------------------------------------------------------------------------ //
-	write_mb_evts = new mbevts();
-	write_tr_evts = new trevts();
-	
-	fill_mb_evts = new mbevts();
-	fill_tr_evts = new trevts();
-	
 	g_clx = new TTree( "g_clx", "g_clx" );
 	g_clx->Branch( "mbevts", "mbevts", &write_mb_evts );
 	
@@ -272,11 +266,13 @@ void ParticleGammaTree::SetupHistograms(){
 	
 	// time differences
 	tdiff_gp = new TH1F("tdiff_gp","tdiff_gp",201,-100.5,100.5);
-	tdiff_gp->GetXaxis()->SetTitle("time diff (particle - gamma) [us]");
+	tdiff_gp->GetXaxis()->SetTitle("time diff (particle - gamma) [25 ns tics]");
 	tdiff_ep = new TH1F("tdiff_ep","tdiff_ep",201,-100.5,100.5);
-	tdiff_ep->GetXaxis()->SetTitle("time diff (particle - electron) [us]");
+	tdiff_ep->GetXaxis()->SetTitle("time diff (particle - electron) [25 ns tics]");
 	tdiff_gg = new TH1F("tdiff_gg","tdiff_gg",201,-100.5,100.5);
-	tdiff_gg->GetXaxis()->SetTitle("time diff between one Dgf and the others [us]");
+	tdiff_gg->GetXaxis()->SetTitle("time diff between gamma rays [25 ns tics]");
+	tdiff_pgg = new TH1F("tdiff_pgg","tdiff_pgg, coincident with particle",201,-100.5,100.5);
+	tdiff_pgg->GetXaxis()->SetTitle("time diff between gamma rays [25 ns tics]");
 	for( unsigned int i = 0; i < 4; i++ )
 		tdiff_gp_q[i] = new TH1F(Form("tdiff_gp_%d",i),Form("tdiff_gp_%d",i),201,-100.5,100.5);
 	

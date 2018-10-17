@@ -73,7 +73,7 @@ class trevts : public TObject {
 	void SetCorTd( double t );
 	void SetGamma( float en, int c, int s, int clu, float th, float ph, double ptd, int co );
 	void SearchCoin();
-	void CopyData( trevts* src );
+	void CopyData( trevts src );
 
 	// get functions
 	int GetCluid( int nr );

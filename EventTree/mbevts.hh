@@ -30,7 +30,7 @@ public:
 	void SetCorGamGtd(float td);
 	void SetPart(float en, int a, int s, double t, double ss, double t1, float ctd, int co, int quad, int laserflag);
 	void SearchCoin();
-	void CopyData(mbevts* src);
+	void CopyData( mbevts src );
 
 	// get functions
 	int GetCluid();

@@ -23,7 +23,7 @@ Calibration::Calibration( string filename ) {
 
 Calibration::~Calibration() {
 
-	cout << "destructor" << endl;
+	//cout << "destructor" << endl;
 
 }
 
