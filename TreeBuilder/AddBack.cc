@@ -28,6 +28,7 @@ void AddBack::ClearEvt() {
 	cid_array.clear();
 	sid_array.clear();
 	sen_array.clear();
+	ab_array.clear();
 	
 	vector<float>().swap(gen_array);
 	vector<long long>().swap(gtd_array);
@@ -35,6 +36,7 @@ void AddBack::ClearEvt() {
 	vector<unsigned short>().swap(cid_array);
 	vector<unsigned short>().swap(sid_array);
 	vector<float>().swap(sen_array);
+	vector<bool>().swap(ab_array);
 
 	return;
 	
@@ -147,11 +149,12 @@ void AddBack::MakeGammaRays( bool addback, bool reject ) {
 					   sid_array[l] == MaxSegId ) continue; // same event
 					
 					// Do the addback if same cluster
-					if( clu_array[l] == MaxSegClu && addback ) {
+					if( clu_array[l] == MaxSegClu && addback && !ab_array[l] ) {
 						
 						gen_array[l] += GammaEnergy;
 						ab_evt = true;
 						ab_mul++;
+						ab_array.at(l) = true;
 						
 						if( sen_array[l] < MaxSegEnergy ) {
 							
@@ -174,6 +177,7 @@ void AddBack::MakeGammaRays( bool addback, bool reject ) {
 						cid_array.erase( cid_array.begin() + l );
 						sid_array.erase( sid_array.begin() + l );
 						sen_array.erase( sen_array.begin() + l );
+						ab_array.erase( ab_array.begin() + l );
 						
 						reject_evt = true;
 						l--;
@@ -191,6 +195,8 @@ void AddBack::MakeGammaRays( bool addback, bool reject ) {
 				cid_array.push_back( MaxSegClu*3 + MaxSegCore );
 				sid_array.push_back( MaxSegId );
 				sen_array.push_back( MaxSegEnergy );
+				if( ab_mul == 0 ) ab_array.push_back( false );
+				else ab_array.push_back( true );
 				
 			} // core event
 			

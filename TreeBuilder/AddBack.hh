@@ -143,6 +143,7 @@ private:
 	// Addback and veto flags
 	bool ab_evt, reject_evt;
 	unsigned short ab_mul;
+	vector<bool> ab_array;
 	bool veto_gamma;
 	unsigned int gSeg;
 	vector< unsigned int > dead_segments;
