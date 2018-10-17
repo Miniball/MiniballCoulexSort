@@ -152,6 +152,8 @@ void ParticleGammaTree::CLXCoincidences() {
 			fill_mb_evts->SetCorGamTheta( gamma_theta[ab.GetClu(k)][ab.GetCid(k)%3][ab.GetSid(k)] );
 			fill_mb_evts->SetCorGamPhi( gamma_phi[ab.GetClu(k)][ab.GetCid(k)%3][ab.GetSid(k)] );
 			
+			if( ab.GetClu(i) != 8 && ab.GetClu(k) != 8 ) tdiff_gg->Fill( ab.GetGtd(i), ab.GetGtd(k) );
+			
 		} // End search for correlated gammas
 		
 		// Push back the temporary event to the mb_evts vector
