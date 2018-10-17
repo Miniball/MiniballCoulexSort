@@ -118,10 +118,6 @@ void AddBack::MakeGammaRays( bool addback, bool reject ) {
 						
 					}
 					
-					// time difference between cores
-					if( dgf_ch2 == 0 && dgf_num2 % 2 == 0 && dgf_ch2 == 0 )
-						tdiff_gg->Fill( dgf_t2 - dgf_t );
-
 					// Skip if a different detector
 					if( dgf_num2 != dgf_num && dgf_num2 != dgf_num + 1 ) continue;
 					
@@ -137,7 +133,7 @@ void AddBack::MakeGammaRays( bool addback, bool reject ) {
 					
 				} // k
 				
-				// Found highest energy segment
+				// Found highest energy segment //
 				
 				// Do the veto of crap segments
 				if( veto_gamma ) continue;
