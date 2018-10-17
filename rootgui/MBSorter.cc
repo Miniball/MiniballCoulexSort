@@ -147,11 +147,6 @@ MBSorter::MBSorter() {
 	sub_frame_11->SetName( "sub_frame_11" );
 	comp_frame_3->AddFrame( sub_frame_11, new TGLayoutHints( kLHintsLeft ) );
 	
-	// Sub frame 12 - Configuration file
-	sub_frame_12 = new TGHorizontalFrame( sub_frame_11, 700, 45 );
-	sub_frame_12->SetName( "sub_frame_12" );
-	sub_frame_11->AddFrame( sub_frame_12, new TGLayoutHints( kLHintsTop | kLHintsExpandX ) );
-	
 	// Sub frame 13 - Kinematic cut file
 	sub_frame_13 = new TGHorizontalFrame( sub_frame_11, 700, 45 );
 	sub_frame_13->SetName( "sub_frame_13" );
@@ -291,14 +286,6 @@ MBSorter::MBSorter() {
 	sub_frame_9->AddFrame( lab_calfile,
 						  new TGLayoutHints( kLHintsLeft | kFixedWidth, 2, 2, 2, 2 ) );
 	
-	// Configuration file
-	lab_config = new TGLabel( sub_frame_12, "Configuration file" );
-	lab_config->SetTextJustify( 36 );
-	lab_config->SetMargins( 0, 0, 0, 0 );
-	lab_config->SetWrapLength( -1 );
-	lab_config->Resize( 80, lab_config->GetDefaultHeight() );
-	sub_frame_12->AddFrame( lab_config,
-						  new TGLayoutHints( kLHintsLeft | kFixedWidth, 2, 2, 2, 2 ) );
 	
 	// Kinematic cut file
 	lab_cutfile = new TGLabel( sub_frame_13, "Kinematic cuts file" );
@@ -647,13 +634,6 @@ MBSorter::MBSorter() {
 	text_calfile->Resize( 500, text_calfile->GetDefaultHeight() );
 	sub_frame_9->AddFrame( text_calfile, new TGLayoutHints( kLHintsRight | kLHintsExpandX, 2, 2, 2, 2 ) );
 	
-	// Configuration file
-	text_config = new TGTextEntry( sub_frame_12 );
-	text_config->SetMaxLength( 4096 );
-	text_config->SetAlignment( kTextLeft );
-	text_config->Resize( 370, text_config->GetDefaultHeight() );
-	sub_frame_12->AddFrame( text_config, new TGLayoutHints( kLHintsRight | kLHintsExpandX, 2, 2, 2, 2 ) );
-	
 	// Kinematic cut file
 	text_cutfile = new TGTextEntry( sub_frame_13 );
 	text_cutfile->SetMaxLength( 4096 );
@@ -708,9 +688,6 @@ MBSorter::MBSorter() {
 	
 	check_verbose = new TGCheckButton( sub_frame_10, "Verbose" );
 	sub_frame_10->AddFrame( check_verbose, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
-	
-	check_config = new TGCheckButton( sub_frame_15, "Use config file" );
-	sub_frame_15->AddFrame( check_config, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
 	check_cutfile = new TGCheckButton( sub_frame_15, "Use cut file" );
 	sub_frame_15->AddFrame( check_cutfile, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
@@ -932,7 +909,6 @@ MBSorter::MBSorter() {
 
 	text_outfile->SetText( "/run/media/miniball/MiniballAnalysis/is562/rootfiles/106Sn_206Pb_xxx-yyy" );
 	text_calfile->SetText( "/run/media/miniball/MiniballAnalysis/is562/config/is562-offline.cal" );
-	text_config->SetText( "/run/media/miniball/MiniballAnalysis/is562/config/config-106Sn_206Pb_pos6.dat" );
 	text_cutfile->SetText( "/run/media/miniball/MiniballAnalysis/is562/config/cutfile-106Sn_206Pb_pos6.root:Bcut:Tcut" );
 	text_srimdir->SetText( "/run/media/miniball/MiniballAnalysis/srim" );
 
@@ -940,7 +916,6 @@ MBSorter::MBSorter() {
 	//check_singles->SetOn();
 	//check_gamgam->SetOn();
 	check_addback->SetOn();
-	check_config->SetOn();
 	check_cutfile->SetOn();
 
 	num_dop_zb->SetNumber( 50 );
@@ -1210,46 +1185,35 @@ void MBSorter::on_ana_clicked() {
 	outputfile += "_hists.root";
 
 	cmd = "CLXAna ";
-
-	if( check_config->IsOn() ) {
-
-		cmd += " -c ";
-		cmd += text_config->GetText();
-
-	}
-
-	else {
-
-		cmd += " -Zb ";
-		cmd += convertInt( num_dop_zb->GetIntNumber() );
-		cmd += " -Ab ";
-		cmd += convertFloat( num_dop_ab->GetNumber() );
-		cmd += " -Zt ";
-		cmd += convertInt( num_dop_zt->GetIntNumber() );
-		cmd += " -At ";
-		cmd += convertFloat( num_dop_at->GetNumber() );
-		cmd += " -Eb ";
-		cmd += convertFloat( num_dop_eb->GetNumber() );
-		cmd += " -Ex ";
-		cmd += convertFloat( num_dop_ex->GetNumber() );
-		cmd += " -thick ";
-		cmd += convertFloat( num_dop_th->GetNumber() );
-		cmd += " -depth ";
-		cmd += convertFloat( num_dop_id->GetNumber() );
-		cmd += " -cddist ";
-		cmd += convertFloat( num_dop_cd->GetNumber() );
-		cmd += " -cdoffset ";
-		cmd += convertFloat( num_dop_ro->GetNumber() );
-		cmd += " -deadlayer ";
-		cmd += convertFloat( num_dop_dl->GetNumber() );
-		cmd += " -spededist ";
-		cmd += convertFloat( num_dop_sp->GetNumber() );
-		cmd += " -bg_frac ";
-		cmd += convertFloat( num_dop_bg->GetNumber() );
-		cmd += " -srim ";
-		cmd += text_srimdir->GetText();
-
-	}
+	
+	cmd += " -Zb ";
+	cmd += convertInt( num_dop_zb->GetIntNumber() );
+	cmd += " -Ab ";
+	cmd += convertFloat( num_dop_ab->GetNumber() );
+	cmd += " -Zt ";
+	cmd += convertInt( num_dop_zt->GetIntNumber() );
+	cmd += " -At ";
+	cmd += convertFloat( num_dop_at->GetNumber() );
+	cmd += " -Eb ";
+	cmd += convertFloat( num_dop_eb->GetNumber() );
+	cmd += " -Ex ";
+	cmd += convertFloat( num_dop_ex->GetNumber() );
+	cmd += " -thick ";
+	cmd += convertFloat( num_dop_th->GetNumber() );
+	cmd += " -depth ";
+	cmd += convertFloat( num_dop_id->GetNumber() );
+	cmd += " -cddist ";
+	cmd += convertFloat( num_dop_cd->GetNumber() );
+	cmd += " -cdoffset ";
+	cmd += convertFloat( num_dop_ro->GetNumber() );
+	cmd += " -deadlayer ";
+	cmd += convertFloat( num_dop_dl->GetNumber() );
+	cmd += " -spededist ";
+	cmd += convertFloat( num_dop_sp->GetNumber() );
+	cmd += " -bg_frac ";
+	cmd += convertFloat( num_dop_bg->GetNumber() );
+	cmd += " -srim ";
+	cmd += text_srimdir->GetText();
 
 	if( check_cutfile->IsOn() ) {
 
@@ -1299,41 +1263,30 @@ void MBSorter::on_tdriv_clicked() {
 	
 	cmd = "TDRIVAna";
 
-	if( check_config->IsOn() ) {
-
-		cmd += " -c ";
-		cmd += text_config->GetText();
-
-	}
-
-	else {
-
-		cmd += " -Zb ";
-		cmd += convertInt( num_dop_zb->GetIntNumber() );
-		cmd += " -Ab ";
-		cmd += convertFloat( num_dop_ab->GetNumber() );
-		cmd += " -Zt ";
-		cmd += convertInt( num_dop_zt->GetIntNumber() );
-		cmd += " -At ";
-		cmd += convertFloat( num_dop_at->GetNumber() );
-		cmd += " -Eb ";
-		cmd += convertFloat( num_dop_eb->GetNumber() );
-		cmd += " -Ex ";
-		cmd += convertFloat( num_dop_ex->GetNumber() );
-		cmd += " -thick ";
-		cmd += convertFloat( num_dop_th->GetNumber() );
-		cmd += " -depth ";
-		cmd += convertFloat( num_dop_id->GetNumber() );
-		cmd += " -cddist ";
-		cmd += convertFloat( num_dop_cd->GetNumber() );
-		cmd += " -cdoffset ";
-		cmd += convertFloat( num_dop_ro->GetNumber() );
-		cmd += " -deadlayer ";
-		cmd += convertFloat( num_dop_dl->GetNumber() );
-		cmd += " -plunger ";
-		cmd += convertFloat( num_dop_pd->GetNumber() );
-
-	}
+	cmd += " -Zb ";
+	cmd += convertInt( num_dop_zb->GetIntNumber() );
+	cmd += " -Ab ";
+	cmd += convertFloat( num_dop_ab->GetNumber() );
+	cmd += " -Zt ";
+	cmd += convertInt( num_dop_zt->GetIntNumber() );
+	cmd += " -At ";
+	cmd += convertFloat( num_dop_at->GetNumber() );
+	cmd += " -Eb ";
+	cmd += convertFloat( num_dop_eb->GetNumber() );
+	cmd += " -Ex ";
+	cmd += convertFloat( num_dop_ex->GetNumber() );
+	cmd += " -thick ";
+	cmd += convertFloat( num_dop_th->GetNumber() );
+	cmd += " -depth ";
+	cmd += convertFloat( num_dop_id->GetNumber() );
+	cmd += " -cddist ";
+	cmd += convertFloat( num_dop_cd->GetNumber() );
+	cmd += " -cdoffset ";
+	cmd += convertFloat( num_dop_ro->GetNumber() );
+	cmd += " -deadlayer ";
+	cmd += convertFloat( num_dop_dl->GetNumber() );
+	cmd += " -plunger ";
+	cmd += convertFloat( num_dop_pd->GetNumber() );
 
 	if( check_cutfile->IsOn() ) {
 
@@ -1377,7 +1330,6 @@ void MBSorter::SaveSetup( string setupfile ) {
 	fSetup->SetValue( "settings", text_settings->GetText() );
 	fSetup->SetValue( "outfile", text_outfile->GetText() );
 	fSetup->SetValue( "calfile", text_calfile->GetText() );
-	fSetup->SetValue( "config", text_config->GetText() );
 	fSetup->SetValue( "cutfile", text_cutfile->GetText() );
 	fSetup->SetValue( "srimdir", text_srimdir->GetText() );
 	
@@ -1425,7 +1377,6 @@ void MBSorter::LoadSetup( string setupfile ) {
 	text_settings->SetText( fSetup->GetValue( "settings", "./config/MBSettings2018_CLX_DgfOffset.dat" ) );
 	text_outfile->SetText( fSetup->GetValue( "outfile", "" ) );
 	text_calfile->SetText( fSetup->GetValue( "calfile", "./config/is562-offline.cal" ) );
-	text_config->SetText( fSetup->GetValue( "config", "" ) );
 	text_cutfile->SetText( fSetup->GetValue( "cutfile", "./config/cutfile.root:Bcut:Tcut" ) );
 	text_srimdir->SetText( fSetup->GetValue( "srimdir", "./srim" ) );
 	
