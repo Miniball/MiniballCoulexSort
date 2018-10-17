@@ -121,6 +121,8 @@ void ParticleFinder::FindCDParticles() {
 					
 				}
 				
+				part_raw->Fill( adc_ch, PartEnergy/1000. );
+				
 			} // front rings
 		
 			else if( adc_ch < 28 ) { // back strips
@@ -262,6 +264,8 @@ unsigned int ParticleFinder::ReconstructHeavyIons() {
 		
 		E_f_b[adc_num]->Fill( fcdfrontenergy.at(0)/1000., fcdbackenergy.at(0)/1000. );
 		
+		part->Fill( fcdfrontid.at(0), fcdfrontenergy.at(0)/1000. );
+
 		cd_debug->Fill(0);
 		return 1;
 		
@@ -287,6 +291,8 @@ unsigned int ParticleFinder::ReconstructHeavyIons() {
 		E_f_b[adc_num]->Fill( fcdfrontenergy.at(0)/1000., fcdbackenergy.at(0)/1000. );
 		E_f_b[adc_num]->Fill( fcdfrontenergy.at(0)/1000., fcdbackenergy.at(1)/1000. );
 		
+		part->Fill( fcdfrontid.at(0), fcdfrontenergy.at(0)/1000. );
+
 		cd_debug->Fill(1);
 		return 1;
 		
@@ -312,6 +318,8 @@ unsigned int ParticleFinder::ReconstructHeavyIons() {
 		E_f_b[adc_num]->Fill( fcdfrontenergy.at(0)/1000., fcdbackenergy.at(0)/1000. );
 		E_f_b[adc_num]->Fill( fcdfrontenergy.at(1)/1000., fcdbackenergy.at(0)/1000. );
 		
+		part->Fill( maxfrontid, fcdbackenergy.at(0)/1000. );
+		
 		cd_debug->Fill(2);
 		return 1;
 		
@@ -327,7 +335,7 @@ unsigned int ParticleFinder::ReconstructHeavyIons() {
 		
 	} // N vs. M
 
-	// There maybe events with no front energy or no back energy
+	// There may be events with no front energy or no back energy
 	// Currently we throw them away, but could be recovered if
 	// one quadrant only has a single dead strip, for example
 	else {

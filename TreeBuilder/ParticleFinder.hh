@@ -196,6 +196,7 @@ private:
 	TH1F *trex_cal[10][32];
 	
 	// particle
+	TH2F *part_raw, *part;
 	TH2F *CD_front_energy[4], *CD_front_energy_cal[4];
 	TH2F *CD_back_energy[4], *CD_back_energy_cal[4];
 	TH2F *E_f_b[4];
@@ -223,6 +224,10 @@ ParticleFinder::~ParticleFinder() {
 }
 
 void ParticleFinder::InitialiseHistograms() {
+	
+	// Total particle spectra before and after reconstruction
+	part = new TH2F("part","particle singles",16,-0.5,15.5,PBINS,PMIN,PMAX);
+	part_raw = new TH2F("part_raw","particle singles before reconstruction",16,-0.5,15.5,PBINS,PMIN,PMAX);
 	
 	// Particle spectra for every segment
 	TDirectory *part_dir = outfile->mkdir("E_part");
