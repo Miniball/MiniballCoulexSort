@@ -970,6 +970,9 @@ void MBSorter::on_open_clicked() {
 	// Open a file dialog
 	new TGFileDialog( gClient->GetRoot(), main_frame, kFDOpen, &fi );
 	
+	// Check if filename is null (on cancel, perhaps)
+	if( fi.fFilename == NULL ) return;
+	
 	cout << "Opening setup from " << fi.fFilename << endl;
 	
 	LoadSetup( fi.fFilename );
@@ -987,6 +990,9 @@ void MBSorter::on_save_clicked() {
 	
 	// Open a file dialog
 	new TGFileDialog( gClient->GetRoot(), main_frame, kFDSave, &fi );
+	
+	// Check if filename is null (on cancel, perhaps)
+	if( fi.fFilename == NULL ) return;
 	
 	cout << "Saving setup to " << fi.fFilename << endl;
 	
