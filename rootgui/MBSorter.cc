@@ -142,6 +142,11 @@ MBSorter::MBSorter() {
 	sub_frame_10->SetName( "sub_frame_10" );
 	sub_frame_7->AddFrame( sub_frame_10, new TGLayoutHints( kLHintsBottom | kLHintsExpandX ) );
 	
+	// Sub frame 12 - AQ4Sort and NeSort action buttons
+	sub_frame_12 = new TGVerticalFrame( comp_frame_2, 100, 135 );
+	sub_frame_12->SetName( "sub_frame_12" );
+	comp_frame_2->AddFrame( sub_frame_12, new TGLayoutHints( kLHintsBottom | kLHintsExpandY ) );
+	
 	// Sub frame 11 - Analysis boxes
 	sub_frame_11 = new TGVerticalFrame( comp_frame_3, 700, 180 );
 	sub_frame_11->SetName( "sub_frame_11" );
@@ -814,13 +819,24 @@ MBSorter::MBSorter() {
 	comp_frame_2->AddFrame( but_build, new TGLayoutHints( kLHintsRight | kLHintsExpandY, 2, 2, 2, 2 ) );
 	
 	// NeSort
-	but_nesort = new TGTextButton( comp_frame_2, "NeSort", -1, TGTextButton::GetDefaultGC()(),
+	but_nesort = new TGTextButton( sub_frame_12, "NeSort", -1, TGTextButton::GetDefaultGC()(),
 								  TGTextButton::GetDefaultFontStruct(), kRaisedFrame );
 	but_nesort->SetTextJustify( 36 );
 	but_nesort->SetMargins( 0, 0, 0, 0 );
 	but_nesort->SetWrapLength( -1 );
 	but_nesort->Resize( 50, 56 );
-	comp_frame_2->AddFrame( but_nesort, new TGLayoutHints( kLHintsRight | kLHintsExpandY, 2, 2, 2, 2 ) );
+	sub_frame_12->AddFrame( but_nesort,
+				new TGLayoutHints( kLHintsTop | kLHintsExpandX | kLHintsExpandY, 2, 2, 2, 2 ) );
+	
+	// AQ4Sort
+	but_aq4sort = new TGTextButton( sub_frame_12, "AQ4", -1, TGTextButton::GetDefaultGC()(),
+								  TGTextButton::GetDefaultFontStruct(), kRaisedFrame );
+	but_aq4sort->SetTextJustify( 36 );
+	but_aq4sort->SetMargins( 0, 0, 0, 0 );
+	but_aq4sort->SetWrapLength( -1 );
+	but_aq4sort->Resize( 50, 56 );
+	sub_frame_12->AddFrame( but_aq4sort,
+				new TGLayoutHints( kLHintsBottom | kLHintsExpandX | kLHintsExpandY, 2, 2, 2, 2 ) );
 	
 	// CLXAna
 	but_ana = new TGTextButton( comp_frame_3, "Coulex analysis", -1, TGTextButton::GetDefaultGC()(),
@@ -948,6 +964,7 @@ MBSorter::MBSorter() {
 	but_del->Connect( "Clicked()", "MBSorter", this, "on_del_clicked()" );
 	but_rsync->Connect( "Clicked()", "MBSorter", this, "on_rsync_clicked()" );
 	but_medroot->Connect( "Clicked()", "MBSorter", this, "on_medroot_clicked()" );
+	but_aq4sort->Connect( "Clicked()", "MBSorter", this, "on_aq4sort_clicked()" );
 	but_nesort->Connect( "Clicked()", "MBSorter", this, "on_nesort_clicked()" );
 	but_build->Connect( "Clicked()", "MBSorter", this, "on_build_clicked()" );
 	but_ana->Connect( "Clicked()", "MBSorter", this, "on_ana_clicked()" );
@@ -1226,6 +1243,55 @@ void MBSorter::on_nesort_clicked() {
 	cmd += " -o ";
 	cmd += text_outfile->GetText();
 	cmd += "_nesort.root";
+	
+	cout << endl << cmd << endl << endl;
+	gSystem->Exec( cmd );
+	
+}
+
+void MBSorter::on_aq4sort_clicked() {
+	
+	// Slot to react to TreeBuilder button
+	TString filebase;
+	TString rootfileout;
+	TString files = "";
+	string answer;
+	TString cmd = "AQ4Sort ";
+	
+	rootfileout = text_outfile->GetText();
+	rootfileout += "_aq4sort.root";
+	
+	if( !gSystem->AccessPathName( rootfileout ) ) {
+		
+		cout << "Are you sure you want to overwrite " << rootfileout << "? (Y/n): ";
+		cin >> answer;
+		
+		if( answer != "Y" && answer != "y" ) return;
+		
+	}
+	
+	cmd += "-c ";
+	cmd += text_calfile->GetText();
+	
+	for( unsigned int i = 0; i < filelist.size(); i++ ) {
+		
+		filebase = filelist.at( i );
+		if( !filestatus.at( i ) ) continue;
+		
+		files += text_local_dir->GetText();
+		files += "/";
+		files += filebase;
+		if( check_source->IsOn() ) files += "_Source.root ";
+		else files += "_OnBeam.root ";
+		
+	}
+	
+	cmd += " -i ";
+	cmd += files;
+	
+	cmd += " -o ";
+	cmd += text_outfile->GetText();
+	cmd += "_aq4sort.root";
 	
 	cout << endl << cmd << endl << endl;
 	gSystem->Exec( cmd );

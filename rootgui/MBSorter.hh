@@ -52,6 +52,7 @@ protected:
 	TGHorizontalFrame   *sub_frame_9;		// sub-sub frame for calibration file
 	TGHorizontalFrame   *sub_frame_10;		// sub-sub frame for TreeBuilder check buttons
 	TGVerticalFrame     *sub_frame_11;		// sub frame for Analysis buttons/boxes
+	TGVerticalFrame		*sub_frame_12;		// sub-sub frame for NeSort and AQ4Sort buttons
 	TGHorizontalFrame   *sub_frame_13;		// sub-sub frame for kinematic cut file
 	TGHorizontalFrame   *sub_frame_14;		// sub-sub frame for SRIM directory
 	TGHorizontalFrame   *sub_frame_15;		// sub-sub frame for Analysis check buttons
@@ -161,6 +162,7 @@ protected:
 	TGTextButton        *but_medroot;		// button to do MedToRoot
 	TGTextButton        *but_build;			// button to do TreeBuilder
 	TGTextButton        *but_nesort;		// button to do NeSort
+	TGTextButton        *but_aq4sort;		// button to do Aq4Sort
 	TGTextButton        *but_ana;			// button to do CLXAna
 	TGTextButton        *but_mnt;			// button to do MntAna
 	TGTextButton        *but_tdriv;			// button to do TDRIVAna
@@ -182,6 +184,7 @@ public:
 	void on_rsync_clicked();	// rsync function
 	void on_medroot_clicked();	// MedToRoot function
 	void on_nesort_clicked();	// NeSort function
+	void on_aq4sort_clicked();	// AQ4Sort function
 	void on_build_clicked();	// TreeBuilder function
 	void on_ana_clicked();		// CLXAna function
 	void on_mnt_clicked();		// MntAna function
