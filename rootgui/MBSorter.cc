@@ -1328,6 +1328,7 @@ void MBSorter::SaveSetup( string setupfile ) {
 	fSetup->SetValue( "cdoffset", (double)num_dop_ro->GetNumber() );
 	fSetup->SetValue( "deadlayer", (double)num_dop_dl->GetNumber() );
 	fSetup->SetValue( "plunger", (double)num_dop_pd->GetNumber() );
+	fSetup->SetValue( "bg_frac", (double)num_dop_bg->GetNumber() );
 
 	fSetup->SetValue( "daq_dir", text_daq_dir->GetText() );
 	fSetup->SetValue( "local_dir", text_local_dir->GetText() );
@@ -1352,8 +1353,21 @@ void MBSorter::SaveSetup( string setupfile ) {
 
 	fSetup->SetValue( "filelist", list_of_files.c_str() );
 	
+	fSetup->SetValue( "source", check_source->IsOn() );
+	fSetup->SetValue( "beamdump", check_beamdump->IsOn() );
+	fSetup->SetValue( "spede", check_spede->IsOn() );
+	fSetup->SetValue( "crex", check_crex->IsOn() );
+	fSetup->SetValue( "trex", check_trex->IsOn() );
+	fSetup->SetValue( "cdpad", check_cdpad->IsOn() );
+	fSetup->SetValue( "singles", check_singles->IsOn() );
+	fSetup->SetValue( "gamgam", check_gamgam->IsOn() );
+	fSetup->SetValue( "addback", check_addback->IsOn() );
+	fSetup->SetValue( "reject", check_reject->IsOn() );
+	fSetup->SetValue( "verbose", check_verbose->IsOn() );
+	fSetup->SetValue( "usecut", check_cutfile->IsOn() );
+	
 	fSetup->WriteFile( setupfile.c_str() );
-
+	
 	return;
 
 }
@@ -1409,6 +1423,19 @@ void MBSorter::LoadSetup( string setupfile ) {
 	
 	run_list_box->Layout();
 	
+	check_source->SetOn( fSetup->GetValue( "source", false ) );
+	check_beamdump->SetOn( fSetup->GetValue( "beamdump", true ) );
+	check_spede->SetOn( fSetup->GetValue( "spede", false ) );
+	check_crex->SetOn( fSetup->GetValue( "crex", false ) );
+	check_trex->SetOn( fSetup->GetValue( "trex", false ) );
+	check_cdpad->SetOn( fSetup->GetValue( "cdpad", true ) );
+	check_singles->SetOn( fSetup->GetValue( "singles", false ) );
+	check_gamgam->SetOn( fSetup->GetValue( "gamgam", false ) );
+	check_addback->SetOn( fSetup->GetValue( "addback", true ) );
+	check_reject->SetOn( fSetup->GetValue( "reject", false ) );
+	check_verbose->SetOn( fSetup->GetValue( "verbose", false ) );
+	check_cutfile->SetOn( fSetup->GetValue( "usecut", false ) );
+
 	return;
 
 }
