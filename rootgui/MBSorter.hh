@@ -160,6 +160,7 @@ protected:
 	TGTextButton        *but_rsync;			// button to do rsync
 	TGTextButton        *but_medroot;		// button to do MedToRoot
 	TGTextButton        *but_build;			// button to do TreeBuilder
+	TGTextButton        *but_nesort;		// button to do NeSort
 	TGTextButton        *but_ana;			// button to do CLXAna
 	TGTextButton        *but_mnt;			// button to do MntAna
 	TGTextButton        *but_tdriv;			// button to do TDRIVAna
@@ -180,6 +181,7 @@ public:
 	void on_del_clicked();		// remove file function
 	void on_rsync_clicked();	// rsync function
 	void on_medroot_clicked();	// MedToRoot function
+	void on_nesort_clicked();	// NeSort function
 	void on_build_clicked();	// TreeBuilder function
 	void on_ana_clicked();		// CLXAna function
 	void on_mnt_clicked();		// MntAna function

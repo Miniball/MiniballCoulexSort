@@ -793,8 +793,7 @@ MBSorter::MBSorter() {
 	but_rsync->SetMargins( 0, 0, 0, 0 );
 	but_rsync->SetWrapLength( -1 );
 	but_rsync->Resize( 50, 56 );
-	comp_frame_0->AddFrame( but_rsync,
-				new TGLayoutHints( kLHintsRight | kLHintsExpandY, 2, 2, 2, 2 ) );
+	comp_frame_0->AddFrame( but_rsync, new TGLayoutHints( kLHintsRight | kLHintsExpandY, 2, 2, 2, 2 ) );
 	
 	// MedToRoot
 	but_medroot = new TGTextButton( comp_frame_1, "Convert to ROOT", -1, TGTextButton::GetDefaultGC()(),
@@ -803,8 +802,7 @@ MBSorter::MBSorter() {
 	but_medroot->SetMargins( 0, 0, 0, 0 );
 	but_medroot->SetWrapLength( -1 );
 	but_medroot->Resize( 50, 56 );
-	comp_frame_1->AddFrame( but_medroot,
-				new TGLayoutHints( kLHintsRight | kLHintsExpandY, 2, 2, 2, 2 ) );
+	comp_frame_1->AddFrame( but_medroot, new TGLayoutHints( kLHintsRight | kLHintsExpandY, 2, 2, 2, 2 ) );
 	
 	// TreeBuilder
 	but_build = new TGTextButton( comp_frame_2, "Build tree", -1, TGTextButton::GetDefaultGC()(),
@@ -813,8 +811,16 @@ MBSorter::MBSorter() {
 	but_build->SetMargins( 0, 0, 0, 0 );
 	but_build->SetWrapLength( -1 );
 	but_build->Resize( 50, 56 );
-	comp_frame_2->AddFrame( but_build,
-				new TGLayoutHints( kLHintsRight | kLHintsExpandY, 2, 2, 2, 2 ) );
+	comp_frame_2->AddFrame( but_build, new TGLayoutHints( kLHintsRight | kLHintsExpandY, 2, 2, 2, 2 ) );
+	
+	// NeSort
+	but_nesort = new TGTextButton( comp_frame_2, "NeSort", -1, TGTextButton::GetDefaultGC()(),
+								  TGTextButton::GetDefaultFontStruct(), kRaisedFrame );
+	but_nesort->SetTextJustify( 36 );
+	but_nesort->SetMargins( 0, 0, 0, 0 );
+	but_nesort->SetWrapLength( -1 );
+	but_nesort->Resize( 50, 56 );
+	comp_frame_2->AddFrame( but_nesort, new TGLayoutHints( kLHintsRight | kLHintsExpandY, 2, 2, 2, 2 ) );
 	
 	// CLXAna
 	but_ana = new TGTextButton( comp_frame_3, "Coulex analysis", -1, TGTextButton::GetDefaultGC()(),
@@ -823,8 +829,7 @@ MBSorter::MBSorter() {
 	but_ana->SetMargins( 0, 0, 0, 0 );
 	but_ana->SetWrapLength( -1 );
 	but_ana->Resize( 50, 56 );
-	comp_frame_3->AddFrame( but_ana,
-				new TGLayoutHints( kLHintsRight | kLHintsExpandY, 2, 2, 2, 2 ) );
+	comp_frame_3->AddFrame( but_ana, new TGLayoutHints( kLHintsRight | kLHintsExpandY, 2, 2, 2, 2 ) );
 
 	// MntAna
 	but_mnt = new TGTextButton( comp_frame_3, "MNT analysis", -1, TGTextButton::GetDefaultGC()(),
@@ -833,8 +838,7 @@ MBSorter::MBSorter() {
 	but_mnt->SetMargins( 0, 0, 0, 0 );
 	but_mnt->SetWrapLength( -1 );
 	but_mnt->Resize( 50, 56 );
-	comp_frame_3->AddFrame( but_mnt,
-				new TGLayoutHints( kLHintsRight | kLHintsExpandY, 2, 2, 2, 2 ) );
+	comp_frame_3->AddFrame( but_mnt, new TGLayoutHints( kLHintsRight | kLHintsExpandY, 2, 2, 2, 2 ) );
 	
 	// TDRIVAna
 	but_tdriv = new TGTextButton( comp_frame_3, "TDRIV analysis", -1, TGTextButton::GetDefaultGC()(),
@@ -843,8 +847,7 @@ MBSorter::MBSorter() {
 	but_tdriv->SetMargins( 0, 0, 0, 0 );
 	but_tdriv->SetWrapLength( -1 );
 	but_tdriv->Resize( 50, 56 );
-	comp_frame_3->AddFrame( but_tdriv,
-				new TGLayoutHints( kLHintsRight | kLHintsExpandY, 2, 2, 2, 2 ) );
+	comp_frame_3->AddFrame( but_tdriv, new TGLayoutHints( kLHintsRight | kLHintsExpandY, 2, 2, 2, 2 ) );
 	
 	// Add files
 	but_add = new TGTextButton( sub_frame_3, "Add", -1, TGTextButton::GetDefaultGC()(),
@@ -945,6 +948,7 @@ MBSorter::MBSorter() {
 	but_del->Connect( "Clicked()", "MBSorter", this, "on_del_clicked()" );
 	but_rsync->Connect( "Clicked()", "MBSorter", this, "on_rsync_clicked()" );
 	but_medroot->Connect( "Clicked()", "MBSorter", this, "on_medroot_clicked()" );
+	but_nesort->Connect( "Clicked()", "MBSorter", this, "on_nesort_clicked()" );
 	but_build->Connect( "Clicked()", "MBSorter", this, "on_build_clicked()" );
 	but_ana->Connect( "Clicked()", "MBSorter", this, "on_ana_clicked()" );
 	but_mnt->Connect( "Clicked()", "MBSorter", this, "on_mnt_clicked()" );
@@ -1179,6 +1183,55 @@ void MBSorter::on_build_clicked() {
 	
 }
 
+void MBSorter::on_nesort_clicked() {
+	
+	// Slot to react to TreeBuilder button
+	TString filebase;
+	TString rootfileout;
+	TString files = "";
+	string answer;
+	TString cmd = "NeSort ";
+	
+	rootfileout = text_outfile->GetText();
+	rootfileout += "_nesort.root";
+	
+	if( !gSystem->AccessPathName( rootfileout ) ) {
+		
+		cout << "Are you sure you want to overwrite " << rootfileout << "? (Y/n): ";
+		cin >> answer;
+		
+		if( answer != "Y" && answer != "y" ) return;
+		
+	}
+	
+	cmd += "-c ";
+	cmd += text_calfile->GetText();
+	
+	for( unsigned int i = 0; i < filelist.size(); i++ ) {
+		
+		filebase = filelist.at( i );
+		if( !filestatus.at( i ) ) continue;
+		
+		files += text_local_dir->GetText();
+		files += "/";
+		files += filebase;
+		if( check_source->IsOn() ) files += "_Source.root ";
+		else files += "_OnBeam.root ";
+		
+	}
+	
+	cmd += " -i ";
+	cmd += files;
+	
+	cmd += " -o ";
+	cmd += text_outfile->GetText();
+	cmd += "_nesort.root";
+	
+	cout << endl << cmd << endl << endl;
+	gSystem->Exec( cmd );
+	
+}
+
 void MBSorter::on_ana_clicked() {
 	
 	// Slot to react to Histograms button
@@ -1389,6 +1442,7 @@ void MBSorter::LoadSetup( string setupfile ) {
 	num_dop_ro->SetNumber( fSetup->GetValue( "cdoffset", 0.0 ) );
 	num_dop_dl->SetNumber( fSetup->GetValue( "deadlayer", 0.0 ) );
 	num_dop_pd->SetNumber( fSetup->GetValue( "plunger", 0.0 ) );
+	num_dop_bg->SetNumber( fSetup->GetValue( "bg_frac", 0.0 ) );
 	
 	text_daq_dir->SetText( fSetup->GetValue( "daq_dir", "/mbdata/miniball/isxxx" ) );
 	text_local_dir->SetText( fSetup->GetValue( "local_dir", "./medfiles" ) );
