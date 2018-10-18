@@ -218,7 +218,7 @@ void ParticleGammaTree::InitialiseVariables() {
 
 	// Prompt and random time windows (to be read by calibration eventually!)
 	tMinPrompt = -12.;			tMaxPrompt = 6.;			// 18 ticks
-	tMinRandom = 7.;			tMaxRandom = 34.;			// 27 ticks
+	tMinRandom = 10.;			tMaxRandom = 34.;			// 24 ticks
 	tMinDelayed = -31.;			tMaxDelayed = -13.;			// 18 ticks
  
 	tMinPromptElectron = -6.;	tMaxPromptElectron = 6.;	// 12 ticks
