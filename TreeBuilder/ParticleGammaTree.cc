@@ -130,7 +130,7 @@ void ParticleGammaTree::CLXCoincidences() {
 			}
 			
 			// Add particle
-			fill_mb_evts.SetPart( pf.GetPEn(j), pf.GetNf(j), pf.GetNb(j), pf.GetTime(j),
+			fill_mb_evts.SetPart( pf.GetPEn(j), pf.GetNf(j), pf.GetNb(j), pf.GetSector(j), pf.GetTime(j),
 								  (double)event->SuperCycleTime(), (double)event->T1Time(),
 								  (float)tdiffPG, (int)coinc_flag, pf.GetQuad(j), pf.GetLaser(j) );
 			
@@ -345,6 +345,16 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 				
 			}
 			
+			// CREX
+			else if( crex && adc_num < 4 ) {
+				
+				pf.FindCREXParticles();
+				ParticleCounterQ[adc_num] += pf.ReconstructHeavyIons();
+				ParticleCounterQ[adc_num] += pf.ReconstructBarrel();
+				pf.NextAdc();
+				
+			}
+			
 			// T-REX
 			else if( trex && adc_num < 8 ) {
 				
@@ -353,7 +363,7 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 				if( adc_num%2 == 1 ) {
 					
 					ParticleCounterQ[adc_num/2] += pf.ReconstructTransferCD();
-					ParticleCounterQ[adc_num/2] += pf.ReconstructTransferBarrel();
+					ParticleCounterQ[adc_num/2] += pf.ReconstructBarrel();
 					pf.NextAdc();
 					
 				}
@@ -361,13 +371,13 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 			}
 			
 			// SPEDE
-			else if( spede && adc_num == 4 ) { // SPEDE
+			else if( spede && adc_num == 4 ) {
 				
 				ab.SetModule( adc_num );
 				ab.SetTime( adc_t + Cal->AdcTime( adc_num ) );
 				ab.SetSubEvent( event->Adc(j)->SubEvent() );
 				ab.MakeElectrons();
-
+				
 			}
 			
 			// Ionisation chamber

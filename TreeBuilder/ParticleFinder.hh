@@ -37,13 +37,13 @@ public:
 	
 	// Functions to fill particle event vectors
 	void FindCDParticles();
+	void FindCREXParticles();
 	void FindTREXParticles();
 	
 	// Particle reconstruction
 	unsigned int ReconstructHeavyIons();
-	unsigned int ReconstructTransfer();
 	unsigned int ReconstructTransferCD();
-	unsigned int ReconstructTransferBarrel();
+	unsigned int ReconstructBarrel();
 	unsigned int DeMux( unsigned int mux_ch, unsigned int mux_en );
 	
 	// Ionisation chamber event
@@ -158,8 +158,8 @@ private:
 	vector<float> E_En;				// Erest energy in transfer
 	vector<unsigned int> Quad;		// 0: Top, 1: Bottom, 2: Left and 3: Right
 	vector<unsigned int> Sector;	// 0: FCD, 1: FBarrel, 2: BBarrel and 3: BCD
-	vector<int> Nf;		// Rings for CDs, strips for barrel
-	vector<int> Nb;		// Strips for CDs, pos for barrel
+	vector<int> Nf;					// Rings for CDs, strips for barrel
+	vector<int> Nb;					// Strips for CDs, pos for barrel
 	vector<long long> time;
 	vector<bool> laser;
 	

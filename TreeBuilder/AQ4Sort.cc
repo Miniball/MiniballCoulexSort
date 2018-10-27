@@ -254,6 +254,8 @@ int main(int argc, char* argv[]) {
 	outfile->Close();
 	delete tr;
 
+	cout << endl << "Finished\n";
+	
 	return 0;
 	
 }

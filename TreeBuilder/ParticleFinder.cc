@@ -56,7 +56,7 @@ void ParticleFinder::NextAdc() {
 	
 	for( unsigned int i = 0; i < 4; i++ ) {
 		
-		padenergy[i] = -99.;
+		padenergy[i] = 0.;
 		
 	}
 
@@ -107,7 +107,7 @@ void ParticleFinder::FindCDParticles() {
 		E_part_ch_cal[adc_num][adc_ch]->Fill( PartEnergy/1000. );
 		
 		// Check threshold for every channel individually
-		if( adc_en > Cal->AdcThreshold( adc_num, adc_ch ) ) {
+		if( adc_en > Cal->AdcThreshold( adc_num, adc_ch ) && adc_en < 3839 ) {
 
 			if( adc_ch < 16 ) { // front rings
 				
@@ -147,6 +147,86 @@ void ParticleFinder::FindCDParticles() {
 	
 }
 
+void ParticleFinder::FindCREXParticles() {
+	
+	// Loop over each of the subevents (i.e the 32 channels)
+	for( unsigned int i = 0; i < subevent->Size(); i++ ) {
+		
+		adc_ch = subevent->AdcChannel(i);
+		adc_en = subevent->AdcValue(i);
+		
+		PartEnergy = Cal->AdcEnergy( adc_num, adc_ch, adc_en );
+		
+		trex[adc_num][adc_ch]->Fill( adc_en );
+		trex_cal[adc_num][adc_ch]->Fill( PartEnergy/1000. );
+		
+		// Check threshold for every channel individually
+		if( adc_en > Cal->AdcThreshold( adc_num, adc_ch ) && adc_en < 3839 ) {
+			
+			// Barrel ∆E - backward
+			if( adc_ch < 16 ) {
+				
+				bbarrelpos.push_back( PartEnergy );
+				bbarrelstrip.push_back( adc_ch );
+				
+			}
+
+			// PADs
+			if( adc_ch == 16 ) bbarrelE = PartEnergy;
+			if( adc_ch == 17 ) padenergy[2] = PartEnergy;
+			if( adc_ch == 26 ) padenergy[0] = PartEnergy;
+			if( adc_ch == 27 ) padenergy[3] = PartEnergy;
+			
+			// MUX - front hits
+			if( adc_ch == 19 || adc_ch == 21 ) {
+				
+				mux_id = DeMux( adc_ch, adc_en );
+				
+				if( mux_id < 18 && MuxEnergy > 0 ) { // FCD
+					
+					fcdfrontid.push_back( mux_id );
+					fcdfrontenergy.push_back( MuxEnergy );
+					
+				} // FCD
+				
+				else if( MuxEnergy > 0 ) { // BCD
+					
+					bcdfrontid.push_back( mux_id );
+					bcdfrontenergy.push_back( MuxEnergy );
+					
+				} // BCD
+				
+			} // MUX front
+			
+			// MUX - back hits
+			if( adc_ch == 23 || adc_ch == 25 ) {
+				
+				mux_id = DeMux( adc_ch, adc_en );
+				
+				if( mux_id < 18 && MuxEnergy > 0 ) { // FCD
+					
+					fcdbackid.push_back( mux_id );
+					fcdbackenergy.push_back( MuxEnergy );
+					
+				} // FCD
+				
+				else if( MuxEnergy > 0 ) { // BCD
+					
+					bcdbackid.push_back( mux_id );
+					bcdbackenergy.push_back( MuxEnergy );
+					
+				} // BCD
+				
+			} // MUX back
+			
+		} // threshold
+		
+	} // k
+	
+	return;
+	
+}
+
 void ParticleFinder::FindTREXParticles() {
 	
 	// Loop over each of the subevents (i.e the 32 channels)
@@ -173,7 +253,7 @@ void ParticleFinder::FindTREXParticles() {
 					
 					fbarrelpos.push_back( PartEnergy );
 					fbarrelstrip.push_back( adc_ch );
-
+					
 				}
 				
 				// Barrel ∆E - backward
@@ -211,7 +291,7 @@ void ParticleFinder::FindTREXParticles() {
 					mux_id = DeMux( adc_ch, adc_en );
 					
 					if( MuxEnergy > 0 ) {
-					
+						
 						fcdfrontid.push_back( mux_id );
 						fcdfrontenergy.push_back( MuxEnergy );
 						
@@ -221,7 +301,7 @@ void ParticleFinder::FindTREXParticles() {
 				
 				// MUX - back hits
 				if( adc_ch == 6 || adc_ch == 7 ) {
-
+					
 					mux_id = DeMux( adc_ch, adc_en );
 					
 					if( mux_id < 18 && MuxEnergy > 0 ) { // FCD
@@ -237,7 +317,7 @@ void ParticleFinder::FindTREXParticles() {
 						bcdbackenergy.push_back( MuxEnergy );
 						
 					} // BCD
-
+					
 				} // MUX back
 				
 			} // Second ADC
@@ -252,6 +332,12 @@ void ParticleFinder::FindTREXParticles() {
 
 unsigned int ParticleFinder::ReconstructHeavyIons() {
 	
+	int counter = 0;
+
+	/////////////////
+	// Forwards CD //
+	/////////////////
+	
 	// Easy case, 1 front and 1 back!
 	if( fcdfrontenergy.size() == 1 && fcdbackenergy.size() == 1 ) {
 		
@@ -259,6 +345,7 @@ unsigned int ParticleFinder::ReconstructHeavyIons() {
 		Nf.push_back( fcdfrontid.at(0) );
 		Nb.push_back( fcdbackid.at(0) );
 		Quad.push_back( adc_num );
+		Sector.push_back( 0 );
 		time.push_back( adc_t );
 		laser.push_back( laser_status );
 		
@@ -267,7 +354,7 @@ unsigned int ParticleFinder::ReconstructHeavyIons() {
 		part->Fill( fcdfrontid.at(0), fcdfrontenergy.at(0)/1000. );
 
 		cd_debug->Fill(0);
-		return 1;
+		counter++;
 		
 	} // 1 vs. 1
 	
@@ -285,6 +372,7 @@ unsigned int ParticleFinder::ReconstructHeavyIons() {
 		Nf.push_back( fcdfrontid.at(0) );
 		Nb.push_back( maxbackid );
 		Quad.push_back( adc_num );
+		Sector.push_back( 0 );
 		time.push_back( adc_t );
 		laser.push_back( laser_status );
 		
@@ -294,7 +382,7 @@ unsigned int ParticleFinder::ReconstructHeavyIons() {
 		part->Fill( fcdfrontid.at(0), fcdfrontenergy.at(0)/1000. );
 
 		cd_debug->Fill(1);
-		return 1;
+		counter++;
 		
 	} // 1 vs. 2
 	
@@ -312,6 +400,7 @@ unsigned int ParticleFinder::ReconstructHeavyIons() {
 		Nb.push_back( fcdbackid.at(0) );
 		Nf.push_back( maxfrontid );
 		Quad.push_back( adc_num );
+		Sector.push_back( 0 );
 		time.push_back( adc_t );
 		laser.push_back( laser_status );
 		
@@ -321,7 +410,7 @@ unsigned int ParticleFinder::ReconstructHeavyIons() {
 		part->Fill( maxfrontid, fcdbackenergy.at(0)/1000. );
 		
 		cd_debug->Fill(2);
-		return 1;
+		counter++;
 		
 	} // 2 vs. 1
 	
@@ -331,19 +420,109 @@ unsigned int ParticleFinder::ReconstructHeavyIons() {
 		cd_debug->Fill(3);
 		
 		// throw these events away!!!
-		return 0;
 		
 	} // N vs. M
-
+	
+	
+	//////////////////
+	// Backwards CD //
+	//////////////////
+	
+	// Easy case, 1 front and 1 back!
+	if( bcdfrontenergy.size() == 1 && bcdbackenergy.size() == 1 ) {
+		
+		PEn.push_back( bcdfrontenergy.at(0) );
+		Nf.push_back( bcdfrontid.at(0) );
+		Nb.push_back( bcdbackid.at(0) );
+		Quad.push_back( adc_num );
+		Sector.push_back( 3 );
+		time.push_back( adc_t );
+		laser.push_back( laser_status );
+		
+		E_f_b[adc_num]->Fill( bcdfrontenergy.at(0)/1000., bcdbackenergy.at(0)/1000. );
+		
+		part->Fill( bcdfrontid.at(0), bcdfrontenergy.at(0)/1000. );
+		
+		cd_debug->Fill(10);
+		counter++;
+		
+	} // 1 vs. 1
+	
+	// 1 on the front and 2 on the back
+	else if( bcdfrontenergy.size() == 1 && bcdbackenergy.size() == 2 ) {
+		
+		// Select events in neighbouring strips with good energy
+		int ndiff = TMath::Abs( bcdbackid.at(0) - bcdbackid.at(1) );
+		float eback = bcdbackenergy.at(0) + bcdbackenergy.at(1);
+		float ediff = TMath::Abs( bcdfrontenergy.at(0) - eback );
+		
+		if( ndiff != 1 && ediff > 50e3 ) return 0;
+		
+		PEn.push_back( bcdfrontenergy.at(0) );
+		Nf.push_back( bcdfrontid.at(0) );
+		Nb.push_back( maxbackid );
+		Quad.push_back( adc_num );
+		Sector.push_back( 3 );
+		time.push_back( adc_t );
+		laser.push_back( laser_status );
+		
+		E_f_b[adc_num]->Fill( bcdfrontenergy.at(0)/1000., bcdbackenergy.at(0)/1000. );
+		E_f_b[adc_num]->Fill( bcdfrontenergy.at(0)/1000., bcdbackenergy.at(1)/1000. );
+		
+		part->Fill( bcdfrontid.at(0), bcdfrontenergy.at(0)/1000. );
+		
+		cd_debug->Fill(11);
+		counter++;
+		
+	} // 1 vs. 2
+	
+	// 2 on the front and 1 on the back
+	else if( bcdfrontenergy.size() == 2 && bcdbackenergy.size() == 1 ) {
+		
+		// Select events in neighbouring strips with good energy
+		int ndiff = TMath::Abs( bcdfrontid.at(0) - bcdfrontid.at(1) );
+		float efront = bcdfrontenergy.at(0) + bcdfrontenergy.at(1);
+		float ediff = TMath::Abs( bcdbackenergy.at(0) - efront );
+		
+		if( ndiff != 1 && ediff > 50e3 ) return 0;
+		
+		PEn.push_back( bcdbackenergy.at(0) );
+		Nb.push_back( bcdbackid.at(0) );
+		Nf.push_back( maxfrontid );
+		Quad.push_back( adc_num );
+		Sector.push_back( 3 );
+		time.push_back( adc_t );
+		laser.push_back( laser_status );
+		
+		E_f_b[adc_num]->Fill( bcdfrontenergy.at(0)/1000., bcdbackenergy.at(0)/1000. );
+		E_f_b[adc_num]->Fill( bcdfrontenergy.at(1)/1000., bcdbackenergy.at(0)/1000. );
+		
+		part->Fill( maxfrontid, bcdbackenergy.at(0)/1000. );
+		
+		cd_debug->Fill(12);
+		counter++;
+		
+	} // 2 vs. 1
+	
+	// multiple on the front and multiple on the back
+	else if( bcdfrontenergy.size() > 1 && bcdbackenergy.size() > 1 ) {
+		
+		cd_debug->Fill(13);
+		
+		// throw these events away!!!
+		
+	} // N vs. M
+	
 	// There may be events with no front energy or no back energy
 	// Currently we throw them away, but could be recovered if
 	// one quadrant only has a single dead strip, for example
 	else {
 		
 		cd_debug->Fill(4);
-		return 0;
 	
 	}
+
+	return counter;
 	
 }
 
@@ -532,7 +711,7 @@ unsigned int ParticleFinder::ReconstructTransferCD() {
 	
 }
 
-unsigned int ParticleFinder::ReconstructTransferBarrel() {
+unsigned int ParticleFinder::ReconstructBarrel() {
 	
 	///////////////////////////////////
 	// Reconstruct the Barrel events //

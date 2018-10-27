@@ -114,7 +114,7 @@ void AddBack::MakeGammaRays( bool addback, bool reject ) {
 					// Is it a crap segment?
 					for( unsigned int ds = 0; ds < dead_segments.size(); ds++ ) {
 						
-						if( gSeg == dead_segments[ds] ) veto_gamma = true;
+						if( gSeg == dead_segments[ds] && dgf_en2 > 20 ) veto_gamma = true;
 						
 					}
 					

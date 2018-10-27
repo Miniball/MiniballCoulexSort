@@ -28,7 +28,7 @@ public:
 	void SetCorGamCid(int id);
 	void SetCorGamSid(int id);
 	void SetCorGamGtd(float td);
-	void SetPart(float en, int a, int s, double t, double ss, double t1, float ctd, int co, int quad, int laserflag);
+	void SetPart(float en, int f, int b, int s, double t, double ss, double t1, float ctd, int co, int quad, int laserflag);
 	void SearchCoin();
 	void CopyData( mbevts src );
 
@@ -45,8 +45,9 @@ public:
 	int GetNrRandom();
 	int GetNrDelayed();
 	int GetNrGammas();
-	int GetSec(int nr);
-	int GetAnn(int nr);
+	int GetNf(int nr);
+	int GetNb(int nr);
+	int GetSector(int nr);
 	
 private:
 	
@@ -73,8 +74,9 @@ private:
 	vector <double> t1t;	///< T1 timestamp (1 ms before proton impact)
 	vector <double> sst;	///< supercycle timestamp
 	vector <float> td;		///< particle-gamma time difference
-	vector <int> ann;		///< front strip number of CD (0 is outer strip, 15 is inner strip)
-	vector <int> sec;		///< back strip number of CD (0-11 going clockwise)
+	vector <int> nf;		///< front strip number of CD (0 is outer strip, 15 is inner strip)
+	vector <int> nb;		///< back strip number of CD (0-11 going clockwise)
+	vector <int> sector;	///< sector of C-REX (0 = FCD; 1 = FBarrel; 2 = BBarrel; 3 = BCD)
 	vector <int> det;		///< CD quadrant (0-3)
 	vector <int> coin;		///< particle-gamma coincidence flag (0 = prompt; 1 = random; 2 = delayed)
 	int laser;				///< laser flag
@@ -89,7 +91,7 @@ private:
 	int file;
 	
 	
-	ClassDef(mbevts,3);
+	ClassDef(mbevts,4);
 
 };
 

@@ -6,14 +6,8 @@
 
 // Select settings by uncommenting one of the following: 
 //#define TWOPART 		// define to plot every 2p combination
-//#define PHICAL  		// define to plot different CD rotation offsets
 //#define GEANG			// define for plotting Ge angles per cluster
 #define SPEDEGEOMETRY	// define to overwrite Spede angles with SpedeGeometry routine
-
-#ifdef PHICAL
-# define PHI_STEP_WIDTH 1 
-# define PHI_NSTEPS 21 // try to use an odd number
-#endif
 
 #ifndef __MBGEOMETRY_HH__
 # include "MBGeometry.hh"
@@ -56,7 +50,7 @@ void g_clx::Loop( string outputfilename ) {
 	h.Initialise( dc );
 
 	// Particle-particle time difference (from tppdiff)
-	h.Set_ppwin(300.);
+	h.Set_ppwin(100.);
 
 	// Maximum strip number where recoils and projectiles are separable
 	// Applicable mostly for inverse kinematics. To turn off, set to 16
@@ -89,7 +83,7 @@ void g_clx::Loop( string outputfilename ) {
 
 	// Loop over events 
 	cout << "Looping over events...\n";
-	Int_t nbytes = 0, nb = 0;
+	Int_t nbytes = 0, nbs = 0;
 	Int_t skipFactor =1;
 	for( Long64_t jentry=0; jentry<fChain->GetEntries()/skipFactor; jentry++ ) {	
 
@@ -97,7 +91,7 @@ void g_clx::Loop( string outputfilename ) {
 
 		if( ientry < 0 ) break;
 
-		nb = fChain->GetEntry(jentry);   nbytes += nb;
+		nbs = fChain->GetEntry(jentry);   nbytes += nbs;
 
 		if( jentry%5000==0 ){
 			cout << " " << jentry << "/" << fChain->GetEntries() << "  (" << jentry*100./fChain->GetEntries() << "%)    \r";
@@ -171,7 +165,7 @@ void g_clx::Loop( string outputfilename ) {
 		for( unsigned int i = 0; i < pen.size(); i++ ){
 
 			// Escape funny events if there are any
-			if( det[i]<0 || det[i]>3 || ann[i]<0 || sec[i]<0 ) continue;
+			if( det[i]<0 || det[i]>3 || nf[i]<0 || nb[i]<0 ) continue;
 
 			// Fill particle-gamma time spectra
 			if( !electron ) {
@@ -196,19 +190,19 @@ void g_clx::Loop( string outputfilename ) {
 			else h.tdiff_e->Fill(td[i]*25.);
 
 			// CD pic
-			if( ann[i]>(-1) && ann.size()>0 ){
-				rad=39-2*ann[i];
+			if( nf[i]>(-1) && nf.size()>0 && sector[i]==0 ){
+				rad=39-2*nf[i];
 				rad+=gRandom->Rndm(1)*1.9;
-				phi=(sec[i]-16.)*0.12+(det[i]*TMath::PiOver2());
+				phi=(nb[i]-16.)*0.12+(det[i]*TMath::PiOver2());
 				phi+=gRandom->Rndm(1)*0.114;
-				if( sec[i]<29 && sec[i]>15 ) h.cdpic->Fill(rad*cos(phi),rad*sin(phi));
+				if( nb[i]<29 && nb[i]>15 ) h.cdpic->Fill(rad*cos(phi),rad*sin(phi));
 			}
 
 			// Germanium angles vs. Silicon angles
 			if( !electron ) {
 #ifdef GEANG
-				h.GeSiAng->Fill(tha*TMath::RadToDeg(),dc.GetPTh(ann[i])*TMath::RadToDeg(),(pha-dc.GetPPhi(det[i],sec[i]))*TMath::RadToDeg());
-				h.GeSiAng_clu[cluid]->Fill(tha*TMath::RadToDeg(),dc.GetPTh(ann[i])*TMath::RadToDeg(),(pha-dc.GetPPhi(det[i],sec[i]))*TMath::RadToDeg());
+				h.GeSiAng->Fill(tha*TMath::RadToDeg(),dc.GetPTh(nf[i])*TMath::RadToDeg(),(pha-dc.GetPPhi(det[i],nb[i]))*TMath::RadToDeg());
+				h.GeSiAng_clu[cluid]->Fill(tha*TMath::RadToDeg(),dc.GetPTh(nf[i])*TMath::RadToDeg(),(pha-dc.GetPPhi(det[i],nb[i]))*TMath::RadToDeg());
 #endif
 			} // !electron
 			
@@ -222,25 +216,27 @@ void g_clx::Loop( string outputfilename ) {
 		// Condition on particle detection
 		if( pr_hits==1 && rndm_hits==0 ) 
 			h.Fill1h(gen, tha, pha, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron,
-					 pen[pr_ptr[0]], ann[pr_ptr[0]], sec[pr_ptr[0]], det[pr_ptr[0]], time[pr_ptr[0]]-t1t[pr_ptr[0]], 1.0);
+					 pen[pr_ptr[0]], nf[pr_ptr[0]], nb[pr_ptr[0]], sector[pr_ptr[0]],
+					 det[pr_ptr[0]], time[pr_ptr[0]]-t1t[pr_ptr[0]], 1.0);
 
 		else if( pr_hits==2 && rndm_hits==0 )
 			h.Fill2h(gen, tha, pha, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron,
-					 pen, ann, sec, det, pr_ptr, td, 1.0);
+					 pen, nf, nb, sector, det, pr_ptr, td, 1.0);
 
 		else if( del_hits==2 && rndm_hits==0 )
-			h.FillDel2h(gen, tha, pha, pen, ann, sec, det, del_ptr, td, 1.0);
+			h.FillDel2h(gen, tha, pha, pen, nf, nb, sector, det, del_ptr, td, 1.0);
 
 		else if( rndm_hits==1 && pr_hits==0 ) 
 			h.Fill1h(gen, tha, pha, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron,
-					 pen[rndm_ptr[0]], ann[rndm_ptr[0]], sec[rndm_ptr[0]], det[rndm_ptr[0]], time[rndm_ptr[0]]-t1t[rndm_ptr[0]], bg_frac);
+					 pen[rndm_ptr[0]], nf[rndm_ptr[0]], nb[rndm_ptr[0]], sector[rndm_ptr[0]],
+					 det[rndm_ptr[0]], time[rndm_ptr[0]]-t1t[rndm_ptr[0]], bg_frac);
 
 		else if( rndm_hits==2 && pr_hits==0 ) {
 		
 			h.Fill2h(gen, tha, pha, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron,
-					 pen, ann, sec, det, rndm_ptr, td, bg_frac);
+					 pen, nf, nb, sector, det, rndm_ptr, td, bg_frac);
 
-			h.FillDel2h(gen, tha, pha, pen, ann, sec, det, rndm_ptr, td, bg_frac);
+			h.FillDel2h(gen, tha, pha, pen, nf, nb, sector, det, rndm_ptr, td, bg_frac);
 
 		}
 
@@ -252,18 +248,6 @@ void g_clx::Loop( string outputfilename ) {
 
 	long nopart = (long)h.part->Integral();
 	cout << "1-particle events = " << nopart << endl;
-
-#ifdef PHICAL
-	TCanvas *cphi;
-	cphi = new TCanvas( "PhiCalibration", "Phi Calibration" );
-	for( unsigned int i = 0; i < PHI_NSTEPS; i++ ) {
-
-		h.phical_dcT[i]->SetLineColor(i+1);
-		if( i == 0 ) h.phical_dcT[i]->Draw();
-		else h.phical_dcT[i]->Draw("SAME");
-
-	}
-#endif
 
 	out->Write();
 

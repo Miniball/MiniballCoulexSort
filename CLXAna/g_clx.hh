@@ -65,8 +65,9 @@ class g_clx : public TObject {
 	vector <double> t1t;		///< T1 timestamps
 	vector <double> sst;		///< supercycle timestamps
 	vector <float>  td;			///< particle-gamma time difference in 25 ns timestamps
-	vector <int>    ann;		///< annular (front) strip ID of particle (0 = outer; 15 inner)
-	vector <int>    sec;		///< secular (back) strip ID of particle (0 to 12; clockwise wrt beam)
+	vector <int>    nf;			///< annular (front) strip ID of particle (0 = outer; 15 inner)
+	vector <int>    nb;			///< secular (back) strip ID of particle (0 to 12; clockwise wrt beam)
+	vector <int>	sector;		///< sector of C-REX (0 = FCD; 1 = FBarrel; 2 = BBarrel; 3 = BCD)
 	vector <int>    det;		///< detector (quadrant) number of particle
 	vector <int>    coin;		///< coincidence flag: 0 = prompt, 1 = random, 2 = delayed, -1 = none
 	int             laser;		///< laser on/off flag: 1 = on, 0 = off
@@ -84,7 +85,7 @@ class g_clx : public TObject {
 	float			Eb, Ex, thick, depth;
 	float			zoffset;		///< offset of the target with respect to the origin in mm (beam direction positive)
 	float			cddist;			///< relative distance between the CD and target in mm
-	float			cdoffset;		///< phi rotation of CD wrt to (det=0;sec=0) at vertical
+	float			cdoffset;		///< phi rotation of CD wrt to (det=0;nb=0) at vertical
 	float			deadlayer;		///< deadlayer thickness in mm
 	float			contaminant;	///< contaminant layer thickness in mg/cm^2
 	float			spededist;		///< SPEDE to target distance in mm
@@ -114,8 +115,9 @@ class g_clx : public TObject {
 	TBranch        *b_mbevts_t1t;   //!
 	TBranch        *b_mbevts_sst;   //!
 	TBranch        *b_mbevts_td;   //!
-	TBranch        *b_mbevts_ann;   //!
-	TBranch        *b_mbevts_sec;   //!
+	TBranch        *b_mbevts_nf;   //!
+	TBranch        *b_mbevts_nb;   //!
+	TBranch        *b_mbevts_sector;   //!
 	TBranch        *b_mbevts_det;   //!
 	TBranch        *b_mbevts_coin;   //!
 	TBranch        *b_mbevts_laser;   //!
@@ -237,8 +239,9 @@ void g_clx::Init( TTree *tree ) {
 	fChain->SetBranchAddress("t1t", &t1t, &b_mbevts_t1t);
 	fChain->SetBranchAddress("sst", &sst, &b_mbevts_sst);
 	fChain->SetBranchAddress("td", &td, &b_mbevts_td);
-	fChain->SetBranchAddress("ann", &ann, &b_mbevts_ann);
-	fChain->SetBranchAddress("sec", &sec, &b_mbevts_sec);
+	fChain->SetBranchAddress("nf", &nf, &b_mbevts_nf);
+	fChain->SetBranchAddress("nb", &nb, &b_mbevts_nb);
+	fChain->SetBranchAddress("sector", &sector, &b_mbevts_sector);
 	fChain->SetBranchAddress("det", &det, &b_mbevts_det);
 	fChain->SetBranchAddress("coin", &coin, &b_mbevts_coin);
 	fChain->SetBranchAddress("laser", &laser, &b_mbevts_laser);
