@@ -44,11 +44,6 @@ void AddBack::ClearEvt() {
 
 void AddBack::MakeGammaRays( bool addback, bool reject ) {
 	
-	// Crap segments list (i.e. those that need to be vetoed)
-	// Counting from 0 to 167, i.e. including cores - clu*21 + core*7 + seg
-	//dead_segments.push_back( 106 ); // clu 5, core 0, seg 1 = 18A1
-	//dead_segments.push_back( 107 ); // clu 5, core 0, seg 2 = 18A2
-
 	// Reset some variables
 	ab_mul = 0;
 	

@@ -267,6 +267,7 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 	ab.SetCalibration( Cal );
 	ab.SetOutputFile( outfile );
 	ab.InitialiseHistograms();
+	ab.InitialiseVariables();
 	
 	// Setup the particle finder
 	pf.SetEvent( event );

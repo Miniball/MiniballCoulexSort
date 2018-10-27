@@ -215,28 +215,28 @@ void g_clx::Loop( string outputfilename ) {
 
 		// Condition on particle detection
 		if( pr_hits==1 && rndm_hits==0 ) 
-			h.Fill1h(gen, tha, pha, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron,
+			h.Fill1h(gen, tha, pha, cid, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron,
 					 pen[pr_ptr[0]], nf[pr_ptr[0]], nb[pr_ptr[0]], sector[pr_ptr[0]],
 					 det[pr_ptr[0]], time[pr_ptr[0]]-t1t[pr_ptr[0]], 1.0);
 
 		else if( pr_hits==2 && rndm_hits==0 )
-			h.Fill2h(gen, tha, pha, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron,
+			h.Fill2h(gen, tha, pha, cid, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron,
 					 pen, nf, nb, sector, det, pr_ptr, td, 1.0);
 
 		else if( del_hits==2 && rndm_hits==0 )
-			h.FillDel2h(gen, tha, pha, pen, nf, nb, sector, det, del_ptr, td, 1.0);
+			h.FillDel2h(gen, tha, pha, cid, pen, nf, nb, sector, det, del_ptr, td, 1.0);
 
 		else if( rndm_hits==1 && pr_hits==0 ) 
-			h.Fill1h(gen, tha, pha, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron,
+			h.Fill1h(gen, tha, pha, cid, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron,
 					 pen[rndm_ptr[0]], nf[rndm_ptr[0]], nb[rndm_ptr[0]], sector[rndm_ptr[0]],
 					 det[rndm_ptr[0]], time[rndm_ptr[0]]-t1t[rndm_ptr[0]], bg_frac);
 
 		else if( rndm_hits==2 && pr_hits==0 ) {
 		
-			h.Fill2h(gen, tha, pha, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron,
+			h.Fill2h(gen, tha, pha, cid, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron,
 					 pen, nf, nb, sector, det, rndm_ptr, td, bg_frac);
 
-			h.FillDel2h(gen, tha, pha, pen, nf, nb, sector, det, rndm_ptr, td, bg_frac);
+			h.FillDel2h(gen, tha, pha, cid, pen, nf, nb, sector, det, rndm_ptr, td, bg_frac);
 
 		}
 

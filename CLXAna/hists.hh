@@ -138,27 +138,27 @@ class hists {
 	void Set_minrecoil( int user_minrecoil );
 
 	// fill functions
-	void Fill1h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, vector <float> GCor_GTh,
+	void Fill1h( float GEn, float GTh, float GPh, int GCid, vector <float> GCor_GEn, vector <float> GCor_GTh,
 				vector <float> GCor_GPh, vector <int> GCor_GCluID, vector <float> GCor_Gtd,
 				bool electron, float PEn, int Pnf, int Pnb, int Psec, int Pquad, int T1T, float weight=1.0 );
-	void Fill2h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, vector <float> GCor_GTh,
+	void Fill2h( float GEn, float GTh, float GPh, int GCid, vector <float> GCor_GEn, vector <float> GCor_GTh,
 				vector <float> GCor_GPh, vector <int> GCor_GCluID, vector <float> GCor_Gtd,
 				bool electron, vector <float> PEn, vector<int> Pnf, vector<int> Pnb, vector<int> Psec,
 				vector<int> Pquad, vector<int> Pptr, vector <float> td, float weight=1.0 );
-	void FillDel2h( float GEn, float GTh, float GPh, vector <float> PEn, vector<int> Pnf, vector<int> Pnb,
+	void FillDel2h( float GEn, float GTh, float GPh, int GCid, vector <float> PEn, vector<int> Pnf, vector<int> Pnb,
 					vector<int> Psec, vector<int> Pquad, vector<int> Pptr, vector <float> td, float weight=1.0 );
-	void FillGam1h( float GEn, float GTh, float GPh, float PEn, int Pnf,
+	void FillGam1h( float GEn, float GTh, float GPh, int GCid, float PEn, int Pnf,
 					int Pnb, int Psec, int Pquad, int T1T, int cut, float weight=1.0 );
-	void FillGam2h( float GEn, float GTh, float GPh, vector <float> PEn, vector<int> Pnf,
+	void FillGam2h( float GEn, float GTh, float GPh, int GCid, vector <float> PEn, vector<int> Pnf,
 					vector<int> Pnb, vector<int> Psec, vector<int> Pquad, int Bptr, int Tptr, float weight=1.0 );
-	void FillElec1h( float GEn, float GTh, float GPh, float PEn, int Pnf,
+	void FillElec1h( float GEn, float GTh, float GPh, int GCid, float PEn, int Pnf,
 					int Pnb, int Psec, int Pquad, int cut, float weight=1.0 );
-	void FillElec2h( float GEn, float GTh, float GPh, vector <float> PEn, vector<int> Pnf,
+	void FillElec2h( float GEn, float GTh, float GPh, int GCid, vector <float> PEn, vector<int> Pnf,
 					vector<int> Pnb, vector<int> Psec, vector<int> Pquad, int Bptr, int Tptr, float weight=1.0 );
-	void FillGamGam1h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, vector <float> GCor_GTh,
+	void FillGamGam1h( float GEn, float GTh, float GPh, int GCid, vector <float> GCor_GEn, vector <float> GCor_GTh,
 					vector <float> GCor_GPh, vector <int> GCor_GCluID, vector <float> GCor_Gtd,
 					float PEn, int Pnf, int Pnb, int Psec, int Pquad, int T1T, int cut, float weight=1.0 );
-	void FillGamGam2h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, vector <float> GCor_GTh,
+	void FillGamGam2h( float GEn, float GTh, float GPh, int GCid, vector <float> GCor_GEn, vector <float> GCor_GTh,
 					vector <float> GCor_GPh, vector <int> GCor_GCluID, vector <float> GCor_Gtd,
 					vector <float> PEn, vector<int> Pnf, vector<int> Pnb, vector<int> Psec, vector<int> Pquad,
 					int Bptr, int Tptr, float weight=1.0 );

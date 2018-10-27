@@ -270,7 +270,7 @@ void hists::Set_minrecoil(int user_minrecoil) {
 	minrecoil = user_minrecoil;
 }
 
-void hists::Fill1h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, vector <float> GCor_GTh,
+void hists::Fill1h( float GEn, float GTh, float GPh, int GCid, vector <float> GCor_GEn, vector <float> GCor_GTh,
 					vector <float> GCor_GPh, vector <int> GCor_CluID, vector <float> GCor_Gtd, bool electron,
 					float PEn, int Pnf, int Pnb, int Psec, int Pquad, int T1T, float weight ) {
 
@@ -295,15 +295,15 @@ void hists::Fill1h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, ve
 	
 		if( !electron ) {
 	
-			FillGam1h( GEn, GTh, GPh, PEn, Pnf, Pnb, Psec, Pquad, T1T, cut, weight );
-			FillGamGam1h( GEn, GTh, GPh, GCor_GEn, GCor_GTh, GCor_GPh, GCor_CluID, GCor_Gtd,
+			FillGam1h( GEn, GTh, GPh, GCid, PEn, Pnf, Pnb, Psec, Pquad, T1T, cut, weight );
+			FillGamGam1h( GEn, GTh, GPh, GCid, GCor_GEn, GCor_GTh, GCor_GPh, GCor_CluID, GCor_Gtd,
 							PEn, Pnf, Pnb, Psec, Pquad, T1T, cut, weight );
 		
 		}
 
 		else {
 			
-			FillElec1h( GEn, GTh, GPh, PEn, Pnf, Pnb, Psec, Pquad, cut, weight );
+			FillElec1h( GEn, GTh, GPh, GCid, PEn, Pnf, Pnb, Psec, Pquad, cut, weight );
 
 		}
 
@@ -313,7 +313,7 @@ void hists::Fill1h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, ve
 
 }
 
-void hists::Fill2h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, vector <float> GCor_GTh,
+void hists::Fill2h( float GEn, float GTh, float GPh, int GCid, vector <float> GCor_GEn, vector <float> GCor_GTh,
 					vector <float> GCor_GPh, vector <int> GCor_CluID, vector <float> GCor_Gtd, bool electron,
 					vector<float> PEn, vector<int> Pnf, vector<int> Pnb, vector<int> Psec, vector<int> Pquad,
 				    vector<int> Pptr, vector<float> td, float weight ) {
@@ -333,9 +333,9 @@ void hists::Fill2h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, ve
 		Bptr = Pptr[1];
 		Tptr = Pptr[0];
 		if( !electron ){
-			FillGam2h( GEn, GTh, GPh, PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, weight );
+			FillGam2h( GEn, GTh, GPh, GCid, PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, weight );
 		}
-		else FillElec2h( GEn, GTh, GPh, PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, weight );
+		else FillElec2h( GEn, GTh, GPh, GCid, PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, weight );
 		FillPar2h( PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, weight );
 		
 	}
@@ -345,9 +345,9 @@ void hists::Fill2h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, ve
 		Bptr = Pptr[0];
 		Tptr = Pptr[1];
 		if( !electron ) {
-			FillGam2h( GEn, GTh, GPh, PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, weight );
+			FillGam2h( GEn, GTh, GPh, GCid, PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, weight );
 		}
-		else FillElec2h( GEn, GTh, GPh, PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, weight );
+		else FillElec2h( GEn, GTh, GPh, GCid, PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, weight );
 		FillPar2h( PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, weight );
 		
 	}
@@ -355,9 +355,9 @@ void hists::Fill2h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, ve
 	else if( cut_0 == 0 ) { // Pptr[0] is a 1p recoil
 	
 		if( !electron ){
-			FillGam1h( GEn, GTh, GPh, PEn[Pptr[0]], Pnf[Pptr[0]], Pnb[Pptr[0]], Psec[Pptr[0]], Pquad[Pptr[0]], cut_0, weight );
+			FillGam1h( GEn, GTh, GPh, GCid, PEn[Pptr[0]], Pnf[Pptr[0]], Pnb[Pptr[0]], Psec[Pptr[0]], Pquad[Pptr[0]], cut_0, weight );
 		}
-		else FillElec1h( GEn, GTh, GPh, PEn[Pptr[0]], Pnf[Pptr[0]], Pnb[Pptr[0]], Psec[Pptr[0]], Pquad[Pptr[0]], cut_0, weight );
+		else FillElec1h( GEn, GTh, GPh, GCid, PEn[Pptr[0]], Pnf[Pptr[0]], Pnb[Pptr[0]], Psec[Pptr[0]], Pquad[Pptr[0]], cut_0, weight );
 		FillPar1h( PEn[Pptr[0]], Pnf[Pptr[0]], Pnb[Pptr[0]], Psec[Pptr[0]], Pquad[Pptr[0]], cut_0, weight );
 		
 	}
@@ -365,9 +365,9 @@ void hists::Fill2h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, ve
 	else if( cut_1 == 0 ) { // Pptr[1] is a 1p recoil
 	
 		if( !electron ){
-			FillGam1h( GEn, GTh, GPh, PEn[Pptr[1]], Pnf[Pptr[1]], Pnb[Pptr[1]], Psec[Pptr[1]], Pquad[Pptr[1]], cut_1, weight );
+			FillGam1h( GEn, GTh, GPh, GCid, PEn[Pptr[1]], Pnf[Pptr[1]], Pnb[Pptr[1]], Psec[Pptr[1]], Pquad[Pptr[1]], cut_1, weight );
 		}
-		else FillElec1h( GEn, GTh, GPh, PEn[Pptr[1]], Pnf[Pptr[1]], Pnb[Pptr[1]], Psec[Pptr[1]], Pquad[Pptr[1]], cut_1, weight );
+		else FillElec1h( GEn, GTh, GPh, GCid, PEn[Pptr[1]], Pnf[Pptr[1]], Pnb[Pptr[1]], Psec[Pptr[1]], Pquad[Pptr[1]], cut_1, weight );
 		FillPar1h( PEn[Pptr[1]], Pnf[Pptr[1]], Pnb[Pptr[1]], Pquad[Pptr[1]], Psec[Pptr[1]], cut_1, weight );
 		
 	}
@@ -376,7 +376,7 @@ void hists::Fill2h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, ve
 
 }
 
-void hists::FillGam1h( float GEn, float GTh, float GPh, float PEn, int Pnf,
+void hists::FillGam1h( float GEn, float GTh, float GPh, int GCid, float PEn, int Pnf,
 						int Pnb, int Psec, int Pquad, int T1T, int cut, float weight ) {
 
 
@@ -405,8 +405,8 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, float PEn, int Pnf,
 			T_1hdcB->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
 			T_1hdcT->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 			
-			//T_dcB_cid->Fill(cid,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
-			//T_dcT_cid->Fill(cid,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+			T_dcB_cid->Fill(GCid,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+			T_dcT_cid->Fill(GCid,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 			
 			p_thetaB->Fill(GEn, dc.GammaAng(BTh, BPh, GTh, GPh)*TMath::RadToDeg());
 			p_thetaT->Fill(GEn, dc.GammaAng(TTh, TPh, GTh, GPh)*TMath::RadToDeg());
@@ -467,8 +467,8 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, float PEn, int Pnf,
 		B_1hdcB->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
 		B_1hdcT->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 
-		//B_dcB_cid->Fill(cid,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
-		//B_dcT_cid->Fill(cid,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+		B_dcB_cid->Fill(GCid,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+		B_dcT_cid->Fill(GCid,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 
 		p_thetaB->Fill(GEn, dc.GammaAng(BTh, BPh, GTh, GPh)*TMath::RadToDeg());
 		p_thetaT->Fill(GEn, dc.GammaAng(TTh, TPh, GTh, GPh)*TMath::RadToDeg());
@@ -514,7 +514,7 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, float PEn, int Pnf,
 
 }
 
-void hists::FillDel2h( float GEn, float GTh, float GPh, vector<float> PEn, vector<int> Pnf,
+void hists::FillDel2h( float GEn, float GTh, float GPh, int GCid, vector<float> PEn, vector<int> Pnf,
 					vector<int> Pnb, vector<int> Psec, vector<int> Pquad, vector<int> Pptr,
 					vector<float> td, float weight ) {
 
@@ -562,7 +562,7 @@ void hists::FillDel2h( float GEn, float GTh, float GPh, vector<float> PEn, vecto
 
 }
 
-void hists::FillGam2h( float GEn, float GTh, float GPh, vector<float> PEn, vector<int> Pnf,
+void hists::FillGam2h( float GEn, float GTh, float GPh, int GCid, vector<float> PEn, vector<int> Pnf,
 						vector<int> Pnb, vector<int> Psec, vector<int> Pquad, int Bptr, int Tptr,
 					    float weight ) {
 
@@ -583,16 +583,19 @@ void hists::FillGam2h( float GEn, float GTh, float GPh, vector<float> PEn, vecto
 	T_dcB_x[Tann]->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);	
 	T_dcT_x[Tann]->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 
-	B_dcB_x[Bann]->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);	
+	B_dcB_x[Bann]->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
 	B_dcT_x[Bann]->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
-
+	
+	B_dcB_cid->Fill(GCid,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+	B_dcT_cid->Fill(GCid,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+	
 	if( Tann >= minrecoil && Tann <= maxrecoil ) {
 
 		T_2hdcB->Fill(GEn*dc.DC(BEn,BTh,BPh,GTh,GPh,dc.GetAb()), weight);
 		T_2hdcT->Fill(GEn*dc.DC(TEn,TTh,TPh,GTh,GPh,dc.GetAt()), weight);
 		
-		//T_dcB_cid->Fill(cid,GEn*dc.DC(BEn,BTh,BPh,GTh,GPh,dc.GetAb()), weight);
-		//T_dcT_cid->Fill(cid,GEn*dc.DC(TEn,TTh,TPh,GTh,GPh,dc.GetAt()), weight);
+		T_dcB_cid->Fill(GCid,GEn*dc.DC(BEn,BTh,BPh,GTh,GPh,dc.GetAb()), weight);
+		T_dcT_cid->Fill(GCid,GEn*dc.DC(TEn,TTh,TPh,GTh,GPh,dc.GetAt()), weight);
 		
 	}
 
@@ -600,7 +603,7 @@ void hists::FillGam2h( float GEn, float GTh, float GPh, vector<float> PEn, vecto
 
 }
 
-void hists::FillElec1h( float GEn, float GTh, float GPh, float PEn, int Pnf,
+void hists::FillElec1h( float GEn, float GTh, float GPh, int GCid, float PEn, int Pnf,
 						int Pnb, int Psec, int Pquad, int cut, float weight ) {
 
 
@@ -657,7 +660,7 @@ void hists::FillElec1h( float GEn, float GTh, float GPh, float PEn, int Pnf,
 
 }
 
-void hists::FillElec2h( float GEn, float GTh, float GPh, vector<float> PEn, vector<int> Pnf,
+void hists::FillElec2h( float GEn, float GTh, float GPh, int GCid, vector<float> PEn, vector<int> Pnf,
 						vector<int> Pnb, vector<int> Psec, vector<int> Pquad, int Bptr, int Tptr,
 					    float weight ) {
 
@@ -689,7 +692,7 @@ void hists::FillElec2h( float GEn, float GTh, float GPh, vector<float> PEn, vect
 
 }
 
-void hists::FillGamGam1h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, vector <float> GCor_GTh,
+void hists::FillGamGam1h( float GEn, float GTh, float GPh, int GCid, vector <float> GCor_GEn, vector <float> GCor_GTh,
 						 vector <float> GCor_GPh, vector <int> GCor_CluID, vector <float> GCor_Gtd,
 						 float PEn, int Pnf, int Pnb, int Psec, int Pquad, int T1T, int cut, float weight ) {
 	
@@ -766,8 +769,8 @@ void hists::FillGamGam1h( float GEn, float GTh, float GPh, vector <float> GCor_G
 	
 }
 
-void hists::FillGamGam2h( float GEn, float GTh, float GPh, vector <float> GCor_GEn, vector <float> GCor_GTh,
-						 vector <float> GCor_GPh, vector <int> GCor_CluID, vector <float> GCor_Gtd,
+void hists::FillGamGam2h( float GEn, float GTh, float GPh, int GCid, vector<float> GCor_GEn, vector<float> GCor_GTh,
+						 vector<float> GCor_GPh, vector <int> GCor_CluID, vector <float> GCor_Gtd,
 						 vector<float> PEn, vector<int> Pnf, vector<int> Pnb,  vector<int> Psec,
 						 vector<int> Pquad, int Bptr, int Tptr, float weight ) {
 	
