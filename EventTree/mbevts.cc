@@ -39,6 +39,7 @@ void mbevts::Initialise() {
 	td.resize(0);
 	nf.resize(0);
 	nb.resize(0);
+	sector.resize(0);
 	det.resize(0);
 	coin.resize(0);
 	pr_ptr.resize(0);
@@ -77,6 +78,7 @@ void mbevts::CopyData( mbevts src ) {
 	td = src.td;
 	nf = src.nf;
 	nb = src.nb;
+	sector = src.sector;
 	det = src.det;
 	coin = src.coin;
 	pr_ptr = src.pr_ptr;
