@@ -161,10 +161,10 @@ void hists::Initialise( doppler dc_ ) {
 	T_del_2hdcB = new TH1F("T_del_2hdcB","T_2hit, delayed, DC for beam;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	
 	// Doppler corrected spectra per detector
-	B_dcB_cid = new TH2F("BdcB_cid","Beam gated prompt, Doppler corrected #gamma-rays;Core ID;Energy [keV]",24,-0.5,23.5,GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
-	T_dcB_cid = new TH2F("TdcB_cid","Target gated prompt, Doppler corrected #gamma-rays;Core ID;Energy [keV]",24,-0.5,23.5,GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
-	B_dcT_cid = new TH2F("BdcT_cid","Beam gated prompt, Doppler corrected #gamma-rays;Core ID;Energy [keV]",24,-0.5,23.5,GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
-	T_dcT_cid = new TH2F("TdcT_cid","Target gated prompt, Doppler corrected #gamma-rays;Core ID;Energy [keV]",24,-0.5,23.5,GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	B_dcB_cid = new TH2F("B_dcB_cid","Beam gated prompt, Doppler corrected #gamma-rays;Core ID;Energy [keV]",24,-0.5,23.5,GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	T_dcB_cid = new TH2F("T_dcB_cid","Target gated prompt, Doppler corrected #gamma-rays;Core ID;Energy [keV]",24,-0.5,23.5,GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	B_dcT_cid = new TH2F("B_dcT_cid","Beam gated prompt, Doppler corrected #gamma-rays;Core ID;Energy [keV]",24,-0.5,23.5,GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	T_dcT_cid = new TH2F("T_dcT_cid","Target gated prompt, Doppler corrected #gamma-rays;Core ID;Energy [keV]",24,-0.5,23.5,GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	
 	// PART : 1 hit
 	// Prompt/Random Particle 1 hit
