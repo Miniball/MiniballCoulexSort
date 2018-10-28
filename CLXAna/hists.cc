@@ -289,7 +289,7 @@ void hists::Fill1h( float GEn, float GTh, float GPh, int GCid, vector <float> GC
 
 	int cut = dc.Cut( PEn, Pnf, Pquad );
 	
-	FillPar1h( PEn, Pnf, Pnb, Pquad, cut, weight );
+	FillPar1h( PEn, Pnf, Pnb, Psec, Pquad, cut, weight );
 
 	if( cut >= 0 ) {
 	
