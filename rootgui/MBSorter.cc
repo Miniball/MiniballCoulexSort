@@ -1145,7 +1145,7 @@ void MBSorter::on_build_clicked() {
 	TString filebase;
 	TString rootfileout;
 	TString files = "";
-	string answer;
+	bool answer = false;
 	TString cmd = "TreeBuilder ";
 
 	if( check_crex->IsOn() ) cmd += "-crex ";
@@ -1164,12 +1164,12 @@ void MBSorter::on_build_clicked() {
 	rootfileout += "_tree.root";
 
 	if( !gSystem->AccessPathName( rootfileout ) ) {
-
-		cout << "Are you sure you want to overwrite " << rootfileout << "? (Y/n): ";
-		cin >> answer;
 		
-		if( answer != "Y" && answer != "y" ) return;
-
+		TString msg = "Are you sure you want to overwrite " + rootfileout + "?";
+		new MyDialog( gClient->GetRoot(), main_frame, msg, answer );
+		
+		if( answer == false ) return;
+		
 	}
 
 	cmd += "-c ";
@@ -1206,7 +1206,7 @@ void MBSorter::on_nesort_clicked() {
 	TString filebase;
 	TString rootfileout;
 	TString files = "";
-	string answer;
+	bool answer = false;
 	TString cmd = "NeSort ";
 	
 	rootfileout = text_outfile->GetText();
@@ -1214,11 +1214,11 @@ void MBSorter::on_nesort_clicked() {
 	
 	if( !gSystem->AccessPathName( rootfileout ) ) {
 		
-		cout << "Are you sure you want to overwrite " << rootfileout << "? (Y/n): ";
-		cin >> answer;
+		TString msg = "Are you sure you want to overwrite " + rootfileout + "?";
+		new MyDialog( gClient->GetRoot(), main_frame, msg, answer );
 		
-		if( answer != "Y" && answer != "y" ) return;
-		
+		if( answer == false ) return;
+
 	}
 	
 	cmd += "-c ";
@@ -1255,7 +1255,7 @@ void MBSorter::on_aq4sort_clicked() {
 	TString filebase;
 	TString rootfileout;
 	TString files = "";
-	string answer;
+	bool answer = false;
 	TString cmd = "AQ4Sort ";
 	
 	rootfileout = text_outfile->GetText();
@@ -1263,10 +1263,10 @@ void MBSorter::on_aq4sort_clicked() {
 	
 	if( !gSystem->AccessPathName( rootfileout ) ) {
 		
-		cout << "Are you sure you want to overwrite " << rootfileout << "? (Y/n): ";
-		cin >> answer;
+		TString msg = "Are you sure you want to overwrite " + rootfileout + "?";
+		new MyDialog( gClient->GetRoot(), main_frame, msg, answer );
 		
-		if( answer != "Y" && answer != "y" ) return;
+		if( answer == false ) return;
 		
 	}
 	
@@ -1558,5 +1558,66 @@ void MBSorter::LoadSetup( string setupfile ) {
 
 	return;
 
+}
+
+MyDialog::MyDialog( const TGWindow *p, const TGWindow *main, TString msg, bool &ans ) {
+	
+	// Default answer is false
+	answer = false;
+	
+	fDialog = new TGTransientFrame( p, main, 800, 100, kVerticalFrame );
+	frame_button = new TGHorizontalFrame( fDialog, 240, 50 );
+	
+	dialog_msg = new TGLabel( fDialog, msg );
+	fDialog->AddFrame( dialog_msg, new TGLayoutHints( kLHintsTop | kLHintsExpandY, 5, 5, 5, 5) );
+	
+	but_yes = new TGTextButton( frame_button, " &Yes ", 1 );
+	but_yes->Connect( "Clicked()", "MyDialog", this, "SayYes()" );
+	but_yes->Associate( fDialog );
+	frame_button->AddFrame( but_yes, new TGLayoutHints( kLHintsLeft | kLHintsExpandX, 4, 4, 4, 4 ) );
+	
+	but_no = new TGTextButton( frame_button, " &No ", 1 );
+	but_no->Connect( "Clicked()", "MyDialog", this, "SayNo()" );
+	but_no->Associate( fDialog );
+	frame_button->AddFrame( but_no, new TGLayoutHints( kLHintsLeft | kLHintsExpandX, 4, 4, 4, 4 ) );
+	
+	frame_button->Resize( 100, but_no->GetDefaultHeight() + 10 );
+	fDialog->AddFrame( frame_button, new TGLayoutHints( kLHintsBottom | kLHintsCenterX | kLHintsExpandY, 5, 5, 5, 5 ) );
+
+	fDialog->MapSubwindows();
+	fDialog->Resize( fDialog->GetDefaultSize() );
+	
+	fDialog->MapWindow();
+
+	gClient->WaitFor( fDialog );
+
+	ans = answer;
+	
+}
+
+MyDialog::~MyDialog() {
+
+	delete fDialog;
+	delete but_yes;
+	delete but_no;
+	delete dialog_msg;
+	delete frame_button;
+	
+	delete fDialog;
+	
+}
+
+void MyDialog::SayYes() {
+	
+	answer = true;
+	fDialog->SendCloseMessage();
+	
+}
+
+void MyDialog::SayNo() {
+	
+	answer = false;
+	fDialog->SendCloseMessage();
+	
 }
 

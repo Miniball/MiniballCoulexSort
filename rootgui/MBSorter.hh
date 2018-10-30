@@ -12,6 +12,7 @@
 #include <TGButtonGroup.h>
 #include <TGLabel.h>
 #include <TGFrame.h>
+#include <TGWindow.h>
 #include <TApplication.h>
 #include <TGListBox.h>
 #include <TList.h>
@@ -21,6 +22,35 @@
 #include <fstream>
 #include <vector>
 using namespace std;
+
+class MyDialog {
+	
+	RQ_OBJECT( "MyDialog" )
+	
+private:
+	
+	// Popup dialogs
+	TGTransientFrame    *fDialog;
+	TGTextButton        *but_yes, *but_no;
+	TGLabel				*dialog_msg;
+	TGHorizontalFrame   *frame_button;
+	
+	// Answer
+	bool answer;
+	
+public:
+	
+	// Popup dialogs
+	MyDialog( const TGWindow *p, const TGWindow *main, TString msg, bool &ans );
+	virtual ~MyDialog();
+	
+	// Do the answer
+	void SayYes();
+	void SayNo();
+	
+	ClassDef( MyDialog, 1 )
+	
+};
 
 class MBSorter {
 	
@@ -189,7 +219,7 @@ public:
 	void on_ana_clicked();		// CLXAna function
 	void on_mnt_clicked();		// MntAna function
 	void on_tdriv_clicked();	// TDRIVAna function
-
+	
 	// Save setup
 	void SaveSetup( string setupfile );
 	void LoadSetup( string setupfile );
