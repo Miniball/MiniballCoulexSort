@@ -341,7 +341,7 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 			if( ( cdpad || spede ) && adc_num < 4 ) {
 				
 				pf.FindCDParticles();
-				ParticleCounterQ[adc_num] += pf.ReconstructHeavyIons();
+				ParticleCounterQ[adc_num] += pf.ReconstructCD( false, false );
 				pf.NextAdc();
 				
 			}
@@ -350,8 +350,8 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 			else if( crex && adc_num < 4 ) {
 				
 				pf.FindCREXParticles();
-				ParticleCounterQ[adc_num] += pf.ReconstructHeavyIons();
-				ParticleCounterQ[adc_num] += pf.ReconstructBarrel();
+				ParticleCounterQ[adc_num] += pf.ReconstructBarrel( false, true );
+				ParticleCounterQ[adc_num] += pf.ReconstructCD( false, true );
 				pf.NextAdc();
 				
 			}
@@ -363,8 +363,8 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 				
 				if( adc_num%2 == 1 ) {
 					
-					ParticleCounterQ[adc_num/2] += pf.ReconstructTransferCD();
-					ParticleCounterQ[adc_num/2] += pf.ReconstructBarrel();
+					ParticleCounterQ[adc_num/2] += pf.ReconstructBarrel( true, false );
+					ParticleCounterQ[adc_num/2] += pf.ReconstructCD( true, false );
 					pf.NextAdc();
 					
 				}

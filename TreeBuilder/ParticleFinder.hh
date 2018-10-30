@@ -41,10 +41,9 @@ public:
 	void FindTREXParticles();
 	
 	// Particle reconstruction
-	unsigned int ReconstructHeavyIons();
-	unsigned int ReconstructTransferCD();
-	unsigned int ReconstructBarrel();
-	unsigned int DeMux( unsigned int mux_ch, unsigned int mux_en );
+	unsigned int ReconstructCD( bool trex, bool crex );
+	unsigned int ReconstructBarrel( bool trex, bool crex );
+	unsigned int DeMux( unsigned int mux_ch, unsigned int mux_en, int ch_offset );
 	
 	// Ionisation chamber event
 	void IonisationChamber();
@@ -90,12 +89,6 @@ public:
 		adc_num = n;
 		return;
 	};
-
-	// Functions to return max particle energies and ids
-	inline float GetMaxEf(){ return maxfrontenergy; };
-	inline float GetMaxEb(){ return maxbackenergy; };
-	inline unsigned short GetMaxNf(){ return maxfrontid; };
-	inline unsigned short GetMaxNb(){ return maxbackid; };
 	
 	// Functions to return reconstructed particle data
 	inline unsigned int ReconstructedSize(){ return PEn.size(); };
@@ -164,10 +157,10 @@ private:
 	vector<bool> laser;
 	
 	// Maximum energy and id
-	float maxfrontenergy;
-	float maxbackenergy;
-	unsigned short maxfrontid;
-	unsigned short maxbackid;
+	float maxfrontenergy_fcd, maxfrontenergy_bcd;
+	float maxbackenergy_fcd, maxbackenergy_bcd;
+	unsigned short maxfrontid_fcd, maxfrontid_bcd;
+	unsigned short maxbackid_fcd, maxbackid_bcd;
 	
 	// Adc values
 	float PartEnergy;
@@ -188,18 +181,15 @@ private:
 	TH1F *cd_debug, *barrel_debug;
 
 	// particles
-	TH1F *E_part_ch[4][32];
-	TH1F *E_part_ch_cal[4][32];
-	
-	// trex
-	TH1F *trex[10][32];
-	TH1F *trex_cal[10][32];
-	
+	TH1F *adc_spec[10][32];
+	TH1F *adc_spec_cal[10][32];
+
 	// particle
 	TH2F *part_raw, *part;
-	TH2F *CD_front_energy[4], *CD_front_energy_cal[4];
-	TH2F *CD_back_energy[4], *CD_back_energy_cal[4];
+	TH2F *CD_front_energy[4];
+	TH2F *CD_back_energy[4];
 	TH2F *E_f_b[4];
+	TH2F *Barrel_energy[4];
 	
 	// Ionisation chamber
 	TH2F *dEE;
@@ -226,64 +216,53 @@ ParticleFinder::~ParticleFinder() {
 void ParticleFinder::InitialiseHistograms() {
 	
 	// Total particle spectra before and after reconstruction
-	part = new TH2F("part","particle singles",16,-0.5,15.5,PBINS,PMIN,PMAX);
-	part_raw = new TH2F("part_raw","particle singles before reconstruction",16,-0.5,15.5,PBINS,PMIN,PMAX);
+	part = new TH2F("part","particle singles",64,-0.5,63.5,PBINS,PMIN,PMAX);
+	part_raw = new TH2F("part_raw","particle singles before reconstruction",64,-0.5,63.5,PBINS,PMIN,PMAX);
 	
 	// Particle spectra for every segment
-	TDirectory *part_dir = outfile->mkdir("E_part");
-	part_dir->cd();
-	for( unsigned int i = 0; i < 4; i++ ) {
+	TDirectory *adc_dir = outfile->mkdir("adc_spec");
+	adc_dir->cd();
+	for( unsigned int i = 0; i < 10; i++ ) {
 		
 		for( unsigned int j = 0; j < 32; j++ ) {
 			
-			E_part_ch[i][j] = new TH1F(Form("E_part_%d_%d",i,j),Form("E_part_%d_%d",i,j),4096,-0.5,4095.5);
-			E_part_ch[i][j]->GetXaxis()->SetTitle("Energy Particles [Channels]");
-			E_part_ch_cal[i][j] = new TH1F(Form("E_part_%d_%d_cal",i,j),Form("E_part_%d_%d_cal",i,j),PBINS,PMIN,PMAX);
-			E_part_ch_cal[i][j]->GetXaxis()->SetTitle("Energy Particles [MeV]");
+			adc_spec[i][j] = new TH1F(Form("adc_%d_%d",i,j),Form("adc_%d_%d",i,j),4096,-0.5,4095.5);
+			adc_spec[i][j]->GetXaxis()->SetTitle("Energy Particles [Channels]");
+			adc_spec_cal[i][j] = new TH1F(Form("adc_%d_%d_cal",i,j),Form("adc_%d_%d_cal",i,j),PBINS,PMIN,PMAX);
+			adc_spec_cal[i][j]->GetXaxis()->SetTitle("Energy Particles [MeV]");
 			
 		}
 		
 	}
 
-	// TREX spectra for every adc channel
-	TDirectory *trex_dir = outfile->mkdir("trex");
-	trex_dir->cd();
-	for( unsigned int i = 0; i < 10; i++ ) {
-		
-		for( unsigned int j = 0; j < 32; j++ ) {
-			
-			trex[i][j] = new TH1F(Form("trex_%d_%d",i,j),Form("trex_%d_%d",i,j),4096,-0.5,4095.5);
-			trex[i][j]->GetXaxis()->SetTitle("Energy Particles [Channels]");
-			trex_cal[i][j] = new TH1F(Form("trex_%d_%d_cal",i,j),Form("trex_%d_%d_cal",i,j),PBINS,PMIN,PMAX);
-			trex_cal[i][j]->GetXaxis()->SetTitle("Energy Particles [MeV]");
-			
-		}
-		
-	}
-	
-	// particle-spectra
+	// particle-spectra in CD
 	TDirectory *cd_dir = outfile->mkdir("CD_spec");
 	cd_dir->cd();
 	
 	for( unsigned int i = 0; i < 4; i++ ) {
 		
-		CD_front_energy[i] = new TH2F(Form("CD_front_energy_%d",i),Form("CD_front_energy_%d",i),16,-0.5,15.5,4096,0,4096);
+		CD_front_energy[i] = new TH2F(Form("CD_front_energy_%d",i),Form("CD_front_energy_%d",i),32,-0.5,31.5,PBINS,PMIN,PMAX);
 		CD_front_energy[i]->GetXaxis()->SetTitle("Ring number");
-		CD_front_energy[i]->GetYaxis()->SetTitle("Energy particle [adc ch.]");
-		CD_back_energy[i] = new TH2F(Form("CD_back_energy_%d",i),Form("CD_back_energy_%d",i),12,-0.5,11.5,4096,0,4096);
+		CD_front_energy[i]->GetYaxis()->SetTitle("Energy particle [MeV]");
+		CD_back_energy[i] = new TH2F(Form("CD_back_energy_%d",i),Form("CD_back_energy _%d",i),32,-0.5,31.5,PBINS,PMIN,PMAX);
 		CD_back_energy[i]->GetXaxis()->SetTitle("Strip number");
-		CD_back_energy[i]->GetYaxis()->SetTitle("Energy particle [adc ch.]");
-		
-		CD_front_energy_cal[i] = new TH2F(Form("CD_front_energy_cal_%d",i),Form("CD_front_energy_cal_%d",i),16,-0.5,15.5,PBINS,PMIN,PMAX);
-		CD_front_energy_cal[i]->GetXaxis()->SetTitle("Ring number");
-		CD_front_energy_cal[i]->GetYaxis()->SetTitle("Energy particle [MeV]");
-		CD_back_energy_cal[i] = new TH2F(Form("CD_back_energy_cal_%d",i),Form("CD_back_energy_cal_%d",i),12,-0.5,11.5,PBINS,PMIN,PMAX);
-		CD_back_energy_cal[i]->GetXaxis()->SetTitle("Strip number");
-		CD_back_energy_cal[i]->GetYaxis()->SetTitle("Energy particle [MeV]");
+		CD_back_energy[i]->GetYaxis()->SetTitle("Energy particle [MeV]");
 		
 		E_f_b[i] = new TH2F(Form("E_f_b_%d",i),Form("E_f_b_%d",i),PBINS,PMIN,PMAX,PBINS,PMIN,PMAX);
 		E_f_b[i]->GetXaxis()->SetTitle("Front Energy particle [MeV]");
 		E_f_b[i]->GetYaxis()->SetTitle("Back Energy particle [MeV]");
+		
+	}
+	
+	// particle-spectra in Barrel
+	TDirectory *barrel_dir = outfile->mkdir("Barrel_spec");
+	barrel_dir->cd();
+	
+	for( unsigned int i = 0; i < 4; i++ ) {
+		
+		Barrel_energy[i] = new TH2F(Form("Barrel_energy_%d",i),Form("Barrel_energy_%d",i),32,-0.5,31.5,PBINS,PMIN,PMAX);
+		Barrel_energy[i]->GetXaxis()->SetTitle("Ring number");
+		Barrel_energy[i]->GetYaxis()->SetTitle("Energy particle [MeV]");
 		
 	}
 	
