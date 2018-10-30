@@ -84,7 +84,7 @@ class hists {
 	TH1F *elec_dcB, *elec_dcT, *Te_2hdcB, *Te_2hdcT;
    
 	// Prompt/Random Particle spectra
-	TH2F *part, *part1h, *part2h, *partQ[4], *part_ann;
+	TH2F *part, *part1h, *part2h, *partQ[4];
 	TH2F *Bh, *Th, *B1h, *T1h, *B2h, *T2h;
 	TH2F *Bhhigh, *Bhlow, *Thhigh, *Thlow;
 	TH1F *target_ev, *target_1pev, *target_2pev;
@@ -126,7 +126,7 @@ class hists {
 	int minrecoil;
 
 	// Array of cd angles for histogram bins
-	double cd_angles[17];
+	double cd_angles[65];
 
 	// Doppler instance
 	doppler dc;

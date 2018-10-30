@@ -88,7 +88,7 @@ void g_clx::Loop( string outputfilename ) {
 	for( Long64_t jentry=0; jentry<fChain->GetEntries()/skipFactor; jentry++ ) {	
 
 		Long64_t ientry = LoadTree(jentry);
-
+		
 		if( ientry < 0 ) break;
 
 		nbs = fChain->GetEntry(jentry);   nbytes += nbs;
@@ -123,8 +123,8 @@ void g_clx::Loop( string outputfilename ) {
 			
 			else { // PAD
 
-				tha = dc.GetPTh( 10 );
-				pha = dc.GetPPhi( cid-1, 6, dc.GetCDOffset() );
+				tha = dc.GetPTh( 10, 4 );
+				pha = dc.GetPPhi( cid-1, 6, 4 );
 
 				for( unsigned int i = 0; i < gcor_gen.size(); i++ ){
 			

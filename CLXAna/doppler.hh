@@ -38,8 +38,9 @@ class doppler : public TObject {
 						float depth_, float cddist_, float cdoffset_, float deadlayer_,
 						float contaminant_, float spededist_, TCutG *Bcut_, TCutG *Tcut_,
 						string srimfile_ );
-	int		Cut( float PEn, float anno, int quad );
-	int		Cut_2p( float PEn1, float anno1, int quad1, float PEn2, float anno2, int quad2 );
+	int		Cut( float PEn, float anno, int quad, int sector );
+	int		Cut_2p( float PEn1, float anno1, int quad1, int sector1,
+				    float PEn2, float anno2, int quad2, int sector2 );
 	bool	CutG_en2hit( float BEn, float TEn );
 	int		GetZb();
 	int		GetZt();
@@ -48,14 +49,13 @@ class doppler : public TObject {
 	float	GetCDOffset();
 	float	GetCDDeadLayer();
 	float	GetSpedeDist();
-	float	GetPTh( float anno);
-	float	GetPPhi( int quad, int seg );
-	float	GetPPhi( int quad, int seg, float offset );
-	float	GetTTh( float Banno, float BEn );
-	float	GetBTh( float Tanno );
-	float	GetQPhi( int quad, int seg );
-	float	GetTEn( float BEn, float Banno );
-	float	GetBEn( float TEn, float Tanno );
+	float	GetPTh( float anno, int sector );
+	float	GetPPhi( int quad, int seg, int sector );
+	float	GetTTh( float Banno, float BEn, int sector );
+	float	GetBTh( float Tanno, int sector );
+	float	GetQPhi( int quad, int seg, int sector );
+	float	GetTEn( float BEn, float Banno, int sector );
+	float	GetBEn( float TEn, float Tanno, int sector );
 	float	GetELoss( float Ei, float dist, int opt, string combo );
 	float	GammaAng( float PTh, float PPhi, float GTh, float GPhi );
 	float	Beta( float Ek, float m );
