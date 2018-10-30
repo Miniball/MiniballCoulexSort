@@ -1566,7 +1566,7 @@ MyDialog::MyDialog( const TGWindow *p, const TGWindow *main, TString msg, bool &
 	answer = false;
 	
 	fDialog = new TGTransientFrame( p, main, 800, 100, kVerticalFrame );
-	frame_button = new TGHorizontalFrame( fDialog, 240, 50 );
+	frame_button = new TGHorizontalFrame( fDialog, 240, 60 );
 	
 	dialog_msg = new TGLabel( fDialog, msg );
 	fDialog->AddFrame( dialog_msg, new TGLayoutHints( kLHintsTop | kLHintsExpandY, 5, 5, 5, 5) );
@@ -1581,7 +1581,7 @@ MyDialog::MyDialog( const TGWindow *p, const TGWindow *main, TString msg, bool &
 	but_no->Associate( fDialog );
 	frame_button->AddFrame( but_no, new TGLayoutHints( kLHintsLeft | kLHintsExpandX, 4, 4, 4, 4 ) );
 	
-	frame_button->Resize( 100, but_no->GetDefaultHeight() + 10 );
+	frame_button->Resize( 100, but_no->GetDefaultHeight() + 4 );
 	fDialog->AddFrame( frame_button, new TGLayoutHints( kLHintsBottom | kLHintsCenterX | kLHintsExpandY, 5, 5, 5, 5 ) );
 
 	fDialog->MapSubwindows();
