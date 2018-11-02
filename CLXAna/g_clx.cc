@@ -187,12 +187,17 @@ void g_clx::Loop( string outputfilename ) {
 			else h.tdiff_e->Fill(td[i]*25.);
 
 			// CD pic
-			if( nf[i]>(-1) && nf.size()>0 && ( sector[i]==0 || sector[i]==4 ) ){
-				rad=39-2*nf[i];
-				rad+=gRandom->Rndm(1)*1.9;
-				phi=(nb[i]-16.)*0.12+(det[i]*TMath::PiOver2());
-				phi+=gRandom->Rndm(1)*0.114;
-				if( nb[i]<29 && nb[i]>15 ) h.cdpic->Fill(rad*cos(phi),rad*sin(phi));
+			if( nf[i]>(-1) && nf.size()>0 && ( sector[i]==0 || sector[i]==4 ) ) {
+				
+				if( sector[i] == 4 ) rad = 39 - 2*nf[i];
+				else rad = 9 + 2*nf[i];
+				rad += gRandom->Rndm(1)*1.9;
+				
+				phi = dc.GetPPhi(det[i],nb[i],sector[i]);
+				phi += ( gRandom->Rndm(1) - 0.5 ) * 3.5*TMath::DegToRad();
+				
+				h.cdpic->Fill( rad * TMath::Cos(phi), rad * TMath::Sin(phi) );
+				
 			}
 
 			// Germanium angles vs. Silicon angles

@@ -441,23 +441,33 @@ float doppler::GetPPhi( int quad, int seg, int sector ) {
 	float ph_det[4];
 	if( sector == 4 ) { // standard CD
 		
-		ph_det[0] =   0.0 + cdoffset;
-		ph_det[1] =  90.0 + cdoffset;
-		ph_det[2] = 180.0 + cdoffset;
-		ph_det[3] = 270.0 + cdoffset;
+		ph_det[0] =   0.0 + cdoffset; // top
+		ph_det[1] =  90.0 + cdoffset; // right
+		ph_det[2] = 180.0 + cdoffset; // bottom
+		ph_det[3] = 270.0 + cdoffset; // left
 		
 	}
 	
 	else if( sector < 4 ) { // CREX and TREX
 		
-		ph_det[0] =   0.0 + cdoffset;
-		ph_det[1] = 180.0 + cdoffset;
-		ph_det[2] = 270.0 + cdoffset;
-		ph_det[3] =  90.0 + cdoffset;
+		ph_det[0] =   0.0 + cdoffset; // top
+		ph_det[1] = 180.0 + cdoffset; // bottom
+		ph_det[2] = 270.0 + cdoffset; // left
+		ph_det[3] =  90.0 + cdoffset; // right
 		
 	}
 	
-	float pphi = ( ph_det[quad] + seg * 7.0 );
+	float pphi = ph_det[quad];
+	if( sector == 4 ) pphi += seg * 7.0;	// standard CD
+	else if( sector < 4 ) {					// CREX and TREX
+		
+		pphi += 1.75; // centre of first strip
+		if( seg < 4 ) pphi += seg * 3.5; // first 4 strips singles (=4 segs)
+		else if( seg < 12 ) pphi += 14. + ( seg - 4 ) * 7.0; // middle 16 strips doubles (=8 segs)
+		else pphi += 70. + ( seg - 12 ) * 3.5; // last 4 strips singles (=4 segs)
+	
+	}
+	
 	if( pphi < 360. ) return pphi * TMath::DegToRad();
 	else return ( pphi - 360. ) * TMath::DegToRad();
 
