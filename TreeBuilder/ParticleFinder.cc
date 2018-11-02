@@ -674,9 +674,16 @@ unsigned int ParticleFinder::ReconstructCD( bool trex, bool crex ) {
 	else if( PEn.size() == 0 ) cd_debug->Fill(20);
 	
 	// Plotting
-	for( unsigned int i = 0; i < PEn.size(); i++ )
-		part->Fill( Nf.at(i) + 16*Sector.at(i), PEn.at(i)/1000. );
-
+	for( unsigned int i = 0; i < PEn.size(); i++ ) {
+	
+		if( Sector.at(i) == 4 )
+			part->Fill( Nf.at(i), PEn.at(i)/1000. );
+		
+		else
+			part->Fill( Nf.at(i) + 16*Sector.at(i), PEn.at(i)/1000. );
+		
+	}
+	
 	return counter;
 	
 }
