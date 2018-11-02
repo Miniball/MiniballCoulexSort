@@ -136,9 +136,38 @@ void MBGeometry::SetupCluster() {
 	clu_offset.SetXYZ(0, r, 0);
 
 	// Offset from centre of cluster to centre of each detector
-	det_offset[0].SetXYZ( 0,					   r, -DIST_CORE_CORNER);
-	det_offset[1].SetXYZ(-DIST_CORE_CORNER * ROOTTHREEOVER2, r,  DIST_CORE_CORNER / 2);
-	det_offset[2].SetXYZ( DIST_CORE_CORNER * ROOTTHREEOVER2, r,  DIST_CORE_CORNER / 2);
+#define USE_EMPIRICAL 1
+#if USE_EMPIRICAL // These are values determined from a Geant4 simulation
+	det_offset[0].SetXYZ(-0.0166, r + 8.6739, -33.7254);
+	det_offset[1].SetXYZ(-29.1946, r + 8.6628, 16.8867);
+	det_offset[2].SetXYZ(29.2040, r + 8.6781, 16.8364);
+	
+	seg_offset[0].SetXYZ(-13.8080,  -0.9293, -8.9018);
+	seg_offset[1].SetXYZ(-15.1076,  0.7917, 8.1148);
+	seg_offset[2].SetXYZ(-0.0098,  -1.5906, -16.6596);
+	seg_offset[3].SetXYZ(13.8680,  -0.9272, -8.9303);
+	seg_offset[4].SetXYZ(-0.0149,  1.8715, 18.2628);
+	seg_offset[5].SetXYZ(15.0723,  0.7839, 8.1142);
+	
+	seg_offset[6].SetXYZ(-0.7397,  -0.8946, 16.4265);
+	seg_offset[7].SetXYZ(14.5265,  0.7779, 9.0148);
+	seg_offset[8].SetXYZ(-14.3342,  -1.5688, 8.2345);
+	seg_offset[9].SetXYZ(-14.6338,  -0.9115, -7.5162);
+	seg_offset[10].SetXYZ(15.7437,  1.8780, -9.0642);
+	seg_offset[11].SetXYZ(-0.5625,  0.7189, -17.0954);
+	
+	seg_offset[12].SetXYZ(14.6795,  -0.9260, -7.5641);
+	seg_offset[13].SetXYZ(0.5776,  0.7675, -17.0816);
+	seg_offset[14].SetXYZ(14.3709,  -1.5876, 8.2896);
+	seg_offset[15].SetXYZ(0.7611,  -0.9218, 16.4052);
+	seg_offset[16].SetXYZ(-15.8436,  1.8638, -9.0467);
+	seg_offset[17].SetXYZ(-14.5454,  0.8040, 8.9976);
+#else
+	Double_t R = DIST_CORE_CORNER * 0.5; // average distance from centre of capsule to centre of segment
+	
+	det_offset[0].SetXYZ( 0,                                 r+9, -DIST_CORE_CORNER);
+	det_offset[1].SetXYZ(-DIST_CORE_CORNER * ROOTTHREEOVER2, r+9,  DIST_CORE_CORNER / 2);
+	det_offset[2].SetXYZ( DIST_CORE_CORNER * ROOTTHREEOVER2, r+9,  DIST_CORE_CORNER / 2);
 	
 	// Offset from centre of a detector to centre of a segment
 	seg_offset[0 ].SetXYZ(-R * ROOTTHREEOVER2, 0.0, -R / 2 );
@@ -147,21 +176,22 @@ void MBGeometry::SetupCluster() {
 	seg_offset[3 ].SetXYZ( R * ROOTTHREEOVER2, 0.0, -R / 2 );
 	seg_offset[4 ].SetXYZ( 0.0,                0.0,  R     );
 	seg_offset[5 ].SetXYZ( R * ROOTTHREEOVER2, 0.0,  R / 2 );
-
+	
 	seg_offset[6 ].SetXYZ( 0.0,                0.0,  R     );
 	seg_offset[7 ].SetXYZ( R * ROOTTHREEOVER2, 0.0,  R / 2 );
 	seg_offset[8 ].SetXYZ(-R * ROOTTHREEOVER2, 0.0,  R / 2 );
 	seg_offset[9 ].SetXYZ(-R * ROOTTHREEOVER2, 0.0, -R / 2 );
 	seg_offset[10].SetXYZ( R * ROOTTHREEOVER2, 0.0, -R / 2 );
 	seg_offset[11].SetXYZ( 0.0,                0.0, -R     );
-
+	
 	seg_offset[12].SetXYZ( R * ROOTTHREEOVER2, 0.0, -R / 2 );
 	seg_offset[13].SetXYZ( 0.0,                0.0, -R     );
 	seg_offset[14].SetXYZ( R * ROOTTHREEOVER2, 0.0,  R / 2 );
 	seg_offset[15].SetXYZ( 0.0,                0.0,  R     );
 	seg_offset[16].SetXYZ(-R * ROOTTHREEOVER2, 0.0, -R / 2 );
 	seg_offset[17].SetXYZ(-R * ROOTTHREEOVER2, 0.0,  R / 2 );
-   
+#endif
+	
    	// Add the segment offsets to the detector offsets, so now
    	// seg_offset has the offset from the centre of the cluster
 	for( int i = 0; i < 3; i++ )
