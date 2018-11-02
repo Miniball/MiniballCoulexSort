@@ -413,22 +413,24 @@ float doppler::GetPTh( float anno, int sector ) {
 
 	/// Returns theta angle from ann strip number in radians
 	
+	float angle = 0.0;
+	
 	// Forward CD - Standard CD
-	if( sector == 4 ) return TMath::ATan( ( 9.0 + (15.5-anno) * 2.0 ) / cddist );
+	if( sector == 4 ) angle = TMath::ATan( ( 9.0 + (15.5-anno) * 2.0 ) / cddist );
 	
 	// Forward CD - CREX
-	if( sector == 0 ) return TMath::ATan( ( 9.0 + (anno+0.5) * 2.0 ) / cddist );
+	if( sector == 0 ) angle = TMath::ATan( ( 9.0 + (anno+0.5) * 2.0 ) / cddist );
 	
 	// Forwards Barrel
-	if( sector == 1 ) return 0.5*TMath::Pi() - TMath::ATan( ( 8.0 + (anno+0.5) * 3.125 ) / 29.0 );
+	if( sector == 1 ) angle = 0.5*TMath::Pi() - TMath::ATan( ( 8.0 + (anno+0.5) * 3.125 ) / 29.0 );
 	
 	// Backwards Barrel
-	if( sector == 2 ) return 0.5*TMath::Pi() + TMath::ATan( ( 8.0 + (anno+0.5) * 3.125 ) / 29.0 );
+	if( sector == 2 ) angle = 0.5*TMath::Pi() + TMath::ATan( ( 8.0 + (anno+0.5) * 3.125 ) / 29.0 );
 	
 	// Backwards CD
-	if( sector == 3 ) return TMath::Pi() - TMath::ATan( ( 9.0 + (anno+0.5) * 2.0 ) / 64.0 );
+	if( sector == 3 ) angle = TMath::Pi() - TMath::ATan( ( 9.0 + (anno+0.5) * 2.0 ) / 64.0 );
 	
-	else return 0.0;
+	return angle;
 	
 }
 

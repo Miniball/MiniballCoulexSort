@@ -37,7 +37,6 @@ MKDIR_P:
 OBJECTS = g_clx.o \
           doppler.o \
           hists.o \
-          MBGeometry.o \
           SpedeGeometry.o \
           CLXAnaDict.o
  
@@ -57,7 +56,6 @@ clean:
 DEPENDENCIES = g_clx.hh \
                doppler.hh \
                hists.hh \
-               MBGeometry.hh \
                SpedeGeometry.hh \
                RootLinkDef.h
 

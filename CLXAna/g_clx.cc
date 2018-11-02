@@ -9,9 +9,6 @@
 //#define GEANG			// define for plotting Ge angles per cluster
 #define SPEDEGEOMETRY	// define to overwrite Spede angles with SpedeGeometry routine
 
-#ifndef __MBGEOMETRY_HH__
-# include "MBGeometry.hh"
-#endif
 #ifndef __SpedeGeometry_HH__
 # include "SpedeGeometry.hh"
 #endif
@@ -190,7 +187,7 @@ void g_clx::Loop( string outputfilename ) {
 			else h.tdiff_e->Fill(td[i]*25.);
 
 			// CD pic
-			if( nf[i]>(-1) && nf.size()>0 && sector[i]==0 ){
+			if( nf[i]>(-1) && nf.size()>0 && ( sector[i]==0 || sector[i]==4 ) ){
 				rad=39-2*nf[i];
 				rad+=gRandom->Rndm(1)*1.9;
 				phi=(nb[i]-16.)*0.12+(det[i]*TMath::PiOver2());
@@ -201,8 +198,8 @@ void g_clx::Loop( string outputfilename ) {
 			// Germanium angles vs. Silicon angles
 			if( !electron ) {
 #ifdef GEANG
-				h.GeSiAng->Fill(tha*TMath::RadToDeg(),dc.GetPTh(nf[i])*TMath::RadToDeg(),(pha-dc.GetPPhi(det[i],nb[i]))*TMath::RadToDeg());
-				h.GeSiAng_clu[cluid]->Fill(tha*TMath::RadToDeg(),dc.GetPTh(nf[i])*TMath::RadToDeg(),(pha-dc.GetPPhi(det[i],nb[i]))*TMath::RadToDeg());
+				h.GeSiAng->Fill(tha*TMath::RadToDeg(),dc.GetPTh(nf[i],sector[i])*TMath::RadToDeg(),(pha-dc.GetPPhi(det[i],nb[i],sector[i]))*TMath::RadToDeg());
+				h.GeSiAng_clu[cluid]->Fill(tha*TMath::RadToDeg(),dc.GetPTh(nf[i],sector[i])*TMath::RadToDeg(),(pha-dc.GetPPhi(det[i],nb[i],sector[i]))*TMath::RadToDeg());
 #endif
 			} // !electron
 			

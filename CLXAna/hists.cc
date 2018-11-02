@@ -33,9 +33,9 @@ void hists::Initialise( doppler dc_ ) {
 
 	string hname, htitle;
 
-	for( int k = 0; k < 16; k++ ) cd_angles[k] = dc.GetPTh(k-0.5,0)*TMath::RadToDeg();
-	for( int k = 16; k < 32; k++ ) cd_angles[k] = 1+((32.-k)*dc.GetPTh(15.5,0)*TMath::RadToDeg()+90.*(k-16.))/16.;
-	for( int k = 32; k < 48; k++ ) cd_angles[k] = 90+((k-32)*(dc.GetPTh(15.5,3)*TMath::RadToDeg()-90.))/16.+1;
+	for( int k = 0; k < 17; k++ ) cd_angles[k] = dc.GetPTh(k-0.5,0)*TMath::RadToDeg();
+	for( int k = 17; k < 32; k++ ) cd_angles[k] = 0.1+((32.5-k)*dc.GetPTh(15.5,0)*TMath::RadToDeg()+90.*(k-16.5))/16.;
+	for( int k = 32; k < 48; k++ ) cd_angles[k] = 90+((k-31.5)*(dc.GetPTh(15.5,3)*TMath::RadToDeg()-90.))/16.+0.1;
 	for( int k = 48; k < 65; k++ ) cd_angles[k] = dc.GetPTh(63.5-k,3)*TMath::RadToDeg();
 
 	p = new TH1F("p","Prompt gammas;Energy [keV];Counts per 1 keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
@@ -371,7 +371,7 @@ void hists::Fill2h( float GEn, float GTh, float GPh, int GCid, vector <float> GC
 			FillGam1h( GEn, GTh, GPh, GCid, PEn[Pptr[1]], Pnf[Pptr[1]], Pnb[Pptr[1]], Psec[Pptr[1]], Pquad[Pptr[1]], cut_1, weight );
 		}
 		else FillElec1h( GEn, GTh, GPh, GCid, PEn[Pptr[1]], Pnf[Pptr[1]], Pnb[Pptr[1]], Psec[Pptr[1]], Pquad[Pptr[1]], cut_1, weight );
-		FillPar1h( PEn[Pptr[1]], Pnf[Pptr[1]], Pnb[Pptr[1]], Pquad[Pptr[1]], Psec[Pptr[1]], cut_1, weight );
+		FillPar1h( PEn[Pptr[1]], Pnf[Pptr[1]], Pnb[Pptr[1]], Psec[Pptr[1]], Pquad[Pptr[1]], cut_1, weight );
 		
 	}
 	
@@ -863,7 +863,7 @@ void hists::FillPar1h( float PEn, int Pnf, int Pnb, int Psec, int Pquad, int cut
 		Tsim->Fill(TTh,TEn/1000.);		
 	
 	}
-	
+
 	return;
 
 }
