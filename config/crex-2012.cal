@@ -3,6 +3,60 @@
 #  CREX campaign at Miniball!!  #
 #################################
 
+# DGF calibration - nominal (delete or comment for real)
+dgf_0_0.Gain: 0.0616898
+dgf_2_0.Gain: 0.0616898
+dgf_4_0.Gain: 0.0616898
+dgf_6_0.Gain: 0.0616898
+dgf_8_0.Gain: 0.0616898
+dgf_10_0.Gain: 0.0616898
+dgf_12_0.Gain: 0.0616898
+dgf_14_0.Gain: 0.0616898
+dgf_16_0.Gain: 0.0616898
+dgf_18_0.Gain: 0.0616898
+dgf_20_0.Gain: 0.0616898
+dgf_22_0.Gain: 0.0616898
+dgf_24_0.Gain: 0.0616898
+dgf_26_0.Gain: 0.0616898
+dgf_28_0.Gain: 0.0616898
+dgf_30_0.Gain: 0.0616898
+dgf_32_0.Gain: 0.0616898
+dgf_34_0.Gain: 0.0616898
+dgf_36_0.Gain: 0.0616898
+dgf_38_0.Gain: 0.0616898
+dgf_40_0.Gain: 0.0616898
+dgf_42_0.Gain: 0.0616898
+dgf_44_0.Gain: 0.0616898
+dgf_46_0.Gain: 0.0616898
+
+dgf_0_0.Offset: 0.0
+dgf_2_0.Offset: 0.0
+dgf_4_0.Offset: 0.0
+dgf_6_0.Offset: 0.0
+dgf_8_0.Offset: 0.0
+dgf_10_0.Offset: 0.0
+dgf_12_0.Offset: 0.0
+dgf_14_0.Offset: 0.0
+dgf_16_0.Offset: 0.0
+dgf_18_0.Offset: 0.0
+dgf_20_0.Offset: 0.0
+dgf_22_0.Offset: 0.0
+dgf_24_0.Offset: 0.0
+dgf_26_0.Offset: 0.0
+dgf_28_0.Offset: 0.0
+dgf_30_0.Offset: 0.0
+dgf_32_0.Offset: 0.0
+dgf_34_0.Offset: 0.0
+dgf_36_0.Offset: 0.0
+dgf_38_0.Offset: 0.0
+dgf_40_0.Offset: 0.0
+dgf_42_0.Offset: 0.0
+dgf_44_0.Offset: 0.0
+dgf_46_0.Offset: 0.0
+
+
+
+
 # DGF calibration - all
 dgf_0_0.Gain: 	0.061676
 dgf_0_0.Offset: -4.68519

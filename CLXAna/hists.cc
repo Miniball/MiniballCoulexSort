@@ -392,7 +392,7 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, int GCid, float PEn, int
 		else r_1T->Fill(GEn);
 		
 		TEn = PEn;
-		TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TA");
+		TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TS");
 		TTh = dc.GetPTh(Pnf,Psec);
 		TPh = dc.GetPPhi(Pquad,Pnb,Psec);
 		
@@ -403,17 +403,14 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, int GCid, float PEn, int
 		T_dcB_x[Pnf]->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);	
 		T_dcT_x[Pnf]->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 	
-		if( Pnf >= minrecoil && Pnf <= maxrecoil ) {
-
-			T_1hdcB->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
-			T_1hdcT->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
-			
-			T_dcB_cid->Fill(GCid,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
-			T_dcT_cid->Fill(GCid,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
-			
-			p_thetaB->Fill(GEn, dc.GammaAng(BTh, BPh, GTh, GPh)*TMath::RadToDeg());
-			p_thetaT->Fill(GEn, dc.GammaAng(TTh, TPh, GTh, GPh)*TMath::RadToDeg());
-		}
+		T_1hdcB->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+		T_1hdcT->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+		
+		T_dcB_cid->Fill(GCid,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+		T_dcT_cid->Fill(GCid,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+		
+		p_thetaB->Fill(GEn, dc.GammaAng(BTh, BPh, GTh, GPh)*TMath::RadToDeg());
+		p_thetaT->Fill(GEn, dc.GammaAng(TTh, TPh, GTh, GPh)*TMath::RadToDeg());
 
 		// Proton time gated spectra
 		if( T1T >= 0 && T1T < PTCUT_P ) {
@@ -444,9 +441,6 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, int GCid, float PEn, int
 
 		}
 
-//		T_2D_T1T_dcB->Fill(T1T,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
-//		T_2D_T1T_dcT->Fill(T1T,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
-
 	}
 	
 	// Projectile
@@ -456,7 +450,7 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, int GCid, float PEn, int
 		else r_1B->Fill(GEn);
 		
 		BEn = PEn;
-		BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"BA");
+		BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"BS");
 		BTh = dc.GetPTh(Pnf,Psec);
 		BPh = dc.GetPPhi(Pquad,Pnb,Psec);
 		
@@ -551,9 +545,9 @@ void hists::FillDel2h( float GEn, float GTh, float GPh, int GCid, vector<float> 
 	int Bnf = Pnf[Bptr];
 	int Tnf = Pnf[Tptr];
 	float BEn = PEn[Bptr];
-	BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"BA");
+	BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"BS");
 	float TEn = PEn[Tptr];
-	TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TA");
+	TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TS");
 	float BTh = dc.GetPTh(Bnf,Psec[Bptr]);
 	float TTh = dc.GetPTh(Tnf,Psec[Tptr]);
 	float BPh = dc.GetPPhi(Pquad[Bptr],Pnb[Bptr],Psec[Bptr]);
@@ -576,9 +570,9 @@ void hists::FillGam2h( float GEn, float GTh, float GPh, int GCid, vector<float> 
 	int Bnf = Pnf[Bptr];
 	int Tnf = Pnf[Tptr];
 	float BEn = PEn[Bptr];
-	BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"BA");
+	BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"BS");
 	float TEn = PEn[Tptr];
-	TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TA");
+	TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TS");
 	float BTh = dc.GetPTh(Bnf,Psec[Bptr]);
 	float TTh = dc.GetPTh(Tnf,Psec[Tptr]);
 	float BPh = dc.GetPPhi(Pquad[Bptr],Pnb[Bptr],Psec[Bptr]);
@@ -593,16 +587,12 @@ void hists::FillGam2h( float GEn, float GTh, float GPh, int GCid, vector<float> 
 	B_dcB_cid->Fill(GCid,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
 	B_dcT_cid->Fill(GCid,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 	
-	if( Tnf >= minrecoil && Tnf <= maxrecoil ) {
-
-		T_2hdcB->Fill(GEn*dc.DC(BEn,BTh,BPh,GTh,GPh,dc.GetAb()), weight);
-		T_2hdcT->Fill(GEn*dc.DC(TEn,TTh,TPh,GTh,GPh,dc.GetAt()), weight);
-		
-		T_dcB_cid->Fill(GCid,GEn*dc.DC(BEn,BTh,BPh,GTh,GPh,dc.GetAb()), weight);
-		T_dcT_cid->Fill(GCid,GEn*dc.DC(TEn,TTh,TPh,GTh,GPh,dc.GetAt()), weight);
-		
-	}
-
+	T_2hdcB->Fill(GEn*dc.DC(BEn,BTh,BPh,GTh,GPh,dc.GetAb()), weight);
+	T_2hdcT->Fill(GEn*dc.DC(TEn,TTh,TPh,GTh,GPh,dc.GetAt()), weight);
+	
+	T_dcB_cid->Fill(GCid,GEn*dc.DC(BEn,BTh,BPh,GTh,GPh,dc.GetAb()), weight);
+	T_dcT_cid->Fill(GCid,GEn*dc.DC(TEn,TTh,TPh,GTh,GPh,dc.GetAt()), weight);
+	
 	return;
 
 }
@@ -620,7 +610,7 @@ void hists::FillElec1h( float GEn, float GTh, float GPh, int GCid, float PEn, in
 		else re_1T->Fill(GEn);
 		
 		TEn = PEn;
-		TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TA");
+		TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TS");
 		TTh = dc.GetPTh(Pnf,Psec);
 		TPh = dc.GetPPhi(Pquad,Pnb,Psec);
 		
@@ -647,7 +637,7 @@ void hists::FillElec1h( float GEn, float GTh, float GPh, int GCid, float PEn, in
 		else re_1B->Fill(GEn);
 		
 		BEn = PEn;
-		BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"BA");
+		BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"BS");
 		BTh = dc.GetPTh(Pnf,Psec);
 		BPh = dc.GetPPhi(Pquad,Pnb,Psec);
 		
@@ -674,9 +664,9 @@ void hists::FillElec2h( float GEn, float GTh, float GPh, int GCid, vector<float>
 	int Bnf = Pnf[Bptr];
 	int Tnf = Pnf[Tptr];
 	float BEn = PEn[Bptr];
-	BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"BA");
+	BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"BS");
 	float TEn = PEn[Tptr];
-	TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TA");
+	TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TS");
 	float BTh = dc.GetPTh(Bnf,Psec[Bptr]);
 	float TTh = dc.GetPTh(Tnf,Psec[Tptr]);
 	float BPh = dc.GetPPhi(Pquad[Bptr],Pnb[Bptr],Psec[Bptr]);
@@ -711,7 +701,7 @@ void hists::FillGamGam1h( float GEn, float GTh, float GPh, int GCid, vector <flo
 		if( Pnf < minrecoil || Pnf > maxrecoil ) return;
 		
 		TEn = PEn;
-		TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TA");
+		TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TS");
 		TTh = dc.GetPTh(Pnf,Psec);
 		TPh = dc.GetPPhi(Pquad,Pnb,Psec);
 		
@@ -725,7 +715,7 @@ void hists::FillGamGam1h( float GEn, float GTh, float GPh, int GCid, vector <flo
 	else if( cut > 0 ){
 		
 		BEn = PEn;
-		BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"BA");
+		BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"BS");
 		BTh = dc.GetPTh(Pnf,Psec);
 		BPh = dc.GetPPhi(Pquad,Pnb,Psec);
 		
@@ -781,9 +771,9 @@ void hists::FillGamGam2h( float GEn, float GTh, float GPh, int GCid, vector<floa
 	int Bnf = Pnf[Bptr];
 	int Tnf = Pnf[Tptr];
 	float BEn = PEn[Bptr];
-	BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"BA");
+	BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"BS");
 	float TEn = PEn[Tptr];
-	TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TA");
+	TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TS");
 	float BTh = dc.GetPTh(Bnf,Psec[Bptr]);
 	float TTh = dc.GetPTh(Tnf,Psec[Tptr]);
 	float BPh = dc.GetPPhi(Pquad[Bptr],Pnb[Bptr],Psec[Bptr]);
@@ -844,7 +834,7 @@ void hists::FillPar1h( float PEn, int Pnf, int Pnb, int Psec, int Pquad, int cut
 	
 		BTh = dc.GetBTh(Pnf,Psec)*TMath::RadToDeg();
 		BEn = dc.GetBEn(PEn,Pnf,Psec);
-		BEn -= dc.GetELoss(BEn,dc.GetCDDeadLayer(),0,"BA");
+		BEn -= dc.GetELoss(BEn,dc.GetCDDeadLayer(),0,"BS");
 
 		Th->Fill(PTh,PEn/1000.);
 		T1h->Fill(PTh,PEn/1000.);
@@ -856,7 +846,7 @@ void hists::FillPar1h( float PEn, int Pnf, int Pnb, int Psec, int Pquad, int cut
 	
 		TTh = dc.GetTTh(Pnf,PEn,Psec)*TMath::RadToDeg();
 		TEn = dc.GetTEn(PEn,Pnf,Psec);
-		TEn -= dc.GetELoss(TEn,dc.GetCDDeadLayer(),0,"TA");
+		TEn -= dc.GetELoss(TEn,dc.GetCDDeadLayer(),0,"TS");
 	
 		Bh->Fill(PTh,PEn/1000.);
 		B1h->Fill(PTh,PEn/1000.);
