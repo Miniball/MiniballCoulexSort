@@ -74,6 +74,7 @@ int main(int argc, char* argv[]) {
 	// ------------------------------------------------------------------------ //
 
 	Calibration *Cal = new Calibration( CalibrationFile );
+	Cal->SetVerbosity( verbose );
 	if( verbose ) Cal->PrintCalibration();
 
 	// ------------------------------------------------------------------------ //

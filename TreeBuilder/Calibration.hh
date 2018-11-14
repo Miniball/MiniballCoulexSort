@@ -39,15 +39,22 @@ public:
 	const string InputFile(){
 		return fInputFile;
 	}
-	double DgfEnergy(int dgf, int chan, unsigned short raw);
-	double AdcEnergy(int adc, int chan, unsigned short raw);
-	double AdcThreshold(int adc, int chan);
-	double AdcTime(int adc);
+	double DgfEnergy( int dgf, int chan, unsigned short raw );
+	double AdcEnergy( int adc, int chan, unsigned short raw );
+	double AdcThreshold( int adc, int chan );
+	double AdcTime( int adc );
 	double ClusterTheta( int clu );
 	double ClusterPhi( int clu );
 	double ClusterAlpha( int clu );
 	double ClusterR( int clu );
 	double ZOffset();
+	
+	// Function to set verbosity
+	inline void SetVerbosity( int v ){
+		fVerbose = v;
+		return;
+	};
+
 
 private:
 

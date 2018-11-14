@@ -35,13 +35,13 @@ void Calibration::ReadCalibration() {
 	fDgfGain.resize(fNofDgfs);
 	fDgfGainQuadr.resize(fNofDgfs);
 
-	for(int dgf=0; dgf<fNofDgfs; dgf++){
+	for( int dgf = 0; dgf < fNofDgfs; dgf++ ){
 
 		fDgfOffset[dgf].resize(fNofDgfChans);
 		fDgfGain[dgf].resize(fNofDgfChans);
 		fDgfGainQuadr[dgf].resize(fNofDgfChans);
 
-		for(int chan=0; chan <fNofDgfChans; chan++){
+		for( int chan = 0; chan < fNofDgfChans; chan++ ){
 
 			fDgfOffset[dgf][chan] = config->GetValue(Form("dgf_%d_%d.Offset", dgf, chan),0.);
 			fDgfGain[dgf][chan] = config->GetValue(Form("dgf_%d_%d.Gain", dgf, chan),1.);
@@ -56,7 +56,7 @@ void Calibration::ReadCalibration() {
 	fBeamdumpGain.resize(fNofDgfChans);
 	fBeamdumpGainQuadr.resize(fNofDgfChans);
 
-	for( int chan=0; chan <fNofDgfChans; chan++) {
+	for( int chan = 0; chan < fNofDgfChans; chan++ ) {
 
 		fBeamdumpOffset[chan] = config->GetValue(Form("dgf_%d_%d.Offset", fBeamdumpDgf, chan), 0.);
 		fBeamdumpGain[chan] = config->GetValue(Form("dgf_%d_%d.Gain", fBeamdumpDgf, chan), 1.);
@@ -71,7 +71,7 @@ void Calibration::ReadCalibration() {
 	fAdcThreshold.resize(fNofAdcs);
 	fAdcTime.resize(fNofAdcs);
 
-	for(int adc=0; adc<fNofAdcs; adc++){
+	for( int adc = 0; adc < fNofAdcs; adc++ ){
 
 		fAdcOffset[adc].resize(fNofAdcChans);
 		fAdcGain[adc].resize(fNofAdcChans);
@@ -79,7 +79,7 @@ void Calibration::ReadCalibration() {
 
 		fAdcTime[adc] = config->GetValue( Form("adc_%d.TimeOffset", adc ) , 0.0 );
 
-		for(int chan=0; chan<fNofAdcChans; chan++){
+		for( int chan = 0; chan < fNofAdcChans; chan++ ){
 
 			fAdcOffset[adc][chan] = config->GetValue(Form("adc_%d_%d.Offset", adc, chan),0.);
 			fAdcGain[adc][chan] = config->GetValue(Form("adc_%d_%d.Gain", adc, chan),1.);
@@ -95,7 +95,7 @@ void Calibration::ReadCalibration() {
 	fClusterAlpha.resize(fNofClusters);
 	fClusterR.resize(fNofClusters);
 
-	for( int clu=0; clu < fNofClusters; clu++ ) {
+	for( int clu = 0; clu < fNofClusters; clu++ ) {
 
 		fClusterR[clu] =     config->GetValue( Form("Cluster_%d.R", clu), 0. );
 		fClusterTheta[clu] = config->GetValue( Form("Cluster_%d.Theta", clu), 0. );
@@ -113,9 +113,9 @@ void Calibration::ReadCalibration() {
 void Calibration::PrintCalibration(){
 
 	cout << "DGFs" << endl;
-	for(int dgf=0; dgf<fNofDgfs; dgf++){
+	for( int dgf = 0; dgf < fNofDgfs; dgf++ ){
 	
-		for(int chan=0; chan<fNofDgfChans; chan++){
+		for( int chan = 0; chan < fNofDgfChans; chan++ ){
 		
 			cout << Form("dgf_%d_%d.Offset\t", dgf, chan) << fDgfOffset[dgf][chan] << endl;
 			cout << Form("dgf_%d_%d.Gain\t", dgf, chan) << fDgfGain[dgf][chan] << endl;
@@ -126,7 +126,7 @@ void Calibration::PrintCalibration(){
 	}
   
 	cout << "Beamdump" << endl;
-	for(int chan=0; chan<fNofDgfChans; chan++){
+	for( int chan = 0; chan < fNofDgfChans; chan++ ){
 
 		cout << Form("dgf_%d_%d.Offset\t", fBeamdumpDgf, chan) << fBeamdumpOffset[chan] << endl;
 		cout << Form("dgf_%d_%d.Gain\t", fBeamdumpDgf, chan) << fBeamdumpGain[chan] << endl;
@@ -135,18 +135,30 @@ void Calibration::PrintCalibration(){
 	}
   
 	cout << "ADCs" << endl;
-	for(int adc=0; adc<fNofAdcs; adc++){
+	for( int adc = 0; adc < fNofAdcs; adc++ ){
 
-		for(int chan=0; chan<fNofAdcChans; chan++){
+		cout << Form( "adc_%d.TimeOffset\t", adc ) << fAdcTime[adc] << endl;
 
-			cout << Form("adc_%d_%d.Offset\t", adc, chan) << fAdcOffset[adc][chan] << endl;
-			cout << Form("adc_%d_%d.Gain\t", adc, chan) << fAdcGain[adc][chan] << endl;
-			cout << Form("adc_%d_%d.Threshold\t", adc, chan) << fAdcThreshold[adc][chan] << endl;
+		for( int chan=0; chan < fNofAdcChans; chan++ ){
+
+			cout << Form( "adc_%d_%d.Offset\t", adc, chan ) << fAdcOffset[adc][chan] << endl;
+			cout << Form( "adc_%d_%d.Gain\t", adc, chan ) << fAdcGain[adc][chan] << endl;
+			cout << Form( "adc_%d_%d.Threshold\t", adc, chan ) << fAdcThreshold[adc][chan] << endl;
 	
 		}
 
 	}
 
+	cout << "Miniball angles" << endl;
+	for( int clu = 0; clu < fNofClusters; clu++ ) {
+		
+		cout << Form( "Cluster_%d.R", clu ) << fClusterR[clu];
+		cout << Form( "Cluster_%d.Theta", clu ) << fClusterTheta[clu];
+		cout << Form( "Cluster_%d.Phi", clu ) << fClusterPhi[clu];
+		cout << Form( "Cluster_%d.Alpha", clu ) << fClusterAlpha[clu];
+		
+	}
+	
 	cout << "zoffset: " << zoffset << endl;
 
 }
