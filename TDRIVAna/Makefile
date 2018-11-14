@@ -2,7 +2,6 @@
 .PHONY: clean all
 
 ROOTCFLAGS	:= $(shell root-config --cflags)
-ROOTINC		:= $(shell root-config --prefix)/include
 ROOTLIBS	:= $(shell root-config --libs)
 ROOTVER		:= $(shell root-config --version | head -c1)
 
@@ -27,7 +26,7 @@ CC          := $(shell root-config --cc)
 CPP         := $(shell root-config --cxx)
 CFLAGS      := -pedantic -Wall -g -O3 $(ROOTCFLAGS) -fPIC -Wno-unused-variable -Wno-long-long
 
-INCLUDES  = -I$(MBEVTS_DIR) -I$(COMMON_DIR) -I$(ROOTINC) -I./
+INCLUDES  = -I$(MBEVTS_DIR) -I$(COMMON_DIR) -I./
 
 all: MKDIR_P TDRIVAna
 

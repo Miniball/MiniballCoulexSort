@@ -10,7 +10,6 @@ MED2R_DIR = ../MedToRoot
 
 ROOTCFLAGS   := $(shell root-config --cflags)
 ROOTLIBS     := $(shell root-config --libs)
-ROOTINC      := $(shell root-config --incdir)
 ROOTVER      := $(shell root-config --version | head -c1)
 
 ifeq ($(ROOTVER),5)

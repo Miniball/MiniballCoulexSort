@@ -8,7 +8,6 @@ LIB_DIR    = ../lib
 ROOTCFLAGS   := $(shell root-config --cflags)
 ROOTLIBS     := $(shell root-config --libs)
 ROOTLDFLAGS  := $(shell root-config --ldflags)
-ROOTINC      := $(shell root-config --incdir)
 ROOTVER      := $(shell root-config --version | head -c1)
 
 ifeq ($(ROOTVER),5)
@@ -27,7 +26,7 @@ CPP       = $(shell root-config --cxx)
 
 CFLAGS    = -O2 -pipe -Wall -W -Woverloaded-virtual $(ROOTCFLAGS) -fPIC
 
-INCLUDES  = -I$(ROOTINC) -I./
+INCLUDES  = -I./
 LFLAGS    = -O2 -g $(ROOTLDFLAGS)
 
 O_FILES = mbevts.o \
