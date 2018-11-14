@@ -536,7 +536,7 @@ MBSorter::MBSorter() {
 						  new TGLayoutHints( kLHintsTop | kLHintsRight, 2, 2, 5, 5 ) );
 	
 	// Units - Plunger distance
-	lab_unit_pd = new TGLabel( dop_frame_2, "{#mu}m" );
+	lab_unit_pd = new TGLabel( dop_frame_2, "µm" );
 	lab_unit_pd->SetTextJustify( 36 );
 	lab_unit_pd->SetMargins( 0, 0, 0, 0 );
 	lab_unit_pd->SetWrapLength( -1 );
