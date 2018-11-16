@@ -1318,31 +1318,38 @@ bool UnpackedEvent::DecodeBraggChamber(int SubEventID, int SubEventWordCount, ch
       return true;
     }
   
-  // needed variables 
-  unsigned int* q = (unsigned int*) SubEventData;
-  unsigned int header;
-  int WordCount;
-  int ModuleNumber;
-  unsigned int* End;
-  unsigned int NumberOfEvents;
-  unsigned int PageSize;
-  unsigned int* StartOfTriggerBuffer;
-  unsigned int* StartOfEventBuffer;
-  unsigned int EventEntry;
-  unsigned int StartOfData;
-  unsigned int EndOfData;
-  bool Wrapped;
-  unsigned int* NextEvent;
-  unsigned int ChannelGroup;
-  unsigned int TriggerMode;
-  int Sample;
-  unsigned int SampleValue;
-  unsigned int p;
-  unsigned int Mask[2];
-  unsigned int OverflowMask[2];
-  int Channel[2];
-  vector <unsigned int>* ChannelPointer[2];
-  bool Trigger;
+	// needed variables 
+	unsigned int* q = (unsigned int*) SubEventData;
+	unsigned int header;
+	int WordCount;
+	int ModuleNumber;
+	unsigned int* End;
+	unsigned int NumberOfEvents;
+	unsigned int PageSize;
+	unsigned int* StartOfTriggerBuffer;
+	unsigned int* StartOfEventBuffer;
+	unsigned int EventEntry;
+	unsigned int StartOfData;
+	unsigned int EndOfData;
+	bool Wrapped;
+	unsigned int* NextEvent;
+	unsigned int ChannelGroup;
+	unsigned int TriggerMode;
+	int Sample;
+	unsigned int SampleValue;
+	unsigned int p;
+	unsigned int Mask[2];
+	unsigned int OverflowMask[2];
+	int Channel[2];
+	vector <unsigned int>* ChannelPointer[2];
+	bool Trigger;
+	
+	for( unsigned int mm = 0; mm < 2; mm++ ) {
+		
+		Mask[mm] = 0;
+		OverflowMask[mm] = 0;
+		
+	}
 
   while(SubEventWordCount > 0) // subevent may contain several SIS modules
     {
