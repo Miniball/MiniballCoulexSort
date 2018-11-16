@@ -372,7 +372,6 @@ bool UnpackedEvent::DecodeDgf(int SubEventID, int SubEventWordCount, char* SubEv
 	}
 
 	int TraceLength;
-	int ChannelCounter=0;
 	unsigned short BufferFormat, ModuleNumber;
 	unsigned short RunTimeA, RunTimeB, RunTimeC, EventTimeHigh, EventTimeLow;
 	unsigned short ChannelLength = 0;
@@ -395,252 +394,310 @@ bool UnpackedEvent::DecodeDgf(int SubEventID, int SubEventWordCount, char* SubEv
 		Start = q;
 		Length = *q++;
 		NextModule = Start+Length;
-		ChannelCounter = 0;
 		ModuleNumber = *q++;
 
 		if( Settings->VerboseLevel() > 2 ) {
-
+			
 			cout << "remaining SubEventWordCount: " << SubEventWordCount << "; act.Dgf buffer with Length: ";
 			cout << Length << " words (raw data ModuleNumber: " << ModuleNumber << ")" << endl;
-
+			
 		}
-
-      // check that data in actual buffer doesn't exceed buffer end 
-      if(NextModule > EndOfSubEvent)
-	{
-	  cout<<__PRETTY_FUNCTION__<<": XIA wrong buffer length: "<<Length<<", Start: "<<q<<", EndOfSubEvent: "<<EndOfSubEvent<<endl;
-	  q =  EndOfSubEvent;
-	  break;
-	}
-      
-      // get buffer format descriptor (=RUNTASK) 
-      BufferFormat = *q++;
-      
-      if(Settings->VerboseLevel() > 2)
-	{
-	  cout<<__PRETTY_FUNCTION__<<": XIA module nb: "<<ModuleNumber<<", length: "<<Length<<", type: "<<SubEventType<<", bufferformat: "<<BufferFormat<<endl;
-	}
-      
-      // check if known buffer format 
-      if((BufferFormat != STD_LM_BUFFORMAT)      &&
-	 (BufferFormat != COMP_LM_BUFFORMAT)  &&
-	 (BufferFormat != COMP_FLM_BUFFORMAT) &&
-	 (BufferFormat != COMP3_LM_BUFFORMAT)    &&
-	 (BufferFormat != STD_FLM_BUFFORMAT))
-	{
-	  cout<<__PRETTY_FUNCTION__<<": read out event "<<EventNumber<<": wrong buffer format: "<<BufferFormat<<" !!!"<<endl;
-	  break;      // skip total subevent 
-	}
-      else
-	{
-	  // read words 3-5 of buffer header: 3.: high-, 4.: middle-, 5.: low-word of run start time 
-	  RunTimeA = *q++;      // high 
-	  RunTimeB = *q++;      // mid 
-	  RunTimeC = *q++;      // low 
-	  
-	  // set 'buffertime' 
-	  //This 3 cout, we use for know the fBufferTime that it add in the TimeStamp
-	  //cout << "RunTimeB :" << RunTimeB << endl;
-	  //cout << "RunTimeC :" << RunTimeC << endl;
-	  BufferTime = (((unsigned int) RunTimeB)<<16) | ((unsigned int) RunTimeC);
-	  //cout << "BufferTime is :" << BufferTime << endl;
-	  if( Settings->VerboseLevel() > 1 )
-	    {
-	      cout<<__PRETTY_FUNCTION__<<": XIA RunTime: A "<<RunTimeA<<" B "<<RunTimeB<<" C "<<RunTimeC<<endl;
-	    }
-
-	  if(fBufferTime == 0)
-	    {
-	      fBufferTime = BufferTime;
-	    }
-	  // cout << "fBufferTime is :" << fBufferTime << endl;
-	}
-	    
-      // from here on: always check buffer format (=RUNTASK) before filling 'dgf' or 'dgf_rt259' 
-      // beam dump module has format 'COMP3_LM_BUFFORMAT' 
-      // determine corrected module number 
-      ModuleNumber -= Settings->MarabouDgfModuleOffset();
-
-      if(Settings->VerboseLevel() > 2)
-	{
-	  cout<<__PRETTY_FUNCTION__<<": module number for filling 'dgf' or 'dgf_rt259': "<<ModuleNumber<<" (RUNTASK="<<BufferFormat<<")"<<endl;
-	}
-
-      if(ModuleNumber < (unsigned short) Settings->NumberOfDgfModules())
-	{
-	  // fill 'typ' 
-	  DgfModules[ModuleNumber].SetType(SubEventType-XIA_EVENT);
-	}
-      else
-	{
-	  cerr<<__PRETTY_FUNCTION__<<": Error, Dgf module number "<<ModuleNumber<<" out of bounds (0 - "<<Settings->NumberOfDgfModules()<<"), skipping event"<<endl;
-	  break;
-	}
-
-      // loop over events stored in buffer as long as there is data 
-      while(q <  NextModule)
-	{
-	  CurrentSubEvent.ClearEvt();
-
-	  // read 3 words of event header (1.: hitpattern, 2.: high-, 3.: low-word of event time) 
-	  HitPattern=*q++;
-	  CurrentSubEvent.SetHitPattern(HitPattern);
-	  
-	  EventTimeHigh=*q++;      // high 
-	  EventTimeLow=*q++;      // low 
-
-	  if(Settings->VerboseLevel() > 3)
-	    {
-	      cout<<__PRETTY_FUNCTION__<<": XIA hitpattern: 0x"<<hex<<HitPattern<<dec<<endl;
-	      cout<<__PRETTY_FUNCTION__<<": XIA event_time high: "<<EventTimeHigh<<" low: "<<EventTimeLow<<endl;
-	    }
-
-	  // set 'eventtime' 
-	  EventTime = (((unsigned int) EventTimeHigh)<<16) | ((unsigned int) EventTimeLow);
-	  
-	  // check overflow 
-	  if(EventTime > BufferTime)
-	    {
-	      CurrentSubEvent.SetEventTime(RunTimeA,EventTimeHigh,EventTimeLow);
-	    }
-	  else
-	    {
-	      // RunTimeA is the highest word 
-	      // => if this has an overflow we're screwed anyway so there's no need to check for that
-	      RunTimeA++;
-	      CurrentSubEvent.SetEventTime(RunTimeA,EventTimeHigh,EventTimeLow);
-	    }
-	    
-	  if( Settings->VerboseLevel() > 4 )
-	    {
-	      cout<<__PRETTY_FUNCTION__<<": CurrentSubEvent.GetEventTime() = "<<CurrentSubEvent.GetEventTime()<<endl;
-	    }
-
-		// check hitpattern: at least one channel bit has to be set for all but TS_EBIS_T1_T2_MODULE and 4 CD TS-modules 
-		// _all_ timestamp modules with RUNTASK!=259 -> 'ModuleNumber' can be directly compared with 'analysis module number'  
-		if( !(HitPattern&0xf) && !Settings->IsTimestampModule(ModuleNumber) ) {
-
-			cout<<__PRETTY_FUNCTION__<<": XIA hitpattern error: hitpattern = "<<HitPattern<<endl;
-			cout<<__PRETTY_FUNCTION__<<": module: "<<ModuleNumber<<", q: "<<q<<", NextModule: "<<NextModule<<", EndOfSubEvent: "<<EndOfSubEvent<<endl;
-			WrongHitPattern++;
-
-			// skip module 
-			q =  NextModule;
-
-	    }
-
+		
+		// check that data in actual buffer doesn't exceed buffer end
+		if( NextModule > EndOfSubEvent ) {
+			
+			cout << __PRETTY_FUNCTION__ << ": XIA wrong buffer length: " << Length << ", Start: " << q;
+			cout << ", EndOfSubEvent: " << EndOfSubEvent << endl;
+			q =  EndOfSubEvent;
+			break;
+			
+		}
+		
+		// get buffer format descriptor (=RUNTASK)
+		BufferFormat = *q++;
+		
+		if( Settings->VerboseLevel() > 2 ) {
+			
+			cout << __PRETTY_FUNCTION__ << ": XIA module nb: " << ModuleNumber << ", length: " << Length;
+			cout << ", type: " << SubEventType << ", bufferformat: " << BufferFormat << endl;
+			
+		}
+		
+		// check if known buffer format
+		if( (BufferFormat != STD_LM_BUFFORMAT)   &&
+		    (BufferFormat != COMP_LM_BUFFORMAT)  &&
+		    (BufferFormat != COMP_FLM_BUFFORMAT) &&
+		    (BufferFormat != COMP3_LM_BUFFORMAT) &&
+		    (BufferFormat != STD_FLM_BUFFORMAT)) {
+			
+			cout << __PRETTY_FUNCTION__ << ": read out event " << EventNumber << ": wrong buffer format: ";
+			cout << BufferFormat << " !!!" << endl;
+			break; // skip total subevent
+			
+		}
+		
 		else {
+			
+			// read words 3-5 of buffer header: 3.: high-, 4.: middle-, 5.: low-word of run start time
+			RunTimeA = *q++;      // high
+			RunTimeB = *q++;      // mid
+			RunTimeC = *q++;      // low
+			
+			// set 'buffertime'
+			BufferTime = (((unsigned int) RunTimeB)<<16) | ((unsigned int) RunTimeC);
 
-	      // process hit channels 
-	      for(ChannelNumber=0; ChannelNumber<Settings->NumberOfDgfChannels(); ChannelNumber++)
-		{			
-		  ChannelMask = 1<<ChannelNumber;
-		  if((HitPattern&ChannelMask)!= 0)
-		    {
-		      // now different data following for RUNTASK=259 resp. others 
-		      // RUNTASK!=259: now #of words for this channel 
-		      if(BufferFormat != COMP3_LM_BUFFORMAT) 
-			{
-			  ChannelLength=*q++;
+			if( Settings->VerboseLevel() > 1 ) {
+				
+				cout << __PRETTY_FUNCTION__ << ": XIA RunTime: A " << RunTimeA;
+				cout << " B " << RunTimeB << " C " << RunTimeC << endl;
+				
 			}
 			
-		      // next 2 words: fast trigger time & energy for ALL diff. RUNTASKs 
-		      CurrentSubEvent.SetFastTriggerTime(ChannelNumber,*q++);
-		      CurrentSubEvent.SetEnergy(ChannelNumber,*q++);
+			if( fBufferTime == 0 )
+				fBufferTime = BufferTime;
 
-		      if( Settings->VerboseLevel() > 4 )
-			{
-			  cout<<__PRETTY_FUNCTION__<<": XIA module "<<ModuleNumber<<" channel "<<ChannelNumber<<" event "<<DgfModules[ModuleNumber].GetNumberOfSubEvents()<<": FTtime: "<<CurrentSubEvent.GetFastTriggerTime(ChannelNumber)<<", energy: "<<CurrentSubEvent.GetEnergy(ChannelNumber)<<endl;
+		}
+	    
+		// from here on: always check buffer format (=RUNTASK) before filling 'dgf' or 'dgf_rt259'
+		// beam dump module has format 'COMP3_LM_BUFFORMAT'
+		// determine corrected module number
+		ModuleNumber -= Settings->MarabouDgfModuleOffset();
+		
+		if( Settings->VerboseLevel() > 2 ) {
+			
+			cout << __PRETTY_FUNCTION__ << ": module number for filling 'dgf' or 'dgf_rt259': " << ModuleNumber;
+			cout << " (RUNTASK=" << BufferFormat << ")" << endl;
+			
+		}
+		
+		if( ModuleNumber < (unsigned short) Settings->NumberOfDgfModules() ) {
+			
+			// fill 'typ'
+			DgfModules[ModuleNumber].SetType(SubEventType-XIA_EVENT);
+			
+		}
+		
+		else {
+			
+			cerr << __PRETTY_FUNCTION__ << ": Error, Dgf module number " << ModuleNumber;
+			cerr << " out of bounds (0 - " << Settings->NumberOfDgfModules() << "), skipping event" << endl;
+			break;
+			
+		}
+		
+		// loop over events stored in buffer as long as there is data
+		while( q <  NextModule ) {
+			
+			CurrentSubEvent.ClearEvt();
+			
+			// read 3 words of event header (1.: hitpattern, 2.: high-, 3.: low-word of event time)
+			HitPattern=*q++;
+			CurrentSubEvent.SetHitPattern(HitPattern);
+			
+			EventTimeHigh=*q++;      // high
+			EventTimeLow=*q++;      // low
+			
+			if( Settings->VerboseLevel() > 3 ) {
+				
+				cout<<__PRETTY_FUNCTION__<<": XIA hitpattern: 0x"<<hex<<HitPattern<<dec<<endl;
+				cout<<__PRETTY_FUNCTION__<<": XIA event_time high: "<<EventTimeHigh<<" low: "<<EventTimeLow<<endl;
+				
 			}
-
-		      // get 48bit fast trigger time 
-		      CurrentSubEvent.SetLongFastTriggerTime(ChannelNumber, RunTimeA, EventTimeHigh, EventTimeLow);
-		      
-		      if( Settings->VerboseLevel() > 4 )
-			{
-			  cout<<__PRETTY_FUNCTION__<<": XIA module "<<ModuleNumber<<" channel "<<ChannelNumber<<" event "<<DgfModules[ModuleNumber].GetNumberOfSubEvents()<<": lFTtime: "<<CurrentSubEvent.GetLongFastTriggerTime(ChannelNumber)<<endl;
+			
+			// set 'eventtime'
+			EventTime = (((unsigned int) EventTimeHigh)<<16) | ((unsigned int) EventTimeLow);
+			
+			// check overflow
+			if( EventTime > BufferTime )
+				CurrentSubEvent.SetEventTime( RunTimeA, EventTimeHigh, EventTimeLow );
+			
+			else {
+				
+				// RunTimeA is the highest word
+				// => if this has an overflow we're screwed anyway so there's no need to check for that
+				RunTimeA++;
+				CurrentSubEvent.SetEventTime( RunTimeA, EventTimeHigh, EventTimeLow );
+				
 			}
-		      
-		      // for RUNTASK!=259, now 6 user PSA values (& possible trace) follow 
-		      if(BufferFormat != COMP3_LM_BUFFORMAT) 
-			{
-			  // get 6 user values 
-			  CurrentSubEvent.SetUserValues(q, ChannelNumber);
-			  
-			  // read out trace 
-			  TraceLength = (int)ChannelLength - CHANHEADLEN;
-			  if(TraceLength != 0)
-			    {
-			      if(Settings->VerboseLevel() > 4)
-				{
-				  cerr<<__PRETTY_FUNCTION__<<": XIA module "<<ModuleNumber<<" channel "<<ChannelNumber<<": tracelength = "<<TraceLength<<endl;
-			      
-				  //if there are traces in the file, just skip them
-				  q += TraceLength;				
+			
+			if( Settings->VerboseLevel() > 4 ) {
+				
+				cout<<__PRETTY_FUNCTION__<<": CurrentSubEvent.GetEventTime() = "<<CurrentSubEvent.GetEventTime()<<endl;
+				
+			}
+			
+			// check hitpattern: at least one channel bit has to be set for all but TS_EBIS_T1_T2_MODULE and 4 CD TS-modules
+			// _all_ timestamp modules with RUNTASK!=259 -> 'ModuleNumber' can be directly compared with 'analysis module number'
+			if( !(HitPattern&0xf) && !Settings->IsTimestampModule(ModuleNumber) ) {
+				
+				cout << __PRETTY_FUNCTION__ << ": XIA hitpattern error: hitpattern = " << HitPattern << endl;
+				cout << __PRETTY_FUNCTION__ << ": module: " << ModuleNumber << ", q: " << q;
+				cout << ", NextModule: " << NextModule << ", EndOfSubEvent: " << EndOfSubEvent << endl;
+				WrongHitPattern++;
+				
+				// skip module
+				q =  NextModule;
+				
+			}
+			
+			else {
+				
+				// process hit channels
+				for( ChannelNumber = 0; ChannelNumber < Settings->NumberOfDgfChannels(); ChannelNumber++ ) {
+					
+					ChannelMask = 1<<ChannelNumber;
+					if( (HitPattern&ChannelMask)!= 0 ) {
+						
+						// now different data following for RUNTASK=259 resp. others
+						// RUNTASK!=259: now #of words for this channel
+						if( BufferFormat != COMP3_LM_BUFFORMAT )
+							ChannelLength=*q++;
+						
+						// next 2 words: fast trigger time & energy for ALL diff. RUNTASKs
+						CurrentSubEvent.SetFastTriggerTime(ChannelNumber,*q++);
+						CurrentSubEvent.SetEnergy(ChannelNumber,*q++);
+						
+						if( Settings->VerboseLevel() > 4 ) {
+							
+							cout << __PRETTY_FUNCTION__ << ": XIA module " << ModuleNumber << " channel " << ChannelNumber;
+							cout << " event " << DgfModules[ModuleNumber].GetNumberOfSubEvents() << ": FTtime: ";
+							cout << CurrentSubEvent.GetFastTriggerTime(ChannelNumber) << ", energy: ";
+							cout << CurrentSubEvent.GetEnergy(ChannelNumber) << endl;
+							
+						}
+						
+						// get 48bit fast trigger time
+						CurrentSubEvent.SetLongFastTriggerTime(ChannelNumber, RunTimeA, EventTimeHigh, EventTimeLow);
+						
+						if( Settings->VerboseLevel() > 4 ) {
+							
+							cout << __PRETTY_FUNCTION__ << ": XIA module " << ModuleNumber << " channel " << ChannelNumber;
+							cout << " event " << DgfModules[ModuleNumber].GetNumberOfSubEvents() << ": lFTtime: ";
+							cout << CurrentSubEvent.GetLongFastTriggerTime(ChannelNumber) << endl;
+							
+						}
+						
+						// for RUNTASK!=259, now 6 user PSA values (& possible trace) follow
+						if( BufferFormat != COMP3_LM_BUFFORMAT ) {
+							
+							// get 6 user values
+							CurrentSubEvent.SetUserValues(q, ChannelNumber);
+							
+							// read out trace
+							TraceLength = (int)ChannelLength - CHANHEADLEN;
+							if( TraceLength != 0 ) {
+								
+								if( Settings->VerboseLevel() > 4 ) {
+									
+									cerr << __PRETTY_FUNCTION__ << ": XIA module " << ModuleNumber << " channel ";
+									cerr << ChannelNumber << ": tracelength = " << TraceLength << endl;
+									
+									// if there are traces in the file, just skip them
+									q += TraceLength;
+									
+								}
+								
+							}
+							
+						}
+						
+					} // if((HitPattern&ChannelMask)!= 0)
+					
+				} // for(ChannelNumber=0; ChannelNumber<4; ChannelNumber++)
+				
+			} // else of 'if(!(HitPattern&0xf) && ModuleNumber!=TS_EBIS_T1_T2_MODULE...)'
+			
+			// increment number of processed events
+			if( Settings->VerboseLevel() > 4 ) {
+				
+				if( DgfModules[ModuleNumber].GetNumberOfSubEvents() > 0 ) {
+					
+					cout << "OLD: " << DgfModules[ModuleNumber].GetNumberOfSubEvents()-1;
+					cout << ". subevent , q = " << q << ", NextModule = " << NextModule;
+					cout << ", diff = " << NextModule-q << endl;
+					cout << *(DgfModules[ModuleNumber].GetSubEvent(DgfModules[ModuleNumber].GetNumberOfSubEvents()-1));
+					
 				}
-			    }
+				
+				for( int i = 0; i < Settings->NumberOfTimestampModules(); i++ ) {
+					
+					if( DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents() > 0 ) {
+						cout <<  "DgfModules["  <<  Settings->TimestampModule(i);
+						cout <<  "].GetSubEvent("  <<  DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents()-1;
+						cout << ")->GetEnergy(" << Settings->TimestampChannel() << ") = ";
+						cout << DgfModules[Settings->TimestampModule(i)].GetSubEvent(DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents()-1)->GetEnergy(Settings->TimestampChannel());
+						cout << " ModuleNumber " << ModuleNumber << endl;
+						
+					}
+					
+				}
+				
 			}
-		    }// if((HitPattern&ChannelMask)!= 0)
-		}// for(ChannelNumber=0; ChannelNumber<4; ChannelNumber++)
-	    }// else of 'if(!(HitPattern&0xf) && ModuleNumber!=TS_EBIS_T1_T2_MODULE...)'
-	  
-	  // increment number of processed events 
-	  if(Settings->VerboseLevel() > 4) {
-		if(DgfModules[ModuleNumber].GetNumberOfSubEvents() > 0)	{
-		  cout<<"OLD: "<<DgfModules[ModuleNumber].GetNumberOfSubEvents()-1<<". subevent , q = "<<q<<", NextModule = "<<NextModule<<", diff = "<<NextModule-q<<endl;
-		  cout<<*(DgfModules[ModuleNumber].GetSubEvent(DgfModules[ModuleNumber].GetNumberOfSubEvents()-1));
+			
+			DgfModules[ModuleNumber].AddSubEvent(CurrentSubEvent);
+			
+			if( Settings->VerboseLevel() > 4 ) {
+				
+				if( DgfModules[ModuleNumber].GetNumberOfSubEvents() > 0 ) {
+					
+					cout << "added " << DgfModules[ModuleNumber].GetNumberOfSubEvents()-1 << ". subevent , q = ";
+					cout << q << ", NextModule = " << NextModule << ", diff = " << NextModule-q << endl;
+					cout << *(DgfModules[ModuleNumber].GetSubEvent(DgfModules[ModuleNumber].GetNumberOfSubEvents()-1));
+					
+				}
+				
+				for(int i = 0; i < Settings->NumberOfTimestampModules(); i++) {
+					
+					if(DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents() > 0) {
+						
+						cout << "DgfModules[" << Settings->TimestampModule(i) << "].GetSubEvent(";
+						cout << DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents()-1;
+						cout << ")->GetEnergy(" << Settings->TimestampChannel() << ") = ";
+						cout << DgfModules[Settings->TimestampModule(i)].GetSubEvent(DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents()-1)->GetEnergy(Settings->TimestampChannel())
+						cout << endl << endl;
+						
+					}
+					
+				}
+				
+			}
+			
+		} // while(q< NextModule)
+		
+		if( Settings->VerboseLevel() > 1 ) {
+			
+			cout << __PRETTY_FUNCTION__ << ": XIA events in module " << ModuleNumber;
+			cout << ": " << DgfModules[ModuleNumber].GetNumberOfSubEvents() << endl;
+			
 		}
-	      for(int i = 0; i < Settings->NumberOfTimestampModules(); i++)
-			if( DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents() > 0 )
-		  	cout  <<  "DgfModules["  <<  Settings->TimestampModule(i)  
-             	  <<  "].GetSubEvent("  <<  DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents()-1
-                << ")->GetEnergy(" << Settings->TimestampChannel() << ") = " 
-                << DgfModules[Settings->TimestampModule(i)].GetSubEvent(DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents()-1)->GetEnergy(Settings->TimestampChannel())
-                << " ModuleNumber " << ModuleNumber << endl;
-	    }
-
-	  DgfModules[ModuleNumber].AddSubEvent(CurrentSubEvent);
-
-	  if(Settings->VerboseLevel() > 4)
-	    {
-	      if(DgfModules[ModuleNumber].GetNumberOfSubEvents() > 0)
-		{
-		  cout<<"added "<<DgfModules[ModuleNumber].GetNumberOfSubEvents()-1<<". subevent , q = "<<q<<", NextModule = "<<NextModule<<", diff = "<<NextModule-q<<endl;
-		  cout<<*(DgfModules[ModuleNumber].GetSubEvent(DgfModules[ModuleNumber].GetNumberOfSubEvents()-1));
+		
+		// subtract #of words of processed buffer (=len) from SubEventWordCount
+		SubEventWordCount -= Length;
+		
+		// MBS data: always 32bit words -> if len odd -> fill word has to be skipped
+		if( Length & 1 ) {  // dgf buffers are aligned to 32 bit (even number of shorts)
+			
+			if( Settings->VerboseLevel() > 2 ) {
+				
+				cout<<"Length = "<<Length<<" => skipping one "<<sizeof(q)<<" byte word"<<endl;
+				
+			}
+			
+			q++; // word count is odd -> skip over filler
+			SubEventWordCount--;
+			
 		}
-	      for(int i = 0; i < Settings->NumberOfTimestampModules(); i++)
-		if(DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents() > 0)
-		  cout<<"DgfModules["<<Settings->TimestampModule(i)<<"].GetSubEvent("<<DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents()-1<<")->GetEnergy("<<Settings->TimestampChannel()<<") = "<<DgfModules[Settings->TimestampModule(i)].GetSubEvent(DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents()-1)->GetEnergy(Settings->TimestampChannel())<<endl;
-	      cout<<endl;
-	    }
-	}// while(q< NextModule)
-      
-      if(Settings->VerboseLevel() > 1)
-	{
-	  cout<<__PRETTY_FUNCTION__<<": XIA events in module "<<ModuleNumber<<": "<<DgfModules[ModuleNumber].GetNumberOfSubEvents()<<endl;
+		
+	} // while(SubEventWordCount>0)
+	
+	if( Settings->VerboseLevel() > 1 ) {
+		
+		cout<<__PRETTY_FUNCTION__<<": in read out event "<<EventNumber<<": read "<<Settings->NumberOfDgfModules()<<" DGF modules"<<endl;
+		
 	}
-
-      // subtract #of words of processed buffer (=len) from SubEventWordCount 
-      SubEventWordCount -= Length; 
-
-      // MBS data: always 32bit words -> if len odd -> fill word has to be skipped 
-      if (Length & 1)
-	{                  // dgf buffers are aligned to 32 bit (even number of shorts)
-	  if(Settings->VerboseLevel() > 2)
-	    {
-	      cout<<"Length = "<<Length<<" => skipping one "<<sizeof(q)<<" byte word"<<endl;
-	    }
-	  q++;                          // word count is odd -> skip over filler
-	  SubEventWordCount--;
-	}
-    }   // while(SubEventWordCount>0)
-
-  if(Settings->VerboseLevel() > 1)
-    {
-      cout<<__PRETTY_FUNCTION__<<": in read out event "<<EventNumber<<": read "<<Settings->NumberOfDgfModules()<<" DGF modules"<<endl;
-    }
-
-  return true;
+	
+	return true;
+	
 }
 
 // subevent id 10 + 11, type [10,43]: raw caen data 

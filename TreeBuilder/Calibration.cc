@@ -17,7 +17,6 @@ Calibration::Calibration( string filename ) {
 	RawRandomized = 0.;
 	ReadCalibration();
 	fRand = new TRandom();
-	//if( fVerbose ) PrintCalibration();
 		
 }
 
@@ -29,11 +28,11 @@ Calibration::~Calibration() {
 
 void Calibration::ReadCalibration() {
 
-	TEnv *config = new TEnv(fInputFile.data());
+	TEnv *config = new TEnv( fInputFile.data() );
 	if( fVerbose ) cout << "reading dgfs" << endl;
-	fDgfOffset.resize(fNofDgfs);
-	fDgfGain.resize(fNofDgfs);
-	fDgfGainQuadr.resize(fNofDgfs);
+	fDgfOffset.resize( fNofDgfs );
+	fDgfGain.resize( fNofDgfs );
+	fDgfGainQuadr.resize( fNofDgfs );
 
 	for( int dgf = 0; dgf < fNofDgfs; dgf++ ){
 
