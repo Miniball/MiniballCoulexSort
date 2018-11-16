@@ -653,7 +653,7 @@ bool UnpackedEvent::DecodeDgf(int SubEventID, int SubEventWordCount, char* SubEv
 						cout << "DgfModules[" << Settings->TimestampModule(i) << "].GetSubEvent(";
 						cout << DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents()-1;
 						cout << ")->GetEnergy(" << Settings->TimestampChannel() << ") = ";
-						cout << DgfModules[Settings->TimestampModule(i)].GetSubEvent(DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents()-1)->GetEnergy(Settings->TimestampChannel())
+						cout << DgfModules[Settings->TimestampModule(i)].GetSubEvent(DgfModules[Settings->TimestampModule(i)].GetNumberOfSubEvents()-1)->GetEnergy(Settings->TimestampChannel());
 						cout << endl << endl;
 						
 					}
@@ -1318,7 +1318,7 @@ bool UnpackedEvent::DecodeBraggChamber(int SubEventID, int SubEventWordCount, ch
       return true;
     }
   
-	// needed variables 
+	// needed variables
 	unsigned int* q = (unsigned int*) SubEventData;
 	unsigned int header;
 	int WordCount;
