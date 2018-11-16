@@ -448,7 +448,7 @@ float doppler::GetPPhi( int quad, int seg, int sector ) {
 		
 	}
 	
-	else if( sector < 4 ) { // CREX and TREX
+	else { // CREX and TREX
 		
 		ph_det[0] =   0.0 + cdoffset; // top
 		ph_det[1] = 180.0 + cdoffset; // bottom
