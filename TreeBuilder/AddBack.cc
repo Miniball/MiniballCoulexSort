@@ -189,6 +189,8 @@ void AddBack::MakeGammaRays( bool addback, bool reject ) {
 				if( ab_mul == 0 ) ab_array.push_back( false );
 				else ab_array.push_back( true );
 				
+				E_gam_ab->Fill( GammaEnergy );
+				
 			} // core event
 			
 			// Reset

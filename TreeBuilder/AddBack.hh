@@ -152,7 +152,7 @@ private:
 	vector< unsigned int > dead_segments;
 	
 	// Histograms
-	TH1F *E_gam, *E_gam_seg[8][3][7], *E_gam_seg_cal[8][3][7];
+	TH1F *E_gam, *E_gam_ab, *E_gam_seg[8][3][7], *E_gam_seg_cal[8][3][7];
 	TH1F *E_BeamDump[2], *T_BeamDump[2], *tdiff_BD;
 	TH2F *bd_bd;
 	TH1F *hABmult;
@@ -191,9 +191,13 @@ void AddBack::InitialiseVariables() {
 
 void AddBack::InitialiseHistograms() {
 	
-	// Total gamma - no Doppler correction
-	E_gam = new TH1F("E_gam","E_gam",GBINS,GMIN,GMAX);
+	// Total gamma - no addback
+	E_gam = new TH1F("E_gam","E_gam no addback",GBINS,GMIN,GMAX);
 	E_gam->GetXaxis()->SetTitle("Energy Gamma Rays [Channels]");
+	
+	// Total gamma - with addback
+	E_gam_ab = new TH1F("E_gam_ab","E_gam with addback",GBINS,GMIN,GMAX);
+	E_gam_ab->GetXaxis()->SetTitle("Energy Gamma Rays [Channels]");
 	
 	// Gamma spectra for every segment - no Doppler correction
 	TDirectory *gam_dir = outfile->mkdir("E_gam_seg");
