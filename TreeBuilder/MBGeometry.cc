@@ -130,8 +130,6 @@ void MBGeometry::SetupCluster( double user_theta, double user_phi, double user_a
 
 void MBGeometry::SetupCluster() {
 
-	Double_t R = DIST_CORE_CORNER * 0.5; // average distance from centre of capsule to center of segment
-
 	// Offset of cluster
 	clu_offset.SetXYZ(0, r, 0);
 
