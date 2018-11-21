@@ -30,7 +30,6 @@ float		Eb = 0.0;			///< incident beam energy in keV/u
 float		Ex = 0.0;			///< excitation energy of Coulex in keV
 float		thick = 0.0;		///< thickness of the target in mg/cm^2
 float		depth = 0.0;		///< interaction depth in target in mg/cm^2
-float		zoffset = 0.0;	///< offset of the target with respect to the origin in mm (beam direction positive)
 float		cddist = 0.0;		///< CD to target distance in mm
 float		cdoffset = 242.6;	///< phi rotation of CD wrt to (det=0;sec=0) at vertical
 float		deadlayer = 0.0007;	///< CD dead layer (aluminium) thickness in mm

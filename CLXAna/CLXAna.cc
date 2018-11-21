@@ -15,7 +15,6 @@ void PrintInput() {
 	cout << "Ex = " << Ex << " keV" << endl;
 	cout << "thick = " << thick << " mg/cm2" << endl;
 	cout << "depth = " << depth << " mg/cm2" << endl;
-	cout << "zoffset = " << zoffset << " mm" << endl;
 	cout << "cddist = " << cddist << " mm" << endl;
 	cout << "cdoffset = " << cdoffset << " degrees" << endl;
 	cout << "deadlayer = " << deadlayer << " mm" << endl;
@@ -45,7 +44,6 @@ int main( int argc, char *argv[] ) {
 	interface->Add("-Ex", "Ex", &Ex );
 	interface->Add("-thick", "Target thickness (mg/cm^2)", &thick );
 	interface->Add("-depth", "Depth of interation in target (mg/cm^2)", &depth );
-	interface->Add("-zoffset", "Offset of target position from origin of array (mm)", &zoffset );
 	interface->Add("-cddist", "Relative distance of CD and target (mm)", &cddist );
 	interface->Add("-cdoffset", "Rotation of CD detector about phi from vertical (deg)", &cdoffset );
 	interface->Add("-deadlayer", "Thickness of Si dead layer (mm)", &deadlayer );
@@ -154,7 +152,6 @@ int main( int argc, char *argv[] ) {
 		Ex = config->GetValue( "Ex", -1.0 );
 		thick = config->GetValue( "thick", -1.0 );
 		depth = config->GetValue( "depth", -1.0 );
-		zoffset = config->GetValue( "zoffset", 0.0 );
 		cddist = config->GetValue( "cddist", -1.0 );
 		cdoffset = config->GetValue( "cdoffset", 242.6 );
 		deadlayer = config->GetValue( "deadlayer", 0.0007 );
@@ -179,7 +176,6 @@ int main( int argc, char *argv[] ) {
 		x.Ex = Ex;
 		x.thick = thick;
 		x.depth = depth;
-		x.zoffset = zoffset;
 		x.cddist = cddist;
 		x.cdoffset = cdoffset;
 		x.deadlayer = deadlayer;

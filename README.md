@@ -70,7 +70,6 @@ This step takes a number of possible inputs:
 [-Ex          <float         >: Ex]
 [-thick       <float         >: Target thickness (mg/cm^2)]
 [-depth       <float         >: Depth of interation in target (mg/cm^2)]
-[-zoffset     <float         >: Offset of the target with respect to the origin in mm (beam direction positive) (mm)]
 [-cddist      <float         >: Relative distance of CD and target (mm)]
 [-cdoffset    <float         >: Rotation of CD detector about phi from vertical (deg)]
 [-deadlayer   <float         >: Thickness of Si dead layer (mm)]
