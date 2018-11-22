@@ -670,7 +670,7 @@ float doppler::DC( float PEn, float PTh, float PPhi, float GTh, float GPhi, floa
 	double costheta = sin(PTh)*sin(GTh)*cos(PPhi-GPhi)+(cos(PTh)*cos(GTh));
 	
 	double corr = 1. - beta*costheta;
-	corr /= gamma;
+	corr *= gamma;
 	
 	return corr;
 	
