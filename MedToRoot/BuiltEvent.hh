@@ -45,7 +45,7 @@ public:
 	inline long long T1Time() { return t1Time; };
 	inline long long SuperCycleTime() { return superCycleTime; };
 	inline long long EventNumber() { return eventNumber; };
-	inline unsigned short SubEventNumber() { return subEventNumber; };
+	inline unsigned int SubEventNumber() { return subEventNumber; };
 	inline AdcData* Adc(size_t Index) { return &(adcData.at(Index)); };
 	inline DgfData* Dgf(size_t Index) { return &(dgfData.at(Index)); };
 	bool Coincident( GlobalSettings*, long long );
@@ -58,7 +58,7 @@ protected:
 	long long superCycleTime;
 	
 	long long eventNumber;
-	unsigned short subEventNumber;
+	unsigned int subEventNumber;
 	
 	vector <AdcData> adcData;
 	vector <DgfData> dgfData;
