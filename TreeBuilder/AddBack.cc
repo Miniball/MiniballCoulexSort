@@ -69,7 +69,6 @@ void AddBack::MakeGammaRays( bool addback, bool reject ) {
 				
 				E_gam_seg[dgf_num/6][dgf_num%6/2][dgf_ch]->Fill( dgf_en );
 				E_gam_seg_cal[dgf_num/6][dgf_num%6/2][dgf_ch]->Fill( GammaEnergy );
-				if( dgf_ch == 0 ) E_gam->Fill( GammaEnergy );
 
 			} // even DGF number
 			
@@ -173,7 +172,7 @@ void AddBack::MakeGammaRays( bool addback, bool reject ) {
 						l--;
 						
 					} // reject
-					
+
 				} // previous gammas
 				
 				if( ab_evt ) continue; // get next gamma (this one has been added back)
@@ -189,7 +188,7 @@ void AddBack::MakeGammaRays( bool addback, bool reject ) {
 				if( ab_mul == 0 ) ab_array.push_back( false );
 				else ab_array.push_back( true );
 				
-				E_gam_ab->Fill( GammaEnergy );
+				E_gam->Fill( GammaEnergy );
 				
 			} // core event
 			
