@@ -48,9 +48,9 @@ int main(int argc, char* argv[]) {
 	
 	}
 	
-	cout << "calibration file: " << CalibrationFile << endl;
 	cout << "output file: " << OutputFile << endl;
-	
+	cout << "calibration file: " << CalibrationFile << endl;
+
 	if( ( trex && cdpad ) || ( trex && spede ) || ( cdpad && spede ) ||
 	    ( trex && crex ) || ( crex && spede ) || ( cdpad && crex ) ){
 		
@@ -73,6 +73,14 @@ int main(int argc, char* argv[]) {
 	// Make calibration
 	// ------------------------------------------------------------------------ //
 
+	ifstream testfile( CalibrationFile );
+	if( !testfile.good() ) {
+	
+		cout << "Unable to open " << CalibrationFile;
+		cout << " so I am continuing with the default calibration parameters" << endl;
+		
+	}
+	
 	Calibration *Cal = new Calibration( CalibrationFile );
 	Cal->SetVerbosity( verbose );
 	if( verbose ) Cal->PrintCalibration();
