@@ -2,6 +2,7 @@
 // Liam Gaffney (liam.gaffney@cern.ch) - 31/08/2018
 
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <string>
 
