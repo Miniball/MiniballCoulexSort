@@ -80,6 +80,7 @@ int main(int argc, char* argv[]) {
 		cout << " so I am continuing with the default calibration parameters" << endl;
 		
 	}
+	else testfile.close();
 	
 	Calibration *Cal = new Calibration( CalibrationFile );
 	Cal->SetVerbosity( verbose );
