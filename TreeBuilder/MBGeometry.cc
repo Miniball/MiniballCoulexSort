@@ -203,7 +203,6 @@ void MBGeometry::SetupCluster() {
 		myphi = TMath::Pi() / 2. + phi;
 		mytheta = TMath::Pi() / 2. + theta;
 	}
-
 	else {
 		myalpha = alpha - TMath::Pi();
 		myphi = TMath::Pi() / 2. + phi;
