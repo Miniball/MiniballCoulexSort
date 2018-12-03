@@ -55,4 +55,4 @@ lib%.a: %.o %Dict.o
 
 #--------------------------------------------------
 clean:
-	rm -f *.o lib*.a *$(DICTEXT) *Dict*cc
+	rm -f *.o lib*.a *Dict$(DICTEXT) *Dict*cc
