@@ -29,28 +29,42 @@ CFLAGS    = -O2 -pipe -Wall -W -Woverloaded-virtual $(ROOTCFLAGS) -fPIC
 INCLUDES  = -I./
 LFLAGS    = -O2 -g $(ROOTLDFLAGS)
 
-O_FILES = mbevts.o \
-		  trevts.o
+O_FILES = mbevts.o trevts.o
 
 all: MKDIR_P libmbevts.a libtrevts.a
 
 MKDIR_P:
 	mkdir -p $(BIN_DIR) $(LIB_DIR)
 
-lib%.a: %.o %Dict.o
-	$(AR) cru $@ $*.o $*Dict.o
+libmbevts.a: mbevts.o mbevtsDict.o
+	$(AR) cru $@ mbevts.o mbevtsDict.o
 	cp $@ $(LIB_DIR)/
 
-%.o: %.cc %.hh
-	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@
+libtrevts.a: trevts.o trevtsDict.o
+	$(AR) cru $@ trevts.o trevtsDict.o
+	cp $@ $(LIB_DIR)/
 
-%Dict.o: %Dict.cc
-	$(CPP) -c $(CFLAGS) $(INCLUDES) -o $@ $<
+mbevts.o: mbevts.cc mbevts.hh
+	$(CPP) $(CFLAGS) $(INCLUDES) -c mbevts.cc -o mbevts.o
 
-%Dict.cc: %.hh RootLinkDef.h
-	rm -f $@ $*Dict$(DICTEXT)
-	$(ROOTDICT) -f $@ -c $(INCLUDES) -p $<
-	cp $*Dict$(DICTEXT) $(LIB_DIR)/
+trevts.o: trevts.cc trevts.hh
+	$(CPP) $(CFLAGS) $(INCLUDES) -c mbevts.cc -o trevts.o
+
+mbevtsDict.o: mbevtsDict.cc
+	$(CPP) -c $(CFLAGS) $(INCLUDES) -o mbevtsDict.o mbevtsDict.cc
+
+trevtsDict.o: trevtsDict.cc
+	$(CPP) -c $(CFLAGS) $(INCLUDES) -o trevtsDict.o trevtsDict.cc
+
+mbevtsDict.cc: mbevts.hh RootLinkDef.h
+	rm -f mbevtsDict.cc mbevtsDict$(DICTEXT)
+	$(ROOTDICT) -f mbevtsDict.cc -c $(INCLUDES) -p $^
+	cp mbevtsDict$(DICTEXT) $(LIB_DIR)/
+
+trevtsDict.cc: trevts.hh RootLinkDef.h
+	rm -f trevtsDict.cc trevtsDict$(DICTEXT)
+	$(ROOTDICT) -f trevtsDict.cc -c $(INCLUDES) -p $^
+	cp trevtsDict$(DICTEXT) $(LIB_DIR)/
 
 
 #--------------------------------------------------

@@ -116,9 +116,9 @@ void Calibration::PrintCalibration(){
 	
 		for( int chan = 0; chan < fNofDgfChans; chan++ ){
 		
-			cout << Form("dgf_%d_%d.Offset\t", dgf, chan) << fDgfOffset[dgf][chan] << endl;
-			cout << Form("dgf_%d_%d.Gain\t", dgf, chan) << fDgfGain[dgf][chan] << endl;
-			cout << Form("dgf_%d_%d.GainQuadr\t", dgf, chan) << fDgfGainQuadr[dgf][chan] << endl;
+			cout << Form("dgf_%d_%d.Offset:   \t", dgf, chan) << fDgfOffset[dgf][chan] << endl;
+			cout << Form("dgf_%d_%d.Gain:     \t", dgf, chan) << fDgfGain[dgf][chan] << endl;
+			cout << Form("dgf_%d_%d.GainQuadr:\t", dgf, chan) << fDgfGainQuadr[dgf][chan] << endl;
       
 		}
     
@@ -127,22 +127,22 @@ void Calibration::PrintCalibration(){
 	cout << "Beamdump" << endl;
 	for( int chan = 0; chan < fNofDgfChans; chan++ ){
 
-		cout << Form("dgf_%d_%d.Offset\t", fBeamdumpDgf, chan) << fBeamdumpOffset[chan] << endl;
-		cout << Form("dgf_%d_%d.Gain\t", fBeamdumpDgf, chan) << fBeamdumpGain[chan] << endl;
-		cout << Form("dgf_%d_%d.GainQuadr\t", fBeamdumpDgf, chan) << fBeamdumpGainQuadr[chan] << endl;
+		cout << Form("dgf_%d_%d.Offset:   \t", fBeamdumpDgf, chan) << fBeamdumpOffset[chan] << endl;
+		cout << Form("dgf_%d_%d.Gain:     \t", fBeamdumpDgf, chan) << fBeamdumpGain[chan] << endl;
+		cout << Form("dgf_%d_%d.GainQuadr:\t", fBeamdumpDgf, chan) << fBeamdumpGainQuadr[chan] << endl;
 
 	}
   
 	cout << "ADCs" << endl;
 	for( int adc = 0; adc < fNofAdcs; adc++ ){
 
-		cout << Form( "adc_%d.TimeOffset\t", adc ) << fAdcTime[adc] << endl;
+		cout << Form( "adc_%d.TimeOffset:   \t", adc ) << fAdcTime[adc] << endl;
 
 		for( int chan=0; chan < fNofAdcChans; chan++ ){
 
-			cout << Form( "adc_%d_%d.Offset\t", adc, chan ) << fAdcOffset[adc][chan] << endl;
-			cout << Form( "adc_%d_%d.Gain\t", adc, chan ) << fAdcGain[adc][chan] << endl;
-			cout << Form( "adc_%d_%d.Threshold\t", adc, chan ) << fAdcThreshold[adc][chan] << endl;
+			cout << Form( "adc_%d_%d.Offset:   \t", adc, chan ) << fAdcOffset[adc][chan] << endl;
+			cout << Form( "adc_%d_%d.Gain:     \t", adc, chan ) << fAdcGain[adc][chan] << endl;
+			cout << Form( "adc_%d_%d.Threshold:\t", adc, chan ) << fAdcThreshold[adc][chan] << endl;
 	
 		}
 
@@ -151,10 +151,10 @@ void Calibration::PrintCalibration(){
 	cout << "Miniball angles" << endl;
 	for( int clu = 0; clu < fNofClusters; clu++ ) {
 		
-		cout << Form( "Cluster_%d.R", clu ) << fClusterR[clu];
-		cout << Form( "Cluster_%d.Theta", clu ) << fClusterTheta[clu];
-		cout << Form( "Cluster_%d.Phi", clu ) << fClusterPhi[clu];
-		cout << Form( "Cluster_%d.Alpha", clu ) << fClusterAlpha[clu];
+		cout << Form( "Cluster_%d.R:    \t", clu ) << fClusterR[clu];
+		cout << Form( "Cluster_%d.Theta:\t", clu ) << fClusterTheta[clu];
+		cout << Form( "Cluster_%d.Phi:  \t", clu ) << fClusterPhi[clu];
+		cout << Form( "Cluster_%d.Alpha:\t", clu ) << fClusterAlpha[clu];
 		
 	}
 	

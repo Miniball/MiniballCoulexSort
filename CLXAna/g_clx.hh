@@ -190,14 +190,14 @@ g_clx::~g_clx() {
 	
 }
 
-Int_t g_clx::GetEntry(Long64_t entry) {
+Int_t g_clx::GetEntry( Long64_t entry ) {
 
 	if( !fChain ) return 0;
 	return fChain->GetEntry(entry);
 
 }
 
-Long64_t g_clx::LoadTree(Long64_t entry) {
+Long64_t g_clx::LoadTree( Long64_t entry ) {
 
 	if( !fChain ) return -5;
 	Long64_t centry = fChain->LoadTree(entry);
@@ -253,6 +253,7 @@ void g_clx::Init( TTree *tree ) {
 	fChain->SetBranchAddress("del_ptr", &del_ptr, &b_mbevts_del_ptr);
 	fChain->SetBranchAddress("file", &file, &b_mbevts_file);
 	Notify();
+	
 }
 
 Bool_t g_clx::Notify() {

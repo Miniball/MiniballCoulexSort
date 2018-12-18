@@ -6,7 +6,7 @@
 
 #ifndef __CINT__
 
-int main(int argc, char* argv[]) {
+int main( int argc, char* argv[] ) {
 	
 	// ------------------------------------------------------------------------ //
 	// Read command line
