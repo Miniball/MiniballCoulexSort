@@ -69,4 +69,4 @@ trevtsDict.cc: trevts.hh RootLinkDef.h
 
 #--------------------------------------------------
 clean:
-	rm -f *.o lib*.a *$(DICTEXT) *Dict*cc
+	rm -f *.o lib*.a *Dict$(DICTEXT) *Dict*cc
