@@ -150,7 +150,8 @@ class hists {
 	void FillGam1h( float GEn, float GTh, float GPh, int GCid, float PEn, int Pnf,
 					int Pnb, int Psec, int Pquad, int T1T, int cut, float weight=1.0 );
 	void FillGam2h( float GEn, float GTh, float GPh, int GCid, vector <float> PEn, vector<int> Pnf,
-					vector<int> Pnb, vector<int> Psec, vector<int> Pquad, int Bptr, int Tptr, float weight=1.0 );
+					vector<int> Pnb, vector<int> Psec, vector<int> Pquad, int Bptr, int Tptr, int T1T,
+				    float weight=1.0 );
 	void FillElec1h( float GEn, float GTh, float GPh, int GCid, float PEn, int Pnf,
 					int Pnb, int Psec, int Pquad, int cut, float weight=1.0 );
 	void FillElec2h( float GEn, float GTh, float GPh, int GCid, vector <float> PEn, vector<int> Pnf,
@@ -161,7 +162,7 @@ class hists {
 	void FillGamGam2h( float GEn, float GTh, float GPh, int GCid, vector <float> GCor_GEn, vector <float> GCor_GTh,
 					vector <float> GCor_GPh, vector <int> GCor_GCluID, vector <float> GCor_Gtd,
 					vector <float> PEn, vector<int> Pnf, vector<int> Pnb, vector<int> Psec, vector<int> Pquad,
-					int Bptr, int Tptr, float weight=1.0 );
+					int Bptr, int Tptr, int T1T, float weight=1.0 );
 	void FillPar1h( float PEn, int Pnf, int Pnb, int Psec, int Pquad, int cut, float weight=1.0 );
 	void FillPar2h( vector <float> PEn, vector<int> Pnf, vector<int> Pnb, vector<int> Psec, vector<int> Pquad,
 					int Bptr, int Tptr, float weight=1.0 );

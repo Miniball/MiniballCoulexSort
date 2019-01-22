@@ -336,7 +336,7 @@ void hists::Fill2h( float GEn, float GTh, float GPh, int GCid, vector <float> GC
 		Bptr = Pptr[1];
 		Tptr = Pptr[0];
 		if( !electron ){
-			FillGam2h( GEn, GTh, GPh, GCid, PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, weight );
+			FillGam2h( GEn, GTh, GPh, GCid, PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, T1T, weight );
 		}
 		else FillElec2h( GEn, GTh, GPh, GCid, PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, weight );
 		FillPar2h( PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, weight );
@@ -348,7 +348,7 @@ void hists::Fill2h( float GEn, float GTh, float GPh, int GCid, vector <float> GC
 		Bptr = Pptr[0];
 		Tptr = Pptr[1];
 		if( !electron ) {
-			FillGam2h( GEn, GTh, GPh, GCid, PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, weight );
+			FillGam2h( GEn, GTh, GPh, GCid, PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, T1T, weight );
 		}
 		else FillElec2h( GEn, GTh, GPh, GCid, PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, weight );
 		FillPar2h( PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, weight );
@@ -562,7 +562,7 @@ void hists::FillDel2h( float GEn, float GTh, float GPh, int GCid, vector<float> 
 
 void hists::FillGam2h( float GEn, float GTh, float GPh, int GCid, vector<float> PEn, vector<int> Pnf,
 						vector<int> Pnb, vector<int> Psec, vector<int> Pquad, int Bptr, int Tptr,
-					    float weight ) {
+					    int T1T, float weight ) {
 
 	if( weight > 0 ) p_2h->Fill(GEn);
 	else r_2h->Fill(GEn);
@@ -766,7 +766,7 @@ void hists::FillGamGam1h( float GEn, float GTh, float GPh, int GCid, vector <flo
 void hists::FillGamGam2h( float GEn, float GTh, float GPh, int GCid, vector<float> GCor_GEn, vector<float> GCor_GTh,
 						 vector<float> GCor_GPh, vector <int> GCor_CluID, vector <float> GCor_Gtd,
 						 vector<float> PEn, vector<int> Pnf, vector<int> Pnb,  vector<int> Psec,
-						 vector<int> Pquad, int Bptr, int Tptr, float weight ) {
+						 vector<int> Pquad, int Bptr, int Tptr, int T1T, float weight ) {
 	
 	int Bnf = Pnf[Bptr];
 	int Tnf = Pnf[Tptr];
