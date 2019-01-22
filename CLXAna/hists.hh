@@ -144,7 +144,7 @@ class hists {
 	void Fill2h( float GEn, float GTh, float GPh, int GCid, vector <float> GCor_GEn, vector <float> GCor_GTh,
 				vector <float> GCor_GPh, vector <int> GCor_GCluID, vector <float> GCor_Gtd,
 				bool electron, vector <float> PEn, vector<int> Pnf, vector<int> Pnb, vector<int> Psec,
-				vector<int> Pquad, vector<int> Pptr, vector <float> td, float weight=1.0 );
+				vector<int> Pquad, vector<int> Pptr, vector <float> td, int T1T, float weight=1.0 );
 	void FillDel2h( float GEn, float GTh, float GPh, int GCid, vector <float> PEn, vector<int> Pnf, vector<int> Pnb,
 					vector<int> Psec, vector<int> Pquad, vector<int> Pptr, vector <float> td, float weight=1.0 );
 	void FillGam1h( float GEn, float GTh, float GPh, int GCid, float PEn, int Pnf,

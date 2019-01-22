@@ -235,7 +235,7 @@ void g_clx::Loop( string outputfilename ) {
 
 		else if( pr_hits==2 && rndm_hits==0 )
 			h.Fill2h(gen, tha, pha, cid, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron,
-					 pen, nf, nb, sector, det, pr_ptr, td, 1.0);
+					 pen, nf, nb, sector, det, pr_ptr, td, time[pr_ptr[0]]-t1t[pr_ptr[0]], 1.0);
 
 		else if( del_hits==2 && rndm_hits==0 )
 			h.FillDel2h(gen, tha, pha, cid, pen, nf, nb, sector, det, del_ptr, td, 1.0);
@@ -248,7 +248,7 @@ void g_clx::Loop( string outputfilename ) {
 		else if( rndm_hits==2 && pr_hits==0 ) {
 		
 			h.Fill2h(gen, tha, pha, cid, gcor_gen, gcor_tha, gcor_pha, gcor_cluid, gcor_gtd, electron,
-					 pen, nf, nb, sector, det, rndm_ptr, td, bg_frac);
+					 pen, nf, nb, sector, det, rndm_ptr, td, time[pr_ptr[0]]-t1t[pr_ptr[0]], bg_frac);
 
 			h.FillDel2h(gen, tha, pha, cid, pen, nf, nb, sector, det, rndm_ptr, td, bg_frac);
 

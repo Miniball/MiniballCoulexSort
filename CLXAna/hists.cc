@@ -318,7 +318,7 @@ void hists::Fill1h( float GEn, float GTh, float GPh, int GCid, vector <float> GC
 void hists::Fill2h( float GEn, float GTh, float GPh, int GCid, vector <float> GCor_GEn, vector <float> GCor_GTh,
 					vector <float> GCor_GPh, vector <int> GCor_CluID, vector <float> GCor_Gtd, bool electron,
 					vector<float> PEn, vector<int> Pnf, vector<int> Pnb, vector<int> Psec, vector<int> Pquad,
-				    vector<int> Pptr, vector<float> td, float weight ) {
+				    vector<int> Pptr, vector<float> td, int T1T, float weight ) {
 
 	float Bptr, Tptr;
 
@@ -358,7 +358,7 @@ void hists::Fill2h( float GEn, float GTh, float GPh, int GCid, vector <float> GC
 	else if( cut_0 == 0 ) { // Pptr[0] is a 1p recoil
 	
 		if( !electron ){
-			FillGam1h( GEn, GTh, GPh, GCid, PEn[Pptr[0]], Pnf[Pptr[0]], Pnb[Pptr[0]], Psec[Pptr[0]], Pquad[Pptr[0]], cut_0, weight );
+			FillGam1h( GEn, GTh, GPh, GCid, PEn[Pptr[0]], Pnf[Pptr[0]], Pnb[Pptr[0]], Psec[Pptr[0]], Pquad[Pptr[0]], T1T, cut_0, weight );
 		}
 		else FillElec1h( GEn, GTh, GPh, GCid, PEn[Pptr[0]], Pnf[Pptr[0]], Pnb[Pptr[0]], Psec[Pptr[0]], Pquad[Pptr[0]], cut_0, weight );
 		FillPar1h( PEn[Pptr[0]], Pnf[Pptr[0]], Pnb[Pptr[0]], Psec[Pptr[0]], Pquad[Pptr[0]], cut_0, weight );
@@ -368,7 +368,7 @@ void hists::Fill2h( float GEn, float GTh, float GPh, int GCid, vector <float> GC
 	else if( cut_1 == 0 ) { // Pptr[1] is a 1p recoil
 	
 		if( !electron ){
-			FillGam1h( GEn, GTh, GPh, GCid, PEn[Pptr[1]], Pnf[Pptr[1]], Pnb[Pptr[1]], Psec[Pptr[1]], Pquad[Pptr[1]], cut_1, weight );
+			FillGam1h( GEn, GTh, GPh, GCid, PEn[Pptr[1]], Pnf[Pptr[1]], Pnb[Pptr[1]], Psec[Pptr[1]], Pquad[Pptr[1]], T1T, cut_1, weight );
 		}
 		else FillElec1h( GEn, GTh, GPh, GCid, PEn[Pptr[1]], Pnf[Pptr[1]], Pnb[Pptr[1]], Psec[Pptr[1]], Pquad[Pptr[1]], cut_1, weight );
 		FillPar1h( PEn[Pptr[1]], Pnf[Pptr[1]], Pnb[Pptr[1]], Psec[Pptr[1]], Pquad[Pptr[1]], cut_1, weight );
