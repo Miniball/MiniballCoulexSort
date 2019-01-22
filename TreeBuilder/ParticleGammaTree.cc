@@ -104,7 +104,7 @@ void ParticleGammaTree::CLXCoincidences() {
 		for( unsigned int j = 0; j < pf.ReconstructedSize(); j++ ) {
 			
 			tdiffPG = pf.GetTime(j) - ab.GetGtd(i);
-			
+
 			// electrons
 			if( ab.GetClu(i) == 8 ) {
 				
@@ -193,7 +193,7 @@ void ParticleGammaTree::TREXCoincidences() {
 			tdiffPG = pf.GetTime(i) - ab.GetGtd(j);
 
 			tdiff_gp->Fill( tdiffPG );
-			tdiff_gp_q[pf.GetQuad(i)]->Fill( tdiffPG - Cal->AdcTime(pf.GetQuad(i)) );
+			tdiff_gp_q[pf.GetQuad(i)]->Fill( tdiffPG - Cal->AdcTime( pf.GetQuad(i)) );
 				
 			if( tMinDelayed <= tdiffPG && tdiffPG < tMaxDelayed ) coinc_flag = 2;
 			else if( tMinRandom <= tdiffPG && tdiffPG < tMaxRandom ) coinc_flag = 1;
