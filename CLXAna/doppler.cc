@@ -280,11 +280,11 @@ int doppler::Cut_2p( float PEn1, float nf1, int quad1, int sector1,
 	if( Ab > At ){
 
 		if( ( Cut(PEn2,nf2,quad2,sector2) >0 ) &&
-			( Cut(PEn1,nf1,quad1,sector1)==0 ){
+			( Cut(PEn1,nf1,quad1,sector1)==0 ) ) {
 			identity=0; // target is particle number 1
 		}
 		if( ( Cut(PEn1,nf1,quad1,sector1) >0 ) &&
-			( Cut(PEn2,nf2,quad2,sector2)==0 ) ){
+			( Cut(PEn2,nf2,quad2,sector2)==0 ) ) {
 			identity=1; // target is particle number 2
 		}
 
