@@ -355,7 +355,7 @@ void hists::Fill2h( float GEn, float GTh, float GPh, int GCid, vector <float> GC
 		
 	}
 
-	else if( cut_0 == 0 ) { // Pptr[0] is a 1p recoil
+	else if( cut_0 >= 0 ) { // Pptr[0] is a 1p event
 	
 		if( !electron ){
 			FillGam1h( GEn, GTh, GPh, GCid, PEn[Pptr[0]], Pnf[Pptr[0]], Pnb[Pptr[0]], Psec[Pptr[0]], Pquad[Pptr[0]], T1T, cut_0, weight );
@@ -365,7 +365,7 @@ void hists::Fill2h( float GEn, float GTh, float GPh, int GCid, vector <float> GC
 		
 	}
 	
-	else if( cut_1 == 0 ) { // Pptr[1] is a 1p recoil
+	else if( cut_1 >= 0 ) { // Pptr[1] is a 1p event
 	
 		if( !electron ){
 			FillGam1h( GEn, GTh, GPh, GCid, PEn[Pptr[1]], Pnf[Pptr[1]], Pnb[Pptr[1]], Psec[Pptr[1]], Pquad[Pptr[1]], T1T, cut_1, weight );
