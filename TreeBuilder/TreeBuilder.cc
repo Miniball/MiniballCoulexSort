@@ -17,7 +17,8 @@ int main( int argc, char* argv[] ) {
 	interface->Add("-s", "singles", &singles );
 	interface->Add("-gg", "gamma-gamma", &gamgam );
 	interface->Add("-addback", "addback", &addback );
-	interface->Add("-reject", "Reject", &reject );
+	interface->Add("-reject", "reject", &reject );
+	interface->Add("-segsum", "sum_segments", &segsum );
 	interface->Add("-crex", "CREX", &crex );
 	interface->Add("-trex", "TREX", &trex );
 	interface->Add("-spede", "SPEDE", &spede );
@@ -126,7 +127,8 @@ int main( int argc, char* argv[] ) {
 
 	ParticleGammaTree pg_ana( tr, event );
 	pg_ana.SetCalibration( Cal );
-	pg_ana.SetupFlags( singles, gamgam, addback, reject, crex, trex, cdpad, ionch, spede, verbose );
+	pg_ana.SetupFlags( singles, gamgam, addback, reject, segsum, crex, trex,
+					  	cdpad, ionch, spede, verbose );
 
 	// ------------------------------------------------------------------------ //
 	

@@ -673,7 +673,7 @@ MBSorter::MBSorter() {
 	check_trex = new TGCheckButton( sub_frame_10, "T-REX" );
 	sub_frame_10->AddFrame( check_trex, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
-	check_cdpad = new TGCheckButton( sub_frame_10, "CD+PAD" );
+	check_cdpad = new TGCheckButton( sub_frame_10, "CD" );
 	sub_frame_10->AddFrame( check_cdpad, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
 //	check_ionch = new TGCheckButton( sub_frame_10, "Ion. Ch." );
@@ -682,7 +682,7 @@ MBSorter::MBSorter() {
 	check_singles = new TGCheckButton( sub_frame_10, "Singles" );
 	sub_frame_10->AddFrame( check_singles, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
-	check_gamgam = new TGCheckButton( sub_frame_10, "Gamma-Gamma" );
+	check_gamgam = new TGCheckButton( sub_frame_10, "gg" );
 	sub_frame_10->AddFrame( check_gamgam, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
 	check_addback = new TGCheckButton( sub_frame_10, "Addback" );
@@ -690,6 +690,9 @@ MBSorter::MBSorter() {
 	
 	check_reject = new TGCheckButton( sub_frame_10, "Reject" );
 	sub_frame_10->AddFrame( check_reject, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
+	
+	check_segsum = new TGCheckButton( sub_frame_10, "SegSum" );
+	sub_frame_10->AddFrame( check_segsum, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
 	check_verbose = new TGCheckButton( sub_frame_10, "Verbose" );
 	sub_frame_10->AddFrame( check_verbose, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
@@ -1158,6 +1161,7 @@ void MBSorter::on_build_clicked() {
 	if( check_gamgam->IsOn() ) cmd += "-gg ";
 	if( check_addback->IsOn() ) cmd += "-addback ";
 	if( check_reject->IsOn() ) cmd += "-reject ";
+	if( check_segsum->IsOn() ) cmd += "-segsum ";
 	if( check_verbose->IsOn() ) cmd += "-vl ";
 
 	rootfileout = text_outfile->GetText();
@@ -1482,6 +1486,7 @@ void MBSorter::SaveSetup( string setupfile ) {
 	fSetup->SetValue( "gamgam", check_gamgam->IsOn() );
 	fSetup->SetValue( "addback", check_addback->IsOn() );
 	fSetup->SetValue( "reject", check_reject->IsOn() );
+	fSetup->SetValue( "segsum", check_segsum->IsOn() );
 	fSetup->SetValue( "verbose", check_verbose->IsOn() );
 	fSetup->SetValue( "usecut", check_cutfile->IsOn() );
 	
@@ -1553,6 +1558,7 @@ void MBSorter::LoadSetup( string setupfile ) {
 	check_gamgam->SetOn( fSetup->GetValue( "gamgam", false ) );
 	check_addback->SetOn( fSetup->GetValue( "addback", true ) );
 	check_reject->SetOn( fSetup->GetValue( "reject", false ) );
+	check_segsum->SetOn( fSetup->GetValue( "segsum", false ) );
 	check_verbose->SetOn( fSetup->GetValue( "verbose", false ) );
 	check_cutfile->SetOn( fSetup->GetValue( "usecut", false ) );
 

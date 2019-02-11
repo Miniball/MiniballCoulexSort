@@ -321,7 +321,7 @@ void ParticleGammaTree::Loop( string outputfilename ) {
 		// ------------------------------------------------------------------------ //
 		// All DGF events - Build gamma-ray events in Miniball (and beam-dump)
 		// ------------------------------------------------------------------------ //
-		ab.MakeGammaRays( addback, reject );
+		ab.MakeGammaRays( addback, reject, segsum );
 
 		
 		// ------------------------------------------------------------------------ //

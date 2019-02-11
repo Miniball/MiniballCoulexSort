@@ -37,7 +37,7 @@ public:
 	virtual ~AddBack();
 	
 	// Functions to fill gamma-ray vectors
-	void MakeGammaRays( bool addback, bool reject );
+	void MakeGammaRays( bool addback, bool reject, bool segsum );
 	void MakeElectrons();
 	
 	// Function to set Event
@@ -127,6 +127,7 @@ private:
 	// Gamma-ray and electron energies
 	float GammaEnergy;
 	float GammaEnergy2;
+	float SegSumEnergy;
 	float ElectronEnergy;
 
 	// Maximum segment energy determination

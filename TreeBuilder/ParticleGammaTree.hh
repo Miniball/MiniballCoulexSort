@@ -99,8 +99,8 @@ public:
 	
 	/// Setup sorting flags
 	virtual void SetupFlags( bool _singles, bool _gamgam, bool _addback, bool _reject,
-							 bool _crex, bool _trex, bool _cdpad, bool _ionch,
-							 bool _spede, bool _verbose );
+							 bool _segsum, bool _crex, bool _trex, bool _cdpad,
+							 bool _ionch, bool _spede, bool _verbose );
 
 	
 	// Variables
@@ -148,6 +148,7 @@ private:
 	bool gamgam;
 	bool addback;
 	bool reject;
+	bool segsum;
 	bool crex;
 	bool trex;
 	bool cdpad;
@@ -243,14 +244,15 @@ void ParticleGammaTree::InitialiseVariables() {
 }
 
 void ParticleGammaTree::SetupFlags( bool _singles, bool _gamgam, bool _addback, bool _reject,
-								   bool _crex, bool _trex, bool _cdpad, bool _ionch,
-								   bool _spede, bool _verbose ){
+								   bool _segsum, bool _crex, bool _trex, bool _cdpad,
+								   bool _ionch, bool _spede, bool _verbose ){
 
 	// Set the private variables, the flags
 	singles = _singles;
 	gamgam = _gamgam;
 	addback = _addback;
 	reject = _reject;
+	segsum = _segsum;
 	crex = _crex;
 	trex = _trex;
 	cdpad = _cdpad;

@@ -42,7 +42,7 @@ void AddBack::ClearEvt() {
 	
 }
 
-void AddBack::MakeGammaRays( bool addback, bool reject ) {
+void AddBack::MakeGammaRays( bool addback, bool reject, bool segsum ) {
 	
 	// Reset some variables
 	ab_mul = 0;
@@ -85,6 +85,7 @@ void AddBack::MakeGammaRays( bool addback, bool reject ) {
 				MaxSegClu = dgf_num / 6;
 				MaxSegCore = dgf_num % 6 / 2;
 				MaxSegId = 0; // initialise as core (if no segment hit (dead), use core!)
+				SegSumEnergy = 0; // add segment energies
 				
 				// Check for highest energy segment in same detector
 				for( unsigned int k = 0; k < event->NumberOfDgfs(); k++ ) {
@@ -116,6 +117,7 @@ void AddBack::MakeGammaRays( bool addback, bool reject ) {
 					if( dgf_num2 != dgf_num && dgf_num2 != dgf_num + 1 ) continue;
 					
 					GammaEnergy2 = Cal->DgfEnergy( dgf_num2, dgf_ch2, dgf_en2 );
+					SegSumEnergy += GammaEnergy2;
 					
 					// Test maximum energy segment
 					if( GammaEnergy2 < MaxSegEnergy ) continue;
@@ -128,6 +130,14 @@ void AddBack::MakeGammaRays( bool addback, bool reject ) {
 				} // k
 				
 				// Found highest energy segment //
+				
+				// Compare segment sum energy and core energy - less than 5% difference
+				if( TMath::Abs( SegSumEnergy - GammaEnergy ) / GammaEnergy < 0.05 ) {
+					
+					// Overwrite with segment sum energy if requested
+					if( segsum ) GammaEnergy = SegSumEnergy;
+					
+				}
 				
 				// Do the veto of crap segments
 				if( veto_gamma ) continue;

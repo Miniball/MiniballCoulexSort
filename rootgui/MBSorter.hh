@@ -184,6 +184,7 @@ protected:
 	TGCheckButton       *check_gamgam;		// check button for gamma-gamma events in tree
 	TGCheckButton       *check_addback;		// check button for addback on/off
 	TGCheckButton       *check_reject;		// check button for rejecting neighbouring Ge detetcors
+	TGCheckButton       *check_segsum;		// check button for sum segment energies
 	TGCheckButton       *check_verbose;		// check button for verbose output
 	TGCheckButton       *check_cutfile;		// check button for kinematics cut file
 	
