@@ -379,9 +379,9 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, int GCid, float PEn, int
 		BTh = dc.GetBTh(Pnf,Psec);
 		BPh = dc.GetQPhi(Pquad,Pnb,Psec);
 
-		T_dcB_x->Fill(TTh,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);	
-		T_dcT_x->Fill(TTh,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
-		T_nodc_x->Fill(TTh,GEn, weight);
+		T_dcB_x->Fill(TTh*TMath::RadToDeg(),GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+		T_dcT_x->Fill(TTh*TMath::RadToDeg(),GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+		T_nodc_x->Fill(TTh*TMath::RadToDeg(),GEn, weight);
 		T_nodc->Fill(GEn, weight);
 
 		T_1hdcB->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
@@ -439,9 +439,9 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, int GCid, float PEn, int
 		TTh = dc.GetTTh(Pnf,PEn,Psec);
 		TPh = dc.GetQPhi(Pquad,Pnb,Psec);
 
-		B_dcB_x->Fill(BTh,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
-		B_dcT_x->Fill(BTh,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
-		B_nodc_x->Fill(BTh,GEn, weight);
+		B_dcB_x->Fill(BTh*TMath::RadToDeg(),GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+		B_dcT_x->Fill(BTh*TMath::RadToDeg(),GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+		B_nodc_x->Fill(BTh*TMath::RadToDeg(),GEn, weight);
 		B_nodc->Fill(GEn, weight);
 
 		B_1hdcB->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
@@ -561,14 +561,14 @@ void hists::FillGam2h( float GEn, float GTh, float GPh, int GCid, vector<float> 
 	float BPh = dc.GetPPhi(Pquad[Bptr],Pnb[Bptr],Psec[Bptr]);
 	float TPh = dc.GetPPhi(Pquad[Tptr],Pnb[Tptr],Psec[Tptr]);
 
-	T_dcB_x->Fill(TTh,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
-	T_dcT_x->Fill(TTh,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
-	T_nodc_x->Fill(TTh,GEn, weight);
+	T_dcB_x->Fill(TTh*TMath::RadToDeg(),GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+	T_dcT_x->Fill(TTh*TMath::RadToDeg(),GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+	T_nodc_x->Fill(TTh*TMath::RadToDeg(),GEn, weight);
 	T_nodc->Fill(GEn, weight);
 
-	B_dcB_x->Fill(BTh,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
-	B_dcT_x->Fill(BTh,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
-	B_nodc_x->Fill(BTh,GEn, weight);
+	B_dcB_x->Fill(BTh*TMath::RadToDeg(),GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+	B_dcT_x->Fill(BTh*TMath::RadToDeg(),GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+	B_nodc_x->Fill(BTh*TMath::RadToDeg(),GEn, weight);
 	B_nodc->Fill(GEn, weight);
 
 	B_dcB_cid->Fill(GCid,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
