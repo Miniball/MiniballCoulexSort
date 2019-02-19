@@ -76,8 +76,6 @@ void g_clx::Loop( string outputfilename ) {
 
 #endif
 
-	float rad, phi; // for cdpic
-
 	// Loop over events 
 	cout << "Looping over events...\n";
 	Int_t nbytes = 0, nbs = 0;
@@ -185,32 +183,6 @@ void g_clx::Loop( string outputfilename ) {
 				}
 			} // cluid < 8
 			else h.tdiff_e->Fill(td[i]*25.);
-
-			// CD pic
-			if( nf[i]>(-1) && nf.size()>0 && ( sector[i]==0 || sector[i]==4 ) ) {
-				
-				if( sector[i] == 4 ) { // Standard CD
-					
-					rad = 39 - 2*nf[i];
-					rad += gRandom->Rndm(1)*1.9;
-					phi = dc.GetPPhi(det[i],nb[i],sector[i]);
-					phi += ( gRandom->Rndm(1) - 0.5 ) * 7.0*TMath::DegToRad();
-					
-				}
-				
-				else { // CREX
-					
-					rad = 9 + 2*nf[i];
-					rad += gRandom->Rndm(1)*1.9;
-					phi = dc.GetPPhi(det[i],nb[i],sector[i]);
-					if( nb[i] >= 4 && nb[i] < 12 ) phi += ( gRandom->Rndm(1) - 0.5 ) * 7.0*TMath::DegToRad();
-					else phi += ( gRandom->Rndm(1) - 0.5 ) * 3.5*TMath::DegToRad();
-				
-				}
-				
-				h.cdpic->Fill( rad * TMath::Cos(phi), rad * TMath::Sin(phi) );
-				
-			}
 
 			// Germanium angles vs. Silicon angles
 			if( !electron ) {

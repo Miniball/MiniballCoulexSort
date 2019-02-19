@@ -48,8 +48,8 @@ class hists {
 	TH1F *pB, *rB, *pBmrB;
 	TH1F *pT, *rT, *pTmrT;
 	TH1F *p_1B, *r_1B, *p_1T, *r_1T, *p_2h, *r_2h;
-	TH2F *p_thetaB;
-	TH2F *p_thetaT;
+	//TH2F *p_thetaB;
+	//TH2F *p_thetaT;
 	
 	// Undoppler-corrected electron spectra
 	TH1F *pe, *re, *pemre;
@@ -58,7 +58,8 @@ class hists {
 	TH1F *pe_1B, *re_1B, *pe_1T, *re_1T, *pe_2h, *re_2h;
 	
 	// Coincidence matrices
-	TH2F *gg, *ge;
+	TH2F *gg;
+	//TH2F *ge;
 	TH2F *gg_dcT, *gg_dcB;
 	TH1F *gg_td, *ge_td;
 	TH1F *gcor_size;
@@ -86,7 +87,6 @@ class hists {
 	// Prompt/Random Particle spectra
 	TH2F *part, *part1h, *part2h, *partQ[4];
 	TH2F *Bh, *Th, *B1h, *T1h, *B2h, *T2h;
-	TH2F *Bhhigh, *Bhlow, *Thhigh, *Thlow;
 	TH1F *target_ev, *target_1pev, *target_2pev;
 #ifdef TWOPART
 	TH2F *BT[16], *TB[16];
@@ -96,9 +96,6 @@ class hists {
 	TH2F *Bsim, *Tsim;
 	TH2F *en2hit;
 	TH1F *sum2hit;
-
-	// CD picture using the gamma gating
-	TH2F *cdpic;
 	
 	// Testing
 	TH1F *multp, *multr;

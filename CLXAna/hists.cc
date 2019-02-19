@@ -1,11 +1,11 @@
 #ifndef hists_cxx
 #define hists_cxx
 
-#define GBINS 4000	// number of bins in gamma spectra
-#define GMAX 4000	// maximum energy in gamma spectra
-#define EBINS 3000	// number of bins in electron spectra
-#define EMAX 6000	// maximum energy in electron spectra
-#define PBINS 600	// number of bins in particle spectra
+#define GBINS 2000	// number of bins in gamma spectra
+#define GMAX 2000	// maximum energy in gamma spectra
+#define EBINS 1500	// number of bins in electron spectra
+#define EMAX 3000	// maximum energy in electron spectra
+#define PBINS 300	// number of bins in particle spectra
 #define PMAX 1200	// maximum energy in particle spectra
 #define TBINS 242	// number of bins in tdiff spectra
 #define TMAX 1525	// maximum time in tdiff spectra
@@ -72,7 +72,7 @@ void hists::Initialise( doppler dc_ ) {
 	
 	// matrices
 	gg = new TH2F("gg","Gamma-gamma matrix;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
-	ge = new TH2F("ge","Gamma-electron matrix;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
+	//ge = new TH2F("ge","Gamma-electron matrix;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
 	gg_dcB = new TH2F("gg_dcB","Gamma-gamma matrix, DC for beam;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	gg_dcT = new TH2F("gg_dcT","Gamma-gamma matrix, DC for target;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	gg_td = new TH1F("gg_td","#gamma-#gamma time difference;#tau (t_{#gamma} - t_{#gamma}) [ns];Counts per 25 ns",TBINS,TMAX-25*TBINS,TMAX); // Total
@@ -102,8 +102,8 @@ void hists::Initialise( doppler dc_ ) {
 	T_2hdcT = new TH1F("T_2hdcT","T_2hit;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	T_2hdcB = new TH1F("T_2hdcB","T_2hit DC for beam;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 
-	p_thetaB = new TH2F("p_thetaB","Uncorrected gamma-ray energies versus beam particle-gamma angle; Energy [keV]; Theta [deg]", 1500, 0, 1500, 181, -0.5, 180.5);
-	p_thetaT = new TH2F("p_thetaT","Uncorrected gamma-ray energies versus target particle-gamma angle; Energy [keV]; Theta [deg]", 1500, 0, 1500, 181, -0.5, 180.5);
+	//p_thetaB = new TH2F("p_thetaB","Uncorrected gamma-ray energies versus beam particle-gamma angle; Energy [keV]; Theta [deg]", 1500, 0, 1500, 181, -0.5, 180.5);
+	//p_thetaT = new TH2F("p_thetaT","Uncorrected gamma-ray energies versus target particle-gamma angle; Energy [keV]; Theta [deg]", 1500, 0, 1500, 181, -0.5, 180.5);
 
 	Te_dcT = new TH1F("Te_dcT","Target gated electrons, background subtracted, Doppler corrected #gamma-rays;Energy [keV];Counts per 1keV",EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
 	Te_dcB = new TH1F("Te_dcB","Target gated electrons, background subtracted, Doppler corrected for scattered projectile;Energy [keV];Counts per 1keV",EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
@@ -184,9 +184,6 @@ void hists::Initialise( doppler dc_ ) {
 	Tsim = new TH2F("Tsim","Simulated target particle after beam detection;Lab angle [deg];Energy [MeV]",90,0,180,PBINS,-PMAX,PMAX);
 	en2hit = new TH2F("en2hit","Energy of beam vs. Energy of target;Beam energy [MeV];Target energy [MeV]",PBINS,0,PMAX,PBINS,0,PMAX);
 	sum2hit = new TH1F("sum2hit","Sum energy of beam target;Sum energy [MeV];Counts",PBINS,0,PMAX);
-
-	// CD picture using the gamma gating
-	cdpic = new TH2F("CDPic_g","Particle distributon in CD (#theta-#phi)",1000,-50,50,1000,-50,50);
 	
 	// Testing
 	multp = new TH1F("multp","Prompt Particle multiplicity;Number of particles;Number of events",16,-0.5,15.5); 
@@ -393,8 +390,8 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, int GCid, float PEn, int
 		T_dcB_cid->Fill(GCid,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
 		T_dcT_cid->Fill(GCid,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 		
-		p_thetaB->Fill(GEn, dc.GammaAng(BTh, BPh, GTh, GPh)*TMath::RadToDeg());
-		p_thetaT->Fill(GEn, dc.GammaAng(TTh, TPh, GTh, GPh)*TMath::RadToDeg());
+		//p_thetaB->Fill(GEn, dc.GammaAng(BTh, BPh, GTh, GPh)*TMath::RadToDeg());
+		//p_thetaT->Fill(GEn, dc.GammaAng(TTh, TPh, GTh, GPh)*TMath::RadToDeg());
 
 		// Proton time gated spectra
 		if( T1T >= 0 && T1T < PTCUT_P ) {
@@ -453,8 +450,8 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, int GCid, float PEn, int
 		B_dcB_cid->Fill(GCid,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
 		B_dcT_cid->Fill(GCid,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 
-		p_thetaB->Fill(GEn, dc.GammaAng(BTh, BPh, GTh, GPh)*TMath::RadToDeg());
-		p_thetaT->Fill(GEn, dc.GammaAng(TTh, TPh, GTh, GPh)*TMath::RadToDeg());
+		//p_thetaB->Fill(GEn, dc.GammaAng(BTh, BPh, GTh, GPh)*TMath::RadToDeg());
+		//p_thetaT->Fill(GEn, dc.GammaAng(TTh, TPh, GTh, GPh)*TMath::RadToDeg());
 
 		velo->Fill( dc.Beta( BEn, dc.GetAb() * dc.u_mass() ) );
 		velo2->Fill( TMath::Sqrt( 2.0 * BEn / ( dc.GetAb() * dc.u_mass() ) ) );
@@ -735,7 +732,7 @@ void hists::FillGamGam1h( float GEn, float GTh, float GPh, int GCid, vector <flo
 			
 			if( GCor_Gtd[i]*25. > -980. && GCor_Gtd[i]*25. < -580. ) {
 				
-				ge->Fill(GEn, GCor_GEn.at(i), weight); // need to add DC versions
+				//ge->Fill(GEn, GCor_GEn.at(i), weight); // need to add DC versions
 				
 			}
 			
@@ -792,7 +789,7 @@ void hists::FillGamGam2h( float GEn, float GTh, float GPh, int GCid, vector<floa
 				
 			if( GCor_Gtd.at(i)*25. > -980. && GCor_Gtd.at(i)*25. < -580. ) {
 					
-				ge->Fill(GEn, GCor_GEn.at(i), weight); // need to add DC versions
+				//ge->Fill(GEn, GCor_GEn.at(i), weight); // need to add DC versions
 					
 			}
 				
