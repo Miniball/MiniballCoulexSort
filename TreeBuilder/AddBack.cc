@@ -133,6 +133,9 @@ void AddBack::MakeGammaRays( bool addback, bool reject, bool segsum ) {
 				
 				// Found highest energy segment //
 				
+				// Do the veto of crap segments
+				if( veto_gamma ) continue;
+				
 				// Compare segment sum energy and core energy - less than 5% difference
 				if( TMath::Abs( SegSumEnergy - GammaEnergy ) / GammaEnergy < 0.05 && segsum )
 					
@@ -142,9 +145,6 @@ void AddBack::MakeGammaRays( bool addback, bool reject, bool segsum ) {
 				// Give event negative energy if outside
 				// (comment out below to use core energy instead)
 				else if( segsum ) GammaEnergy *= -1.0;
-				
-				// Do the veto of crap segments
-				if( veto_gamma ) continue;
 				
 				// Check previous gammas
 				for( unsigned int l = 0; l < gen_array.size(); l++ ) {
