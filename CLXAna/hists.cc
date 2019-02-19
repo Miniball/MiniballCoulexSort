@@ -115,8 +115,10 @@ void hists::Initialise( doppler dc_ ) {
 
 	T_dcB_x = new TH2F("T_dcB_x","Target gated by lab angle, background subtracted #gamma rays, Doppler corrected for scattered projectile;Target lab angle [deg.];Energy [keV];Counts per 1keV",64,cd_angles,GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	T_dcT_x = new TH2F("T_dcT_x","Target gated by lab angle, background subtracted #gamma rays, Doppler corrected for scattered target;Target lab angle [deg.];Energy [keV];Counts per 1keV",64,cd_angles,GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	T_nodc_x = new TH2F("T_nodc_x","Target gated by lab angle, background subtracted #gamma rays;Target lab angle [deg.];Energy [keV];Counts per 1keV",64,cd_angles,GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	B_dcB_x = new TH2F("B_dcB_x","Beam gated by lab angle, background subtracted #gamma rays, Doppler corrected for scattered projectile;Beam lab angle [deg.];Energy [keV];Counts per 1keV",64,cd_angles,GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	B_dcT_x = new TH2F("B_dcT_x","Beam gated by lab angle, background subtracted #gamma rays, Doppler corrected for scattered target;Beam lab angle [deg.];Energy [keV];Counts per 1keV",64,cd_angles,GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	B_nodc_x = new TH2F("B_nodc_x","Beam gated by lab angle, background subtracted #gamma rays;Beam lab angle [deg.];Energy [keV];Counts per 1keV",64,cd_angles,GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 
 	// Proton time gated spectra
 	T_T1T_dcT = new TH1F("T_T1T_dcT","Target gated, prompt proton gated, delayed proton gate subtracted, Doppler corrected #gamma-rays;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
@@ -382,7 +384,9 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, int GCid, float PEn, int
 
 		T_dcB_x->Fill(TTh,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);	
 		T_dcT_x->Fill(TTh,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
-	
+		T_nodc_x->Fill(TTh,GEn, weight);
+		T_nodc->Fill(GEn, weight);
+
 		T_1hdcB->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
 		T_1hdcT->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 		
@@ -440,6 +444,8 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, int GCid, float PEn, int
 
 		B_dcB_x->Fill(BTh,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
 		B_dcT_x->Fill(BTh,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+		B_nodc_x->Fill(BTh,GEn, weight);
+		B_nodc->Fill(GEn, weight);
 
 		B_1hdcB->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
 		B_1hdcT->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
@@ -560,10 +566,14 @@ void hists::FillGam2h( float GEn, float GTh, float GPh, int GCid, vector<float> 
 
 	T_dcB_x->Fill(TTh,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
 	T_dcT_x->Fill(TTh,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+	T_nodc_x->Fill(TTh,GEn, weight);
+	T_nodc->Fill(GEn, weight);
 
 	B_dcB_x->Fill(BTh,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
 	B_dcT_x->Fill(BTh,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
-	
+	B_nodc_x->Fill(BTh,GEn, weight);
+	B_nodc->Fill(GEn, weight);
+
 	B_dcB_cid->Fill(GCid,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
 	B_dcT_cid->Fill(GCid,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 	
@@ -597,9 +607,6 @@ void hists::FillElec1h( float GEn, float GTh, float GPh, int GCid, float PEn, in
 		BEn = dc.GetBEn(PEn,Pnf,Psec);
 		BTh = dc.GetBTh(Pnf,Psec);
 		BPh = dc.GetQPhi(Pquad,Pnb,Psec);
-
-//		Te_dcB_x[Pnf]->Fill(dc.DC_elec(GEn, BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);	
-//		Te_dcT_x[Pnf]->Fill(dc.DC_elec(GEn, TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 	
 		if( Pnf >= minrecoil && Pnf <= maxrecoil ) {
 
@@ -651,9 +658,6 @@ void hists::FillElec2h( float GEn, float GTh, float GPh, int GCid, vector<float>
 	float TTh = dc.GetPTh(Tnf,Psec[Tptr]);
 	float BPh = dc.GetPPhi(Pquad[Bptr],Pnb[Bptr],Psec[Bptr]);
 	float TPh = dc.GetPPhi(Pquad[Tptr],Pnb[Tptr],Psec[Tptr]);
-
-//	Te_dcB_x[Tnf]->Fill(dc.DC_elec(GEn, BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);	
-//	Te_dcT_x[Tnf]->Fill(dc.DC_elec(GEn, TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 
 	if( Tnf >= minrecoil && Tnf <= maxrecoil ) {
 
