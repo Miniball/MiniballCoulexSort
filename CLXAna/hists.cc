@@ -80,12 +80,13 @@ void hists::Initialise( doppler dc_ ) {
 	gcor_size = new TH1F("gcor_size","gcor_size;Number of correlated gammas/electrons;frequency",100,-0.5,99.5);
 	
 	// Background subtracted, Doppler corrected spectra
-	B_dcB = new TH1F("B_dcB","Beam gated gamma rays, background subtracted, Doppler corrected #gamma-rays;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
-	B_dcT = new TH1F("B_dcT","Beam gated gamma rays, background subtracted, Doppler corrected for target recoil;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
-	B_1hdcB = new TH1F("B_1hdcB","Beam gated gamma rays, 1-p, background subtracted, Doppler corrected #gamma-rays;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
-	B_1hdcT = new TH1F("B_1hdcT","Beam gated gamma rays, 1-p, background subtracted, Doppler corrected for target recoil;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	B_dcB = new TH1F("B_dcB","Beam gated, background subtracted, Doppler corrected #gamma-rays;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	B_dcT = new TH1F("B_dcT","Beam gated, background subtracted, Doppler corrected for target recoil;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	B_1hdcB = new TH1F("B_1hdcB","Beam gated, 1-p, background subtracted, Doppler corrected #gamma-rays;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	B_1hdcT = new TH1F("B_1hdcT","Beam gated, 1-p, background subtracted, Doppler corrected for target recoil;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	B_nodc = new TH1F("B_nodc","Beam gated, background subtracted #gamma-rays, no DC;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	gam_dcB = new TH1F("gam_dcB","Total statistics for gamma rays, background subtracted, Doppler corrected for scattered projectile;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
-	
+
 	Be_dcB = new TH1F("Be_dcB","Beam gated electrons, background subtracted, Doppler corrected #gamma-rays;Energy [keV];Counts per 1keV",EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
 	Be_dcT = new TH1F("Be_dcT","Beam gated electrons, background subtracted, Doppler corrected for target recoil;Energy [keV];Counts per 1keV",EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
 	Be_1hdcB = new TH1F("Be_1hdcB","Beam gated electrons, 1-p, background subtracted, Doppler corrected #gamma-rays;Energy [keV];Counts per 1keV",EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
@@ -96,9 +97,11 @@ void hists::Initialise( doppler dc_ ) {
 	T_dcB = new TH1F("T_dcB","Target gated, background subtracted, Doppler corrected for scattered projectile;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	T_1hdcT = new TH1F("T_1hdcT","Target gated, 1-p, background subtracted, Doppler corrected #gamma-rays;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	T_1hdcB = new TH1F("T_1hdcB","Target gated, 1-p, background subtracted, Doppler corrected for scattered projectile;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	T_nodc = new TH1F("T_nodc","Target gated, background subtracted #gamma-rays, no DC;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	gam_dcT = new TH1F("gam_dcT","Total statistics for gamma rays, background subtracted, Doppler corrected for target recoil;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	T_2hdcT = new TH1F("T_2hdcT","T_2hit;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	T_2hdcB = new TH1F("T_2hdcB","T_2hit DC for beam;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+
 	p_thetaB = new TH2F("p_thetaB","Uncorrected gamma-ray energies versus beam particle-gamma angle; Energy [keV]; Theta [deg]", 1500, 0, 1500, 181, -0.5, 180.5);
 	p_thetaT = new TH2F("p_thetaT","Uncorrected gamma-ray energies versus target particle-gamma angle; Energy [keV]; Theta [deg]", 1500, 0, 1500, 181, -0.5, 180.5);
 
@@ -110,33 +113,10 @@ void hists::Initialise( doppler dc_ ) {
 	Te_2hdcT = new TH1F("Te_2hdcT","Te_2hit;Energy [keV];Counts per 1keV",EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
 	Te_2hdcB = new TH1F("Te_2hdcB","Te_2hit DC for beam;Energy [keV];Counts per 1keV",EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
 
-	for(int i=0; i<16; i++){
-	
-		hname = "T_dcB_x" + dc.convertInt(i);
-		htitle = "Target gated (strip " + dc.convertInt(i) + "), background subtracted gamma rays, Doppler corrected for scattered projectile;Energy [keV];Counts per 1keV";
-		T_dcB_x[i] = new TH1F(hname.c_str(),htitle.c_str(),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));	
-		
-		hname = "T_dcT_x" + dc.convertInt(i);
-		htitle = "Target gated (strip " + dc.convertInt(i) + "), background subtracted gamma rays, Doppler corrected for target recoil;Energy [keV];Counts per 1keV";
-		T_dcT_x[i] = new TH1F(hname.c_str(),htitle.c_str(),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));	
-		
-//		hname = "Te_dcB_x" + dc.convertInt(i);
-//		htitle = "Target gated (strip " + dc.convertInt(i) + "), background subtracted electrons, Doppler corrected for scattered projectile;Energy [keV];Counts per 1keV";
-//		Te_dcB_x[i] = new TH1F(hname.c_str(),htitle.c_str(),EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
-		
-//		hname = "Te_dcT_x" + dc.convertInt(i);
-//		htitle = "Target gated (strip " + dc.convertInt(i) + "), background subtracted electrons, Doppler corrected for target recoil;Energy [keV];Counts per 1keV";
-//		Te_dcT_x[i] = new TH1F(hname.c_str(),htitle.c_str(),EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
-		
-		hname = "B_dcB_x" + dc.convertInt(i);
-		htitle = "Beam gated (strip " + dc.convertInt(i) + "), background subtracted gamma rays, Doppler corrected for scattered projectile;Energy [keV];Counts per 1keV";
-		B_dcB_x[i] = new TH1F(hname.c_str(),htitle.c_str(),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));	
-		
-		hname = "B_dcT_x" + dc.convertInt(i);
-		htitle = "Beam gated (strip " + dc.convertInt(i) + "), background subtracted gamma rays, Doppler corrected for target recoil;Energy [keV];Counts per 1keV";
-		B_dcT_x[i] = new TH1F(hname.c_str(),htitle.c_str(),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));	
-		
-	}
+	T_dcB_x = new TH2F("T_dcB_x","Target gated by lab angle, background subtracted #gamma rays, Doppler corrected for scattered projectile;Target lab angle [deg.];Energy [keV];Counts per 1keV",64,cd_angles,GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	T_dcT_x = new TH2F("T_dcT_x","Target gated by lab angle, background subtracted #gamma rays, Doppler corrected for scattered target;Target lab angle [deg.];Energy [keV];Counts per 1keV",64,cd_angles,GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	B_dcB_x = new TH2F("B_dcB_x","Beam gated by lab angle, background subtracted #gamma rays, Doppler corrected for scattered projectile;Beam lab angle [deg.];Energy [keV];Counts per 1keV",64,cd_angles,GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	B_dcT_x = new TH2F("B_dcT_x","Beam gated by lab angle, background subtracted #gamma rays, Doppler corrected for scattered target;Beam lab angle [deg.];Energy [keV];Counts per 1keV",64,cd_angles,GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 
 	// Proton time gated spectra
 	T_T1T_dcT = new TH1F("T_T1T_dcT","Target gated, prompt proton gated, delayed proton gate subtracted, Doppler corrected #gamma-rays;Energy [keV];Counts per 1keV",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
@@ -400,8 +380,8 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, int GCid, float PEn, int
 		BTh = dc.GetBTh(Pnf,Psec);
 		BPh = dc.GetQPhi(Pquad,Pnb,Psec);
 
-		T_dcB_x[Pnf]->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);	
-		T_dcT_x[Pnf]->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+		T_dcB_x->Fill(TTh,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);	
+		T_dcT_x->Fill(TTh,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 	
 		T_1hdcB->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
 		T_1hdcT->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
@@ -458,8 +438,8 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, int GCid, float PEn, int
 		TTh = dc.GetTTh(Pnf,PEn,Psec);
 		TPh = dc.GetQPhi(Pquad,Pnb,Psec);
 
-		B_dcB_x[Pnf]->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);	
-		B_dcT_x[Pnf]->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+		B_dcB_x->Fill(BTh,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+		B_dcT_x->Fill(BTh,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 
 		B_1hdcB->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
 		B_1hdcT->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
@@ -578,11 +558,11 @@ void hists::FillGam2h( float GEn, float GTh, float GPh, int GCid, vector<float> 
 	float BPh = dc.GetPPhi(Pquad[Bptr],Pnb[Bptr],Psec[Bptr]);
 	float TPh = dc.GetPPhi(Pquad[Tptr],Pnb[Tptr],Psec[Tptr]);
 
-	T_dcB_x[Tnf]->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);	
-	T_dcT_x[Tnf]->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+	T_dcB_x->Fill(TTh,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+	T_dcT_x->Fill(TTh,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 
-	B_dcB_x[Bnf]->Fill(GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
-	B_dcT_x[Bnf]->Fill(GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+	B_dcB_x->Fill(BTh,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+	B_dcT_x->Fill(BTh,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 	
 	B_dcB_cid->Fill(GCid,GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
 	B_dcT_cid->Fill(GCid,GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);

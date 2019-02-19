@@ -64,14 +64,14 @@ class hists {
 	TH1F *gcor_size;
 	 
 	// Background subtracted, Doppler corrected gamma spectra
-	TH1F *B_dcB, *B_dcT, *B_1hdcB, *B_1hdcT;
-	TH1F *T_dcT, *T_dcB, *T_1hdcT, *T_1hdcB;
+	TH1F *B_dcB, *B_dcT, *B_1hdcB, *B_1hdcT, *T_nodc;
+	TH1F *T_dcT, *T_dcB, *T_1hdcT, *T_1hdcB, *B_nodc;
 	TH1F *B_T1T_dcB, *B_T1T_dcT, *T_T1T_dcB, *T_T1T_dcT;
 	TH1F *B_T1T_dcB_p, *B_T1T_dcT_p, *T_T1T_dcB_p, *T_T1T_dcT_p;
 	TH1F *B_T1T_dcB_d, *B_T1T_dcT_d, *T_T1T_dcB_d, *T_T1T_dcT_d;
 //	TH2F *B_2D_T1T_dcB, *B_2D_T1T_dcT, *T_2D_T1T_dcB, *T_2D_T1T_dcT;
-	TH1F *T_dcB_x[16], *T_dcT_x[16];
-	TH1F *B_dcB_x[16], *B_dcT_x[16];
+	TH2F *T_dcB_x, *T_dcT_x, *T_nodc_x;
+	TH2F *B_dcB_x, *B_dcT_x, *B_nodc_x;
 	TH1F *T_del_2hdcB, *T_del_2h;
 	TH1F *gam_dcB, *gam_dcT, *T_2hdcB, *T_2hdcT;
 	TH2F *B_dcB_cid, *B_dcT_cid;
