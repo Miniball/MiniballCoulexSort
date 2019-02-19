@@ -201,9 +201,7 @@ void AddBack::MakeGammaRays( bool addback, bool reject, bool segsum ) {
 				sen_array.push_back( MaxSegEnergy );
 				if( ab_mul == 0 ) ab_array.push_back( false );
 				else ab_array.push_back( true );
-				
-				E_gam->Fill( GammaEnergy );
-				
+
 			} // core event
 			
 			// Reset
@@ -244,6 +242,9 @@ void AddBack::MakeGammaRays( bool addback, bool reject, bool segsum ) {
 		}
 		
 	}
+	
+	// Fill the gamma-ray singles histogram
+	for( unsigned int i = 0; i < gen_array.size(); i++ ) E_gam->Fill( gen_array[i] );
 	
 	return;
 	
