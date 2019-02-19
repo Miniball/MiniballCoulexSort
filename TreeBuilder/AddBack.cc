@@ -118,8 +118,8 @@ void AddBack::MakeGammaRays( bool addback, bool reject, bool segsum ) {
 					
 					GammaEnergy2 = Cal->DgfEnergy( dgf_num2, dgf_ch2, dgf_en2 );
 					
-					// Calculate sum of segments if energy is deposited (i.e. >10 keV)
-					if( GammaEnergy2 > 10. ) SegSumEnergy += GammaEnergy2;
+					// Calculate sum of segments if energy is deposited (i.e. >0 keV)
+					if( GammaEnergy2 > 0. ) SegSumEnergy += GammaEnergy2;
 					
 					// Test maximum energy segment
 					if( GammaEnergy2 < MaxSegEnergy ) continue;
