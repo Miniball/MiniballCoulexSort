@@ -86,6 +86,7 @@ void AddBack::MakeGammaRays( bool addback, bool reject, bool segsum ) {
 				MaxSegCore = dgf_num % 6 / 2;
 				MaxSegId = 0; // initialise as core (if no segment hit (dead), use core!)
 				SegSumEnergy = 0; // add segment energies
+				seg_mul = 0; // segment multiplicity
 				
 				// Check for highest energy segment in same detector
 				for( unsigned int k = 0; k < event->NumberOfDgfs(); k++ ) {
@@ -118,8 +119,13 @@ void AddBack::MakeGammaRays( bool addback, bool reject, bool segsum ) {
 					
 					GammaEnergy2 = Cal->DgfEnergy( dgf_num2, dgf_ch2, dgf_en2 );
 					
-					// Calculate sum of segments if energy is deposited (i.e. >0 keV)
-					if( GammaEnergy2 > 0. ) SegSumEnergy += GammaEnergy2;
+					// Calculate sum of segments if energy is deposited (i.e. >1 keV)
+					if( GammaEnergy2 > 1. ) {
+						
+						SegSumEnergy += GammaEnergy2;
+						seg_mul++;
+						
+					}
 					
 					// Test maximum energy segment
 					if( GammaEnergy2 < MaxSegEnergy ) continue;
@@ -136,15 +142,17 @@ void AddBack::MakeGammaRays( bool addback, bool reject, bool segsum ) {
 				// Do the veto of crap segments
 				if( veto_gamma ) continue;
 				
-				// Compare segment sum energy and core energy - less than 5% difference
-				if( TMath::Abs( SegSumEnergy - GammaEnergy ) / GammaEnergy < 0.05 && segsum )
+				// Compare segment sum energy and core energy - less than 1% difference or 2 keV
+				if( ( TMath::Abs( SegSumEnergy - GammaEnergy ) / GammaEnergy < 0.01 ||
+					  TMath::Abs( SegSumEnergy - GammaEnergy ) < 2. ) && segsum )
 					
 					// Overwrite with segment sum energy
 					GammaEnergy = SegSumEnergy;
 
-				// If energy is outside of 5% window, throw it away
-				// In reject mode, we need to know the event was here (not compatible with each other)
-				// (comment out below to use core energy instead)
+				// If energy is outside of 1% window and using reject, take only single hits
+				else if( segsum && reject && seg_mul > 1 ) continue;
+				
+				// If energy is outside of 1% window and not using reject, throw it away
 				else if( segsum && !reject ) continue;
 				
 				// Check previous gammas
