@@ -142,8 +142,8 @@ void AddBack::MakeGammaRays( bool addback, bool reject, bool segsum ) {
 				// Do the veto of crap segments
 				if( veto_gamma ) continue;
 				
-				// Compare segment sum energy and core energy - less than 1% difference or 2 keV
-				if( ( TMath::Abs( SegSumEnergy - GammaEnergy ) / GammaEnergy < 0.01 ||
+				// Compare segment sum energy and core energy - less than 0.5% difference or 2 keV
+				if( ( TMath::Abs( SegSumEnergy - GammaEnergy ) / GammaEnergy < 0.005 ||
 					  TMath::Abs( SegSumEnergy - GammaEnergy ) < 2. ) && segsum )
 					
 					// Overwrite with segment sum energy
