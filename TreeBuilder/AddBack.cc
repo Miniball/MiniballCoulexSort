@@ -149,11 +149,17 @@ void AddBack::MakeGammaRays( bool addback, bool reject, bool segsum ) {
 					// Overwrite with segment sum energy
 					GammaEnergy = SegSumEnergy;
 
-				// If energy is outside of 1% window and using reject, take only single hits
-				else if( segsum && reject && seg_mul > 1 ) continue;
-				
 				// If energy is outside of 1% window and not using reject, throw it away
+				// (comment out the line below if you want to use core energy instead)
 				else if( segsum && !reject ) continue;
+				
+				// If using reject and segsum in combination, take only single hits
+				if( segsum && reject ) {
+					
+					if( seg_mul > 1 ) continue;
+					else GammaEnergy = SegSumEnergy;
+					
+				}
 				
 				// Check previous gammas
 				for( unsigned int l = 0; l < gen_array.size(); l++ ) {
