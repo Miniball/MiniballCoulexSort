@@ -156,9 +156,9 @@ void AddBack::MakeGammaRays( bool addback, bool reject, bool segsum ) {
 				// If using reject and segsum in combination, take only single hits
 				if( segsum && reject ) {
 					
-					if( seg_mul > 1 ) continue;
-					else GammaEnergy = SegSumEnergy;
-					
+					if( seg_mul == 1 ) GammaEnergy = SegSumEnergy;
+					else continue;
+
 				}
 				
 				// Check previous gammas
