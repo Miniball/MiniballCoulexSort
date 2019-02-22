@@ -187,8 +187,8 @@ void AddBack::MakeGammaRays( bool addback, bool reject, bool segsum ) {
 
 					} // addback
 					
-					// Reject/suppress if same cluster
-					if( clu_array[l] == MaxSegClu && reject ) {
+					// Reject/suppress if same cluster (if not doing single crystal reject)
+					if( clu_array[l] == MaxSegClu && reject && !segsum ) {
 							
 						gen_array.erase( gen_array.begin() + l );
 						gtd_array.erase( gtd_array.begin() + l );
