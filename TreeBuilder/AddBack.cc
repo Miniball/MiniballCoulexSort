@@ -259,7 +259,14 @@ void AddBack::MakeGammaRays( bool addback, bool reject, bool segsum ) {
 	}
 	
 	// Fill the gamma-ray singles histogram
-	for( unsigned int i = 0; i < gen_array.size(); i++ ) E_gam->Fill( gen_array[i] );
+	for( unsigned int i = 0; i < gen_array.size(); i++ ) {
+		
+		E_gam_tot->Fill( gen_array[i] );
+
+		E_gam_vs_seg->Fill( cid_array[i] * 6 + sid_array[i], gen_array[i] ); // segment
+		E_gam_vs_seg->Fill( cid_array[i] * -6 - 1, gen_array[i] );	// core
+
+	}
 	
 	return;
 	

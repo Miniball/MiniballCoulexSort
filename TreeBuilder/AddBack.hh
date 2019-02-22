@@ -154,8 +154,9 @@ private:
 	vector< unsigned int > dead_segments;
 	
 	// Histograms
-	TH1F *E_gam, *E_gam_seg[8][3][7], *E_gam_seg_cal[8][3][7];
+	TH1F *E_gam_tot, *E_gam_seg[8][3][7], *E_gam_seg_cal[8][3][7];
 	TH1F *E_BeamDump[2], *T_BeamDump[2], *tdiff_BD;
+	TH2F *E_gam_vs_seg;
 	TH2F *bd_bd;
 	TH1F *hABmult;
 
@@ -193,9 +194,17 @@ void AddBack::InitialiseVariables() {
 
 void AddBack::InitialiseHistograms() {
 	
-	// Total gamma - addback if option is ticked
-	E_gam = new TH1F("E_gam","E_gam",GBINS,GMIN,GMAX);
-	E_gam->GetXaxis()->SetTitle("Energy Gamma Rays [Channels]");
+	// Total gamma - including any addback options if ticked
+	E_gam_tot = new TH1F( "E_gam_tot", "Total gamma-ray spectrum after addback/reject/segsum", GBINS, GMIN, GMAX );
+	E_gam_tot->GetXaxis()->SetTitle("Gamma-ray energy (keV)");
+	E_gam_tot->GetYaxis()->SetTitle("Counts per keV");
+	
+	// Gamma vs. segment - including any addback options if ticked
+	E_gam_vs_seg = new TH2F( "E_gam_tot", "Gamma-ray spectra after addback/reject/segsum vs. segment number (positive) or core number (negative)",
+							168, -24.5, 143.5, GBINS, GMIN, GMAX );
+	E_gam_vs_seg->GetXaxis()->SetTitle("Segment number");
+	E_gam_vs_seg->GetYaxis()->SetTitle("Gamma-ray energy (keV)");
+	E_gam_vs_seg->GetZaxis()->SetTitle("Counts per keV");
 	
 	// Gamma spectra for every segment - no Doppler correction
 	TDirectory *gam_dir = outfile->mkdir("E_gam_seg");
