@@ -263,8 +263,8 @@ void AddBack::MakeGammaRays( bool addback, bool reject, bool segsum ) {
 		
 		E_gam_tot->Fill( gen_array[i] );
 
-		E_gam_vs_seg->Fill( cid_array[i] * 6 + sid_array[i], gen_array[i] ); // segment
-		E_gam_vs_seg->Fill( cid_array[i] * -6 - 1, gen_array[i] );	// core
+		E_gam_vs_seg->Fill( cid_array[i] * 6 + sid_array[i] - 1, gen_array[i] ); // segment
+		E_gam_vs_seg->Fill( cid_array[i] * -1 - 1, gen_array[i] );	// core
 
 	}
 	

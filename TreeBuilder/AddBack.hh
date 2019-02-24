@@ -200,7 +200,7 @@ void AddBack::InitialiseHistograms() {
 	E_gam_tot->GetYaxis()->SetTitle("Counts per keV");
 	
 	// Gamma vs. segment - including any addback options if ticked
-	E_gam_vs_seg = new TH2F( "E_gam_tot", "Gamma-ray spectra after addback/reject/segsum vs. segment number (positive) or core number (negative)",
+	E_gam_vs_seg = new TH2F( "E_gam_vs_seg", "Gamma-ray spectra after addback/reject/segsum vs. segment number (positive) or core number (negative)",
 							168, -24.5, 143.5, GBINS, GMIN, GMAX );
 	E_gam_vs_seg->GetXaxis()->SetTitle("Segment number");
 	E_gam_vs_seg->GetYaxis()->SetTitle("Gamma-ray energy (keV)");
