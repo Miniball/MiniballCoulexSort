@@ -44,7 +44,16 @@ CLXAna: CLXAna.cc $(OBJECTS)
 	$(AR) cru $(LIB_DIR)/libCLXAna.a $(OBJECTS)
 	cp CLXAna $(BIN_DIR)/
 
-%.o: %.cc %.hh
+g_clx.o: g_clx.cc g_clx.hh hists.cc hists.hh doppler.cc doppler.hh
+	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+hists.o: hists.cc hists.hh doppler.cc doppler.hh
+	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+doppler.o: doppler.cc doppler.hh
+	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+SpedeGeometry.o: SpedeGeometry.cc SpedeGeometry.hh
 	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
