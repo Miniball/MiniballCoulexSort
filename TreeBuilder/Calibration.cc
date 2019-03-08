@@ -151,10 +151,10 @@ void Calibration::PrintCalibration(){
 	cout << "Miniball angles" << endl;
 	for( int clu = 0; clu < fNofClusters; clu++ ) {
 		
-		cout << Form( "Cluster_%d.R:    \t", clu ) << fClusterR[clu];
-		cout << Form( "Cluster_%d.Theta:\t", clu ) << fClusterTheta[clu];
-		cout << Form( "Cluster_%d.Phi:  \t", clu ) << fClusterPhi[clu];
-		cout << Form( "Cluster_%d.Alpha:\t", clu ) << fClusterAlpha[clu];
+		cout << Form( "Cluster_%d.R:    \t", clu ) << fClusterR[clu] << endl;
+		cout << Form( "Cluster_%d.Theta:\t", clu ) << fClusterTheta[clu] << endl;
+		cout << Form( "Cluster_%d.Phi:  \t", clu ) << fClusterPhi[clu] << endl;
+		cout << Form( "Cluster_%d.Alpha:\t", clu ) << fClusterAlpha[clu] << endl;
 		
 	}
 	
