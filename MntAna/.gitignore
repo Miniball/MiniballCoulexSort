@@ -1,8 +1,0 @@
-# Ignore gedit temporary files
-*~
-*.o
-*Dict.cc
-*Dict.h
-*.pcm
-MntAna
-MntAna_13mg
