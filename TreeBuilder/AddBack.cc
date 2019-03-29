@@ -107,15 +107,15 @@ void AddBack::MakeGammaRays( bool addback, bool reject, bool segsum ) {
 					if( dgf_num2 % 2 == 0 ) gSeg += dgf_ch2;
 					else gSeg += dgf_ch2+3;
 					
+					// Skip if a different detector
+					if( dgf_num2 != dgf_num && dgf_num2 != dgf_num + 1 ) continue;
+					
 					// Is it a crap segment?
 					for( unsigned int ds = 0; ds < dead_segments.size(); ds++ ) {
 						
 						if( gSeg == dead_segments[ds] && dgf_en2 > 20 ) veto_gamma = true;
 						
 					}
-					
-					// Skip if a different detector
-					if( dgf_num2 != dgf_num && dgf_num2 != dgf_num + 1 ) continue;
 					
 					GammaEnergy2 = Cal->DgfEnergy( dgf_num2, dgf_ch2, dgf_en2 );
 					
