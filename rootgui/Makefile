@@ -16,13 +16,13 @@ endif
 BIN_DIR     := ../bin
 LIB_DIR     := ../lib
 MED_DIR     := ../MedToRoot
-ANA_INC     := -I../CLXAna -I../MntAna -I../TDRIVAna
+ANA_INC     := -I../CLXAna
 
 CC       := $(shell root-config --cc)
 CPP      := $(shell root-config --cxx)
 CFLAGS   := $(ROOTCFLAGS) -Wall -fPIC -Wno-unused-variable -g
 
-LIBS     := $(ROOTGLIBS) -L$(LIB_DIR) -lCLXAna -lTDRIVAna -lMntAna -lTreeBuilder
+LIBS     := $(ROOTGLIBS) -L$(LIB_DIR) -lCLXAna -lTreeBuilder
 
 INCLUDES := $(ANA_DIR)
 
