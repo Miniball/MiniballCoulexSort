@@ -171,6 +171,8 @@ int main( int argc, char* argv[] ) {
 	delete tr;
 
 	cout << "Finished." << endl;
+	cout << "\a" << endl;
+
 	return 0;
 	
 }

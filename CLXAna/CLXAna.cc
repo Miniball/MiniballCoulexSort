@@ -204,7 +204,8 @@ int main( int argc, char *argv[] ) {
 	x.Loop( outputfilename );
 	
 	cout << "Finished." << endl;
-
+	cout << "\a" << endl;
+	
 	return 0;
 
 }
