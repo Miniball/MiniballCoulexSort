@@ -1,5 +1,4 @@
-# MiniballCoulexSort
-[![DOI](https://zenodo.org/badge/99667438.svg)](https://zenodo.org/badge/latestdoi/99667438)
+# MiniballCoulexSort [![DOI](https://zenodo.org/badge/99667438.svg)](https://zenodo.org/badge/latestdoi/99667438)
 Analysis code for MINIBALL experiments at ISOLDE. This code is designed to take the raw med data files and convert them to ROOT trees, then subsequently analyse them to produce particle-gated, Doppler corrected spectra. It is broken down in to 3 parts:
 
 ### MedToRoot
