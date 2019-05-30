@@ -117,6 +117,14 @@ void AddBack::MakeGammaRays( bool addback, bool reject, bool segsum ) {
 						
 					}
 					
+					// Check if it should be swapped
+					for( unsigned int ss = 0; ss < swap_segments.size(); ss++ ) {
+						
+						if( gSeg == swap_segments[ss][0] ) gSeg = swap_segments[ss][1];
+						if( gSeg == swap_segments[ss][1] ) gSeg = swap_segments[ss][0];
+
+					}
+
 					GammaEnergy2 = Cal->DgfEnergy( dgf_num2, dgf_ch2, dgf_en2 );
 					
 					// Calculate sum of segments if energy is deposited (i.e. >1 keV)
@@ -132,8 +140,8 @@ void AddBack::MakeGammaRays( bool addback, bool reject, bool segsum ) {
 					
 					// Reassign energy and id
 					MaxSegEnergy = GammaEnergy2;
-					if( dgf_num2 % 2 == 0 ) MaxSegId = dgf_ch2;
-					else MaxSegId = dgf_ch2+3;
+					MaxSegId = gSeg % 7;
+
 					
 				} // k
 				

@@ -151,8 +151,10 @@ private:
 	vector<bool> ab_array;
 	bool veto_gamma;
 	unsigned int gSeg;
-	vector< unsigned int > dead_segments;
-	
+	vector<unsigned short> dead_segments;
+	vector< array< unsigned short, 2 > > swap_segments;
+	array< unsigned short, 2 > segpair;
+
 	// Histograms
 	TH1F *E_gam_tot, *E_gam_seg[8][3][7], *E_gam_seg_cal[8][3][7];
 	TH1F *E_BeamDump[2], *T_BeamDump[2], *tdiff_BD;
@@ -182,11 +184,32 @@ AddBack::~AddBack() {
 }
 
 void AddBack::InitialiseVariables() {
-	
-	// Crap segments list (i.e. those that need to be vetoed)
+
+	// Segment counting...
 	// Counting from 0 to 167, i.e. including cores - clu*21 + core*7 + seg
-	dead_segments.push_back( 106 ); // clu 5, core 0, seg 1 = 18A1
+
+	// Crap segments list (i.e. those that need to be vetoed)
+	// Repeat the next line for every segment to be vetoed
+	//dead_segments.push_back( 106 ); // clu 5, core 0, seg 1 = 18A1
 	dead_segments.push_back( 107 ); // clu 5, core 0, seg 2 = 18A2
+	
+	// Swap segments list (i.e. pairs of segments where cables were swapped)
+	// Repeat next three lines for every pair to be swapped
+	//segpair[0] = 108; // clu 5, core 0, seg 3 = 18A3
+	//segpair[1] = 109; // clu 5, core 0, seg 4 = 18A4
+	//swap_segments.push_back( segpair );
+
+	
+	// Comment about the segments
+	cout << "Number of segments to be vetoed = " << dead_segments.size() << endl;
+	for( unsigned int i = 0; i < dead_segments.size(); i++ )
+		cout << "\tVeto segment " << dead_segments[i] << endl;
+		
+	cout << "Number of segment pairs to swap = " << swap_segments.size() << endl;
+	for( unsigned int i = 0; i < swap_segments.size(); i++ )
+		cout << "\tSwap segments " << swap_segments[i][0] << " and " << swap_segments[i][1] << endl;
+
+	cout << endl;
 	
 	return;
 
