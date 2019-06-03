@@ -59,13 +59,13 @@ class doppler : public TObject {
 	float	GetELoss( float Ei, float dist, int opt, string combo );
 	float	GetBThLab( float CoM );
 	float	GetTThLab( float CoM );
-	float	GetBThCoM( float BTh );
+	float	GetBThCoM( float BTh, bool kinflag = false );
 	float	GetTThCoM( float TTh );
 	float	GetBEnKin( float CoM );
-	float	GetBEnKinB( float BTh );
+	float	GetBEnKinB( float BTh, bool kinflag = false );
 	float	GetBEnKinT( float TTh );
 	float	GetTEnKin( float CoM );
-	float	GetTEnKinB( float BTh );
+	float	GetTEnKinB( float BTh, bool kinflag = false );
 	float	GetTEnKinT( float TTh );
 	float	GammaAng( float PTh, float PPhi, float GTh, float GPhi );
 	float	Beta( float Ek, float m );

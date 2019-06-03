@@ -647,7 +647,8 @@ float doppler::GetELoss( float Ei, float dist, int opt, string combo ) {
 float doppler::GetBThLab( float CoM ) {
 	
 	/// Calculate the beam angle in the lab from the centre of mass angle (radians)
-	
+	/// @param CoM theta angle of the beam in the centre of mass frame
+
 	float tau = Ab/At;
 	float Eprime = Ereac - Ex * ( 1 + tau );
 	float epsilon = TMath::Sqrt(Ereac/Eprime);
@@ -667,6 +668,7 @@ float doppler::GetBThLab( float CoM ) {
 float doppler::GetTThLab( float CoM ) {
 	
 	/// Calculate the target angle in the lab from the centre of mass angle (radians)
+	/// @param CoM theta angle of the beam in the centre of mass frame
 
 	float tau = Ab/At;
 	float Eprime = Ereac - Ex * ( 1 + tau );
@@ -682,9 +684,11 @@ float doppler::GetTThLab( float CoM ) {
 	
 }
 
-float doppler::GetBThCoM( float BTh ) {
+float doppler::GetBThCoM( float BTh, bool kinflag ) {
 	
 	/// Calculates CoM scattering angle from the beam laboratory angle in radians
+	/// @param BTh theta angle of the beam in laboratory frame
+	/// @param kinflag kinematics flag such that true is the backwards solution (i.e. CoM > 90 deg)
 	
 	float tau = Ab/At;
 	float Eprime = Ereac - Ex * ( 1 + tau );
@@ -693,7 +697,10 @@ float doppler::GetBThCoM( float BTh ) {
 	// y = tan(theta_lab)
 	float y = TMath::Tan(BTh);
 	// x = cos(com)
-	float x = (-y*y*epsilon*tau + TMath::Sqrt(-y*y*epsilon*epsilon*tau*tau + y*y + 1) ) / (1+y*y);
+	float x = -y*y*epsilon*tau;
+	if( kinflag ) x += TMath::Sqrt(-y*y*epsilon*epsilon*tau*tau + y*y + 1);
+	else x -= TMath::Sqrt(-y*y*epsilon*epsilon*tau*tau + y*y + 1);
+	x /= (1+y*y);
 	
 	float CoM;
 	if( BTh < 0.5*TMath::Pi() ) CoM = TMath::ACos(x);
@@ -707,7 +714,8 @@ float doppler::GetBThCoM( float BTh ) {
 float doppler::GetTThCoM( float TTh ) {
 	
 	/// Calculates CoM scattering angle from the target laboratory angle in radians
-	
+	/// @param TTh theta angle of the target in laboratory frame
+
 	float tau = Ab/At;
 	float Eprime = Ereac - Ex * ( 1 + tau );
 	float epsilon = TMath::Sqrt(Ereac/Eprime);
@@ -728,7 +736,8 @@ float doppler::GetBEnKin( float CoM ) {
 	
 	/// Calculate the beam energy for a given centre of mass angle
 	/// using two-body kinematics calculations only
-	
+	/// @param CoM theta angle of the beam in the centre of mass frame
+
 	float tau = Ab/At;
 	float Eprime = Ereac - Ex * ( 1 + tau );
 	float epsilon = TMath::Sqrt(Ereac/Eprime);
@@ -745,7 +754,8 @@ float doppler::GetTEnKin( float CoM ) {
 	
 	/// Calculate the target energy for a given centre of mass angle
 	/// using two-body kinematics calculations only
-	
+	/// @param CoM theta angle of the beam in the centre of mass frame
+
 	float tau = Ab/At;
 	float Eprime = Ereac - Ex * ( 1 + tau );
 	float epsilon = TMath::Sqrt(Ereac/Eprime);
@@ -758,12 +768,14 @@ float doppler::GetTEnKin( float CoM ) {
 
 }
 
-float doppler::GetBEnKinB( float BTh ) {
+float doppler::GetBEnKinB( float BTh, bool kinflag ) {
 	
 	/// Calculate the beam energy for a given beam
 	/// using two-body kinematics calculations only
-	
-	return GetBEnKin( GetBThCoM( BTh ) );
+	/// @param BTh theta angle of the beam in laboratory frame
+	/// @param kinflag kinematics flag such that true is the backwards solution (i.e. CoM > 90 deg)
+
+	return GetBEnKin( GetBThCoM( BTh, kinflag ) );
 	
 }
 
@@ -771,17 +783,20 @@ float doppler::GetBEnKinT( float TTh ) {
 	
 	/// Calculate the beam energy for a given target
 	/// using two-body kinematics calculations only
-	
+	/// @param TTh theta angle of the target in laboratory frame
+
 	return GetBEnKin( GetTThCoM( TTh ) );
 	
 }
 
-float doppler::GetTEnKinB( float BTh ) {
+float doppler::GetTEnKinB( float BTh, bool kinflag ) {
 	
 	/// Calculate the target energy for a given beam
 	/// using two-body kinematics calculations only
-	
-	return GetTEnKin( GetBThCoM( BTh ) );
+	/// @param BTh theta angle of the beam in laboratory frame
+	/// @param kinflag kinematics flag such that true is the backwards solution (i.e. CoM > 90 deg)
+
+	return GetTEnKin( GetBThCoM( BTh, kinflag ) );
 	
 }
 
@@ -789,7 +804,8 @@ float doppler::GetTEnKinT( float TTh ) {
 	
 	/// Calculate the target energy for a given target
 	/// using two-body kinematics calculations only
-	
+	/// @param TTh theta angle of the target in laboratory frame
+
 	return GetTEnKin( GetTThCoM( TTh ) );
 	
 }
