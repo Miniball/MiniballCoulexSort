@@ -37,5 +37,6 @@ float		contaminant = -1.0;	///< contaminant layer thickness in mg/cm^2 (negative
 float		spededist = 23.6;	///< SPEDE to target distance in mm
 float		bg_frac = -1.0;		///< ratio of prompt and random background subtraction (negative)
 string      srim = "./srim";	///< directory containing the SRIM output files for Doppler correction
+bool		usekin = false;		///< Flag to use two-body kinematics for particle velocity
 
 void PrintInput();

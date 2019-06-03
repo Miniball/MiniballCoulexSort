@@ -700,7 +700,9 @@ MBSorter::MBSorter() {
 	check_cutfile = new TGCheckButton( sub_frame_15, "Use cut file" );
 	sub_frame_15->AddFrame( check_cutfile, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
 	
-	
+	check_kinemat = new TGCheckButton( sub_frame_15, "Use two-body kinematics" );
+	sub_frame_15->AddFrame( check_kinemat, new TGLayoutHints( kLHintsLeft, 2, 2, 2, 2 ) );
+
 	///////////////////////////
 	// Create number entries //
 	///////////////////////////
@@ -939,6 +941,7 @@ MBSorter::MBSorter() {
 	//check_gamgam->SetOn();
 	check_addback->SetOn();
 	check_cutfile->SetOn();
+	//check_kinemat->SetOn();
 
 	num_dop_zb->SetNumber( 50 );
 	num_dop_zt->SetNumber( 82 );
@@ -1345,12 +1348,18 @@ void MBSorter::on_ana_clicked() {
 	cmd += text_srimdir->GetText();
 
 	if( check_cutfile->IsOn() ) {
-
+		
 		cmd += " -cut ";
 		cmd += text_cutfile->GetText();
-
+		
 	}
-
+	
+	if( check_kinemat->IsOn() ) {
+		
+		cmd += " -usekin ";
+		
+	}
+	
 	cmd += " -i ";
 	cmd += inputfile;
 	cmd += " -o ";
@@ -1424,6 +1433,11 @@ void MBSorter::on_tdriv_clicked() {
 
 	}
 
+	if( check_kinemat->IsOn() ) {
+		
+		cmd += " -usekin ";
+		
+	}
 	cmd += " -i ";
 	cmd += inputfile;
 	cmd += " -o ";
@@ -1489,7 +1503,8 @@ void MBSorter::SaveSetup( string setupfile ) {
 	fSetup->SetValue( "segsum", check_segsum->IsOn() );
 	fSetup->SetValue( "verbose", check_verbose->IsOn() );
 	fSetup->SetValue( "usecut", check_cutfile->IsOn() );
-	
+	fSetup->SetValue( "usekin", check_kinemat->IsOn() );
+
 	fSetup->WriteFile( setupfile.c_str() );
 	
 	return;
@@ -1561,6 +1576,7 @@ void MBSorter::LoadSetup( string setupfile ) {
 	check_segsum->SetOn( fSetup->GetValue( "segsum", false ) );
 	check_verbose->SetOn( fSetup->GetValue( "verbose", false ) );
 	check_cutfile->SetOn( fSetup->GetValue( "usecut", false ) );
+	check_kinemat->SetOn( fSetup->GetValue( "usekin", false ) );
 
 	return;
 

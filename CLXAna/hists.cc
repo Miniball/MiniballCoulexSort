@@ -370,14 +370,31 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, int GCid, float PEn, int
 		if( weight > 0 ) p_1T->Fill(GEn);
 		else r_1T->Fill(GEn);
 		
-		TEn = PEn;
-		TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TS");
-		TTh = dc.GetPTh(Pnf,Psec);
+		// Target angles
+		TTh = dc.GetPTh( Pnf, Psec );
 		TPh = dc.GetPPhi(Pquad,Pnb,Psec);
-		
-		BEn = dc.GetBEn(PEn,Pnf,Psec);
-		BTh = dc.GetBTh(Pnf,Psec);
 		BPh = dc.GetQPhi(Pquad,Pnb,Psec);
+
+		// Use the two-body kinematics
+		if( dc.UseKin() ) {
+			
+			TEn = dc.GetTEnKinT( TTh );
+			
+			BTh = dc.GetBThLabT( TTh );
+			BEn = dc.GetBEnKinT( TTh );
+							 
+		}
+		
+		// Or use the particle energy and angle
+		else {
+			
+			TEn = PEn;
+			TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TS");
+			
+			BEn = dc.GetBEn(PEn,Pnf,Psec);
+			BTh = dc.GetBTh(Pnf,Psec);
+			
+		}
 
 		T_dcB_x->Fill(TTh*TMath::RadToDeg(),GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
 		T_dcT_x->Fill(TTh*TMath::RadToDeg(),GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
@@ -430,14 +447,31 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, int GCid, float PEn, int
 		if( weight > 0 ) p_1B->Fill(GEn);
 		else r_1B->Fill(GEn);
 		
-		BEn = PEn;
-		BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"BS");
-		BTh = dc.GetPTh(Pnf,Psec);
+		// Beam angles
+		BTh = dc.GetPTh( Pnf, Psec );
 		BPh = dc.GetPPhi(Pquad,Pnb,Psec);
-		
-		TEn = dc.GetTEn(PEn,Pnf,Psec);
-		TTh = dc.GetTTh(Pnf,PEn,Psec);
 		TPh = dc.GetQPhi(Pquad,Pnb,Psec);
+		
+		// Use the two-body kinematics
+		if( dc.UseKin() ) {
+			
+			BEn = dc.GetBEnKinB( BTh );
+			
+			TTh = dc.GetTThLabB( BTh );
+			TEn = dc.GetTEnKinB( BTh );
+			
+		}
+		
+		// Or use the particle energy and angle
+		else {
+			
+			BEn = PEn;
+			BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"BS");
+			
+			TEn = dc.GetTEn(PEn,Pnf,Psec);
+			TTh = dc.GetTTh(Pnf,PEn,Psec);
+
+		}
 
 		B_dcB_x->Fill(BTh*TMath::RadToDeg(),GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
 		B_dcT_x->Fill(BTh*TMath::RadToDeg(),GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
@@ -494,55 +528,6 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, int GCid, float PEn, int
 
 }
 
-void hists::FillDel2h( float GEn, float GTh, float GPh, int GCid, vector<float> PEn, vector<int> Pnf,
-					vector<int> Pnb, vector<int> Psec, vector<int> Pquad, vector<int> Pptr,
-					vector<float> td, float weight ) {
-
-	int Bptr, Tptr;
-
-	float time_diff = TMath::Abs(td[Pptr[0]]-td[Pptr[1]]);
-	int quad_diff = TMath::Abs(Pquad[Pptr[0]]-Pquad[Pptr[1]]);
-	int cut2 = dc.Cut_2p(PEn[Pptr[0]],Pnf[Pptr[0]],Pquad[Pptr[0]],Psec[Pptr[0]],
-						 PEn[Pptr[1]],Pnf[Pptr[1]],Pquad[Pptr[1]],Psec[Pptr[1]]);
-	bool cutg_0 = dc.CutG_en2hit(PEn[Pptr[1]]/1000.,PEn[Pptr[0]]/1000.);
-	bool cutg_1 = dc.CutG_en2hit(PEn[Pptr[0]]/1000.,PEn[Pptr[1]]/1000.);
-	int cut_0 = dc.Cut(PEn[Pptr[0]],Pnf[Pptr[0]],Pquad[Pptr[0]],Psec[Pptr[0]]);
-	int cut_1 = dc.Cut(PEn[Pptr[1]],Pnf[Pptr[1]],Pquad[Pptr[1]],Psec[Pptr[1]]);
-
-	if( quad_diff == 2 && time_diff <= ppwin && cut2 == 0 && cutg_0 ) { // target is [0]
-
-		Bptr = Pptr[1];
-		Tptr = Pptr[0];
-		
-	}
-
-	else if( quad_diff == 2 && time_diff <= ppwin && cut2 == 1 && cutg_1 ) { // target is [1]
-
-		Bptr = Pptr[0];
-		Tptr = Pptr[1];
-		
-	}
-
-	else return;
-	
-	int Bnf = Pnf[Bptr];
-	int Tnf = Pnf[Tptr];
-	float BEn = PEn[Bptr];
-	BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"BS");
-	float TEn = PEn[Tptr];
-	TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TS");
-	float BTh = dc.GetPTh(Bnf,Psec[Bptr]);
-	float TTh = dc.GetPTh(Tnf,Psec[Tptr]);
-	float BPh = dc.GetPPhi(Pquad[Bptr],Pnb[Bptr],Psec[Bptr]);
-	float TPh = dc.GetPPhi(Pquad[Tptr],Pnb[Tptr],Psec[Tptr]);
-
-	T_del_2h->Fill( GEn, weight );	
-	T_del_2hdcB->Fill( GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight );
-
-	return;
-
-}
-
 void hists::FillGam2h( float GEn, float GTh, float GPh, int GCid, vector<float> PEn, vector<int> Pnf,
 						vector<int> Pnb, vector<int> Psec, vector<int> Pquad, int Bptr, int Tptr,
 					    int T1T, float weight ) {
@@ -560,6 +545,14 @@ void hists::FillGam2h( float GEn, float GTh, float GPh, int GCid, vector<float> 
 	float TTh = dc.GetPTh(Tnf,Psec[Tptr]);
 	float BPh = dc.GetPPhi(Pquad[Bptr],Pnb[Bptr],Psec[Bptr]);
 	float TPh = dc.GetPPhi(Pquad[Tptr],Pnb[Tptr],Psec[Tptr]);
+	
+	// Use the two-body kinematics
+	if( dc.UseKin() ) {
+		
+		TEn = dc.GetTEnKinT( TTh );
+		BEn = dc.GetBEnKinB( BTh ); // no good for inverse kinematics?
+		
+	}
 
 	T_dcB_x->Fill(TTh*TMath::RadToDeg(),GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
 	T_dcT_x->Fill(TTh*TMath::RadToDeg(),GEn*dc.DC(TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
@@ -584,6 +577,63 @@ void hists::FillGam2h( float GEn, float GTh, float GPh, int GCid, vector<float> 
 
 }
 
+void hists::FillDel2h( float GEn, float GTh, float GPh, int GCid, vector<float> PEn, vector<int> Pnf,
+					  vector<int> Pnb, vector<int> Psec, vector<int> Pquad, vector<int> Pptr,
+					  vector<float> td, float weight ) {
+	
+	int Bptr, Tptr;
+	
+	float time_diff = TMath::Abs(td[Pptr[0]]-td[Pptr[1]]);
+	int quad_diff = TMath::Abs(Pquad[Pptr[0]]-Pquad[Pptr[1]]);
+	int cut2 = dc.Cut_2p(PEn[Pptr[0]],Pnf[Pptr[0]],Pquad[Pptr[0]],Psec[Pptr[0]],
+						 PEn[Pptr[1]],Pnf[Pptr[1]],Pquad[Pptr[1]],Psec[Pptr[1]]);
+	bool cutg_0 = dc.CutG_en2hit(PEn[Pptr[1]]/1000.,PEn[Pptr[0]]/1000.);
+	bool cutg_1 = dc.CutG_en2hit(PEn[Pptr[0]]/1000.,PEn[Pptr[1]]/1000.);
+	int cut_0 = dc.Cut(PEn[Pptr[0]],Pnf[Pptr[0]],Pquad[Pptr[0]],Psec[Pptr[0]]);
+	int cut_1 = dc.Cut(PEn[Pptr[1]],Pnf[Pptr[1]],Pquad[Pptr[1]],Psec[Pptr[1]]);
+	
+	if( quad_diff == 2 && time_diff <= ppwin && cut2 == 0 && cutg_0 ) { // target is [0]
+		
+		Bptr = Pptr[1];
+		Tptr = Pptr[0];
+		
+	}
+	
+	else if( quad_diff == 2 && time_diff <= ppwin && cut2 == 1 && cutg_1 ) { // target is [1]
+		
+		Bptr = Pptr[0];
+		Tptr = Pptr[1];
+		
+	}
+	
+	else return;
+	
+	int Bnf = Pnf[Bptr];
+	int Tnf = Pnf[Tptr];
+	float BEn = PEn[Bptr];
+	BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"BS");
+	float TEn = PEn[Tptr];
+	TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TS");
+	float BTh = dc.GetPTh(Bnf,Psec[Bptr]);
+	float TTh = dc.GetPTh(Tnf,Psec[Tptr]);
+	float BPh = dc.GetPPhi(Pquad[Bptr],Pnb[Bptr],Psec[Bptr]);
+	float TPh = dc.GetPPhi(Pquad[Tptr],Pnb[Tptr],Psec[Tptr]);
+	
+	// Use the two-body kinematics
+	if( dc.UseKin() ) {
+		
+		TEn = dc.GetTEnKinT( TTh );
+		BEn = dc.GetBEnKinB( BTh ); // no good for inverse kinematics?
+		
+	}
+	
+	T_del_2h->Fill( GEn, weight );
+	T_del_2hdcB->Fill( GEn*dc.DC(BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight );
+	
+	return;
+	
+}
+
 void hists::FillElec1h( float GEn, float GTh, float GPh, int GCid, float PEn, int Pnf,
 						int Pnb, int Psec, int Pquad, int cut, float weight ) {
 
@@ -596,21 +646,34 @@ void hists::FillElec1h( float GEn, float GTh, float GPh, int GCid, float PEn, in
 		if( weight > 0 ) pe_1T->Fill(GEn);
 		else re_1T->Fill(GEn);
 		
-		TEn = PEn;
-		TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TS");
-		TTh = dc.GetPTh(Pnf,Psec);
+		// Target angles
+		TTh = dc.GetPTh( Pnf, Psec );
 		TPh = dc.GetPPhi(Pquad,Pnb,Psec);
-		
-		BEn = dc.GetBEn(PEn,Pnf,Psec);
-		BTh = dc.GetBTh(Pnf,Psec);
 		BPh = dc.GetQPhi(Pquad,Pnb,Psec);
-	
-		if( Pnf >= minrecoil && Pnf <= maxrecoil ) {
-
-			Te_1hdcB->Fill(dc.DC_elec(GEn, BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
-			Te_1hdcT->Fill(dc.DC_elec(GEn, TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
+		
+		// Use the two-body kinematics
+		if( dc.UseKin() ) {
+			
+			TEn = dc.GetTEnKinT( TTh );
+			
+			BTh = dc.GetBThLabT( TTh );
+			BEn = dc.GetBEnKinT( TTh );
 			
 		}
+		
+		// Or use the particle energy and angle
+		else {
+			
+			TEn = PEn;
+			TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TS");
+			
+			BEn = dc.GetBEn(PEn,Pnf,Psec);
+			BTh = dc.GetBTh(Pnf,Psec);
+			
+		}
+	
+		Te_1hdcB->Fill(dc.DC_elec(GEn, BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
+		Te_1hdcT->Fill(dc.DC_elec(GEn, TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
 
 	}
 	
@@ -620,14 +683,31 @@ void hists::FillElec1h( float GEn, float GTh, float GPh, int GCid, float PEn, in
 		if( weight > 0 ) pe_1B->Fill(GEn);
 		else re_1B->Fill(GEn);
 		
-		BEn = PEn;
-		BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"BS");
-		BTh = dc.GetPTh(Pnf,Psec);
+		// Beam angles
+		BTh = dc.GetPTh( Pnf, Psec );
 		BPh = dc.GetPPhi(Pquad,Pnb,Psec);
-		
-		TEn = dc.GetTEn(PEn,Pnf,Psec);
-		TTh = dc.GetTTh(Pnf,PEn,Psec);
 		TPh = dc.GetQPhi(Pquad,Pnb,Psec);
+		
+		// Use the two-body kinematics
+		if( dc.UseKin() ) {
+			
+			BEn = dc.GetBEnKinB( BTh );
+			
+			TTh = dc.GetTThLabB( BTh );
+			TEn = dc.GetTEnKinB( BTh );
+			
+		}
+		
+		// Or use the particle energy and angle
+		else {
+			
+			BEn = PEn;
+			BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"BS");
+			
+			TEn = dc.GetTEn(PEn,Pnf,Psec);
+			TTh = dc.GetTTh(Pnf,PEn,Psec);
+			
+		}
 
 		Be_1hdcB->Fill(dc.DC_elec(GEn, BEn, BTh, BPh, GTh, GPh, dc.GetAb()), weight);
 		Be_1hdcT->Fill(dc.DC_elec(GEn, TEn, TTh, TPh, GTh, GPh, dc.GetAt()), weight);
@@ -656,12 +736,16 @@ void hists::FillElec2h( float GEn, float GTh, float GPh, int GCid, vector<float>
 	float BPh = dc.GetPPhi(Pquad[Bptr],Pnb[Bptr],Psec[Bptr]);
 	float TPh = dc.GetPPhi(Pquad[Tptr],Pnb[Tptr],Psec[Tptr]);
 
-	if( Tnf >= minrecoil && Tnf <= maxrecoil ) {
-
-		Te_2hdcB->Fill(dc.DC_elec(GEn, BEn,BTh,BPh,GTh,GPh,dc.GetAb()), weight);
-		Te_2hdcT->Fill(dc.DC_elec(GEn, TEn,TTh,TPh,GTh,GPh,dc.GetAt()), weight);
+	// Use the two-body kinematics
+	if( dc.UseKin() ) {
+		
+		TEn = dc.GetTEnKinT( TTh );
+		BEn = dc.GetBEnKinB( BTh ); // no good for inverse kinematics?
 		
 	}
+
+	Te_2hdcB->Fill(dc.DC_elec(GEn, BEn,BTh,BPh,GTh,GPh,dc.GetAb()), weight);
+	Te_2hdcT->Fill(dc.DC_elec(GEn, TEn,TTh,TPh,GTh,GPh,dc.GetAt()), weight);
 
 	return;
 
@@ -679,30 +763,62 @@ void hists::FillGamGam1h( float GEn, float GTh, float GPh, int GCid, vector <flo
 	// Target
 	if( cut == 0 ) {
 		
-		if( Pnf < minrecoil || Pnf > maxrecoil ) return;
-		
-		TEn = PEn;
-		TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TS");
-		TTh = dc.GetPTh(Pnf,Psec);
+		// Target angles
+		TTh = dc.GetPTh( Pnf, Psec );
 		TPh = dc.GetPPhi(Pquad,Pnb,Psec);
-		
-		BEn = dc.GetBEn(PEn,Pnf,Psec);
-		BTh = dc.GetBTh(Pnf,Psec);
 		BPh = dc.GetQPhi(Pquad,Pnb,Psec);
+
+		// Use the two-body kinematics
+		if( dc.UseKin() ) {
+
+			TEn = dc.GetTEnKinT( TTh );
+			
+			BTh = dc.GetBThLabT( TTh );
+			BEn = dc.GetBEnKinT( TTh );
+			
+		}
+		
+		// Or use the particle energy and angle
+		else {
+			
+			TEn = PEn;
+			TEn += dc.GetELoss(TEn,dc.GetCDDeadLayer(),1,"TS");
+			
+			BEn = dc.GetBEn(PEn,Pnf,Psec);
+			BTh = dc.GetBTh(Pnf,Psec);
+			
+		}
 
 	}
 	
 	// Projectile
 	else if( cut > 0 ){
 		
-		BEn = PEn;
-		BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"BS");
-		BTh = dc.GetPTh(Pnf,Psec);
+		// Beam angles
+		BTh = dc.GetPTh( Pnf, Psec );
 		BPh = dc.GetPPhi(Pquad,Pnb,Psec);
-		
-		TEn = dc.GetTEn(PEn,Pnf,Psec);
-		TTh = dc.GetTTh(Pnf,PEn,Psec);
 		TPh = dc.GetQPhi(Pquad,Pnb,Psec);
+		
+		// Use the two-body kinematics
+		if( dc.UseKin() ) {
+			
+			BEn = dc.GetBEnKinB( BTh );
+			
+			TTh = dc.GetTThLabB( BTh );
+			TEn = dc.GetTEnKinB( BTh );
+			
+		}
+		
+		// Or use the particle energy and angle
+		else {
+			
+			BEn = PEn;
+			BEn += dc.GetELoss(BEn,dc.GetCDDeadLayer(),1,"BS");
+			
+			TEn = dc.GetTEn(PEn,Pnf,Psec);
+			TTh = dc.GetTTh(Pnf,PEn,Psec);
+			
+		}
 		
 	}
 	
@@ -759,6 +875,14 @@ void hists::FillGamGam2h( float GEn, float GTh, float GPh, int GCid, vector<floa
 	float TTh = dc.GetPTh(Tnf,Psec[Tptr]);
 	float BPh = dc.GetPPhi(Pquad[Bptr],Pnb[Bptr],Psec[Bptr]);
 	float TPh = dc.GetPPhi(Pquad[Tptr],Pnb[Tptr],Psec[Tptr]);
+	
+	// Use the two-body kinematics
+	if( dc.UseKin() ) {
+		
+		TEn = dc.GetTEnKinT( TTh );
+		BEn = dc.GetBEnKinB( BTh ); // no good for inverse kinematics?
+		
+	}
 	
 	// Comment below for background subtraction
 	if( weight < 0 ) return;

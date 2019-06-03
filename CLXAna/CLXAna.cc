@@ -23,7 +23,9 @@ void PrintInput() {
 	cout << "bg_frac = " << bg_frac << endl;
 	cout << "srim = " << srim << endl;
 	cout << "cutfile = " << cutfilename << endl;
-	
+	if( usekin ) cout << "Using two-body kinematics for particle velocity" << endl;
+	else cout << "Using detected particle energy for velocity calculation" << endl;
+
 	return;
 	
 }
@@ -51,6 +53,7 @@ int main( int argc, char *argv[] ) {
 	interface->Add("-spededist", "Relative distance of SPEDE and target (mm)", &spededist );
 	interface->Add("-bg_frac", "Ratio of prompt and random for background subtraction", &bg_frac );
 	interface->Add("-srim", "Directory containing the SRIM files", &srim );
+	interface->Add("-usekin", "Use two-body kinematics for particle velocity?", &usekin );
 
 	interface->CheckFlags( argc, argv );
 
@@ -159,6 +162,7 @@ int main( int argc, char *argv[] ) {
 		spededist = config->GetValue( "spededist", 23.6 );
 		bg_frac = config->GetValue( "bg_frac", -1.0 );
 		srim = config->GetValue( "srim", "./srim" );
+		usekin = config->GetValue( "usekin", false );
 
 	}
 
@@ -183,6 +187,7 @@ int main( int argc, char *argv[] ) {
 		x.spededist = spededist;
 		x.bg_frac = bg_frac;
 		x.srim = srim;
+		x.usekin = usekin;
 		
 		cout << "Input parameters:" << endl;
 		PrintInput();

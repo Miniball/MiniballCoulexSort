@@ -9,7 +9,7 @@ TRandom3 doppler::rand = 1;
 
 void doppler::ExpDefs( int Zb_, float Ab_, int Zt_, float At_, float Eb_, float Ex_, float thick_,
 						float depth_, float cddist_, float cdoffset_, float deadlayer_, float contaminant_,
-						float spededist_, TCutG *Bcut_, TCutG *Tcut_, string srimfile_ ) {
+						float spededist_, TCutG *Bcut_, TCutG *Tcut_, string srimfile_, bool usekin_ ) {
 
 	/// Initialisation of experimental definitions from command line of config file
 	
@@ -29,6 +29,7 @@ void doppler::ExpDefs( int Zb_, float Ab_, int Zt_, float At_, float Eb_, float 
 	Bcut = Bcut_;
 	Tcut = Tcut_;
 	srimfile = srimfile_;
+	usekin = usekin_;
 
 	return;
 
@@ -501,10 +502,10 @@ float doppler::GetTTh( float Bnf, float BEn, int sector ) {
 
 	/// Returns theta angle of T using angle and energy of B
 	
-	double tau = (float)Ab/(float)At;
-	double Eprime = (float)Eb*(float)Ab - (float)Ex*(1+tau);
-	double epsilon = TMath::Sqrt((float)Eb*(float)Ab/Eprime);
-	double x, y, TTh;
+	float tau = Ab/At;
+	float Eprime = Eb*Ab - Ex*(1+tau);
+	float epsilon = TMath::Sqrt(Eb*Ab/Eprime);
+	float x, y, TTh;
 	if( tau > 1 ) { // inverse kinematics: maximum scattering angle may be exceeded...
 		y = TMath::ASin(1./(tau*epsilon)); // maximum projectile angle in lab
 		if( GetPTh(Bnf, sector) < y ) y = GetPTh(Bnf, sector);
@@ -528,10 +529,10 @@ float doppler::GetBTh( float Tnf, int sector ) {
 
 	/// Returns theta angle of B using angle and energy of T
 	
-	double tau = (float)Ab/(float)At;
-	double Eprime = (float)Eb*(float)Ab - (float)Ex*(1+tau);
-	double epsilon = TMath::Sqrt((float)Eb*(float)Ab/Eprime);
-	double x, y, BTh;
+	float tau = Ab/At;
+	float Eprime = Eb*Ab - Ex*(1+tau);
+	float epsilon = TMath::Sqrt(Eb*Ab/Eprime);
+	float x, y, BTh;
 	y = TMath::Tan(GetPTh(Tnf, sector)); // y = tan(Theta_targetlab)
 	x = (y*y*epsilon - TMath::Sqrt(-y*y*epsilon*epsilon + y*y + 1) ) / (1+y*y);
 	//	cout << "Centre of mass angle: " << TMath::ACos(x)*TMath::RadToDeg() << endl;
@@ -681,6 +682,24 @@ float doppler::GetTThLab( float CoM ) {
 	if( TTh < 0. ) TTh += TMath::Pi();
 	
 	return TTh;
+	
+}
+
+float doppler::GetBThLabT( float TTh ) {
+	
+	/// Calculate the beam angle in the lab from the target lab angle
+	/// @param TTh theta angle of the target in the laboratory frame
+
+	return GetBThLab( GetTThCoM( TTh ) );
+	
+}
+
+float doppler::GetTThLabB( float BTh ) {
+	
+	/// Calculate the target angle in the lab from the beam lab angle
+	/// @param BTh theta angle of the beam in the laboratory frame
+	
+	return GetTThLab( GetBThCoM( BTh ) );
 	
 }
 
@@ -834,14 +853,16 @@ float doppler::Beta( float Ek, float m ) {
 float doppler::DC( float PEn, float PTh, float PPhi, float GTh, float GPhi, float A ) {
 
 	/// Returns Doppler correction factor for given particle and gamma
-	/// angular combination.  Factors in detected particle energy too
+	/// angular combination.
+	/// Velocity is calculated from detected particle energy, unless
+	/// the 'usekin' flag is set to true, in which case it uses the velocity
+	/// calculated from two-body kinematics
 	
-	double beta = Beta( PEn, A * u_mass() );
-//	double beta = TMath::Sqrt( 2.0*PEn / ( A * u_mass() ) );
-	double gamma = 1. / TMath::Sqrt( 1. - beta*beta );
-	double costheta = sin(PTh)*sin(GTh)*cos(PPhi-GPhi)+(cos(PTh)*cos(GTh));
+	float beta = Beta( PEn, A * u_mass() );
+	float gamma = 1. / TMath::Sqrt( 1. - beta*beta );
+	float costheta = sin(PTh)*sin(GTh)*cos(PPhi-GPhi)+(cos(PTh)*cos(GTh));
 	
-	double corr = 1. - beta*costheta;
+	float corr = 1. - beta*costheta;
 	corr *= gamma;
 	
 	return corr;
@@ -853,12 +874,12 @@ float doppler::DC_elec( float een, float PEn, float PTh, float PPhi, float GTh, 
 	/// Returns Doppler correction factor for given particle and electron
 	/// angular combination.  Factors in detected particle energy too
 	
-	double beta = TMath::Sqrt( 2*PEn / ( A * u_mass() ) );
-	double mass_e = 511.;
-	double gamma = 1. / TMath::Sqrt( 1. - beta*beta );
-	double costheta = sin(PTh)*sin(GTh)*cos(PPhi-GPhi)+(cos(PTh)*cos(GTh));
+	float beta = TMath::Sqrt( 2*PEn / ( A * u_mass() ) );
+	float mass_e = 511.;
+	float gamma = 1. / TMath::Sqrt( 1. - beta*beta );
+	float costheta = sin(PTh)*sin(GTh)*cos(PPhi-GPhi)+(cos(PTh)*cos(GTh));
 	
-	double energy = een + mass_e - beta*costheta*TMath::Sqrt( een*een + 2.*mass_e*een );
+	float energy = een + mass_e - beta*costheta*TMath::Sqrt( een*een + 2.*mass_e*een );
 	energy /= gamma;
 	energy -= mass_e;	
 

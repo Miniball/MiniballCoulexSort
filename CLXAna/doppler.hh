@@ -37,7 +37,7 @@ class doppler : public TObject {
 	void	ExpDefs( int Zb_, float Ab_, int Zt_, float At_, float Eb_, float Ex_, float thick_,
 						float depth_, float cddist_, float cdoffset_, float deadlayer_,
 						float contaminant_, float spededist_, TCutG *Bcut_, TCutG *Tcut_,
-						string srimfile_ );
+						string srimfile_, bool usekin_ );
 	int		Cut( float PEn, float anno, int quad, int sector );
 	int		Cut_2p( float PEn1, float anno1, int quad1, int sector1,
 				    float PEn2, float anno2, int quad2, int sector2 );
@@ -61,6 +61,8 @@ class doppler : public TObject {
 	float	GetTThLab( float CoM );
 	float	GetBThCoM( float BTh, bool kinflag = false );
 	float	GetTThCoM( float TTh );
+	float	GetBThLabT( float TTh );
+	float	GetTThLabB( float BTh );
 	float	GetBEnKin( float CoM );
 	float	GetBEnKinB( float BTh, bool kinflag = false );
 	float	GetBEnKinT( float TTh );
@@ -79,6 +81,7 @@ class doppler : public TObject {
 	static string	convertFloat( float number );
 	
 	inline float u_mass() { return 931494.0038; };
+	inline bool	UseKin() { return usekin; };
 	
 	private:
 	static TRandom3	rand;
@@ -96,6 +99,7 @@ class doppler : public TObject {
 	float	bg_frac;
 	TCutG	*Bcut, *Tcut;
 	string  srimfile;
+	bool	usekin;			///< flag to use two-body kinematics for velocity
 	
 	ClassDef(doppler,1);
 

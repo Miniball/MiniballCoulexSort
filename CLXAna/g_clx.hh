@@ -93,6 +93,7 @@ class g_clx : public TObject {
 	TCutG			*Bcut;			///< Graphical cut for beam-like particles
 	TCutG			*Tcut;			///< Graphical cut for target-like particles
 	string			srim;			///< Directory containing the srim files
+	bool			usekin;			///< Flag to use two-body kinematics for particle velocity
 	
 	// List of branches
 	TBranch        *b_mbevts_fUniqueID;   //!

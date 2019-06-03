@@ -187,7 +187,8 @@ protected:
 	TGCheckButton       *check_segsum;		// check button for sum segment energies
 	TGCheckButton       *check_verbose;		// check button for verbose output
 	TGCheckButton       *check_cutfile;		// check button for kinematics cut file
-	
+	TGCheckButton       *check_kinemat;		// check button for two-body kinematics
+
 	// Action buttons
 	TGTextButton        *but_rsync;			// button to do rsync
 	TGTextButton        *but_medroot;		// button to do MedToRoot
