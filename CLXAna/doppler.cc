@@ -34,6 +34,17 @@ void doppler::ExpDefs( int Zb_, float Ab_, int Zt_, float At_, float Eb_, float 
 
 }
 
+void doppler::reactionEnergy() {
+	
+	/// Calculate the energy at interaction point
+	Ereac = Eb * Ab;
+	if( contaminant >= 0 ) Ereac -= GetELoss( Ereac, contaminant, 0, "BC" );
+	Ereac -= GetELoss( Ereac, depth, 0, "BT" );
+	
+	return;
+	
+}
+
 bool doppler::stoppingpowers( bool BT, bool TT, bool BS, bool TS, bool BC, bool TC ) {
 
 	/// Initialisation of stopping powers
@@ -50,6 +61,8 @@ bool doppler::stoppingpowers( bool BT, bool TT, bool BS, bool TS, bool BC, bool 
 	if( BC && contaminant >= 0 ) success *= stoppingpowers( "BC" );
 	if( TC && contaminant >= 0 ) success *= stoppingpowers( "TC" );
 
+	if( success ) reactionEnergy();
+	
 	return success;
 
 }
@@ -535,23 +548,18 @@ float doppler::GetTEn( float BEn, float Bnf, int sector ) {
 	/// given the energy and the angle of the scattered beam
 	/// Returns the energy after the target in keV
 	
-	// energy at interaction point
-	double Ereac = (float)Eb * (float)Ab;
-	if( contaminant >= 0 ) Ereac -= GetELoss( Ereac, contaminant, 0, "BC" );
-	Ereac -= GetELoss( Ereac, depth, 0, "BT" );
-
 	// Correct for dead layer loss
-	double dist = TMath::Abs( deadlayer / TMath::Cos( GetPTh( Bnf, sector ) ) );
-	double Eproj = BEn + GetELoss( BEn, dist, 1, "BS" );
+	float dist = TMath::Abs( deadlayer / TMath::Cos( GetPTh( Bnf, sector ) ) );
+	float Eproj = BEn + GetELoss( BEn, dist, 1, "BS" );
 
 	// Trace energy loss back through target to get energy at interaction point
 	dist = TMath::Abs( ( thick - depth ) / TMath::Cos( GetPTh( Bnf, sector ) ) );
 	Eproj += GetELoss( Eproj, dist, 1, "BT" );
 
-	double Etarg = Ereac - Eproj;
+	float Etarg = Ereac - Eproj;
 	if( Etarg < 0.1 ) return 0.1; // recoil is stopped in target
 
-	double angle = GetTTh( Bnf, BEn, sector );
+	float angle = GetTTh( Bnf, BEn, sector );
 	if( angle < 0.501*TMath::Pi() && angle > 0.499*TMath::Pi() ) return 0.1; // stopped
 
 	dist = TMath::Abs( ( thick - depth ) / TMath::Cos( angle ) );
@@ -568,23 +576,18 @@ float doppler::GetBEn( float TEn, float Tnf, int sector ) {
 	/// given the energy and the angle of the recoiling target
 	/// Returns the energy after the target in keV
 	
-	// energy at interaction point
-	double Ereac = (float)Eb * (float)Ab;
-	if( contaminant >= 0 ) Ereac -= GetELoss( Ereac, contaminant, 0, "BC" );
-	Ereac -= GetELoss( Ereac, depth, 0, "BT" );
-	
 	// Correct for dead layer loss
-	double dist = TMath::Abs( deadlayer / TMath::Cos( GetPTh( Tnf, sector ) ) );
-	double Etarg = TEn + GetELoss( TEn, dist, 1, "TS" );
+	float dist = TMath::Abs( deadlayer / TMath::Cos( GetPTh( Tnf, sector ) ) );
+	float Etarg = TEn + GetELoss( TEn, dist, 1, "TS" );
 
 	// Trace energy loss back through target to get energy at interaction point
 	dist = TMath::Abs( ( thick - depth ) / TMath::Cos( GetPTh( Tnf, sector ) ) );
 	Etarg += GetELoss( Etarg, dist, 1, "TT" );
 
-	double Eproj = Ereac - Etarg;
+	float Eproj = Ereac - Etarg;
 	if( Eproj < 0.1 ) return 0.1; // projectile is stopped in target
 
-	double angle = GetBTh( Tnf, sector );
+	float angle = GetBTh( Tnf, sector );
 	if( angle < 0.501*TMath::Pi() && angle > 0.499*TMath::Pi() ) return 0.1; // stopped
 
 	dist = TMath::Abs( ( thick - depth ) / TMath::Cos( angle ) );
@@ -639,6 +642,156 @@ float doppler::GetELoss( float Ei, float dist, int opt, string combo ) {
 	if( opt == 0 ) return Ei - E;
 	else return E - Ei;
 
+}
+
+float doppler::GetBThLab( float CoM ) {
+	
+	/// Calculate the beam angle in the lab from the centre of mass angle (radians)
+	
+	float tau = Ab/At;
+	float Eprime = Ereac - Ex * ( 1 + tau );
+	float epsilon = TMath::Sqrt(Ereac/Eprime);
+
+	//	if( tau > 1 ) double Th_max = TMath::ASin(tau*epsilon);
+	
+	// y = tan(theta_lab)
+	float y = TMath::Sin(CoM) / ( TMath::Cos(CoM) + tau*epsilon );
+	
+	float BTh = TMath::ATan(y);
+	if( BTh < 0. ) BTh += TMath::Pi();
+	
+	return BTh;
+	
+}
+
+float doppler::GetTThLab( float CoM ) {
+	
+	/// Calculate the target angle in the lab from the centre of mass angle (radians)
+
+	float tau = Ab/At;
+	float Eprime = Ereac - Ex * ( 1 + tau );
+	float epsilon = TMath::Sqrt(Ereac/Eprime);
+
+	// y = tan(theta_lab)
+	float y = TMath::Sin(TMath::Pi()-CoM) / ( TMath::Cos(TMath::Pi()-CoM) + epsilon );
+	
+	float TTh = TMath::ATan(y);
+	if( TTh < 0. ) TTh += TMath::Pi();
+	
+	return TTh;
+	
+}
+
+float doppler::GetBThCoM( float BTh ) {
+	
+	/// Calculates CoM scattering angle from the beam laboratory angle in radians
+	
+	float tau = Ab/At;
+	float Eprime = Ereac - Ex * ( 1 + tau );
+	float epsilon = TMath::Sqrt(Ereac/Eprime);
+	
+	// y = tan(theta_lab)
+	float y = TMath::Tan(BTh);
+	// x = cos(com)
+	float x = (-y*y*epsilon*tau + TMath::Sqrt(-y*y*epsilon*epsilon*tau*tau + y*y + 1) ) / (1+y*y);
+	
+	float CoM;
+	if( BTh < 0.5*TMath::Pi() ) CoM = TMath::ACos(x);
+	else CoM = TMath::Pi() - TMath::ACos(x);
+	if( CoM < 0. ) CoM += TMath::Pi();
+	
+	return CoM;
+
+}
+
+float doppler::GetTThCoM( float TTh ) {
+	
+	/// Calculates CoM scattering angle from the target laboratory angle in radians
+	
+	float tau = Ab/At;
+	float Eprime = Ereac - Ex * ( 1 + tau );
+	float epsilon = TMath::Sqrt(Ereac/Eprime);
+	
+	// y = tan(theta_lab)
+	float y = TMath::Tan(TTh);
+	// x = cos(com)
+	float x = (-y*y*epsilon*tau + TMath::Sqrt(-y*y*epsilon*epsilon*tau*tau + y*y + 1) ) / (1+y*y);
+	
+	float CoM = TMath::ACos(x);
+	if( CoM < 0. ) CoM += TMath::Pi();
+	
+	return CoM;
+	
+}
+
+float doppler::GetBEnKin( float CoM ) {
+	
+	/// Calculate the beam energy for a given centre of mass angle
+	/// using two-body kinematics calculations only
+	
+	float tau = Ab/At;
+	float Eprime = Ereac - Ex * ( 1 + tau );
+	float epsilon = TMath::Sqrt(Ereac/Eprime);
+	
+	float Eproj = TMath::Power( At/(At+Ab), 2.0 );
+	Eproj *= 1. + tau*tau*epsilon*epsilon + 2.*tau*epsilon*TMath::Cos( CoM );
+	Eproj *= Eprime;
+	
+	return Eproj;
+	
+}
+
+float doppler::GetTEnKin( float CoM ) {
+	
+	/// Calculate the target energy for a given centre of mass angle
+	/// using two-body kinematics calculations only
+	
+	float tau = Ab/At;
+	float Eprime = Ereac - Ex * ( 1 + tau );
+	float epsilon = TMath::Sqrt(Ereac/Eprime);
+
+	float Etarg = (At*Ab) / TMath::Power( (At+Ab), 2.0 );
+	Etarg *= 1. + epsilon*epsilon + 2.*epsilon*TMath::Cos( TMath::Pi() - CoM );
+	Etarg *= Eprime;
+	
+	return Etarg;
+
+}
+
+float doppler::GetBEnKinB( float BTh ) {
+	
+	/// Calculate the beam energy for a given beam
+	/// using two-body kinematics calculations only
+	
+	return GetBEnKin( GetBThCoM( BTh ) );
+	
+}
+
+float doppler::GetBEnKinT( float TTh ) {
+	
+	/// Calculate the beam energy for a given target
+	/// using two-body kinematics calculations only
+	
+	return GetBEnKin( GetTThCoM( TTh ) );
+	
+}
+
+float doppler::GetTEnKinB( float BTh ) {
+	
+	/// Calculate the target energy for a given beam
+	/// using two-body kinematics calculations only
+	
+	return GetTEnKin( GetBThCoM( BTh ) );
+	
+}
+
+float doppler::GetTEnKinT( float TTh ) {
+	
+	/// Calculate the target energy for a given target
+	/// using two-body kinematics calculations only
+	
+	return GetTEnKin( GetTThCoM( TTh ) );
+	
 }
 
 float doppler::GammaAng( float PTh, float PPhi, float GTh, float GPhi ) {

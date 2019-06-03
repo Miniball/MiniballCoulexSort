@@ -57,12 +57,23 @@ class doppler : public TObject {
 	float	GetTEn( float BEn, float Banno, int sector );
 	float	GetBEn( float TEn, float Tanno, int sector );
 	float	GetELoss( float Ei, float dist, int opt, string combo );
+	float	GetBThLab( float CoM );
+	float	GetTThLab( float CoM );
+	float	GetBThCoM( float BTh );
+	float	GetTThCoM( float TTh );
+	float	GetBEnKin( float CoM );
+	float	GetBEnKinB( float BTh );
+	float	GetBEnKinT( float TTh );
+	float	GetTEnKin( float CoM );
+	float	GetTEnKinB( float BTh );
+	float	GetTEnKinT( float TTh );
 	float	GammaAng( float PTh, float PPhi, float GTh, float GPhi );
 	float	Beta( float Ek, float m );
 	float	DC( float PEn, float PTh, float PPhi, float GTh, float GPhi, float A );
 	float	DC_elec( float een, float PEn, float PTh, float PPhi, float GTh, float GPhi, float A );
 	bool	stoppingpowers( bool BT, bool TT, bool BS, bool TS, bool BC, bool TC );
 	bool	stoppingpowers( string opt );
+	void	reactionEnergy();
 
 	static string	convertInt( int number );
 	static string	convertFloat( float number );
@@ -77,6 +88,7 @@ class doppler : public TObject {
 	int		Zb, Zt;
 	float	Ab, At;
 	float	Eb, Ex, thick, depth;
+	float   Ereac; 			///< Energy at the reaction point (thick-depth)
 	float	cddist, cdoffset;
 	float	deadlayer;
 	float	contaminant;
