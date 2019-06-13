@@ -39,8 +39,11 @@ void doppler::reactionEnergy() {
 	
 	/// Calculate the energy at interaction point
 	Ereac = Eb * Ab;
-	if( contaminant >= 0 ) Ereac -= GetELoss( Ereac, contaminant, 0, "BC" );
+	if( contaminant > 0 ) Ereac -= GetELoss( Ereac, contaminant, 0, "BC" );
 	Ereac -= GetELoss( Ereac, depth, 0, "BT" );
+	
+	cout << "Reaction energy = " << Ereac/1000. << " MeV";
+	cout << " or " << Ereac/1000./Ab << " MeV/u" << endl;
 	
 	return;
 	
@@ -59,8 +62,8 @@ bool doppler::stoppingpowers( bool BT, bool TT, bool BS, bool TS, bool BC, bool 
 	if( TT ) success *= stoppingpowers( "TT" );
 	if( BS ) success *= stoppingpowers( "BS" );
 	if( TS ) success *= stoppingpowers( "TS" );
-	if( BC && contaminant >= 0 ) success *= stoppingpowers( "BC" );
-	if( TC && contaminant >= 0 ) success *= stoppingpowers( "TC" );
+	if( BC && contaminant > 0 ) success *= stoppingpowers( "BC" );
+	if( TC && contaminant > 0 ) success *= stoppingpowers( "TC" );
 
 	if( success ) reactionEnergy();
 	
@@ -654,8 +657,6 @@ float doppler::GetBThLab( float CoM ) {
 	float Eprime = Ereac - Ex * ( 1 + tau );
 	float epsilon = TMath::Sqrt(Ereac/Eprime);
 
-	//	if( tau > 1 ) double Th_max = TMath::ASin(tau*epsilon);
-	
 	// y = tan(theta_lab)
 	float y = TMath::Sin(CoM) / ( TMath::Cos(CoM) + tau*epsilon );
 	
@@ -685,21 +686,21 @@ float doppler::GetTThLab( float CoM ) {
 	
 }
 
-float doppler::GetBThLabT( float TTh ) {
+float doppler::GetBThLabT( float TTh, bool kinflag ) {
 	
 	/// Calculate the beam angle in the lab from the target lab angle
 	/// @param TTh theta angle of the target in the laboratory frame
 
-	return GetBThLab( GetTThCoM( TTh ) );
+	return GetBThLab( GetTThCoM( TTh, kinflag ) );
 	
 }
 
-float doppler::GetTThLabB( float BTh ) {
+float doppler::GetTThLabB( float BTh, bool kinflag ) {
 	
 	/// Calculate the target angle in the lab from the beam lab angle
 	/// @param BTh theta angle of the beam in the laboratory frame
 	
-	return GetTThLab( GetBThCoM( BTh ) );
+	return GetTThLab( GetBThCoM( BTh, kinflag ) );
 	
 }
 
@@ -713,24 +714,31 @@ float doppler::GetBThCoM( float BTh, bool kinflag ) {
 	float Eprime = Ereac - Ex * ( 1 + tau );
 	float epsilon = TMath::Sqrt(Ereac/Eprime);
 	
-	// y = tan(theta_lab)
-	float y = TMath::Tan(BTh);
-	// x = cos(com)
-	float x = -y*y*epsilon*tau;
-	if( kinflag ) x += TMath::Sqrt(-y*y*epsilon*epsilon*tau*tau + y*y + 1);
-	else x -= TMath::Sqrt(-y*y*epsilon*epsilon*tau*tau + y*y + 1);
-	x /= (1+y*y);
+	// maximum scattering angle may be exceeded...
+	float maxang = TMath::ASin( 1. / ( tau * epsilon ) );
+	if( tau*epsilon > 1 && BTh > maxang ) BTh = maxang;
 	
-	float CoM;
-	if( BTh < 0.5*TMath::Pi() ) CoM = TMath::ACos(x);
-	else CoM = TMath::Pi() - TMath::ACos(x);
+	if( kinflag && tau*epsilon < 1 ){
+		
+		cerr << "Only one solution for the beam, kinflag = false" << endl;
+		kinflag = false;
+		
+	}
+
+	float y = epsilon * tau * TMath::Sin( BTh );
+	if( kinflag ) y = TMath::ASin( -y );
+	else y = TMath::ASin( y );
+
+	float CoM = BTh + y;
+	
 	if( CoM < 0. ) CoM += TMath::Pi();
-	
+	if( CoM > TMath::Pi() ) CoM -= TMath::Pi();
+
 	return CoM;
 
 }
 
-float doppler::GetTThCoM( float TTh ) {
+float doppler::GetTThCoM( float TTh, bool kinflag ) {
 	
 	/// Calculates CoM scattering angle from the target laboratory angle in radians
 	/// @param TTh theta angle of the target in laboratory frame
@@ -739,14 +747,19 @@ float doppler::GetTThCoM( float TTh ) {
 	float Eprime = Ereac - Ex * ( 1 + tau );
 	float epsilon = TMath::Sqrt(Ereac/Eprime);
 	
-	// y = tan(theta_lab)
-	float y = TMath::Tan(TTh);
-	// x = cos(com)
-	float x = (-y*y*epsilon*tau + TMath::Sqrt(-y*y*epsilon*epsilon*tau*tau + y*y + 1) ) / (1+y*y);
+	// maximum scattering angle may be exceeded...
+	float maxang = TMath::ASin( 1. / ( epsilon ) );
+	if( TTh > maxang ) TTh = maxang;
 	
-	float CoM = TMath::ACos(x);
+	float y = epsilon * TMath::Sin( TTh );
+	if( kinflag ) y = TMath::ASin( -y );
+	else y = TMath::ASin( y );
+
+	float CoM = TTh + y;
+	CoM = TMath::Pi() - CoM;
 	if( CoM < 0. ) CoM += TMath::Pi();
-	
+	if( CoM > TMath::Pi() ) CoM -= TMath::Pi();
+
 	return CoM;
 	
 }
@@ -798,13 +811,13 @@ float doppler::GetBEnKinB( float BTh, bool kinflag ) {
 	
 }
 
-float doppler::GetBEnKinT( float TTh ) {
+float doppler::GetBEnKinT( float TTh, bool kinflag ) {
 	
 	/// Calculate the beam energy for a given target
 	/// using two-body kinematics calculations only
 	/// @param TTh theta angle of the target in laboratory frame
 
-	return GetBEnKin( GetTThCoM( TTh ) );
+	return GetBEnKin( GetTThCoM( TTh, kinflag ) );
 	
 }
 
@@ -819,13 +832,13 @@ float doppler::GetTEnKinB( float BTh, bool kinflag ) {
 	
 }
 
-float doppler::GetTEnKinT( float TTh ) {
+float doppler::GetTEnKinT( float TTh, bool kinflag ) {
 	
 	/// Calculate the target energy for a given target
 	/// using two-body kinematics calculations only
 	/// @param TTh theta angle of the target in laboratory frame
 
-	return GetTEnKin( GetTThCoM( TTh ) );
+	return GetTEnKin( GetTThCoM( TTh, kinflag ) );
 	
 }
 

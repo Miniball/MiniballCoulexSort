@@ -929,33 +929,73 @@ void hists::FillGamGam2h( float GEn, float GTh, float GPh, int GCid, vector<floa
 
 void hists::FillPar1h( float PEn, int Pnf, int Pnb, int Psec, int Pquad, int cut, float weight ) {
 	
-	float PTh = dc.GetPTh(Pnf,Psec)*TMath::RadToDeg();
+	float PTh = dc.GetPTh( Pnf, Psec );
 	float BTh, TTh, BEn, TEn;
 
-	part1h->Fill(PTh, PEn/1000.);
-	partQ[Pquad]->Fill(PTh, PEn/1000.);
+	part1h->Fill( PTh*TMath::RadToDeg(), PEn/1000. );
+	partQ[Pquad]->Fill( PTh*TMath::RadToDeg(), PEn/1000. );
 	
 	if( cut == 0 ) {
 	
-		BTh = dc.GetBTh(Pnf,Psec)*TMath::RadToDeg();
-		BEn = dc.GetBEn(PEn,Pnf,Psec);
-		BEn -= dc.GetELoss(BEn,dc.GetCDDeadLayer(),0,"BS");
+		// Target angles
+		TTh = dc.GetPTh( Pnf, Psec );
+		
+		// Use the two-body kinematics
+		if( dc.UseKin() ) {
+			
+			TEn = dc.GetTEnKinT( TTh );
+			
+			BTh = dc.GetBThLabT( TTh );
+			BEn = dc.GetBEnKinT( TTh );
+			
+		}
+		
+		// Or use the particle energy and angle
+		else {
+			
+			TEn = PEn;
+			
+			BTh = dc.GetBTh(Pnf,Psec);
+			BEn = dc.GetBEn(PEn,Pnf,Psec);
+			BEn -= dc.GetELoss(BEn,dc.GetCDDeadLayer(),0,"BS");
 
-		Th->Fill(PTh,PEn/1000.);
-		T1h->Fill(PTh,PEn/1000.);
-		Bsim->Fill(BTh,BEn/1000.);
-
+		}
+		
+		Th->Fill( TTh*TMath::RadToDeg(), TEn/1000. );
+		T1h->Fill( TTh*TMath::RadToDeg(), TEn/1000. );
+		Bsim->Fill( BTh*TMath::RadToDeg(), BEn/1000. );
+			
 	}
 	
 	else if( cut > 0 ) {
 	
-		TTh = dc.GetTTh(Pnf,PEn,Psec)*TMath::RadToDeg();
-		TEn = dc.GetTEn(PEn,Pnf,Psec);
-		TEn -= dc.GetELoss(TEn,dc.GetCDDeadLayer(),0,"TS");
+		// Beam angles
+		BTh = dc.GetPTh( Pnf, Psec );
+		
+		// Use the two-body kinematics
+		if( dc.UseKin() ) {
+			
+			BEn = dc.GetBEnKinB( BTh );
+			
+			TTh = dc.GetTThLabB( BTh );
+			TEn = dc.GetTEnKinB( BTh );
+			
+		}
+		
+		// Or use the particle energy and angle
+		else {
+			
+			BEn = PEn;
+			
+			TTh = dc.GetTTh(Pnf,PEn,Psec);
+			TEn = dc.GetTEn(PEn,Pnf,Psec);
+			TEn -= dc.GetELoss(TEn,dc.GetCDDeadLayer(),0,"TS");
 	
-		Bh->Fill(PTh,PEn/1000.);
-		B1h->Fill(PTh,PEn/1000.);
-		Tsim->Fill(TTh,TEn/1000.);		
+		}
+		
+		Bh->Fill( BTh*TMath::RadToDeg(), BEn/1000. );
+		B1h->Fill( BTh*TMath::RadToDeg(), BEn/1000. );
+		Tsim->Fill( TTh*TMath::RadToDeg(), TEn/1000. );
 	
 	}
 
@@ -976,22 +1016,35 @@ void hists::FillPar2h( vector<float> PEn, vector<int> Pnf, vector<int> Pnb, vect
 	int Tsec = Psec[Tptr];
 	float BEn = PEn[Bptr];
 	float TEn = PEn[Tptr];
-	float BTh = dc.GetPTh(Bnf,Bsec)*TMath::RadToDeg();
-	float TTh = dc.GetPTh(Tnf,Tsec)*TMath::RadToDeg();
-	float BPh = dc.GetPPhi(Bquad,Bnb,Bsec)*TMath::RadToDeg();
-	float TPh = dc.GetPPhi(Tquad,Tnb,Tsec)*TMath::RadToDeg();
+	float BTh = dc.GetPTh(Bnf,Bsec);
+	float TTh = dc.GetPTh(Tnf,Tsec);
+	float BPh = dc.GetPPhi(Bquad,Bnb,Bsec);
+	float TPh = dc.GetPPhi(Tquad,Tnb,Tsec);
 
-	Bh->Fill(BTh, BEn/1000.);
-	Th->Fill(TTh, TEn/1000.);
-	B2h->Fill(BTh, BEn/1000.);
-	T2h->Fill(TTh, TEn/1000.);
-	partQ[Bquad]->Fill(BTh, BEn/1000.);
-	partQ[Tquad]->Fill(TTh, TEn/1000.);
+	partQ[Bquad]->Fill( BTh*TMath::RadToDeg(), BEn/1000.);
+	partQ[Tquad]->Fill( TTh*TMath::RadToDeg(), TEn/1000.);
+	part2h->Fill( BTh*TMath::RadToDeg(), BEn/1000.);
+	part2h->Fill( TTh*TMath::RadToDeg(), TEn/1000.);
+
+	// Use the two-body kinematics - overwrite energies
+	if( dc.UseKin() ) {
+		
+		BEn = dc.GetBEnKinB( BTh );
+		TEn = dc.GetTEnKinT( TTh );
+		
+	}
+
+	Bh->Fill( BTh*TMath::RadToDeg(), BEn/1000. );
+	Th->Fill( TTh*TMath::RadToDeg(), TEn/1000. );
+	B2h->Fill( BTh*TMath::RadToDeg(), BEn/1000. );
+	T2h->Fill( TTh*TMath::RadToDeg(), TEn/1000. );
+	
 	en2hit->Fill(BEn/1000.,TEn/1000.);
-	sum2hit->Fill((BEn+TEn)/1000.);	
+	sum2hit->Fill((BEn+TEn)/1000.);
+	
 #ifdef TWOPART
-	BT[Bnf]->Fill(TTh,TEn/1000.);
-	TB[Tnf]->Fill(BTh,BEn/1000.);
+	BT[Bnf]->Fill(TTh*TMath::RadToDeg(),TEn/1000.);
+	TB[Tnf]->Fill(BTh*TMath::RadToDeg(),BEn/1000.);
 #endif
 
 	return;
@@ -1019,7 +1072,6 @@ void hists::AddSpectra(float bg_frac) {
 	reT->Add(re_1T,re_2h);
 	peTmreT->Add(peT,reT,1.0,bg_frac);
 	
-	part2h->Add(B2h,T2h);
 	part->Add(part1h,part2h);
 	
 	B_dcB->Add(B_1hdcB,T_2hdcB);

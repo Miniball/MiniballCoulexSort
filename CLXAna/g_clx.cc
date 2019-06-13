@@ -34,7 +34,7 @@ void g_clx::Loop( string outputfilename ) {
 	// Create stopping power curves from the srim output files
 	// Comment out to use the default parameters in doppler.hh
 	// stoppingpowers( BT, TT, BA, TA, BC, TC )
-	if( !dc.stoppingpowers( true, true, true, true, true, true ) ) return;
+	if( !dc.stoppingpowers( true, true, true, true, true, false ) ) return;
 
 	// Test if it's an electron or gamma
 	bool electron;
