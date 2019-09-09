@@ -25,6 +25,8 @@ void PrintInput() {
 	cout << "cutfile = " << cutfilename << endl;
 	if( usekin ) cout << "Using two-body kinematics for particle velocity" << endl;
 	else cout << "Using detected particle energy for velocity calculation" << endl;
+	
+	cout << "\nOutputfile = " << outputfilename << endl << endl;
 
 	return;
 	

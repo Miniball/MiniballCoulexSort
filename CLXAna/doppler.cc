@@ -55,6 +55,8 @@ bool doppler::stoppingpowers( bool BT, bool TT, bool BS, bool TS, bool BC, bool 
 	
 	bool success = true;
 	
+	gErrorIgnoreLevel = kWarning;
+	
 	for( int i = 0; i < 6; i++ )
 		gSP[i] = new TGraph();
 

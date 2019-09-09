@@ -82,7 +82,11 @@ private:
 	vector< double > fBeamdumpOffset;
 	vector< double > fBeamdumpGain;
 	vector< double > fBeamdumpGainQuadr;
-  
+	
+	vector< unsigned short > deadseg;
+	vector< array< unsigned short, 2 > > swapseg;
+	array< unsigned short, 2 > pairseg;
+
 	double RawRandomized;
 
 	int fNofDgfs;

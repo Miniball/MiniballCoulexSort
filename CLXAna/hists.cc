@@ -316,6 +316,8 @@ void hists::Fill2h( float GEn, float GTh, float GPh, int GCid, vector <float> GC
 		Tptr = Pptr[0];
 		if( !electron ){
 			FillGam2h( GEn, GTh, GPh, GCid, PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, T1T, weight );
+			FillGamGam2h( GEn, GTh, GPh, GCid, GCor_GEn, GCor_GTh, GCor_GPh, GCor_CluID, GCor_Gtd,
+						 PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, T1T, weight);
 		}
 		else FillElec2h( GEn, GTh, GPh, GCid, PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, weight );
 		FillPar2h( PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, weight );
@@ -328,6 +330,8 @@ void hists::Fill2h( float GEn, float GTh, float GPh, int GCid, vector <float> GC
 		Tptr = Pptr[1];
 		if( !electron ) {
 			FillGam2h( GEn, GTh, GPh, GCid, PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, T1T, weight );
+			FillGamGam2h( GEn, GTh, GPh, GCid, GCor_GEn, GCor_GTh, GCor_GPh, GCor_CluID, GCor_Gtd,
+						 PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, T1T, weight);
 		}
 		else FillElec2h( GEn, GTh, GPh, GCid, PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, weight );
 		FillPar2h( PEn, Pnf, Pnb, Psec, Pquad, Bptr, Tptr, weight );
@@ -338,6 +342,8 @@ void hists::Fill2h( float GEn, float GTh, float GPh, int GCid, vector <float> GC
 	
 		if( !electron ){
 			FillGam1h( GEn, GTh, GPh, GCid, PEn[Pptr[0]], Pnf[Pptr[0]], Pnb[Pptr[0]], Psec[Pptr[0]], Pquad[Pptr[0]], T1T, cut_0, weight );
+			FillGamGam1h( GEn, GTh, GPh, GCid, GCor_GEn, GCor_GTh, GCor_GPh, GCor_CluID, GCor_Gtd,
+						 PEn[Pptr[0]], Pnf[Pptr[0]], Pnb[Pptr[0]], Psec[Pptr[0]], Pquad[Pptr[0]], T1T, cut_0, weight );
 		}
 		else FillElec1h( GEn, GTh, GPh, GCid, PEn[Pptr[0]], Pnf[Pptr[0]], Pnb[Pptr[0]], Psec[Pptr[0]], Pquad[Pptr[0]], cut_0, weight );
 		FillPar1h( PEn[Pptr[0]], Pnf[Pptr[0]], Pnb[Pptr[0]], Psec[Pptr[0]], Pquad[Pptr[0]], cut_0, weight );
@@ -348,6 +354,8 @@ void hists::Fill2h( float GEn, float GTh, float GPh, int GCid, vector <float> GC
 	
 		if( !electron ){
 			FillGam1h( GEn, GTh, GPh, GCid, PEn[Pptr[1]], Pnf[Pptr[1]], Pnb[Pptr[1]], Psec[Pptr[1]], Pquad[Pptr[1]], T1T, cut_1, weight );
+			FillGamGam1h( GEn, GTh, GPh, GCid, GCor_GEn, GCor_GTh, GCor_GPh, GCor_CluID, GCor_Gtd,
+						 PEn[Pptr[1]], Pnf[Pptr[1]], Pnb[Pptr[1]], Psec[Pptr[1]], Pquad[Pptr[1]], T1T, cut_1, weight );
 		}
 		else FillElec1h( GEn, GTh, GPh, GCid, PEn[Pptr[1]], Pnf[Pptr[1]], Pnb[Pptr[1]], Psec[Pptr[1]], Pquad[Pptr[1]], cut_1, weight );
 		FillPar1h( PEn[Pptr[1]], Pnf[Pptr[1]], Pnb[Pptr[1]], Psec[Pptr[1]], Pquad[Pptr[1]], cut_1, weight );
