@@ -15,12 +15,12 @@ INCLUDES	= -I./
 LFLAGS		=  -g 
 LIBS 		= $(ALLIBS)
 
-all: MKDIR_P libCommandLineInterface.a
+all: MKDIR_P libCommandLineInterface.so
 
 MKDIR_P:
 	mkdir -p $(BIN_DIR) $(LIB_DIR)
 
-lib%.a: %.o
+lib%.so: %.o
 	$(AR) cru $@ $^
 	cp $@ $(LIB_DIR)/
 
@@ -29,4 +29,4 @@ lib%.a: %.o
 
 #--------------------------------------------------
 clean:
-	rm  -f *.o libCommandLineInterface.a
+	rm  -f *.o libCommandLineInterface.so

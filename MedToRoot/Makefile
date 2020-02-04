@@ -50,8 +50,10 @@ MKDIR_P:
 
 MedToRoot: MedToRoot.cc $(O_FILES) MedToRootDictionary.o
 	$(CPP) $(CFLAGS) $(INCLUDES) MedToRoot.cc $(O_FILES) MedToRootDictionary.o $(LIBS) -o $@
-	$(AR) cru $(LIB_DIR)/libMedToRoot.a $(O_FILES) MedToRootDictionary.o
+	$(AR) cru libMedToRoot.so $(O_FILES) MedToRootDictionary.o
 	cp MedToRoot $(BIN_DIR)/
+	cp libMedToRoot.so $(LIB_DIR)/
+
 
 $(MED_DIR)/mbsio.o: $(MED_DIR)/src/mbsio.c $(MED_DIR)/inc/mbsio.h
 	$(CC) -I$(ROOTINC) $(INCLUDES) -c $< -o $@
@@ -80,7 +82,7 @@ DEPENDENCIES = BuiltEvent.hh \
 
 MedToRootDictionary.cc: $(DEPENDENCIES)
 	rm -f MedToRootDictionary.cc MedToRootDictionary$(DICTEXT)
-	$(ROOTDICT) -f MedToRootDictionary.cc -c $(INCLUDES) $(DEPENDENCIES)
+	$(ROOTDICT) -f MedToRootDictionary.cc -c $(INCLUDES) -rml $(LIB_DIR)/libMedToRoot.so $(DEPENDENCIES)
 	cp MedToRootDictionary$(DICTEXT) $(LIB_DIR)/
 
 MedToRootDictionary.o: MedToRootDictionary.cc MedToRootDictionary$(DICTEXT)
@@ -92,3 +94,6 @@ clean:
 	rm -f MedToRootDictionary.cc MedToRootDictionary$(DICTEXT)
 	rm -f $(LIB_DIR)/MedToRootDictionary$(DICTEXT)
 
+clean-dict:
+	rm -f MedToRootDictionary.cc MedToRootDictionary$(DICTEXT)
+	rm -f $(LIB_DIR)/MedToRootDictionary$(DICTEXT)

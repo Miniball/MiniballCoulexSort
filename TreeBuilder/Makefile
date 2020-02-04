@@ -44,17 +44,17 @@ MKDIR_P:
 
 TreeBuilder: TreeBuilder.cc $(O_FILES) TreeBuilderDictionary.o
 	$(CPP) $(CFLAGS) $(INCLUDES) TreeBuilder.cc $(O_FILES) TreeBuilderDictionary.o $(LIBS) -o $@
-	$(AR) cru $(LIB_DIR)/libTreeBuilder.a $(O_FILES) TreeBuilderDictionary.o
+	$(AR) cru $(LIB_DIR)/libTreeBuilder.so $(O_FILES) TreeBuilderDictionary.o
 	cp TreeBuilder $(BIN_DIR)/
 
 NeSort: NeSort.cc Calibration.o NeSortDictionary.o
 	$(CPP) $(CFLAGS) $(INCLUDES) NeSort.cc $(O_FILES) NeSortDictionary.o $(LIBS) -o $@
-	$(AR) cru $(LIB_DIR)/libNeSort.a $(O_FILES) NeSortDictionary.o
+	$(AR) cru $(LIB_DIR)/libNeSort.so $(O_FILES) NeSortDictionary.o
 	cp NeSort $(BIN_DIR)/
 
 AQ4Sort: AQ4Sort.cc Calibration.o AQ4SortDictionary.o
 	$(CPP) $(CFLAGS) $(INCLUDES) AQ4Sort.cc $(O_FILES) AQ4SortDictionary.o $(LIBS) -o $@
-	$(AR) cru $(LIB_DIR)/libNeSort.a $(O_FILES) AQ4SortDictionary.o
+	$(AR) cru $(LIB_DIR)/libNeSort.so $(O_FILES) AQ4SortDictionary.o
 	cp AQ4Sort $(BIN_DIR)/
 
 %.o: %.cc %.hh

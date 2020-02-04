@@ -16,7 +16,7 @@ endif
 BIN_DIR     := ../bin
 LIB_DIR     := ../lib
 MED_DIR     := ../MedToRoot
-ANA_INC     := -I../CLXAna
+ANA_INC     := ../CLXAna
 
 CC       := $(shell root-config --cc)
 CPP      := $(shell root-config --cxx)
@@ -24,7 +24,7 @@ CFLAGS   := $(ROOTCFLAGS) -Wall -fPIC -Wno-unused-variable -g
 
 LIBS     := $(ROOTGLIBS) -L$(LIB_DIR) -lCLXAna -lTreeBuilder
 
-INCLUDES := $(ANA_DIR)
+INCLUDES := -I$(ANA_DIR) -I$(MED_DIR)
 
 all: MKDIR_P mb_sorter
 
@@ -39,6 +39,7 @@ MBSorter.o: MBSorter.cc
 
 mb_sorter: mb_sorter.cc $(OBJECTS)
 	$(CPP) $(CFLAGS) $(INCLUDES) $< $(OBJECTS) -o $@ $(LIBS)
+	$(AR) cru $(LIB_DIR)/libmb_sorter.so $(O_FILES) mb_sorter_dict.o
 	cp $@ $(BIN_DIR)
 
 # Root stuff
@@ -49,7 +50,7 @@ mb_sorter_dict.o: mb_sorter_dict.cc
 	$(CPP) $(CFLAGS) $(INCLUDES) -c $<
 
 mb_sorter_dict.cc: $(DEPENDENCIES)
-	$(ROOTDICT) -f $@ -c $(INCLUDES) $(DEPENDENCIES)
+	$(ROOTDICT) -f $@ -c $(INCLUDES) -rml $(LIB_DIR)/libmb_sorter.so $(DEPENDENCIES)
 	cp mb_sorter_dict$(DICTEXT) $(LIB_DIR)
 
 

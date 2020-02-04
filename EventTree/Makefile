@@ -32,12 +32,12 @@ LFLAGS    = -O2 -g $(ROOTLDFLAGS)
 O_FILES = mbevts.o \
 		  trevts.o
 
-all: MKDIR_P libmbevts.a libtrevts.a
+all: MKDIR_P libmbevts.so libtrevts.so
 
 MKDIR_P:
 	mkdir -p $(BIN_DIR) $(LIB_DIR)
 
-lib%.a: %.o %Dict.o
+lib%.so: %.o %Dict.o
 	$(AR) cru $@ $*.o $*Dict.o
 	cp $@ $(LIB_DIR)/
 
@@ -55,4 +55,4 @@ lib%.a: %.o %Dict.o
 
 #--------------------------------------------------
 clean:
-	rm -f *.o lib*.a *Dict$(DICTEXT) *Dict*cc
+	rm -f *.o lib*.so *Dict$(DICTEXT) *Dict*cc

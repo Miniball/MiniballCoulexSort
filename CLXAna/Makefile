@@ -41,7 +41,7 @@ OBJECTS = g_clx.o \
  
 CLXAna: CLXAna.cc $(OBJECTS)
 	$(CPP) $(CFLAGS) $(INCLUDES) $< $(OBJECTS) -o $@ $(LIBS)
-	$(AR) cru $(LIB_DIR)/libCLXAna.a $(OBJECTS)
+	$(AR) cru $(LIB_DIR)/libCLXAna.so $(OBJECTS)
 	cp CLXAna $(BIN_DIR)/
 
 g_clx.o: g_clx.cc g_clx.hh hists.cc hists.hh doppler.cc doppler.hh
