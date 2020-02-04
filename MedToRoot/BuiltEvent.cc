@@ -102,7 +102,8 @@ long long BuiltEvent::GetTime() {
 	
 	else {
   
-		cerr<<__PRETTY_FUNCTION__<<": Error, neither particle nor gamma stored in this event!"<<endl;
+		cerr << __PRETTY_FUNCTION__;
+		cerr << ": Error, neither particle nor gamma stored in this event!" << endl;
 		return -1;
 		
 	}

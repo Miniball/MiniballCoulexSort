@@ -38,13 +38,16 @@ int main(int argc, char* argv[]) {
 	// open med file  (works only from file !!!)
 	const MBSDataIO* mbs;
 	
-	printf( "opening file %s ...\n", Settings->MedFile() );
+	cout << "opening file " << Settings->MedFile() << " ... " << endl;
 	
 	mbs = mbs_open_file( Settings->MedFile(), "F", 0x4000, NULL );
-	
+
 	// if error when opening file
 	if( mbs == NULL ) printf( "couldn't open file %s -> exit!!!\n", Settings->MedFile() );
-	
+
+	// if not, print the header data
+	cout << mbs->hdr_data << endl;
+
 	//EventBuilder instance
 	EventBuilder* eventBuilder = new EventBuilder( Settings );
 	
