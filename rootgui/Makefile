@@ -39,8 +39,9 @@ MBSorter.o: MBSorter.cc
 
 mb_sorter: mb_sorter.cc $(OBJECTS)
 	$(CPP) $(CFLAGS) $(INCLUDES) $< $(OBJECTS) -o $@ $(LIBS)
-	$(AR) cru $(LIB_DIR)/libmb_sorter.so $(O_FILES) mb_sorter_dict.o
+	$(AR) cru libmb_sorter.so $(O_FILES) mb_sorter_dict.o
 	cp $@ $(BIN_DIR)
+	cp libmb_sorter.so $(LIB_DIR)
 
 # Root stuff
 DEPENDENCIES = MBSorter.hh \
@@ -50,7 +51,7 @@ mb_sorter_dict.o: mb_sorter_dict.cc
 	$(CPP) $(CFLAGS) $(INCLUDES) -c $<
 
 mb_sorter_dict.cc: $(DEPENDENCIES)
-	$(ROOTDICT) -f $@ -c $(INCLUDES) -rml $(LIB_DIR)/libmb_sorter.so $(DEPENDENCIES)
+	$(ROOTDICT) -f $@ -c $(INCLUDES) -rml libmb_sorter.so $(DEPENDENCIES)
 	cp mb_sorter_dict$(DICTEXT) $(LIB_DIR)
 
 

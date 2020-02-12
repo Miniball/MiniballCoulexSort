@@ -50,9 +50,8 @@ MKDIR_P:
 
 MedToRoot: MedToRoot.cc $(O_FILES) MedToRootDictionary.o
 	$(CPP) $(CFLAGS) $(INCLUDES) MedToRoot.cc $(O_FILES) MedToRootDictionary.o $(LIBS) -o $@
-	$(AR) cru libMedToRoot.so $(O_FILES) MedToRootDictionary.o
+	$(AR) cru $(LIB_DIR)/libMedToRoot.so $(O_FILES) MedToRootDictionary.o
 	cp MedToRoot $(BIN_DIR)/
-	cp libMedToRoot.so $(LIB_DIR)/
 
 
 $(MED_DIR)/mbsio.o: $(MED_DIR)/src/mbsio.c $(MED_DIR)/inc/mbsio.h
@@ -96,4 +95,4 @@ clean:
 
 clean-dict:
 	rm -f MedToRootDictionary.cc MedToRootDictionary$(DICTEXT)
-	rm -f $(LIB_DIR)/MedToRootDictionary$(DICTEXT)
+	rm -f F/MedToRootDictionary$(DICTEXT)
