@@ -7,12 +7,12 @@
 
 TRandom3 doppler::rand = 1;
 
-void doppler::ExpDefs( int Zb_, float Ab_, int Zt_, float At_, float Eb_, float Ex_, float thick_,
-						float depth_, float cddist_, float cdoffset_, float deadlayer_, float contaminant_,
-						float spededist_, TCutG *Bcut_, TCutG *Tcut_, string srimfile_, bool usekin_ ) {
+void doppler::ExpDefs( int Zb_, float Ab_, int Zt_, float At_, float Eb_, float Ex_,
+                      float thick_,	float depth_, float cddist_, float cdoffset_,
+                      float deadlayer_, float contaminant_,	float spededist_,
+                      TCutG *Bcut_, TCutG *Tcut_, string srimfile_, bool usekin_ ) {
 
 	/// Initialisation of experimental definitions from command line of config file
-	
 	Zb = Zb_;
 	Ab = Ab_;
 	Zt = Zt_;
@@ -52,7 +52,6 @@ void doppler::reactionEnergy() {
 bool doppler::stoppingpowers( bool BT, bool TT, bool BS, bool TS, bool BC, bool TC ) {
 
 	/// Initialisation of stopping powers
-	
 	bool success = true;
 	
 	gErrorIgnoreLevel = kWarning;
