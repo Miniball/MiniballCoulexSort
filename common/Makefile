@@ -15,13 +15,22 @@ INCLUDES	= -I./
 LFLAGS		=  -g 
 LIBS 		= $(ALLIBS)
 
+PLATFORM:=$(shell uname)
+ifeq ($(PLATFORM),Darwin)
+SHAREDSWITCH = -Qunused-arguments -shared -undefined dynamic_lookup -dynamiclib -Wl,-install_name,'@executable_path/../lib/'# NO ENDING SPACE
+else
+export __LINUX__:= 1
+LINKFLAGS_PREFIX += -Wl,--no-as-needed
+SHAREDSWITCH = -shared -Wl,-soname,# NO ENDING SPACE
+endif
+
 all: MKDIR_P libCommandLineInterface.so
 
 MKDIR_P:
 	mkdir -p $(BIN_DIR) $(LIB_DIR)
 
 lib%.so: %.o
-	$(AR) cru $@ $^
+	$(CPP) -fPIC $^ $(SHAREDSWITCH)$@ $(LIBS) -o $@
 	cp $@ $(LIB_DIR)/
 
 %.o: %.cc %.hh

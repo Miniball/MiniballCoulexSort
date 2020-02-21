@@ -31,6 +31,15 @@ CFLAGS    = -pipe -Wall -W -Woverloaded-virtual $(ROOTCFLAGS) -fPIC
 INCLUDES  = -I$(COMMON_DIR) -I$(MBEVTS_DIR) -I$(MED2R_DIR) -I./
 LFLAGS    = -g
 
+PLATFORM:=$(shell uname)
+ifeq ($(PLATFORM),Darwin)
+SHAREDSWITCH = -Qunused-arguments -shared -undefined dynamic_lookup -dynamiclib -Wl,-install_name,'@executable_path/../lib/'# NO ENDING SPACE
+else
+export __LINUX__:= 1
+LINKFLAGS_PREFIX += -Wl,--no-as-needed
+SHAREDSWITCH = -shared -Wl,-soname,# NO ENDING SPACE
+endif
+
 O_FILES = Calibration.o \
 		MBGeometry.o \
 		AddBack.o \
@@ -71,30 +80,29 @@ DEPENDENCIES = $(DEPENDENCIES_BASIC) \
 				ParticleFinder.hh \
 				ParticleGammaTree.hh
 
-
 TreeBuilderDictionary.cc: $(DEPENDENCIES) RootLinkDef.h
-	rm -f TreeBuilderDictionary.cc TreeBuilderDictionary$(DICTEXT)
-	$(ROOTDICT) -f TreeBuilderDictionary.cc -c $(INCLUDES) $(DEPENDENCIES) RootLinkDef.h
-	cp TreeBuilderDictionary$(DICTEXT) $(LIB_DIR)/
+	$(ROOTDICT) -f $@ -c $(INCLUDES) $(DEPENDENCIES) RootLinkDef.h
+	cp $(basename $@)$(DICTEXT) $(LIB_DIR)/
+	cp $(basename $@)$(DICTEXT) $(BIN_DIR)/
 
-TreeBuilderDictionary.o: TreeBuilderDictionary.cc TreeBuilderDictionary$(DICTEXT)
-	$(CPP) -fPIC $(CFLAGS) $(INCLUDES) -c $<
+TreeBuilderDictionary.o: TreeBuilderDictionary.cc TreeBuilderDictionary$(DICTEXT) RootLinkDef.h
+	$(CPP) -fPIC $(CFLAGS) $(INCLUDES) -c $< RootLinkDef.h
 
 NeSortDictionary.cc: $(DEPENDENCIES_BASIC) RootLinkDef.h
-	rm -f NeSortDictionary.cc NeSortDictionary$(DICTEXT)
-	$(ROOTDICT) -f NeSortDictionary.cc -c $(INCLUDES) $(DEPENDENCIES) RootLinkDef.h
-	cp NeSortDictionary$(DICTEXT) $(LIB_DIR)/
+	$(ROOTDICT) -f $@ -c $(INCLUDES) $(DEPENDENCIES) RootLinkDef.h
+	cp $(basename $@)$(DICTEXT) $(LIB_DIR)/
+	cp $(basename $@)$(DICTEXT) $(BIN_DIR)/
 
-NeSortDictionary.o: NeSortDictionary.cc NeSortDictionary$(DICTEXT)
-	$(CPP) -fPIC $(CFLAGS) $(INCLUDES) -c $<
+NeSortDictionary.o: NeSortDictionary.cc NeSortDictionary$(DICTEXT) RootLinkDef.h
+	$(CPP) -fPIC $(CFLAGS) $(INCLUDES) -c $< RootLinkDef.h
 
 AQ4SortDictionary.cc: $(DEPENDENCIES_BASIC) RootLinkDef.h
-	rm -f AQ4SortDictionary.cc AQ4SortDictionary$(DICTEXT)
-	$(ROOTDICT) -f AQ4SortDictionary.cc -c $(INCLUDES) $(DEPENDENCIES) RootLinkDef.h
-	cp AQ4SortDictionary$(DICTEXT) $(LIB_DIR)/
+	$(ROOTDICT) -f $@ -c $(INCLUDES) $(DEPENDENCIES) RootLinkDef.h
+	cp $(basename $@)$(DICTEXT) $(LIB_DIR)/
+	cp $(basename $@)$(DICTEXT) $(BIN_DIR)/
 
-AQ4SortDictionary.o: AQ4SortDictionary.cc AQ4SortDictionary$(DICTEXT)
-	$(CPP) -fPIC $(CFLAGS) $(INCLUDES) -c $<
+AQ4SortDictionary.o: AQ4SortDictionary.cc AQ4SortDictionary$(DICTEXT) RootLinkDef.h
+	$(CPP) -fPIC $(CFLAGS) $(INCLUDES) -c $< RootLinkDef.h
 
 #--------------------------------------------------
 clean:

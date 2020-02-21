@@ -21,12 +21,21 @@ MBEVTS_DIR  = ../EventTree
 
 LIBS        := $(ROOTLIBS) -L$(LIB_DIR) -lCommandLineInterface -lmbevts
 
-AR          := ar
 CC          := $(shell root-config --cc)
 CPP         := $(shell root-config --cxx)
 CFLAGS      := -pedantic -Wall -g -O3 $(ROOTCFLAGS) -fPIC -Wno-unused-variable -Wno-long-long
 
 INCLUDES  = -I$(MBEVTS_DIR) -I$(COMMON_DIR) -I./
+
+PLATFORM:=$(shell uname)
+ifeq ($(PLATFORM),Darwin)
+SHAREDSWITCH = -Qunused-arguments -shared -undefined dynamic_lookup -dynamiclib -Wl,-install_name,'@executable_path/../lib/'# NO ENDING SPACE
+else
+export __LINUX__:= 1
+LINKFLAGS_PREFIX += -Wl,--no-as-needed
+SHAREDSWITCH = -shared -Wl,-soname,# NO ENDING SPACE
+endif
+
 
 all: MKDIR_P CLXAna
 
@@ -41,7 +50,7 @@ OBJECTS = g_clx.o \
  
 CLXAna: CLXAna.cc $(OBJECTS)
 	$(CPP) $(CFLAGS) $(INCLUDES) $< $(OBJECTS) -o $@ $(LIBS)
-	$(AR) cru $(LIB_DIR)/libCLXAna.so $(OBJECTS)
+	$(CPP) -fPIC $(OBJECTS) $(SHAREDSWITCH)lib$@.so $(LIBS) -o $(LIB_DIR)/lib$@.so
 	cp CLXAna $(BIN_DIR)/
 
 g_clx.o: g_clx.cc g_clx.hh hists.cc hists.hh doppler.cc doppler.hh
@@ -72,5 +81,6 @@ CLXAnaDict.o: CLXAnaDict.cc
 
 CLXAnaDict.cc: $(DEPENDENCIES)
 	 $(ROOTDICT) -f $@ -c $(INCLUDES) $(DEPENDENCIES)
-	 cp CLXAnaDict$(DICTEXT) $(LIB_DIR)/
+	 cp $(basename $@)$(DICTEXT) $(LIB_DIR)/
+	 cp $(basename $@)$(DICTEXT) $(BIN_DIR)/
 

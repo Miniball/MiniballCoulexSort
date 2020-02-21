@@ -22,9 +22,18 @@ CC       := $(shell root-config --cc)
 CPP      := $(shell root-config --cxx)
 CFLAGS   := $(ROOTCFLAGS) -Wall -fPIC -Wno-unused-variable -g
 
-LIBS     := $(ROOTGLIBS) -L$(LIB_DIR) -lCLXAna -lTreeBuilder
+LIBS     := $(ROOTGLIBS) -L$(LIB_DIR)
 
-INCLUDES := -I$(ANA_DIR) -I$(MED_DIR)
+INCLUDES := -I.
+
+PLATFORM:=$(shell uname)
+ifeq ($(PLATFORM),Darwin)
+SHAREDSWITCH = -Qunused-arguments -shared -undefined dynamic_lookup -dynamiclib -Wl,-install_name,'@executable_path/../lib/'# NO ENDING SPACE
+else
+export __LINUX__:= 1
+LINKFLAGS_PREFIX += -Wl,--no-as-needed
+SHAREDSWITCH = -shared -Wl,-soname,# NO ENDING SPACE
+endif
 
 all: MKDIR_P mb_sorter
 
@@ -34,14 +43,18 @@ MKDIR_P:
 OBJECTS = MBSorter.o \
           mb_sorter_dict.o
 
-MBSorter.o: MBSorter.cc
+lib%.so: %.o %_dict.o
+	$(CPP) -fPIC $(OBJECTS) $(SHAREDSWITCH)lib$@.so $(LIBS) -o lib$@.so
+	cp $@ $(LIB_DIR)/
+
+%.o: %.cc %.hh
 	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 mb_sorter: mb_sorter.cc $(OBJECTS)
 	$(CPP) $(CFLAGS) $(INCLUDES) $< $(OBJECTS) -o $@ $(LIBS)
-	$(AR) cru libmb_sorter.so $(O_FILES) mb_sorter_dict.o
-	cp $@ $(BIN_DIR)
-	cp libmb_sorter.so $(LIB_DIR)
+	$(CPP) -fPIC $(OBJECTS) $(SHAREDSWITCH)lib$@.so $(LIBS) -o lib$@.so
+	cp $@ $(BIN_DIR)/
+	cp $@ $(LIB_DIR)/
 
 # Root stuff
 DEPENDENCIES = MBSorter.hh \
@@ -51,10 +64,11 @@ mb_sorter_dict.o: mb_sorter_dict.cc
 	$(CPP) $(CFLAGS) $(INCLUDES) -c $<
 
 mb_sorter_dict.cc: $(DEPENDENCIES)
-	$(ROOTDICT) -f $@ -c $(INCLUDES) -rml libmb_sorter.so $(DEPENDENCIES)
-	cp mb_sorter_dict$(DICTEXT) $(LIB_DIR)
+	$(ROOTDICT) -f $@ -c $(INCLUDES) -p $(DEPENDENCIES)
+	cp $(basename $@)$(DICTEXT) $(LIB_DIR)/
+	cp $(basename $@)$(DICTEXT) $(BIN_DIR)/
 
 
 clean:
-	rm -f *.o *_dict$(DICTEXT) *_dict.cc
+	rm -f *.o *$(DICTEXT) *_dict.cc
 

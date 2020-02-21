@@ -32,6 +32,15 @@ CFLAGS    = -O2 -pipe -Wall -W -Woverloaded-virtual $(ROOTCFLAGS) -fPIC
 INCLUDES  = -I$(MED_DIR)/inc -I$(COMMON_DIR) -I$(MBEVTS_DIR) -I./
 LFLAGS    = -O2 -g
 
+PLATFORM:=$(shell uname)
+ifeq ($(PLATFORM),Darwin)
+SHAREDSWITCH = -Qunused-arguments -shared -undefined dynamic_lookup -dynamiclib -Wl,-install_name,'@executable_path/../lib/'# NO ENDING SPACE
+else
+export __LINUX__:= 1
+LINKFLAGS_PREFIX += -Wl,--no-as-needed
+SHAREDSWITCH = -shared -Wl,-soname,# NO ENDING SPACE
+endif
+
 O_FILES = BuiltEvent.o \
 		Datas.o \
         EventBuffer.o \
@@ -80,9 +89,9 @@ DEPENDENCIES = BuiltEvent.hh \
 			RootLinkDef.h
 
 MedToRootDictionary.cc: $(DEPENDENCIES)
-	rm -f MedToRootDictionary.cc MedToRootDictionary$(DICTEXT)
-	$(ROOTDICT) -f MedToRootDictionary.cc -c $(INCLUDES) -rml $(LIB_DIR)/libMedToRoot.so $(DEPENDENCIES)
-	cp MedToRootDictionary$(DICTEXT) $(LIB_DIR)/
+	$(ROOTDICT) -f $@ -c $(INCLUDES) $(DEPENDENCIES)
+	cp $(basename $@)$(DICTEXT) $(LIB_DIR)/
+	cp $(basename $@)$(DICTEXT) $(BIN_DIR)/
 
 MedToRootDictionary.o: MedToRootDictionary.cc MedToRootDictionary$(DICTEXT)
 	$(CPP) -fPIC $(CFLAGS) $(INCLUDES) -c $<

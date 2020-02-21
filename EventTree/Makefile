@@ -29,6 +29,15 @@ CFLAGS    = -O2 -pipe -Wall -W -Woverloaded-virtual $(ROOTCFLAGS) -fPIC
 INCLUDES  = -I./
 LFLAGS    = -O2 -g $(ROOTLDFLAGS)
 
+PLATFORM:=$(shell uname)
+ifeq ($(PLATFORM),Darwin)
+SHAREDSWITCH = -Qunused-arguments -shared -undefined dynamic_lookup -dynamiclib -Wl,-install_name,'@executable_path/../lib/'# NO ENDING SPACE
+else
+export __LINUX__:= 1
+LINKFLAGS_PREFIX += -Wl,--no-as-needed
+SHAREDSWITCH = -shared -Wl,-soname,# NO ENDING SPACE
+endif
+
 O_FILES = mbevts.o \
 		  trevts.o
 
@@ -51,6 +60,7 @@ lib%.so: %.o %Dict.o
 	rm -f $@ $*Dict$(DICTEXT)
 	$(ROOTDICT) -f $@ -c $(INCLUDES) -p $<
 	cp $*Dict$(DICTEXT) $(LIB_DIR)/
+	cp $*Dict$(DICTEXT) $(BIN_DIR)/
 
 
 #--------------------------------------------------
