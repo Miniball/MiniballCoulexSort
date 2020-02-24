@@ -8,7 +8,7 @@ LIB_DIR = ../lib
 
 AR      = ar
 CPP     = $(shell root-config --cxx)
-CFLAGS  =  -O2 -pipe -Wall -W -Woverloaded-virtual
+CFLAGS  =  -fPIC -O2 -pipe -Wall -W -Woverloaded-virtual
 
 INCLUDES	= -I./
 
