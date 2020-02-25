@@ -120,6 +120,13 @@ public:
 	double tMaxRandomElectron;	///< maximum edge of random window (particle-electron)
  
 	double WeightPR; ///< ratio of prompt and random windows
+
+	double tMinPromptGamma;	///< minimum edge of prompt window (gamma-gamma)
+	double tMaxPromptGamma;	///< maximum edge of prompt window (gamma-gamma)
+	double tMinRandomGamma;	///< minimum edge of random window (gamma-gamma)
+	double tMaxRandomGamma;	///< maximum edge of random window (gamma-gamma)
+
+
 	
 	// Histograms
 	// diagnostics
@@ -130,7 +137,7 @@ public:
 	TH1F *tdiff_gp_q[4], *tdiff_BD;
 	
 	// gamma
-	TH2F *gg;
+	TH2F *gg, *gg_pr, *gg_ran;
 
 private:
 	
@@ -172,6 +179,7 @@ private:
 	unsigned int adc_en2;
 	long long adc_t;
 	float tdiffPG;
+	float tdiffGG;
 	int coinc_flag;
 
 	// Counters
@@ -225,9 +233,13 @@ void ParticleGammaTree::InitialiseVariables() {
 	tMinPromptElectron = -6.;	tMaxPromptElectron = 6.;	// 12 ticks
 	tMinRandomElectron = 7.;	tMaxRandomElectron = 33.;	// = (39/18)*12 = 26
  
+	tMinPromptGamma = -15.;	tMaxPromptGamma = 15.;	// from tdiff_gg
+	tMinRandomGamma = 20.;	tMaxRandomGamma = 35.;	// from tdiff_gg
+
 	WeightPR = TMath::Abs( tMinPrompt - tMaxPrompt );
 	WeightPR /= TMath::Abs( tMinRandom - tMaxRandom );
-	
+
+
 	cout << "WeightPR: " << WeightPR << endl;
 	
 	// ------------------------------------------------------------------------ //
@@ -280,6 +292,8 @@ void ParticleGammaTree::SetupHistograms(){
 	
 	// Gamma-gamma - no Doppler correction
 	gg = new TH2F("gg","#gamma-#gamma matrix;Energy [keV];Energy[keV]",GBINS,GMIN,GMAX,GBINS,GMIN,GMAX);
+	gg_pr = new TH2F("gg_pr","prompt #gamma-#gamma matrix;Energy [keV];Energy[keV]",GBINS,GMIN,GMAX,GBINS,GMIN,GMAX);
+	gg_ran = new TH2F("gg_ran","random #gamma-#gamma matrix;Energy [keV];Energy[keV]",GBINS,GMIN,GMAX,GBINS,GMIN,GMAX);
 
 	// ------------------------------------------------------------------------ //
 	

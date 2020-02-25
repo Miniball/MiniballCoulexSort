@@ -230,10 +230,23 @@ void ParticleGammaTree::GammaGammaCoincidences() {
 			
 			// Skip over the electrons
 			if( ab.GetClu(i) == 8 || ab.GetClu(j) == 8 ) continue;
+
+			tdiffGG = ab.GetGtd(j) - ab.GetGtd(i);
 			
-			tdiff_gg->Fill( ab.GetGtd(i) - ab.GetGtd(j) );
+			tdiff_gg->Fill( tdiffGG );
 			gg->Fill( ab.GetGen(i), ab.GetGen(j) );
-			
+
+			// Prompt gate			
+			if( tMinPromptGamma <= tdiffGG && tdiffGG < tMaxPromptGamma ) {
+			gg_pr->Fill( ab.GetGen(i), ab.GetGen(j) );
+				}
+		
+
+			// Time-random gate
+			if( tMinRandomGamma <= TMath::Abs( tdiffGG ) && TMath::Abs( tdiffGG ) < tMaxRandomGamma ) {
+			gg_ran->Fill( ab.GetGen(i), ab.GetGen(j) );
+				}
+
 		}
 		
 	}
