@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <fstream>
 #include <string>
+#include <array>
 #include <cstdlib>
 
 #include "TSystem.h"
