@@ -74,6 +74,7 @@ void hists::Initialise( doppler dc_ ) {
 	gg = new TH2F("gg","Gamma-gamma matrix;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	//ge = new TH2F("ge","Gamma-electron matrix;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),EBINS,-0.5*((float)EMAX/(float)EBINS),EMAX-0.5*((float)EMAX/(float)EBINS));
 	gg_dcB = new TH2F("gg_dcB","Gamma-gamma matrix, DC for beam;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
+	gg_user = new TH2F("gg_user","Gamma-gamma matrix, DC for beam, user particle gates;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	gg_dcT = new TH2F("gg_dcT","Gamma-gamma matrix, DC for target;Energy [keV];Energy [keV];Counts",GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS),GBINS,-0.5*((float)GMAX/(float)GBINS),GMAX-0.5*((float)GMAX/(float)GBINS));
 	gg_td = new TH1F("gg_td","#gamma-#gamma time difference;#tau (t_{#gamma} - t_{#gamma}) [ns];Counts per 25 ns",TBINS,TMAX-25*TBINS,TMAX); // Total
 	ge_td = new TH1F("ge_td","electron-#gamma time difference;#tau (t_{e^{-}} - t_{#gamma}) [ns];Counts per 25 ns",TBINS,TMAX-25*TBINS,TMAX); // Total
@@ -766,7 +767,7 @@ void hists::FillGamGam1h( float GEn, float GTh, float GPh, int GCid, vector <flo
 	float BEn = 0, TEn = 0, BTh = 0, TTh = 0, BPh = 0, TPh = 0;
 
 	// Comment below for background subtraction
-	if( weight < 0 ) return;
+	//if( weight < 0 ) return;
 	
 	// Target
 	if( cut == 0 ) {
@@ -846,6 +847,14 @@ void hists::FillGamGam1h( float GEn, float GTh, float GPh, int GCid, vector <flo
 							  GCor_GEn.at(i)*dc.DC(BEn,BTh,BPh,GCor_GTh.at(i),GCor_GPh.at(i),dc.GetAb()),
 							  weight );
 				
+				if( cut == 0 && Pnf <= maxrecoil && Pnf >= minrecoil) {
+					
+					gg_user->Fill( GEn*dc.DC(BEn,BTh,BPh,GTh,GPh,dc.GetAb()),
+								  GCor_GEn.at(i)*dc.DC(BEn,BTh,BPh,GCor_GTh.at(i),GCor_GPh.at(i),dc.GetAb()),
+								  weight );
+					
+				}
+				
 			}
 			
 		}
@@ -893,7 +902,7 @@ void hists::FillGamGam2h( float GEn, float GTh, float GPh, int GCid, vector<floa
 	}
 	
 	// Comment below for background subtraction
-	if( weight < 0 ) return;
+	//if( weight < 0 ) return;
 
 	for( unsigned int i = 0; i < GCor_GEn.size(); i++ ) {
 		
@@ -908,6 +917,14 @@ void hists::FillGamGam2h( float GEn, float GTh, float GPh, int GCid, vector<floa
 							  GCor_GEn.at(i)*dc.DC(TEn,TTh,TPh,GCor_GTh.at(i),GCor_GPh.at(i),dc.GetAt()),
 							  weight );
 				gg_dcB->Fill( GEn*dc.DC(BEn,BTh,BPh,GTh,GPh,dc.GetAb()),
+							  GCor_GEn.at(i)*dc.DC(BEn,BTh,BPh,GCor_GTh.at(i),GCor_GPh.at(i),dc.GetAb()),
+							  weight );
+				
+			}
+			
+			if( Tnf <= maxrecoil && Tnf >= minrecoil ) {
+				
+				gg_user->Fill( GEn*dc.DC(BEn,BTh,BPh,GTh,GPh,dc.GetAb()),
 							  GCor_GEn.at(i)*dc.DC(BEn,BTh,BPh,GCor_GTh.at(i),GCor_GPh.at(i),dc.GetAb()),
 							  weight );
 				
@@ -930,8 +947,6 @@ void hists::FillGamGam2h( float GEn, float GTh, float GPh, int GCid, vector<floa
 	}
 	
 	return;
-	
-
 	
 }
 

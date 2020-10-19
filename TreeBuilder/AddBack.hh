@@ -190,10 +190,10 @@ void AddBack::InitialiseVariables() {
 
 	// Crap segments list (i.e. those that need to be vetoed)
 	// Repeat the next line for every segment to be vetoed
-	dead_segments.push_back( 106 ); // clu 5, core 0, seg 1 = 18A1
-	dead_segments.push_back( 107 ); // clu 5, core 0, seg 2 = 18A2
-	dead_segments.push_back( 123 ); // clu 5, core 2, seg 4 = 18C4
-	dead_segments.push_back( 124 ); // clu 5, core 2, seg 5 = 18C5
+	//dead_segments.push_back( 106 ); // clu 5, core 0, seg 1 = 18A1
+	//dead_segments.push_back( 107 ); // clu 5, core 0, seg 2 = 18A2
+	//dead_segments.push_back( 123 ); // clu 5, core 2, seg 4 = 18C4
+	//dead_segments.push_back( 124 ); // clu 5, core 2, seg 5 = 18C5
 
 	// Swap segments list (i.e. pairs of segments where cables were swapped)
 	// Repeat next three lines for every pair to be swapped

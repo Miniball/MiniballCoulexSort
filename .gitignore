@@ -16,3 +16,7 @@ TDRIVAna_20171101
 *.xcuserstate
 *.xcsettings
 *.plist
+test.C
+*/*.so
+*/*.rootmap
+*/*.gch

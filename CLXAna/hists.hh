@@ -61,6 +61,7 @@ class hists {
 	TH2F *gg;
 	//TH2F *ge;
 	TH2F *gg_dcT, *gg_dcB;
+	TH2F *gg_user;
 	TH1F *gg_td, *ge_td;
 	TH1F *gcor_size;
 	 

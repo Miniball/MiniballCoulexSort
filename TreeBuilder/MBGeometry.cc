@@ -134,7 +134,7 @@ void MBGeometry::SetupCluster() {
 	clu_offset.SetXYZ(0, r, 0);
 
 	// Offset from centre of cluster to centre of each detector
-#define USE_EMPIRICAL 1
+#define USE_EMPIRICAL 0
 #if USE_EMPIRICAL // These are values determined from a Geant4 simulation
 	det_offset[0].SetXYZ(-0.0166, r + 8.6739, -33.7254);
 	det_offset[1].SetXYZ(-29.1946, r + 8.6628, 16.8867);

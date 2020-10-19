@@ -1,4 +1,4 @@
-// TreeAna: The main routine that calls g_clx
+// CLXAna: The main routine that calls g_clx
 // Liam Gaffney (liam.gaffney@cern.ch) - 01/05/2017
 
 #ifndef g_clx_hh

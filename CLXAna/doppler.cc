@@ -875,7 +875,7 @@ float doppler::DC( float PEn, float PTh, float PPhi, float GTh, float GPhi, floa
 	float beta = Beta( PEn, A * u_mass() );
 	float gamma = 1. / TMath::Sqrt( 1. - beta*beta );
 	float costheta = sin(PTh)*sin(GTh)*cos(PPhi-GPhi)+(cos(PTh)*cos(GTh));
-	
+    
 	float corr = 1. - beta*costheta;
 	corr *= gamma;
 	

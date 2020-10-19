@@ -3,6 +3,7 @@
 
 #include "TRandom.h"
 #include "TRandom3.h"
+#include "TVector3.h"
 #include "TCutG.h"
 #include "TGaxis.h"
 #include "TCanvas.h"
