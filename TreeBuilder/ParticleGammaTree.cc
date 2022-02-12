@@ -206,7 +206,20 @@ void ParticleGammaTree::TREXCoincidences() {
 								   gamma_phi[ab.GetClu(j)][ab.GetCid(j)%3][ab.GetSid(j)],
 								   tdiffPG, coinc_flag );
 			
-		} // gammas
+		} // j: gammas
+		
+		// Coincident particles
+		for( unsigned int j = 0; j < pf.ReconstructedSize(); j++ ) {
+			
+			if( i == j ) continue;
+			fill_tr_evts.SetCorPen( pf.GetPEn(j), pf.GetPdE(j), pf.GetPErest(j) );
+			fill_tr_evts.SetQuad( pf.GetQuad(j) );
+			fill_tr_evts.SetSector( pf.GetSector(j) );
+			fill_tr_evts.SetNf( pf.GetNf(j) );
+			fill_tr_evts.SetNb( pf.GetNb(j) );
+			fill_tr_evts.SetTs( pf.GetTime(i) - pf.GetTime(j) );
+
+		} // j: second particle
 		
 		// Push back the temporary event to the mb_evts vector
 		tr_evts.push_back( fill_tr_evts );

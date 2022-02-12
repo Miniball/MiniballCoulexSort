@@ -33,7 +33,7 @@ void hists::Initialise( doppler dc_ ) {
 
 	string hname, htitle;
 
-	for( int k = 0; k < 17; k++ ) cd_angles[k] = dc.GetPTh(k-0.5,0)*TMath::RadToDeg();
+	for( int k =  0; k < 17; k++ ) cd_angles[k] = dc.GetPTh(k-0.5,0)*TMath::RadToDeg();
 	for( int k = 17; k < 32; k++ ) cd_angles[k] = 0.1+((32.5-k)*dc.GetPTh(15.5,0)*TMath::RadToDeg()+90.*(k-16.5))/16.;
 	for( int k = 32; k < 48; k++ ) cd_angles[k] = 90+((k-31.5)*(dc.GetPTh(15.5,3)*TMath::RadToDeg()-90.))/16.+0.1;
 	for( int k = 48; k < 65; k++ ) cd_angles[k] = dc.GetPTh(63.5-k,3)*TMath::RadToDeg();
