@@ -450,7 +450,7 @@ void hists::FillGam1h( float GEn, float GTh, float GPh, int GCid, float PEn, int
 
 	}
 	
-	// Projectile
+	// Projectile/Beam
 	else if( cut > 0 ){
 	
 		if( weight > 0 ) p_1B->Fill(GEn);

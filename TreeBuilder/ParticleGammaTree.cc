@@ -238,14 +238,14 @@ void ParticleGammaTree::GammaGammaCoincidences() {
 
 			// Prompt gate			
 			if( tMinPromptGamma <= tdiffGG && tdiffGG < tMaxPromptGamma ) {
-			gg_pr->Fill( ab.GetGen(i), ab.GetGen(j) );
-				}
+				gg_pr->Fill( ab.GetGen(i), ab.GetGen(j) );
+			}
 		
 
 			// Time-random gate
 			if( tMinRandomGamma <= TMath::Abs( tdiffGG ) && TMath::Abs( tdiffGG ) < tMaxRandomGamma ) {
-			gg_ran->Fill( ab.GetGen(i), ab.GetGen(j) );
-				}
+				gg_ran->Fill( ab.GetGen(i), ab.GetGen(j) );
+			}
 
 		}
 		

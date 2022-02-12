@@ -743,6 +743,7 @@ float doppler::GetTThCoM( float TTh, bool kinflag ) {
 	
 	/// Calculates CoM scattering angle from the target laboratory angle in radians
 	/// @param TTh theta angle of the target in laboratory frame
+	/// @param kinflag kinematics flag such that true is the backwards solution (i.e. CoM > 90 deg)
 
 	float tau = Ab/At;
 	float Eprime = Ereac - Ex * ( 1 + tau );

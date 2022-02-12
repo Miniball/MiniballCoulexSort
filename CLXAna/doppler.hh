@@ -50,13 +50,13 @@ class doppler : public TObject {
 	float	GetCDOffset();
 	float	GetCDDeadLayer();
 	float	GetSpedeDist();
-	float	GetPTh( float anno, int sector );
+	float	GetPTh( float nf, int sector );
 	float	GetPPhi( int quad, int seg, int sector );
-	float	GetTTh( float Banno, float BEn, int sector );
-	float	GetBTh( float Tanno, int sector );
+	float	GetTTh( float Bnf, float BEn, int sector );
+	float	GetBTh( float Tnf, int sector );
 	float	GetQPhi( int quad, int seg, int sector );
-	float	GetTEn( float BEn, float Banno, int sector );
-	float	GetBEn( float TEn, float Tanno, int sector );
+	float	GetTEn( float BEn, float Bnf, int sector );
+	float	GetBEn( float TEn, float Tnf, int sector );
 	float	GetELoss( float Ei, float dist, int opt, string combo );
 	float	GetBThLab( float CoM );
 	float	GetTThLab( float CoM );

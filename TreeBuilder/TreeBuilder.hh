@@ -34,6 +34,6 @@ bool cdpad = false;
 bool ionch = false;
 bool spede = false;
 bool verbose = false;
-CommandLineInterface* interface = new CommandLineInterface();
+CommandLineInterface *interface = new CommandLineInterface();
 
 void PrintInput();
