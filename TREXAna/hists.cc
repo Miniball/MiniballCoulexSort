@@ -113,6 +113,9 @@ void hists::FillPrompt( trevts *evt ) {
 	// the correlation, or we double count them
 	if( evt->GetFirst() ) {
 		
+		//---- TODO: Here we need to add Doppler corrected gamma-ray spectra
+		//---- TODO: But first we need the kinematic reconstruction implementing in doppler class
+
 		// All gammas
 		for( unsigned int i = 0; i < evt->GetNrPrompt(); ++i ){
 		
@@ -145,6 +148,9 @@ void hists::FillPrompt( trevts *evt ) {
 	part_Erest_p->Fill( PTh * TMath::RadToDeg(), evt->GetPerest() );
 	part_Erest_p_Q[evt->GetQuad()]->Fill( PTh * TMath::RadToDeg(), evt->GetPerest() );
 
+	
+	//---- TODO: Here we can loop over the gammas, apply Doppler correction then gate on them
+	//---- TODO: to produce gated particle spectra. Similarly vice versa with particle gates.
 	
 		
 	return;
