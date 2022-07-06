@@ -28,6 +28,7 @@ void trevts::Initialise() {
 	t1t=-999.;
 	sst=-999.;
 	laser=-1;
+	first=false;
 
 	pcor_pen.resize(0);
 	pcor_pen_de.resize(0);
@@ -36,7 +37,8 @@ void trevts::Initialise() {
 	pcor_nf.resize(0);
 	pcor_nb.resize(0);
 	pcor_sector.resize(0);
-	
+	pcor_ptd.resize(0);
+
 	gen.resize(0);
 	cid.resize(0);
 	sid.resize(0);
@@ -68,7 +70,8 @@ void trevts::CopyData( trevts src ) {
 	t1t = src.t1t;
 	sst = src.sst;
 	laser = src.laser;
-	
+	first = src.first;
+
 	pcor_pen = src.pcor_pen;
 	pcor_pen_de = src.pcor_pen_de;
 	pcor_pen_e = src.pcor_pen_e;
@@ -76,6 +79,7 @@ void trevts::CopyData( trevts src ) {
 	pcor_nf = src.pcor_nf;
 	pcor_nb = src.pcor_nb;
 	pcor_sector = src.pcor_sector;
+	pcor_ptd = src.pcor_ptd;
 
 	gen = src.gen;
 	cid = src.cid;
@@ -146,6 +150,12 @@ void trevts::SetLaser( int l ) {
 	
 }
 
+void trevts::SetFirst( bool f ) {
+	
+	first = f;
+	
+}
+
 void trevts::SetSS( double t ) {
 	
 	sst = t;
@@ -190,89 +200,6 @@ void trevts::SetCorTd( double t ) {
 	
 }
 
-float trevts::GetGen( int nr ) {
-	
-	return gen[nr];
-	
-}
-
-int trevts::GetCluid( int nr ) {
-	
-	return cluid[nr];
-
-}
-
-int trevts::GetCid( int nr ) {
-
-	return cid[nr];
-
-}
-
-int trevts::GetSid( int nr ) {
-
-	return sid[nr];
-
-}
-
-float trevts::GetTheta( int nr ) {
-
-	return tha[nr];
-
-}
-
-float trevts::GetPhi( int nr ) {
-
-	return pha[nr];
-
-}
-
-int trevts::GetNrGammas() {
-
-	return gen.size();
-
-}
-
-float trevts::GetPen() {
-	
-	return pen;
-	
-}
-
-float trevts::GetPde() {
-	
-	return pen_de;
-	
-}
-
-float trevts::GetPerest() {
-	
-	return pen_e;
-	
-}
-
-int trevts::GetNf() {
-
-	return nf;
-
-}
-
-int trevts::GetNb() {
-	
-	return nb;
-	
-}
-
-int trevts::GetSector() {
-	
-	return sector;
-	
-}
-
-int trevts::GetQuad() {
-	
-	return quad;
-	
-}
 
 void trevts::SetGamma( float en, int c, int s, int clu, float th, float ph, double ptd, int co ) {
 

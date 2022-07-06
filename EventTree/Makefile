@@ -24,10 +24,10 @@ AR        = ar
 CC        = $(shell root-config --cc)
 CPP       = $(shell root-config --cxx)
 
-CFLAGS    = -O2 -pipe -Wall -W -Woverloaded-virtual $(ROOTCFLAGS) -fPIC
+CFLAGS    = -pipe -Wall -W -g -Woverloaded-virtual $(ROOTCFLAGS) -fPIC
 
 INCLUDES  = -I./
-LFLAGS    = -O2 -g $(ROOTLDFLAGS)
+LFLAGS    = -g $(ROOTLDFLAGS)
 
 PLATFORM:=$(shell uname)
 ifeq ($(PLATFORM),Darwin)

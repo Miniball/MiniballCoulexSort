@@ -73,8 +73,16 @@ void ParticleGammaTree::FillTREXTree() {
 		write_tr_evts.Initialise();
 		write_tr_evts.CopyData( tr_evts[j] );
 		
-		p_tr->Fill();
-		
+		// Only if we have some gammas, or singles is declared
+		if( write_tr_evts.GetNrPrompt() > 0 ||
+		    write_mb_evts.GetNrRandom() > 0 ||
+		    write_mb_evts.GetNrDelayed() > 0 ||
+		    singles ) {
+			
+			p_tr->Fill();
+
+		}
+	
 	}
 	
 	return;
@@ -184,6 +192,8 @@ void ParticleGammaTree::TREXCoincidences() {
 		fill_tr_evts.SetNb( pf.GetNb(i) );
 		fill_tr_evts.SetTime( pf.GetTime(i) );
 		fill_tr_evts.SetLaser( pf.GetLaser(i) );
+		if( i == 0 ) fill_tr_evts.SetFirst( true );
+		else fill_tr_evts.SetFirst( false );
 		fill_tr_evts.SetT1( (double)event->T1Time() );
 		fill_tr_evts.SetSS( (double)event->SuperCycleTime() );
 		
@@ -213,11 +223,11 @@ void ParticleGammaTree::TREXCoincidences() {
 			
 			if( i == j ) continue;
 			fill_tr_evts.SetCorPen( pf.GetPEn(j), pf.GetPdE(j), pf.GetPErest(j) );
-			fill_tr_evts.SetQuad( pf.GetQuad(j) );
-			fill_tr_evts.SetSector( pf.GetSector(j) );
-			fill_tr_evts.SetNf( pf.GetNf(j) );
-			fill_tr_evts.SetNb( pf.GetNb(j) );
-			fill_tr_evts.SetTs( pf.GetTime(i) - pf.GetTime(j) );
+			fill_tr_evts.SetCorQuad( pf.GetQuad(j) );
+			fill_tr_evts.SetCorSector( pf.GetSector(j) );
+			fill_tr_evts.SetCorNf( pf.GetNf(j) );
+			fill_tr_evts.SetCorNb( pf.GetNb(j) );
+			fill_tr_evts.SetCorTd( pf.GetTime(i) - pf.GetTime(j) );
 
 		} // j: second particle
 		

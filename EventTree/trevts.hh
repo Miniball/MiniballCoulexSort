@@ -23,6 +23,7 @@ class trevts : public TObject {
 	double t1t;		///< T1 timestamp (1 ms before proton impact)
 	double sst;		///< supercycle timestamp
 	int laser;		///< laser flag
+	bool first;		///< is it the first correlated event? Useful for not double-counting gammas
 	
 	// list of correlated particles
 	vector <float> pcor_pen;
@@ -65,6 +66,7 @@ class trevts : public TObject {
 	void SetT1( double t );
 	void SetSS( double t );
 	void SetLaser( int l );
+	void SetFirst( bool f );
 	void SetCorPen( float en, float de, float erest );
 	void SetCorQuad( int q );
 	void SetCorNf( int id );
@@ -76,21 +78,34 @@ class trevts : public TObject {
 	void CopyData( trevts src );
 
 	// get functions
-	int GetCluid( int nr );
-	int GetCid( int nr );
-	int GetSid( int nr );
-	float GetGen( int nr );
-	float GetTheta( int nr );
-	float GetPhi( int nr );
-	int GetNrGammas();
-	float GetPen();
-	float GetPde();
-	float GetPerest();
-	int GetSector();
-	int GetNf();
-	int GetNb();
-	int GetQuad();
-	
+	inline int GetCluid( int nr ){ return cluid[nr]; };
+	inline int GetCid( int nr ){ return cid[nr]; };
+	inline int GetSid( int nr ){ return sid[nr]; };
+	inline float GetGen( int nr ){ return gen[nr]; };
+	inline float GetTheta( int nr ){ return tha[nr]; };
+	inline float GetPhi( int nr ){ return pha[nr]; };
+	inline int GetCoinc( int nr ){ return coin[nr]; };
+	inline int GetNrGammas(){ return gen.size(); };
+	inline int GetNrPrompt(){ return pr_hits; };
+	inline int GetNrRandom(){ return rndm_hits; };
+	inline int GetNrDelayed(){ return del_hits; };
+	inline int GetPromptPtr( int nr ){ return pr_ptr[nr]; };
+	inline int GetRandomPtr( int nr ){ return rndm_ptr[nr]; };
+	inline int GetDelayedPtr( int nr ){ return del_ptr[nr]; };
+	inline float GetPen(){ return pen; };
+	inline float GetPde(){ return pen_de; };
+	inline float GetPerest(){ return pen_e; };
+	inline int GetSector(){ return sector; };
+	inline int GetNf(){ return nf; };
+	inline int GetNb(){ return nb; };
+	inline int GetQuad(){ return quad; };
+	inline int GetNrCorr(){ return pcor_pen.size(); };
+	inline double GetTime(){ return time; };
+	inline double GetT1T(){ return t1t; };
+	inline double GetSST(){ return sst; };
+	inline int GetLaser(){ return laser; };
+	inline bool GetFirst(){ return first; };
+
 	ClassDef( trevts, 1 );
 
 };

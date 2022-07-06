@@ -74,7 +74,7 @@ int main( int argc, char *argv[] ) {
 	}
 
 	// Make chain for tr_ana
-	TChain *chain = new TChain( "p_tr", "" );
+	TChain *chain = new TChain( "p_tr" );
 	for( unsigned int i = 0; i < inputfilenames.size(); i++ ) {
 
 		chain->Add( inputfilenames[i].c_str() );	

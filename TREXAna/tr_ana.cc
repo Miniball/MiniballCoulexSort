@@ -40,56 +40,56 @@ void tr_ana::Loop( string outputfilename ) {
 	hists h;
 	h.Initialise( dc );
 
-
-	// Loop over events 
+	// Loop over events
 	cout << "Looping over events...\n";
 	Int_t nbytes = 0, nbs = 0;
-	Int_t skipFactor =1;
+	Int_t skipFactor = 1;
 	for( Long64_t jentry=0; jentry<fChain->GetEntries()/skipFactor; jentry++ ) {	
 
 		Long64_t ientry = LoadTree(jentry);
-		
 		if( ientry < 0 ) break;
 
-		nbs = fChain->GetEntry(jentry);   nbytes += nbs;
+		nbs = GetEntry(jentry);   nbytes += nbs;
 
 		if( jentry%5000==0 ){
 			cout << " " << jentry << "/" << fChain->GetEntries() << "  (" << jentry*100./fChain->GetEntries() << "%)    \r";
 			cout << flush;
 		}
 
-		// Paricle multiplicity
-		if( pr_hits != 0 ) h.multp->Fill( pr_hits );
-		else if( rndm_hits != 0 )  h.multr->Fill( rndm_hits );
+		// Gamma multiplicity
+		if( evt->GetFirst() ) {
+		
+			h.multp->Fill( evt->GetNrPrompt() );
+			h.multr->Fill( evt->GetNrRandom() );
+		
+			// Loop over gamma counter
+			for( unsigned int i = 0; i < evt->GetNrGammas(); i++ ){
 
+				// Germanium angles
+				h.GeAng->Fill( evt->GetTheta(i)*TMath::RadToDeg(), evt->GetPhi(i)*TMath::RadToDeg() );
 
-		// Loop over gamma counter
-		for( unsigned int i = 0; i < gen.size(); i++ ){
+				// Germanium angles vs. Silicon angles
+				h.GeSiAng->Fill( evt->GetTheta(i)*TMath::RadToDeg(), dc.GetPTh(evt->GetNf(),evt->GetSector())*TMath::RadToDeg(), (evt->GetPhi(i)-dc.GetPPhi(evt->GetQuad(),evt->GetNb(),evt->GetSector()))*TMath::RadToDeg() );
+				
+			} // END - Loop over gamma counter
 
-			// Germanium angles
-			h.GeAng->Fill( tha[i]*TMath::RadToDeg(), pha[i]*TMath::RadToDeg() );
-			h.GeAng_clu[cluid[i]]->Fill( tha[i]*TMath::RadToDeg(), pha[i]*TMath::RadToDeg() );
+		}
 
-			// Germanium angles vs. Silicon angles
-			h.GeSiAng->Fill( tha[i]*TMath::RadToDeg(), dc.GetPTh(nf,sector)*TMath::RadToDeg(), (pha[i]-dc.GetPPhi(quad,nb,sector))*TMath::RadToDeg() );
-			h.GeSiAng_clu[cluid[i]]->Fill( tha[i]*TMath::RadToDeg(), dc.GetPTh(nf,sector)*TMath::RadToDeg(), (pha[i]-dc.GetPPhi(quad,nb,sector))*TMath::RadToDeg() );
-			
-		} // END - Loop over particle counter
 
 		// Check size of particle multiplicity
-		h.pcor_size->Fill( pcor_pen.size() );
+		h.pcor_size->Fill( evt->GetNrCorr() );
+
+		
+		// Fill singles particle spectra, with gamma or no gamma.
+		h.FillSingles( evt );
 
 		// Fill conditioned spectra
-
 		// Condition on gamma detection
-		if( pr_hits==0 && rndm_hits==0 )
-			h.FillSingles();
+		if( evt->GetNrPrompt() > 0 && evt->GetNrRandom() == 0 )
+			h.FillPrompt( evt );
 
-		else if( pr_hits>0 && rndm_hits==0 )
-			h.FillPrompt();
-
-		else if( pr_hits==0 && rndm_hits>0 )
-			h.FillRandom();
+		else if( evt->GetNrPrompt() == 0 && evt->GetNrRandom() > 0 )
+			h.FillRandom( evt );
 		
 		else {} // what if there are prompt and random gammas?
 

@@ -32,8 +32,8 @@ using namespace std;
 //#endif
 
 // Headers for tree
-#ifndef __MBEVTS_HH__
-# include "mbevts.hh"
+#ifndef __TREVTS_HH__
+# include "trevts.hh"
 #endif
 
 /// Main class for gamma-particle coinidence analysis
@@ -44,43 +44,7 @@ class tr_ana : public TObject {
 	Int_t           fCurrent; //!current Tree number in a TChain
 	
 	// Declaration of leaf types
-	//trevts          *trevts;
-	UInt_t          fUniqueID;
-	UInt_t          fBits;
-	float				pen;		///< reconstructed particle energy in keV
-	float				pen_de;	///< reconstructed particle dE in keV
-	float				pen_e;	///< reconstructed particle E_rest in keV
-	int					quad;		///< quadrant of the T-REX (0 = Top; 1 = Left; 2 = Bottom; 3 = Right)
-	int					nf;			///< front strip number of CD quadrant
-	int					nb;			///< back strip number of CD quadrant
-	int					sector;		///< sector of T-REX (0 = FCD; 1 = FBarrel; 2 = BBarrel; 3 = BCD)
-	vector <float>		pcor_pen;
-	vector <float>		pcor_pen_de;
-	vector <float>		pcor_pen_e;
-	vector <int>		pcor_quad;
-	vector <int>		pcor_nf;
-	vector <int>		pcor_nb;
-	vector <int>		pcor_sector;
-	vector <double>		pcor_ptd;
-	vector <float>		gen;		///< gamma-ray energy in keV
-	vector <int>		cid;		///< Miniball core id (0-23)
-	vector <int>		sid;		///< Miniball segment id (0 is core 1-6 is segments)
-	vector <int>		cluid;		///< Miniball cluster id (0-7)
-	vector <float>		tha;		///< gamma-ray theta angle in radians
-	vector <float>		pha;		///< gamma-ray phi angle in radians
-	vector <float>		td;		///< particle-gamma time difference
-	vector <int>		coin;		///< particle-gamma coincidence flag (0 = prompt; 1 = random; 2 = delayed)
-	Double_t        	time;
-	Double_t        	t1t;
-	Double_t        	sst;
-	int            		laser;		///< laser on/off flag: 1 = on, 0 = off
-	int					pr_hits;	///< number of prompt hits
-	int					rndm_hits;	///< number of random hits
-	int					del_hits;	///< number of delayed hits
-	vector <int>		pr_ptr;		///< pointer to prompt hits in particle vector/array
-	vector <int>		rndm_ptr;	///< pointer to random hits in particle vector/array
-	vector <int>		del_ptr;	///< pointer to delayed hits in particle vector/array
-	int           		file;
+	trevts          *evt;
 
 	float			GammaEnergy;
 	int				Zb, Zt;
@@ -98,43 +62,6 @@ class tr_ana : public TObject {
 	string			srim;			///< Directory containing the srim files
 	bool			usekin;			///< Flag to use two-body kinematics for particle velocity
 	
-	// List of branches
-	TBranch        *b_trevts_fUniqueID;   //!
-	TBranch        *b_trevts_fBits;   //!
-	TBranch        *b_trevts_pen;   //!
-	TBranch        *b_trevts_pen_de;   //!
-	TBranch        *b_trevts_pen_e;   //!
-	TBranch        *b_trevts_quad;   //!
-	TBranch        *b_trevts_nf;   //!
-	TBranch        *b_trevts_nb;   //!
-	TBranch        *b_trevts_sector;   //!
-	TBranch        *b_trevts_time;   //!
-	TBranch        *b_trevts_t1t;   //!
-	TBranch        *b_trevts_sst;   //!
-	TBranch        *b_trevts_laser;   //!
-	TBranch        *b_trevts_pcor_pen;   //!
-	TBranch        *b_trevts_pcor_pen_de;   //!
-	TBranch        *b_trevts_pcor_pen_e;   //!
-	TBranch        *b_trevts_pcor_quad;   //!
-	TBranch        *b_trevts_pcor_nf;   //!
-	TBranch        *b_trevts_pcor_nb;   //!
-	TBranch        *b_trevts_pcor_sector;   //!
-	TBranch        *b_trevts_pcor_ptd;   //!
-	TBranch        *b_trevts_gen;   //!
-	TBranch        *b_trevts_cid;   //!
-	TBranch        *b_trevts_sid;   //!
-	TBranch        *b_trevts_cluid;   //!
-	TBranch        *b_trevts_tha;   //!
-	TBranch        *b_trevts_pha;   //!
-	TBranch        *b_trevts_td;   //!
-	TBranch        *b_trevts_coin;   //!
-	TBranch        *b_trevts_pr_hits;   //!
-	TBranch        *b_trevts_rndm_hits;   //!
-	TBranch        *b_trevts_del_hits;   //!
-	TBranch        *b_trevts_pr_ptr;   //!
-	TBranch        *b_trevts_rndm_ptr;   //!
-	TBranch        *b_trevts_del_ptr;   //!
-
 	/// Constructor: if parameter tree is not specified (or zero), probably crash
 	tr_ana( TTree *tree = 0 );
 
@@ -220,46 +147,13 @@ Long64_t tr_ana::LoadTree( Long64_t entry ) {
 void tr_ana::Init( TTree *tree ) {
 	
 	// Set branch addresses and branch pointers
+	evt = 0;
 	if (!tree) return;
 	fChain = tree;
 	fCurrent = -1;
 	fChain->SetMakeClass(1);
 	
-	fChain->SetBranchAddress("fUniqueID", &fUniqueID, &b_trevts_fUniqueID);
-	fChain->SetBranchAddress("fBits", &fBits, &b_trevts_fBits);
-	fChain->SetBranchAddress("pen", &pen, &b_trevts_pen);
-	fChain->SetBranchAddress("pen_de", &pen_de, &b_trevts_pen_de);
-	fChain->SetBranchAddress("pen_e", &pen_e, &b_trevts_pen_e);
-	fChain->SetBranchAddress("quad", &quad, &b_trevts_quad);
-	fChain->SetBranchAddress("nf", &nf, &b_trevts_nf);
-	fChain->SetBranchAddress("nb", &nb, &b_trevts_nb);
-	fChain->SetBranchAddress("sector", &sector, &b_trevts_sector);
-	fChain->SetBranchAddress("time", &time, &b_trevts_time);
-	fChain->SetBranchAddress("t1t", &t1t, &b_trevts_t1t);
-	fChain->SetBranchAddress("sst", &sst, &b_trevts_sst);
-	fChain->SetBranchAddress("laser", &laser, &b_trevts_laser);
-	fChain->SetBranchAddress("pcor_pen", &pcor_pen, &b_trevts_pcor_pen);
-	fChain->SetBranchAddress("pcor_pen_de", &pcor_pen_de, &b_trevts_pcor_pen_de);
-	fChain->SetBranchAddress("pcor_pen_e", &pcor_pen_e, &b_trevts_pcor_pen_e);
-	fChain->SetBranchAddress("pcor_quad", &pcor_quad, &b_trevts_pcor_quad);
-	fChain->SetBranchAddress("pcor_nf", &pcor_nf, &b_trevts_pcor_nf);
-	fChain->SetBranchAddress("pcor_nb", &pcor_nb, &b_trevts_pcor_nb);
-	fChain->SetBranchAddress("pcor_sector", &pcor_sector, &b_trevts_pcor_sector);
-	fChain->SetBranchAddress("pcor_ptd", &pcor_ptd, &b_trevts_pcor_ptd);
-	fChain->SetBranchAddress("gen", &gen, &b_trevts_gen);
-	fChain->SetBranchAddress("cid", &cid, &b_trevts_cid);
-	fChain->SetBranchAddress("sid", &sid, &b_trevts_sid);
-	fChain->SetBranchAddress("cluid", &cluid, &b_trevts_cluid);
-	fChain->SetBranchAddress("tha", &tha, &b_trevts_tha);
-	fChain->SetBranchAddress("pha", &pha, &b_trevts_pha);
-	fChain->SetBranchAddress("td", &td, &b_trevts_td);
-	fChain->SetBranchAddress("coin", &coin, &b_trevts_coin);
-	fChain->SetBranchAddress("pr_hits", &pr_hits, &b_trevts_pr_hits);
-	fChain->SetBranchAddress("rndm_hits", &rndm_hits, &b_trevts_rndm_hits);
-	fChain->SetBranchAddress("del_hits", &del_hits, &b_trevts_del_hits);
-	fChain->SetBranchAddress("pr_ptr", &pr_ptr, &b_trevts_pr_ptr);
-	fChain->SetBranchAddress("rndm_ptr", &rndm_ptr, &b_trevts_rndm_ptr);
-	fChain->SetBranchAddress("del_ptr", &del_ptr, &b_trevts_del_ptr);
+	fChain->SetBranchAddress( "trevts", &evt );
 	Notify();
 	
 }

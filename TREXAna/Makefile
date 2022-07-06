@@ -19,11 +19,11 @@ LIB_DIR     = ../lib
 COMMON_DIR  = ../common
 MBEVTS_DIR  = ../EventTree
 
-LIBS        := $(ROOTLIBS) -L$(LIB_DIR) -lCommandLineInterface -lmbevts
+LIBS        := $(ROOTLIBS) -L$(LIB_DIR) -lCommandLineInterface -ltrevts
 
 CC          := $(shell root-config --cc)
 CPP         := $(shell root-config --cxx)
-CFLAGS      := -pedantic -Wall -g -O3 $(ROOTCFLAGS) -fPIC -Wno-unused-variable -Wno-long-long
+CFLAGS      := -pedantic -Wall -g $(ROOTCFLAGS) -fPIC -Wno-unused-variable -Wno-long-long
 
 INCLUDES  = -I$(MBEVTS_DIR) -I$(COMMON_DIR) -I./
 

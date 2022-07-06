@@ -5,6 +5,6 @@
 #pragma link C++ class SpedeGeometry+;
 #pragma link C++ class hists+;
 #pragma link C++ class doppler+;
-#pragma link C++ class mbevts+;
+//#pragma link C++ class mbevts+;
 #pragma link C++ class g_clx+;
 #endif

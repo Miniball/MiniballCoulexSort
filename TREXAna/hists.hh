@@ -16,6 +16,11 @@ using namespace std;
 # include "doppler.hh"
 #endif
 
+// Headers for trevts
+#ifndef __TREVTS_HH__
+# include "trevts.hh"
+#endif
+
 using namespace std;
 
 /// A class for making TREX analysis histograms
@@ -40,30 +45,38 @@ class hists {
 
 	// Undoppler-corrected gamma spectra
 	TH1F *gp, *gr;
-	
+	TH2F *ggp, *ggr;
+
 	// Coincidence matrices
 	TH1F *pcor_size;
+	
+	// Prompt/Random Particle spectra
+	TH2F *part, *part_p, *part_r;
+	TH2F *part_dE, *part_dE_p, *part_dE_r;
+	TH2F *part_Erest, *part_Erest_p, *part_Erest_r;
+	TH2F *part_Q[4], *part_p_Q[4], *part_r_Q[4];
+	TH2F *part_dE_Q[4], *part_dE_p_Q[4], *part_dE_r_Q[4];
+	TH2F *part_Erest_Q[4], *part_Erest_p_Q[4], *part_Erest_r_Q[4];
+
    
 	// Testing
 	TH1F *multp, *multr;
-	TH1F *GeReject, *GePass, *GeRatio;
 	TH2F *GeAng;
-	TH2F *GeAng_clu[8];
-	TH3F *GeSiAng, *GeSiAng_clu[8];
+	TH3F *GeSiAng;
 
 	// Array of cd angles for histogram bins
 	double cd_angles[65];
 
 	// Doppler instance
 	doppler dc;
-
+	
 	// functions
 	void Initialise( doppler dc_ );
 
 	// fill functions
-	void FillSingles( );
-	void FillPrompt( );
-	void FillRandom( );
+	void FillSingles( trevts *evt );
+	void FillPrompt( trevts *evt );
+	void FillRandom( trevts *evt );
 
 	private:
 
