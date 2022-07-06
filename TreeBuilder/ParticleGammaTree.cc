@@ -75,8 +75,8 @@ void ParticleGammaTree::FillTREXTree() {
 		
 		// Only if we have some gammas, or singles is declared
 		if( write_tr_evts.GetNrPrompt() > 0 ||
-		    write_mb_evts.GetNrRandom() > 0 ||
-		    write_mb_evts.GetNrDelayed() > 0 ||
+		    write_tr_evts.GetNrRandom() > 0 ||
+		    write_tr_evts.GetNrDelayed() > 0 ||
 		    singles ) {
 			
 			p_tr->Fill();
